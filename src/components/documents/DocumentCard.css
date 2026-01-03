@@ -141,3 +141,55 @@
 .btn-cancel:hover {
   color: #666;
 }
+
+/* Mobile Optimizations */
+@media (max-width: 480px) {
+  .document-card {
+    padding: 15px;
+    border-radius: 10px;
+  }
+  
+  .card-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .card-icon {
+    font-size: 24px;
+  }
+  
+  .card-title-section h4 {
+    font-size: 14px;
+  }
+  
+  .card-description {
+    font-size: 12px;
+  }
+  
+  .card-status {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+  
+  .card-file-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .file-name {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .file-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .btn-view, .btn-replace {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+  }
+}

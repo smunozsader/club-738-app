@@ -8,6 +8,8 @@ export default function MisDocumentosOficiales({ user, socioData }) {
     curp: { url: null, loading: true, exists: false },
     constancia: { url: null, loading: true, exists: false }
   });
+  const [viewerUrl, setViewerUrl] = useState(null);
+  const [viewerTitle, setViewerTitle] = useState('');
 
   useEffect(() => {
     if (!user?.email) return;
@@ -30,15 +32,26 @@ export default function MisDocumentosOficiales({ user, socioData }) {
         }));
       }
 
-      // Cargar Constancia
-      try {
-        const constanciaRef = ref(storage, `documentos/${email}/constancia.pdf`);
-        const constanciaUrl = await getDownloadURL(constanciaRef);
-        setDocumentos(prev => ({
-          ...prev,
-          constancia: { url: constanciaUrl, loading: false, exists: true }
-        }));
-      } catch (error) {
+      // Cargar Constancia - probar diferentes nombres
+      const constanciaNames = ['constancia_antecedentes.pdf', 'constancia.pdf', 'antecedentes.pdf'];
+      let constanciaFound = false;
+      
+      for (const fileName of constanciaNames) {
+        try {
+          const constanciaRef = ref(storage, `documentos/${email}/${fileName}`);
+          const constanciaUrl = await getDownloadURL(constanciaRef);
+          setDocumentos(prev => ({
+            ...prev,
+            constancia: { url: constanciaUrl, loading: false, exists: true }
+          }));
+          constanciaFound = true;
+          break;
+        } catch (error) {
+          // Continuar con el siguiente nombre
+        }
+      }
+      
+      if (!constanciaFound) {
         setDocumentos(prev => ({
           ...prev,
           constancia: { url: null, loading: false, exists: false }
@@ -48,6 +61,16 @@ export default function MisDocumentosOficiales({ user, socioData }) {
 
     cargarDocumentos();
   }, [user]);
+
+  const openViewer = (url, title) => {
+    setViewerUrl(url);
+    setViewerTitle(title);
+  };
+
+  const closeViewer = () => {
+    setViewerUrl(null);
+    setViewerTitle('');
+  };
 
   const DocumentoCard = ({ tipo, titulo, descripcion, icono, doc }) => (
     <div className={`doc-oficial-card ${doc.exists ? 'disponible' : 'no-disponible'}`}>
@@ -60,14 +83,22 @@ export default function MisDocumentosOficiales({ user, socioData }) {
         {doc.loading ? (
           <span className="doc-loading">Cargando...</span>
         ) : doc.exists ? (
-          <a 
-            href={doc.url} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="btn-descargar"
-          >
-            📥 Descargar
-          </a>
+          <div className="action-buttons">
+            <button 
+              className="btn-ver"
+              onClick={() => openViewer(doc.url, titulo)}
+            >
+              👁️ Ver
+            </button>
+            <a 
+              href={doc.url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn-descargar"
+            >
+              📥 Descargar
+            </a>
+          </div>
         ) : (
           <span className="doc-no-disponible">No disponible</span>
         )}
@@ -77,6 +108,35 @@ export default function MisDocumentosOficiales({ user, socioData }) {
 
   return (
     <div className="mis-documentos-oficiales">
+      {/* Visor de PDF */}
+      {viewerUrl && (
+        <div className="pdf-viewer-overlay" onClick={closeViewer}>
+          <div className="pdf-viewer-container" onClick={e => e.stopPropagation()}>
+            <div className="pdf-viewer-header">
+              <h4>{viewerTitle}</h4>
+              <button className="btn-close-viewer" onClick={closeViewer}>✕</button>
+            </div>
+            <div className="pdf-viewer-content">
+              <iframe 
+                src={`${viewerUrl}#toolbar=1&navpanes=0`}
+                title={viewerTitle}
+                className="pdf-iframe"
+              />
+            </div>
+            <div className="pdf-viewer-footer">
+              <a 
+                href={viewerUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="btn-abrir-nueva"
+              >
+                🔗 Abrir en nueva pestaña
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="docs-oficiales-header">
         <h3>📋 Mis Documentos Oficiales</h3>
         <p>Documentos proporcionados por el Club. Descárgalos cuando los necesites.</p>

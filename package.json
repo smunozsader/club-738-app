@@ -1,9 +1,9 @@
 {
   "name": "club-738-web",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
-  "description": "Portal de socios Club 738 - Caza, Tiro y Pesca",
+  "description": "Portal de socios Club 738 - Caza, Tiro y Pesca de Yucatán, A.C.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,6 +12,8 @@
   "dependencies": {
     "firebase": "^11.0.0",
     "firebase-admin": "^13.6.0",
+    "heic2any": "^0.0.4",
+    "jspdf": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "xlsx": "^0.18.5"

@@ -7,6 +7,7 @@ import DocumentList from './components/documents/DocumentList';
 import MisArmas from './components/MisArmas';
 import MisDocumentosOficiales from './components/MisDocumentosOficiales';
 import WelcomeDialog from './components/WelcomeDialog';
+import AvisoPrivacidad from './components/privacidad/AvisoPrivacidad';
 import './App.css';
 
 function App() {
@@ -133,7 +134,7 @@ function App() {
               ← Volver al Dashboard
             </button>
             <DocumentList 
-              userId={user.uid}
+              userId={user.email.toLowerCase()}
               documentosData={documentosData}
               onUploadComplete={handleUploadComplete}
             />
@@ -157,6 +158,15 @@ function App() {
             <MisArmas user={user} />
           </div>
         )}
+
+        {activeSection === 'privacidad' && (
+          <div className="section-privacidad">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <AvisoPrivacidad />
+          </div>
+        )}
       </main>
       
       <footer className="app-footer">
@@ -177,6 +187,15 @@ function App() {
           </div>
           <p>© 2026 Club de Caza, Tiro y Pesca de Yucatán, A.C. - Todos los derechos reservados</p>
           <p className="footer-registros">Afiliado a FEMETI | Registro SEMARNAT-CLUB-CIN-005-YUC-05</p>
+          <p className="footer-legal">
+            <button className="link-privacidad" onClick={() => setActiveSection('privacidad')}>
+              📋 Aviso de Privacidad
+            </button>
+            {' | '}
+            <button className="link-privacidad" onClick={() => setActiveSection('privacidad')}>
+              ⚖️ Derechos ARCO
+            </button>
+          </p>
         </div>
       </footer>
     </div>

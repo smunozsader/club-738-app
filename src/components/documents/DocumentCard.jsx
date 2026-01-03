@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import DocumentUploader from './DocumentUploader';
+import MultiImageUploader from './MultiImageUploader';
 import './DocumentCard.css';
+
+// Documentos que permiten múltiples imágenes (frente/vuelta)
+const MULTI_IMAGE_DOCS = ['ine', 'cartillaMilitar', 'registrosArmas'];
 
 export default function DocumentCard({ 
   userId,
@@ -12,6 +15,9 @@ export default function DocumentCard({
   onUploadComplete 
 }) {
   const [showUploader, setShowUploader] = useState(false);
+  
+  // Determinar si este documento permite múltiples imágenes
+  const allowMultiple = MULTI_IMAGE_DOCS.includes(documentType);
 
   const getStatusInfo = () => {
     if (!documentData) {
@@ -87,10 +93,11 @@ export default function DocumentCard({
 
       {(!hasDocument || showUploader) && (
         <div className="card-uploader">
-          <DocumentUploader
+          <MultiImageUploader
             userId={userId}
             documentType={documentType}
             documentLabel={label}
+            allowMultiple={allowMultiple}
             onUploadComplete={handleUploadComplete}
           />
           {showUploader && (
