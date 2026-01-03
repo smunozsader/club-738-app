@@ -10,6 +10,40 @@
 
 ## 📅 Enero 2026
 
+### 3 de Enero - v1.2.0 Uploader con opción PDF preparado
+
+#### Mejora UX: Selector de modo de subida
+
+**Problema identificado**: Las fotos tomadas desde iPhone y convertidas a PDF resultaban de muy baja calidad. Los documentos oficiales (especialmente INE) requieren ampliación al 200% y buena resolución.
+
+**Solución**: Dar al usuario la opción clara de subir un PDF ya preparado correctamente.
+
+#### MultiImageUploader - Selector de modo
+
+Ahora muestra **dos opciones claras** al iniciar:
+
+1. **📄 "Ya tengo PDF listo"**
+   - Requisitos mostrados: Tamaño carta, 200 DPI, ampliado 200%, máx 5MB
+   - Link directo a iLovePDF.com para preparar documentos
+   - Solo acepta archivos PDF
+
+2. **📷 "Tomar foto"**  
+   - Convierte fotos a PDF automáticamente
+   - Advertencia especial para INE sobre preparar PDF al 200%
+
+#### MisArmas - Solo PDFs
+
+- **Eliminada opción de imágenes** - Solo acepta PDFs
+- Requisitos claros: Tamaño carta, 200-300 DPI, máx 5MB
+- Mensaje de error informativo con link a iLovePDF
+
+#### Archivos modificados
+- `src/components/documents/MultiImageUploader.jsx` - Selector de modo PDF/Foto
+- `src/components/documents/MultiImageUploader.css` - Estilos para selector
+- `src/components/MisArmas.jsx` - Solo acepta PDFs
+
+---
+
 ### 3 de Enero - v1.1.1 Fix Storage Path + CORS
 
 #### Bug crítico corregido: Error de permisos en upload
