@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Firebase
+scripts/serviceAccountKey.json
+.firebase/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Sensitive data - NEVER commit these
+serviceAccountKey.json
+**/serviceAccountKey.json
+
+# Data files - keep locally only
+Base datos/
+2025. 738. CONSTANCIAS NO ANTECEDENTES/
+*.xlsx
+*.docx
+CONTEXT.md
+
+# Credentials files - sensitive
+credenciales_socios.csv
+credenciales_socios.json
+firebase_auth_import.json

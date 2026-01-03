@@ -1,0 +1,143 @@
+.document-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #ff9800;
+  transition: all 0.3s ease;
+}
+
+.document-card.aprobado {
+  border-left-color: #4caf50;
+}
+
+.document-card.rechazado {
+  border-left-color: #f44336;
+}
+
+.document-card.revision {
+  border-left-color: #2196f3;
+}
+
+.document-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.card-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.card-title-section {
+  flex: 1;
+}
+
+.card-title-section h4 {
+  margin: 0 0 4px;
+  color: #1a472a;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.card-description {
+  margin: 0;
+  color: #666;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.card-status {
+  padding: 4px 10px;
+  border-radius: 12px;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.card-file-info {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.file-name {
+  color: #333;
+  font-size: 13px;
+  flex: 1;
+  min-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-date {
+  color: #999;
+  font-size: 12px;
+}
+
+.file-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-view {
+  background: #1a472a;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.btn-view:hover {
+  background: #0f2d1a;
+}
+
+.btn-replace {
+  background: transparent;
+  color: #1a472a;
+  border: 1px solid #1a472a;
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-replace:hover {
+  background: #1a472a;
+  color: white;
+}
+
+.card-uploader {
+  margin-top: 10px;
+}
+
+.btn-cancel {
+  width: 100%;
+  background: transparent;
+  color: #999;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-cancel:hover {
+  color: #666;
+}
