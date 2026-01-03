@@ -1,0 +1,357 @@
+.mis-armas {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mis-armas-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.mis-armas-header h2 {
+  color: #1a472a;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.mis-armas-subtitle {
+  color: #666;
+  font-size: 1rem;
+}
+
+.mis-armas-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Barra de progreso */
+.progreso-armas {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+}
+
+.progreso-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.progreso-porcentaje {
+  font-weight: bold;
+  color: #1a472a;
+}
+
+.progreso-barra {
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progreso-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1a472a, #2d6a4f);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+/* Sin armas */
+.sin-armas {
+  text-align: center;
+  padding: 60px 20px;
+  background: #fff3cd;
+  border-radius: 12px;
+  border: 1px solid #ffc107;
+}
+
+.sin-armas p {
+  margin: 10px 0;
+  color: #856404;
+}
+
+/* Grid de armas */
+.armas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+/* Card de arma */
+.arma-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-left: 4px solid #dc3545;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.arma-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.arma-card.completa {
+  border-left-color: #28a745;
+}
+
+.arma-card.pendiente {
+  border-left-color: #ffc107;
+}
+
+.arma-icono {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.arma-info h3 {
+  color: #1a472a;
+  font-size: 1.1rem;
+  margin: 0 0 5px 0;
+}
+
+.arma-clase {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.arma-detalles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.arma-detalles span {
+  background: #f8f9fa;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Documento */
+.arma-documento {
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+  margin-top: 10px;
+}
+
+.documento-ok {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.documento-ok .check {
+  font-size: 1.2rem;
+}
+
+.documento-ok a {
+  color: #1a472a;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.documento-ok a:hover {
+  text-decoration: underline;
+}
+
+.documento-pendiente .upload-btn {
+  display: block;
+  background: linear-gradient(135deg, #c9a227, #b8922a);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.documento-pendiente .upload-btn:hover {
+  background: linear-gradient(135deg, #b8922a, #a68225);
+  transform: scale(1.02);
+}
+
+.documento-pendiente .upload-btn.uploading {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.documento-pendiente .upload-btn input {
+  display: none;
+}
+
+/* Drag & Drop Zone */
+.drop-zone {
+  border: 2px dashed #c9a227;
+  border-radius: 10px;
+  padding: 20px 15px;
+  text-align: center;
+  background: #fffdf5;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.drop-zone.drag-over {
+  border-color: #1a472a;
+  background: #e8f4ea;
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(26, 71, 42, 0.2);
+}
+
+.drop-hint {
+  font-size: 1rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.drag-over .drop-hint {
+  color: #1a472a;
+  font-weight: 600;
+}
+
+.drop-divider {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.upload-btn-small {
+  background: linear-gradient(135deg, #c9a227, #b8922a);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.upload-btn-small:hover {
+  background: linear-gradient(135deg, #b8922a, #a68225);
+}
+
+.upload-btn-small input {
+  display: none;
+}
+
+.file-types {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.uploading-status {
+  padding: 20px;
+  color: #1a472a;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .armas-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .mis-armas-header h2 {
+    font-size: 1.4rem;
+  }
+}
+
+/* Tips de escaneo */
+.tips-escaneo {
+  background: #e8f4ea;
+  border: 1px solid #1a472a;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  overflow: hidden;
+}
+
+.tips-toggle {
+  width: 100%;
+  background: #1a472a;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.tips-toggle:hover {
+  background: #2d6a4f;
+}
+
+.tips-toggle .arrow {
+  transition: transform 0.2s;
+}
+
+.tips-content {
+  padding: 20px;
+}
+
+.tips-content ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.tips-content li {
+  margin-bottom: 10px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.tips-content li strong {
+  color: #1a472a;
+}
+
+.tips-content a {
+  color: #c9a227;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.tips-content a:hover {
+  text-decoration: underline;
+}
+
+.tips-content p {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ccc;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.tips-content h4 {
+  margin: 0 0 15px 0;
+  color: #1a472a;
+  font-size: 1rem;
+}
+
+.tips-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}

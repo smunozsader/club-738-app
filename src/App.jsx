@@ -4,6 +4,8 @@ import { signOut } from 'firebase/auth';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import Login from './components/Login';
 import DocumentList from './components/documents/DocumentList';
+import MisArmas from './components/MisArmas';
+import WelcomeDialog from './components/WelcomeDialog';
 import './App.css';
 
 function App() {
@@ -11,6 +13,8 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState('dashboard');
   const [documentosData, setDocumentosData] = useState({});
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [socioData, setSocioData] = useState(null);
 
   useEffect(() => {
     // Escuchar cambios en autenticación
@@ -26,11 +30,17 @@ function App() {
   useEffect(() => {
     if (!user) return;
 
-    const socioRef = doc(db, 'socios', user.uid);
+    const socioRef = doc(db, 'socios', user.email.toLowerCase());
     const unsubscribe = onSnapshot(socioRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
+        setSocioData(data);
         setDocumentosData(data.documentosPETA || {});
+        
+        // Mostrar bienvenida si es primera vez
+        if (!data.bienvenidaVista) {
+          setShowWelcome(true);
+        }
       }
     });
 
@@ -57,6 +67,17 @@ function App() {
 
   return (
     <div className="app-container">
+      {/* Dialog de bienvenida */}
+      {showWelcome && (
+        <WelcomeDialog 
+          user={user} 
+          onClose={() => {
+            setShowWelcome(false);
+            setActiveSection('armas');
+          }} 
+        />
+      )}
+      
       <header>
         <div className="header-brand">
           <img src="/logo.jpg" alt="Logo Club 738" className="header-logo" />
@@ -86,9 +107,12 @@ function App() {
                 <h3>🎫 Mi Credencial</h3>
                 <p>Descarga tu credencial del Club</p>
               </div>
-              <div className="feature-card">
+              <div className="feature-card" onClick={() => setActiveSection('armas')}>
                 <h3>🔫 Mis Armas</h3>
-                <p>Consulta tus armas registradas</p>
+                <p>Consulta tus armas registradas y sube documentos</p>
+                {socioData?.totalArmas > 0 && (
+                  <span className="feature-badge">{socioData.totalArmas} armas</span>
+                )}
               </div>
               <div className="feature-card">
                 <h3>💳 Pagos</h3>
@@ -108,6 +132,15 @@ function App() {
               documentosData={documentosData}
               onUploadComplete={handleUploadComplete}
             />
+          </div>
+        )}
+
+        {activeSection === 'armas' && (
+          <div className="section-armas">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <MisArmas user={user} />
           </div>
         )}
       </main>

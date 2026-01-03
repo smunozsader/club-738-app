@@ -131,6 +131,27 @@ main {
   line-height: 1.5;
 }
 
+.feature-card .feature-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #c9a227, #b8922a);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-top: 10px;
+}
+
+/* Secciones */
+.section-documentos,
+.section-armas {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Footer */
 .app-footer {
   background: rgba(0, 0, 0, 0.3);
