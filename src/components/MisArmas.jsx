@@ -41,31 +41,35 @@ export default function MisArmas({ user }) {
   const handleFileUpload = async (armaId, file) => {
     if (!file) return;
     
-    // Validar tipo de archivo
-    const validTypes = ['application/pdf', 'image/jpeg', 'image/png'];
-    if (!validTypes.includes(file.type)) {
-      alert('⚠️ Solo se aceptan archivos PDF, JPG o PNG');
+    // ⚠️ SOLO PDFs - Los registros deben estar preparados correctamente
+    if (file.type !== 'application/pdf') {
+      alert('⚠️ Solo se aceptan archivos PDF\n\n📋 Requisitos:\n• Tamaño carta\n• Resolución 200-300 DPI\n• Máximo 5MB\n\n💡 Usa iLovePDF.com o Adobe Scan para preparar tu documento');
       return;
     }
 
     // Validar tamaño (5MB máximo)
     if (file.size > MAX_FILE_SIZE) {
       const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
-      alert(`⚠️ El archivo pesa ${sizeMB}MB.\n\nMáximo permitido: 5MB\n\n💡 Tip: Usa iLovePDF.com para comprimir o escanea a 200-300 DPI en escala de grises.`);
+      alert(`⚠️ El PDF pesa ${sizeMB}MB\n\nMáximo: 5MB\n\n💡 Comprime en iLovePDF.com`);
       return;
     }
 
     setUploading(armaId);
     
     try {
-      // Subir a Storage
-      const filePath = `registros/${user.email}/${armaId}_registro.pdf`;
+      const userEmail = user.email.toLowerCase();
+      const filePath = `documentos/${userEmail}/armas/${armaId}/${armaId}_registro.pdf`;
+      
+      console.log('📤 Subiendo registro arma:', filePath);
+      
       const storageRef = ref(storage, filePath);
       await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(storageRef);
+      
+      console.log('✅ Storage OK');
 
       // Actualizar Firestore
-      const armaRef = doc(db, 'socios', user.email.toLowerCase(), 'armas', armaId);
+      const armaRef = doc(db, 'socios', userEmail, 'armas', armaId);
       await updateDoc(armaRef, {
         documentoRegistro: downloadURL,
         fechaRegistro: new Date().toISOString()
@@ -78,10 +82,17 @@ export default function MisArmas({ user }) {
           : a
       ));
 
-      alert('✅ Documento subido correctamente');
+      alert('✅ Registro subido correctamente');
     } catch (error) {
-      console.error('Error subiendo documento:', error);
-      alert('Error al subir el documento. Intenta de nuevo.');
+      console.error('❌ Error:', error);
+      
+      let errorMsg = 'Error: ';
+      if (error.code === 'storage/unauthorized') {
+        errorMsg += 'Sin permisos. Verifica tu sesión.';
+      } else {
+        errorMsg += error.message;
+      }
+      alert(errorMsg);
     } finally {
       setUploading(null);
     }
@@ -217,19 +228,18 @@ export default function MisArmas({ user }) {
                     ) : (
                       <>
                         <div className="drop-hint">
-                          {dragOver === arma.id ? '📥 Suelta aquí' : '📄 Arrastra tu archivo aquí'}
+                          {dragOver === arma.id ? '📥 Suelta aquí' : '📄 Sube tu registro (PDF)'}
                         </div>
-                        <span className="drop-divider">o</span>
                         <label className="upload-btn-small">
-                          Seleccionar archivo
+                          📄 Seleccionar PDF
                           <input
                             type="file"
-                            accept=".pdf,.jpg,.jpeg,.png"
+                            accept="application/pdf"
                             onChange={(e) => handleFileUpload(arma.id, e.target.files[0])}
                             disabled={uploading !== null}
                           />
                         </label>
-                        <span className="file-types">PDF, JPG, PNG • Máx 5MB</span>
+                        <span className="file-types">Solo PDF • Tamaño carta • Máx 5MB</span>
                       </>
                     )}
                   </div>

@@ -19,9 +19,11 @@ export default function MultiImageUploader({
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState('');
   const [converting, setConverting] = useState(false);
+  const [uploadMode, setUploadMode] = useState(null); // 'pdf' o 'photo'
 
   const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/heic', 'image/heif'];
-  const maxSize = 10 * 1024 * 1024; // 10MB per file
+  const maxSizePdf = 5 * 1024 * 1024; // 5MB para PDFs
+  const maxSizeImage = 10 * 1024 * 1024; // 10MB para imágenes
   const maxImages = allowMultiple ? 4 : 1;
 
   // Convertir HEIC (iOS) a JPEG
@@ -114,16 +116,30 @@ export default function MultiImageUploader({
     return pdf.output('blob');
   };
 
-  const validateFile = (file) => {
-    // Check type (including HEIC)
-    const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
-    if (!allowedTypes.includes(file.type) && !isHeic) {
-      setError('Solo se permiten archivos PDF, JPG, PNG o HEIC');
-      return false;
-    }
-    if (file.size > maxSize) {
-      setError('El archivo no debe superar 10MB');
-      return false;
+  const validateFile = (file, isPdfMode = false) => {
+    if (isPdfMode) {
+      // Modo PDF: solo PDFs de máximo 5MB
+      if (file.type !== 'application/pdf') {
+        setError('Solo se permiten archivos PDF');
+        return false;
+      }
+      if (file.size > maxSizePdf) {
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+        setError(`El PDF pesa ${sizeMB}MB. Máximo: 5MB. Usa iLovePDF.com para comprimir.`);
+        return false;
+      }
+    } else {
+      // Modo foto: imágenes de máximo 10MB
+      const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+      const isImage = file.type.startsWith('image/') || isHeic;
+      if (!isImage) {
+        setError('Solo se permiten imágenes (JPG, PNG, HEIC)');
+        return false;
+      }
+      if (file.size > maxSizeImage) {
+        setError('La imagen no debe superar 10MB');
+        return false;
+      }
     }
     return true;
   };
@@ -136,19 +152,28 @@ export default function MultiImageUploader({
     return file;
   };
 
-  const handleFiles = async (files) => {
+  // Manejar subida de PDF preparado
+  const handlePdfUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setError('');
+    if (!validateFile(file, true)) return;
+    
+    await uploadFile(file);
+  };
+
+  // Manejar fotos para convertir a PDF
+  const handlePhotoUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    
     setError('');
     const validFiles = [];
 
     for (const file of files) {
-      if (!validateFile(file)) continue;
+      if (!validateFile(file, false)) continue;
       
-      // Si ya es PDF, subir directamente
-      if (file.type === 'application/pdf') {
-        await uploadFile(file);
-        return;
-      }
-
       try {
         const processedFile = await processFile(file);
         validFiles.push(processedFile);
@@ -167,6 +192,36 @@ export default function MultiImageUploader({
     // Si no permite múltiples, convertir y subir inmediatamente
     if (!allowMultiple && newImages.length > 0) {
       await convertAndUpload(newImages);
+    }
+  };
+
+  // Legacy handler para drag & drop
+  const handleFiles = async (files) => {
+    setError('');
+
+    for (const file of files) {
+      // Si es PDF, subir directamente
+      if (file.type === 'application/pdf') {
+        if (!validateFile(file, true)) return;
+        await uploadFile(file);
+        return;
+      }
+
+      // Si es imagen, procesar
+      if (!validateFile(file, false)) continue;
+      
+      try {
+        const processedFile = await processFile(file);
+        const newImages = [...images, processedFile].slice(0, maxImages);
+        setImages(newImages);
+
+        if (!allowMultiple && newImages.length > 0) {
+          await convertAndUpload(newImages);
+        }
+      } catch (err) {
+        setError(err.message);
+        return;
+      }
     }
   };
 
@@ -207,7 +262,18 @@ export default function MultiImageUploader({
 
     const timestamp = Date.now();
     const fileName = `${documentType}_${timestamp}.pdf`;
-    const storageRef = ref(storage, `documentos/${userId}/${fileName}`);
+    const storagePath = `documentos/${userId}/${fileName}`;
+    
+    // 🔍 Debug: mostrar información de upload
+    console.log('📤 UPLOAD DEBUG:', {
+      path: storagePath,
+      userId: userId,
+      fileName: fileName,
+      fileType: file.type,
+      fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`
+    });
+
+    const storageRef = ref(storage, storagePath);
 
     const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -218,15 +284,37 @@ export default function MultiImageUploader({
         setProgress(prog);
       },
       (err) => {
-        setError('Error al subir archivo: ' + err.message);
+        // 🔍 Debug: mostrar error completo
+        console.error('❌ UPLOAD ERROR:', {
+          code: err.code,
+          message: err.message,
+          serverResponse: err.serverResponse,
+          path: storagePath
+        });
+        
+        // Mostrar código de error específico al usuario
+        let errorMsg = 'Error al subir: ';
+        if (err.code === 'storage/unauthorized') {
+          errorMsg += 'Sin permisos. Verifica que estés logueado.';
+        } else if (err.code === 'storage/canceled') {
+          errorMsg += 'Subida cancelada.';
+        } else if (err.code === 'storage/retry-limit-exceeded') {
+          errorMsg += 'Conexión lenta. Intenta de nuevo.';
+        } else {
+          errorMsg += `${err.code || err.message}`;
+        }
+        setError(errorMsg);
         setUploading(false);
       },
       async () => {
         try {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          console.log('✅ Storage upload OK, URL:', downloadURL);
           
           // Actualizar Firestore
           const socioRef = doc(db, 'socios', userId);
+          console.log('📝 Updating Firestore doc: socios/', userId);
+          
           await updateDoc(socioRef, {
             [`documentosPETA.${documentType}`]: {
               url: downloadURL,
@@ -238,6 +326,7 @@ export default function MultiImageUploader({
             }
           });
 
+          console.log('✅ Firestore update OK');
           setUploading(false);
           setProgress(100);
           setImages([]);
@@ -246,7 +335,22 @@ export default function MultiImageUploader({
             onUploadComplete(documentType, downloadURL);
           }
         } catch (err) {
-          setError('Error al guardar referencia: ' + err.message);
+          console.error('❌ FIRESTORE ERROR:', {
+            code: err.code,
+            message: err.message,
+            docPath: `socios/${userId}`
+          });
+          
+          // Error específico de Firestore
+          let errorMsg = 'Error Firestore: ';
+          if (err.code === 'not-found') {
+            errorMsg += 'Tu perfil de socio no existe. Contacta al admin.';
+          } else if (err.code === 'permission-denied') {
+            errorMsg += 'Sin permisos para actualizar tu perfil.';
+          } else {
+            errorMsg += err.message;
+          }
+          setError(errorMsg);
           setUploading(false);
         }
       }
@@ -279,90 +383,156 @@ export default function MultiImageUploader({
 
   return (
     <div className={`multi-image-uploader ${isDragging ? 'dragging' : ''}`}>
-      {/* Preview de imágenes agregadas */}
-      {images.length > 0 && (
-        <div className="images-preview">
-          {images.map((img, idx) => (
-            <div key={idx} className="preview-item">
-              <img src={URL.createObjectURL(img)} alt={`Imagen ${idx + 1}`} />
-              <button className="remove-btn" onClick={() => removeImage(idx)}>×</button>
-              <span className="image-label">
-                {allowMultiple ? (idx === 0 ? 'Frente' : idx === 1 ? 'Vuelta' : `Pág ${idx + 1}`) : 'Imagen'}
-              </span>
-            </div>
-          ))}
+      
+      {/* Selector de modo (si no hay nada en progreso) */}
+      {!uploadMode && !uploading && images.length === 0 && (
+        <div className="upload-mode-selector">
+          <p className="mode-title">¿Cómo quieres subir tu {documentLabel}?</p>
+          
+          <button 
+            className="mode-btn mode-pdf"
+            onClick={() => setUploadMode('pdf')}
+          >
+            <span className="mode-icon">📄</span>
+            <span className="mode-label">Ya tengo PDF listo</span>
+            <span className="mode-desc">Ampliado al 200%, tamaño carta, máx 5MB</span>
+          </button>
+          
+          <button 
+            className="mode-btn mode-photo"
+            onClick={() => setUploadMode('photo')}
+          >
+            <span className="mode-icon">📷</span>
+            <span className="mode-label">Tomar foto</span>
+            <span className="mode-desc">Se convertirá a PDF automáticamente</span>
+          </button>
         </div>
       )}
 
-      {/* Zona de drop */}
-      <div
-        className="drop-zone"
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        {uploading || converting ? (
-          <div className="upload-progress">
-            <div className="progress-bar">
-              <div className="progress-fill" style={{ width: `${progress}%` }}></div>
-            </div>
-            <span>
-              {converting ? 'Convirtiendo imagen...' : 
-               progress < 50 ? 'Creando PDF...' : 
-               progress < 100 ? `${progress}% subiendo...` : 
-               '¡Completado!'}
-            </span>
+      {/* Modo PDF: Subir PDF preparado */}
+      {uploadMode === 'pdf' && !uploading && (
+        <div className="pdf-upload-section">
+          <div className="pdf-requirements">
+            <h4>📋 Requisitos del PDF:</h4>
+            <ul>
+              <li>✓ Tamaño <strong>carta</strong> (letter)</li>
+              <li>✓ Resolución mínima <strong>200 DPI</strong></li>
+              <li>✓ Ampliado al <strong>200%</strong> (especialmente INE)</li>
+              <li>✓ Peso máximo: <strong>5 MB</strong></li>
+            </ul>
+            <p className="pdf-tip">
+              💡 Tip: Usa <a href="https://www.ilovepdf.com/es" target="_blank" rel="noopener noreferrer">iLovePDF.com</a> para preparar tu documento
+            </p>
           </div>
-        ) : (
-          <>
+          
+          <label className="file-select-btn pdf-btn">
+            📄 Seleccionar PDF
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={handlePdfUpload}
+              hidden
+            />
+          </label>
+          
+          <button className="btn-back-mode" onClick={() => setUploadMode(null)}>
+            ← Cambiar método
+          </button>
+        </div>
+      )}
+
+      {/* Modo Foto: Tomar fotos */}
+      {uploadMode === 'photo' && !uploading && (
+        <>
+          {/* Preview de imágenes agregadas */}
+          {images.length > 0 && (
+            <div className="images-preview">
+              {images.map((img, idx) => (
+                <div key={idx} className="preview-item">
+                  <img src={URL.createObjectURL(img)} alt={`Imagen ${idx + 1}`} />
+                  <button className="remove-btn" onClick={() => removeImage(idx)}>×</button>
+                  <span className="image-label">
+                    {allowMultiple ? (idx === 0 ? 'Frente' : idx === 1 ? 'Vuelta' : `Pág ${idx + 1}`) : 'Imagen'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div
+            className="drop-zone"
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
             <div className="upload-icon">📷</div>
             {allowMultiple ? (
               <>
                 <p className="upload-text">
                   {images.length === 0 ? (
-                    <>Toma foto del <strong>FRENTE</strong> de tu {documentLabel}</>
+                    <>Toma foto del <strong>FRENTE</strong></>
                   ) : images.length === 1 ? (
-                    <>Ahora toma foto de la <strong>VUELTA</strong></>
+                    <>Ahora el <strong>REVERSO</strong></>
                   ) : (
-                    <>Listo para convertir a PDF</>
+                    <>Listo para convertir</>
                   )}
                 </p>
                 <p className="upload-hint">{images.length} de {maxImages} imágenes</p>
               </>
             ) : (
-              <p className="upload-text">
-                Arrastra o toma foto de tu <strong>{documentLabel}</strong>
-              </p>
+              <p className="upload-text">Toma foto de tu documento</p>
             )}
             
             <label className="file-select-btn">
-              {allowMultiple && images.length > 0 ? 'Agregar otra foto' : '📷 Tomar foto / Seleccionar'}
+              📷 {images.length > 0 ? 'Agregar foto' : 'Tomar foto'}
               <input
                 type="file"
-                accept="image/*,.pdf,.heic,.heif"
+                accept="image/*"
                 capture="environment"
-                onChange={handleFileSelect}
+                onChange={handlePhotoUpload}
                 multiple={allowMultiple}
                 hidden
               />
             </label>
-            
-            <p className="upload-formats">
-              JPG, PNG, HEIC o PDF (máx. 10MB)
-              {allowMultiple && <><br/>Se convertirá automáticamente a PDF</>}
-            </p>
-          </>
-        )}
-      </div>
 
-      {/* Botón para convertir y subir (solo modo múltiple) */}
-      {allowMultiple && images.length > 0 && !uploading && (
-        <button 
-          className="convert-btn"
-          onClick={() => convertAndUpload(images)}
-        >
-          ✨ Convertir a PDF y Subir ({images.length} {images.length === 1 ? 'imagen' : 'imágenes'})
-        </button>
+            {documentType.toLowerCase().includes('ine') && (
+              <p className="ine-reminder">
+                ⚠️ <strong>Para INE:</strong> Prepara mejor tu PDF al 200% con iLovePDF
+              </p>
+            )}
+          </div>
+
+          {/* Botón para convertir */}
+          {allowMultiple && images.length > 0 && (
+            <button 
+              className="convert-btn"
+              onClick={() => convertAndUpload(images)}
+            >
+              ✨ Crear PDF y Subir ({images.length} {images.length === 1 ? 'imagen' : 'imágenes'})
+            </button>
+          )}
+
+          <button className="btn-back-mode" onClick={() => { setUploadMode(null); setImages([]); }}>
+            ← Cambiar método
+          </button>
+        </>
+      )}
+
+      {/* Estado de subida */}
+      {(uploading || converting) && (
+        <div className="upload-progress-container">
+          <div className="upload-progress">
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+            </div>
+            <span>
+              {converting ? '🔄 Convirtiendo imagen...' : 
+               progress < 50 ? '📝 Creando PDF...' : 
+               progress < 100 ? `⬆️ ${progress}% subiendo...` : 
+               '✅ ¡Completado!'}
+            </span>
+          </div>
+        </div>
       )}
 
       {error && <div className="upload-error">{error}</div>}

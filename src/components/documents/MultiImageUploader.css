@@ -2,6 +2,133 @@
   width: 100%;
 }
 
+/* Selector de modo */
+.upload-mode-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mode-title {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+.mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border: 2px solid rgba(201, 162, 39, 0.3);
+  border-radius: 12px;
+  background: rgba(201, 162, 39, 0.05);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-btn:hover {
+  border-color: #c9a227;
+  background: rgba(201, 162, 39, 0.1);
+  transform: translateY(-2px);
+}
+
+.mode-btn .mode-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.mode-btn .mode-label {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.mode-btn .mode-desc {
+  color: #888;
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.mode-btn.mode-pdf {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.mode-btn.mode-pdf:hover {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.15);
+}
+
+/* Sección PDF */
+.pdf-upload-section {
+  text-align: center;
+}
+
+.pdf-requirements {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.pdf-requirements h4 {
+  color: #60a5fa;
+  margin: 0 0 10px 0;
+  font-size: 0.9rem;
+}
+
+.pdf-requirements ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.pdf-requirements li {
+  color: #ccc;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+}
+
+.pdf-requirements strong {
+  color: #60a5fa;
+}
+
+.pdf-tip {
+  color: #fbbf24;
+  font-size: 0.75rem;
+  margin: 12px 0 0 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.pdf-tip a {
+  color: #60a5fa;
+}
+
+.pdf-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+}
+
+.btn-back-mode {
+  display: block;
+  margin-top: 12px;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 0.8rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-back-mode:hover {
+  color: #ccc;
+}
+
 /* Preview de imágenes */
 .images-preview {
   display: flex;
@@ -238,4 +365,16 @@
     font-size: 12px;
     padding: 8px;
   }
+}
+
+/* INE reminder */
+.ine-reminder {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #fbbf24;
+  line-height: 1.4;
 }
