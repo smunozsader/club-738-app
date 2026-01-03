@@ -10,6 +10,50 @@
 
 ## 📅 Enero 2026
 
+### 3 de Enero - v1.1.1 Fix Storage Path + CORS
+
+#### Bug crítico corregido: Error de permisos en upload
+
+**Problema**: Al subir documentos desde iPhone aparecía error:
+```
+User does not have permission to access 'documentos/EQASQOwPz1PRZRxjcBt695dD2tl1/ine_xxx.pdf'
+```
+
+**Root cause**: `DocumentUploader.jsx` usaba ruta incorrecta:
+- ❌ Antes: `socios/${userId}/documentos/${fileName}`
+- ✅ Ahora: `documentos/${userId}/${fileName}`
+
+**Solución aplicada**:
+1. Corregí ruta en `DocumentUploader.jsx` línea 48
+2. Instalé Google Cloud SDK (`brew install --cask google-cloud-sdk`)
+3. Configuré CORS para Firebase Storage
+
+**CORS configurado** (`cors.json`):
+```json
+{
+  "origin": ["https://club-738-app.web.app", "http://localhost:5173"],
+  "method": ["GET", "HEAD", "PUT", "POST", "DELETE"],
+  "maxAgeSeconds": 3600
+}
+```
+
+**Comando ejecutado**:
+```bash
+gsutil cors set cors.json gs://club-738-app.firebasestorage.app
+```
+
+#### Mejoras de debugging
+- Agregué console.log con emojis en `MisDocumentosOficiales.jsx`
+- Agregué display de código de error en UI cuando documento no carga
+
+#### Archivos modificados
+- `src/components/documents/DocumentUploader.jsx` - Fix ruta Storage
+- `src/components/MisDocumentosOficiales.jsx` - Logs de debug
+- `src/components/MisDocumentosOficiales.css` - Estilo error code
+- `cors.json` - Configuración CORS (nuevo)
+
+---
+
 ### 3 de Enero - v1.1.0 Privacidad LFPDPPP
 
 #### Implementación de Protección de Datos Personales

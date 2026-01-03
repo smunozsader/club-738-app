@@ -45,7 +45,8 @@ export default function DocumentUploader({ userId, documentType, documentLabel, 
     const timestamp = Date.now();
     const extension = file.name.split('.').pop();
     const fileName = `${documentType}_${timestamp}.${extension}`;
-    const storageRef = ref(storage, `socios/${userId}/documentos/${fileName}`);
+    // IMPORTANTE: La ruta debe ser documentos/{email}/ para coincidir con Storage Rules
+    const storageRef = ref(storage, `documentos/${userId}/${fileName}`);
 
     const uploadTask = uploadBytesResumable(storageRef, file);
 

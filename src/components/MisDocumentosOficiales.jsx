@@ -16,19 +16,24 @@ export default function MisDocumentosOficiales({ user, socioData }) {
 
     const cargarDocumentos = async () => {
       const email = user.email.toLowerCase();
+      console.log('🔍 Buscando documentos para:', email);
       
       // Cargar CURP
       try {
-        const curpRef = ref(storage, `documentos/${email}/curp.pdf`);
+        const curpPath = `documentos/${email}/curp.pdf`;
+        console.log('📂 Intentando cargar CURP:', curpPath);
+        const curpRef = ref(storage, curpPath);
         const curpUrl = await getDownloadURL(curpRef);
+        console.log('✅ CURP encontrado');
         setDocumentos(prev => ({
           ...prev,
           curp: { url: curpUrl, loading: false, exists: true }
         }));
       } catch (error) {
+        console.error('❌ Error CURP:', error.code, error.message);
         setDocumentos(prev => ({
           ...prev,
-          curp: { url: null, loading: false, exists: false }
+          curp: { url: null, loading: false, exists: false, error: error.code }
         }));
       }
 
@@ -38,8 +43,11 @@ export default function MisDocumentosOficiales({ user, socioData }) {
       
       for (const fileName of constanciaNames) {
         try {
-          const constanciaRef = ref(storage, `documentos/${email}/${fileName}`);
+          const constanciaPath = `documentos/${email}/${fileName}`;
+          console.log('📂 Intentando cargar constancia:', constanciaPath);
+          const constanciaRef = ref(storage, constanciaPath);
           const constanciaUrl = await getDownloadURL(constanciaRef);
+          console.log('✅ Constancia encontrada:', fileName);
           setDocumentos(prev => ({
             ...prev,
             constancia: { url: constanciaUrl, loading: false, exists: true }
@@ -47,11 +55,13 @@ export default function MisDocumentosOficiales({ user, socioData }) {
           constanciaFound = true;
           break;
         } catch (error) {
+          console.log('⚠️ No encontrado:', fileName, error.code);
           // Continuar con el siguiente nombre
         }
       }
       
       if (!constanciaFound) {
+        console.error('❌ Ninguna constancia encontrada');
         setDocumentos(prev => ({
           ...prev,
           constancia: { url: null, loading: false, exists: false }
@@ -100,7 +110,10 @@ export default function MisDocumentosOficiales({ user, socioData }) {
             </a>
           </div>
         ) : (
-          <span className="doc-no-disponible">No disponible</span>
+          <div className="doc-no-disponible-info">
+            <span className="doc-no-disponible">No disponible</span>
+            {doc.error && <span className="doc-error-code">({doc.error})</span>}
+          </div>
         )}
       </div>
     </div>
