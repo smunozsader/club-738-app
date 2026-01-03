@@ -5,6 +5,7 @@ import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import Login from './components/Login';
 import DocumentList from './components/documents/DocumentList';
 import MisArmas from './components/MisArmas';
+import MisDocumentosOficiales from './components/MisDocumentosOficiales';
 import WelcomeDialog from './components/WelcomeDialog';
 import './App.css';
 
@@ -99,8 +100,12 @@ function App() {
             <p>Aquí podrás gestionar tus documentos para el PETA.</p>
             
             <div className="features">
+              <div className="feature-card" onClick={() => setActiveSection('docs-oficiales')}>
+                <h3>🆔 Documentos Oficiales</h3>
+                <p>Descarga tu CURP y Constancia de antecedentes</p>
+              </div>
               <div className="feature-card" onClick={() => setActiveSection('documentos')}>
-                <h3>📄 Mis Documentos</h3>
+                <h3>📄 Mis Documentos PETA</h3>
                 <p>Sube y gestiona tus documentos para el PETA</p>
               </div>
               <div className="feature-card">
@@ -132,6 +137,15 @@ function App() {
               documentosData={documentosData}
               onUploadComplete={handleUploadComplete}
             />
+          </div>
+        )}
+
+        {activeSection === 'docs-oficiales' && (
+          <div className="section-docs-oficiales">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <MisDocumentosOficiales user={user} socioData={socioData} />
           </div>
         )}
 

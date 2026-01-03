@@ -1,0 +1,85 @@
+rules_version = '2';
+
+// ============================================================================
+// FIRESTORE SECURITY RULES - Club 738
+// ============================================================================
+// PRINCIPIO: Mínimo privilegio - cada usuario solo accede a sus propios datos
+// ============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ========================================================================
+    // HELPER FUNCTIONS
+    // ========================================================================
+    
+    // Verificar que el usuario esté autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Verificar que el usuario accede a su propio documento
+    function isOwner(email) {
+      return isAuthenticated() && request.auth.token.email.lower() == email.lower();
+    }
+    
+    // Verificar que el email del documento coincide con el usuario autenticado
+    function isOwnDocument() {
+      return isAuthenticated() && request.auth.token.email.lower() == resource.id.lower();
+    }
+    
+    // Verificar que el usuario está creando su propio documento
+    function isCreatingOwnDocument(docId) {
+      return isAuthenticated() && request.auth.token.email.lower() == docId.lower();
+    }
+    
+    // ========================================================================
+    // COLECCIÓN: socios
+    // ========================================================================
+    // Cada socio solo puede leer/escribir su propio documento
+    // El documento ID es el email del socio
+    
+    match /socios/{email} {
+      // Lectura: solo el propio socio puede leer sus datos
+      allow read: if isOwner(email);
+      
+      // Escritura: solo el propio socio puede actualizar sus datos
+      // No permitir crear nuevos documentos desde cliente (solo admin/scripts)
+      allow update: if isOwner(email) 
+        // Campos que el usuario puede actualizar
+        && request.resource.data.diff(resource.data).affectedKeys()
+           .hasOnly(['documentosPETA', 'bienvenidaVista', 'telefono', 'domicilio']);
+      
+      // No permitir delete desde cliente
+      allow delete: if false;
+      
+      // Crear solo si no existe y es el propio usuario
+      allow create: if isCreatingOwnDocument(email);
+      
+      // ======================================================================
+      // SUBCOLECCIÓN: armas
+      // ======================================================================
+      // Cada socio solo puede leer sus propias armas
+      // No permitir crear/modificar/eliminar desde cliente
+      
+      match /armas/{armaId} {
+        allow read: if isOwner(email);
+        allow write: if false; // Solo admin puede modificar armas
+      }
+    }
+    
+    // ========================================================================
+    // COLECCIÓN: admin (para futuros roles de administrador)
+    // ========================================================================
+    match /admin/{document=**} {
+      allow read, write: if false; // Solo acceso por backend
+    }
+    
+    // ========================================================================
+    // REGLA DEFAULT: Denegar todo lo demás
+    // ========================================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

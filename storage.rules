@@ -1,0 +1,78 @@
+rules_version = '2';
+
+// ============================================================================
+// STORAGE SECURITY RULES - Club 738
+// ============================================================================
+// PRINCIPIO: Cada socio solo accede a sus propios documentos
+// Estructura: documentos/{email}/[curp.pdf, constancia.pdf, etc.]
+// ============================================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ========================================================================
+    // HELPER FUNCTIONS
+    // ========================================================================
+    
+    // Verificar autenticación
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Verificar que accede a su propia carpeta
+    function isOwner(email) {
+      return isAuthenticated() && request.auth.token.email.lower() == email.lower();
+    }
+    
+    // Verificar tipo de archivo permitido
+    function isAllowedFileType() {
+      return request.resource.contentType.matches('application/pdf')
+          || request.resource.contentType.matches('image/jpeg')
+          || request.resource.contentType.matches('image/png');
+    }
+    
+    // Verificar tamaño máximo (5MB)
+    function isUnderSizeLimit() {
+      return request.resource.size < 5 * 1024 * 1024;
+    }
+    
+    // ========================================================================
+    // CARPETA: documentos/{email}/
+    // ========================================================================
+    // Cada socio puede leer sus documentos
+    // Solo puede subir PDFs e imágenes de máximo 5MB
+    
+    match /documentos/{email}/{fileName} {
+      // Lectura: solo el propio socio
+      allow read: if isOwner(email);
+      
+      // Escritura: solo el propio socio, con validaciones
+      allow write: if isOwner(email) 
+                   && isAllowedFileType() 
+                   && isUnderSizeLimit();
+      
+      // Eliminar: solo el propio socio
+      allow delete: if isOwner(email);
+    }
+    
+    // ========================================================================
+    // CARPETA: documentos/{email}/armas/{armaId}/
+    // ========================================================================
+    // Para documentos específicos de armas (registros, etc.)
+    
+    match /documentos/{email}/armas/{armaId}/{fileName} {
+      allow read: if isOwner(email);
+      allow write: if isOwner(email) 
+                   && isAllowedFileType() 
+                   && isUnderSizeLimit();
+      allow delete: if isOwner(email);
+    }
+    
+    // ========================================================================
+    // REGLA DEFAULT: Denegar todo lo demás
+    // ========================================================================
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
