@@ -79,6 +79,102 @@ Based on dashboard UI hints, expected features include:
 - Payment status tracking (Firestore query or API integration)
 - User profile completion (extend currentUser with Firestore doc)
 
+## Documentos Requeridos para PETA
+
+### Referencia Oficial
+Los requisitos están documentados en:
+```
+Base datos/Requisitos PETA (1).docx
+```
+
+### Lista de 16 Documentos
+
+| # | Documento | Presentación | Notas |
+|---|-----------|--------------|-------|
+| 1 | **INE** | Copia ampliada 200%, ambas caras en 1 página carta | Socio sube escaneado |
+| 2 | **CURP** | Copia | ✅ Ya tenemos 76 en Firebase Storage |
+| 3 | **Cartilla Militar / Acta Nacimiento** | Copia | Escanear una vez, tener lista para imprimir |
+| 4 | **Comprobante de Domicilio** | Original | Socio sube escaneado para expediente integral |
+| 5 | **Constancia Antecedentes Penales** | Original | ✅ ~70 socios ya subidas |
+| 6 | **Certificado Médico** (no impedimento) | Original | Socio sube escaneado para constancia |
+| 7 | **Certificado Psicológico** | Original | Socio sube escaneado para constancia |
+| 8 | **Certificado Toxicológico** | Original | Socio sube escaneado para constancia |
+| 9 | **Carta Modo Honesto de Vivir** | Original | Formato oficial, se entrega en 32 ZM. Socio sube escaneado |
+| 10 | **Licencia de Caza** | Copia | Solo si modalidad caza. **REVISAR VIGENCIA** |
+| 11 | **Credencial del Club** | Copia | ⏳ Pendiente generar |
+| 12 | **Solicitud PETA** | Original | Club provee formato/template |
+| 13 | **Registros de Armas (RFA)** | Copia | Verificar datos vs Firebase. Máx 10 armas por PETA |
+| 14 | **Recibo Pago e5cinco** | Original | Socio sube escaneado |
+| 15 | **Fotografía** (fondo blanco, infantil) | Física + Digital | Para credencial y entregar en 32 ZM |
+| 16 | **Permiso Anterior** | Original | Solo renovaciones. Se entrega en 32 ZM |
+
+### Flujo de Documentos
+1. **Socio sube** → Firebase Storage `documentos/{email}/{tipo}.pdf`
+2. **Secretario verifica** → Marca como "verificado" en Firestore
+3. **Originales físicos** → Se entregan en 32 Zona Militar (Valladolid)
+
+### Autoridad de Trámite
+- **32 Zona Militar** - Valladolid, Yucatán
+- Formato PETA: SEDENA-02-045 (caza) o 02-046 (tiro/competencia)
+- Máximo: 10 armas por PETA
+
+## Requisitos para Socios Nuevos
+
+### Referencia Oficial
+```
+2025 requisitos club con whatsapp NEW.pdf
+```
+
+### Documentación Requerida (20 puntos)
+
+| # | Documento | Cantidad | Notas |
+|---|-----------|----------|-------|
+| 1 | Solicitud formato libre | 1 | Club provee formato |
+| 2 | Compromiso Art. 80 Ley de Armas | 1 | Club provee formato |
+| 3 | Acta de Nacimiento | 2 copias | |
+| 4 | Cartilla Militar (liberada) | 2 copias | |
+| 5 | Registro Federal de Armas (RFA) | 2 copias c/u | Por cada arma |
+| 6 | Fotografías color infantil | 4 | |
+| 7 | CURP | 2 copias | |
+| 8 | RFC | 2 copias | |
+| 9 | INE (Credencial elector) | 2 copias | |
+| 10 | Comprobante de domicilio | 2 copias | Luz, agua, teléfono, predial |
+| 11 | Licencia de Cacería SEMARNAT | 2 copias | Vigente |
+| 12 | Constancia Modo Honesto de Vivir | Original + copia | Incluir: fecha inicio laboral, cargo, ingresos |
+| 13 | Constancia Antecedentes Penales | Original + copia | https://constancias.oadprs.gob.mx/ |
+| 14 | Certificado Médico | Original + copia | Formato oficial |
+| 15 | Certificado Toxicológico | Original + copia | Formato oficial |
+| 16 | Certificado Psicológico | Original + copia | Formato oficial |
+
+### Cuotas (2025)
+
+| Concepto | Monto |
+|----------|-------|
+| Inscripción | $2,000.00 MXN |
+| Cuota Anual | $6,000.00 MXN |
+| FEMETI primer ingreso | $700.00 MXN |
+| FEMETI socios | $350.00 MXN |
+
+### Notas Importantes
+- **Incluye**: 1 trámite de permiso de transportación
+- **NO incluye**: Pago de derechos (forma e5), costos de mensajería
+- **NO se acepta**: Documentación digitalizada (solo físicos)
+- **Trámite personal**: No enviar intermediarios
+
+### Datos de Contacto del Club
+```
+Club de Caza, Tiro y Pesca de Yucatán, A.C.
+Calle 50 No. 531-E x 69 y 71
+Colonia Centro, 97000 Mérida, Yucatán
+Tel: +52 56 6582 4667
+Email: tiropracticoyucatan@gmail.com
+
+Registros:
+- FEMETI: YUC 05/2020
+- SEMARNAT: SEMARNAT-CLUB-CIN-005-YUC-05
+- SEDENA: 738
+```
+
 ## Data Sources
 
 ### Master Database File

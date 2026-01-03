@@ -57,9 +57,22 @@
   font-style: italic;
 }
 
+/* Categorías de documentos */
+.document-category {
+  margin-bottom: 30px;
+}
+
+.category-title {
+  color: #c9a227;
+  font-size: 18px;
+  margin: 0 0 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+}
+
 .documents-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
 }
 
@@ -70,5 +83,9 @@
   
   .document-list {
     padding: 15px;
+  }
+  
+  .category-title {
+    font-size: 16px;
   }
 }
