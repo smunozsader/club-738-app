@@ -1,0 +1,767 @@
+/* CalendarioTiradas.css - Estilos para el calendario de tiradas */
+
+.calendario-tiradas {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Navegación */
+.calendario-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.nav-home {
+  color: #1a365d;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.nav-home:hover {
+  background: #f1f5f9;
+}
+
+.nav-links {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-links a {
+  color: #475569;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.nav-links a:hover {
+  background: #f1f5f9;
+  color: #1a365d;
+}
+
+/* Header */
+.calendario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  background: linear-gradient(135deg, #1a365d 0%, #2d5a87 100%);
+  border-radius: 16px;
+  margin-bottom: 24px;
+  color: white;
+}
+
+.header-titulo h1 {
+  font-size: 2rem;
+  margin: 0 0 8px 0;
+}
+
+.header-titulo p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+.header-logos {
+  display: flex;
+  gap: 24px;
+}
+
+.logo-femeti, .logo-club738 {
+  text-align: center;
+  padding: 12px 20px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 12px;
+}
+
+.logo-femeti span, .logo-club738 span {
+  display: block;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.logo-femeti small, .logo-club738 small {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+/* Filtros */
+.filtros-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.filtros-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filtros-grupo label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.filtros-grupo select {
+  padding: 10px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: white;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.btn-group {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-group button {
+  padding: 10px 16px;
+  border: none;
+  background: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.btn-group button:not(:last-child) {
+  border-right: 1px solid #e2e8f0;
+}
+
+.btn-group button:hover {
+  background: #f1f5f9;
+}
+
+.btn-group button.activo {
+  background: #1a365d;
+  color: white;
+}
+
+/* Stats Bar */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-item {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.stat-numero {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1a365d;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Vista Calendario */
+.vista-calendario {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.navegacion-mes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.navegacion-mes h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1a365d;
+}
+
+.navegacion-mes button {
+  padding: 10px 20px;
+  border: none;
+  background: #1a365d;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.navegacion-mes button:hover:not(:disabled) {
+  background: #2d5a87;
+}
+
+.navegacion-mes button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.calendario-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.dia-header {
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+  color: #475569;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.dia-header.fin-semana {
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 8px 8px 0 0;
+}
+
+.dia-celda {
+  min-height: 80px;
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  position: relative;
+}
+
+.dia-celda.vacio {
+  background: #f8fafc;
+  border-color: transparent;
+}
+
+.dia-celda.tiene-tiradas {
+  background: #fefce8;
+}
+
+.dia-numero {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+.dia-tiradas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.tirada-punto {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+.tirada-punto:hover {
+  transform: scale(1.2);
+}
+
+.tirada-punto.club738 {
+  border: 2px solid gold;
+}
+
+.mas-tiradas {
+  font-size: 0.75rem;
+  color: #64748b;
+  padding: 2px 6px;
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+/* Tiradas del mes */
+.tiradas-mes {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.tiradas-mes h3 {
+  margin: 0 0 16px 0;
+  color: #1a365d;
+}
+
+.tiradas-mes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+/* Tarjeta de tirada */
+.tarjeta-tirada {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  border-left: 4px solid;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tarjeta-tirada:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.tarjeta-tirada.club-738 {
+  background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+  border-left-color: gold !important;
+}
+
+.tarjeta-tirada.compacta {
+  padding: 12px;
+}
+
+.tarjeta-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.modalidad-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+.badge-738 {
+  padding: 4px 8px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #1a365d;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.tirada-nombre {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  color: #1e293b;
+}
+
+.tirada-fecha {
+  margin: 0 0 8px 0;
+  color: #1a365d;
+  font-weight: 600;
+}
+
+.tirada-club {
+  margin: 0 0 4px 0;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.tirada-lugar {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Vista Club 738 */
+.vista-club738 {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.club738-header {
+  text-align: center;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #fbbf24;
+  margin-bottom: 24px;
+}
+
+.club738-header h2 {
+  margin: 0 0 8px 0;
+  color: #1a365d;
+}
+
+.club738-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.club738-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.club738-info {
+  background: #f8fafc;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.club738-info h3 {
+  margin: 0 0 12px 0;
+  color: #1a365d;
+}
+
+.club738-info p {
+  margin: 4px 0;
+  color: #475569;
+}
+
+.link-mapa {
+  display: inline-block;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #1a365d 0%, #2d5a87 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.link-mapa:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 54, 93, 0.3);
+}
+
+/* Vista Lista */
+.vista-lista {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.vista-lista h2 {
+  margin: 0 0 20px 0;
+  color: #1a365d;
+}
+
+.lista-tiradas {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sin-tiradas {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+}
+
+/* Leyenda */
+.leyenda {
+  margin-top: 24px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.leyenda h4 {
+  margin: 0 0 12px 0;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.leyenda-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.leyenda-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-contenido {
+  background: white;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  animation: modalEntrar 0.3s ease;
+}
+
+@keyframes modalEntrar {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-cerrar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1e293b;
+}
+
+.modal-header {
+  padding: 32px 24px;
+  color: white;
+  text-align: center;
+}
+
+.modal-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-body h3 {
+  margin: 0 0 16px 0;
+  color: #1e293b;
+  font-size: 1.3rem;
+}
+
+.badge-738-grande {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.info-icon {
+  font-size: 1.5rem;
+}
+
+.info-item strong {
+  display: block;
+  color: #64748b;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.info-item p {
+  margin: 0;
+  color: #1e293b;
+}
+
+.modal-acciones {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.nota-inscripcion {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Footer */
+.calendario-footer {
+  margin-top: 32px;
+  text-align: center;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.calendario-footer p {
+  margin: 4px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .calendario-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .header-titulo h1 {
+    font-size: 1.5rem;
+  }
+
+  .filtros-container {
+    flex-direction: column;
+  }
+
+  .filtros-grupo select {
+    min-width: 100%;
+  }
+
+  .stats-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .calendario-grid {
+    font-size: 0.85rem;
+  }
+
+  .dia-header {
+    padding: 8px 4px;
+    font-size: 0.7rem;
+  }
+
+  .dia-celda {
+    min-height: 60px;
+    padding: 4px;
+  }
+
+  .dia-numero {
+    font-size: 0.8rem;
+  }
+
+  .tirada-punto {
+    width: 18px;
+    height: 18px;
+    font-size: 0.6rem;
+  }
+
+  .tiradas-mes-grid,
+  .club738-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .navegacion-mes {
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .navegacion-mes h2 {
+    width: 100%;
+    text-align: center;
+    order: -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendario-tiradas {
+    padding: 12px;
+  }
+
+  .btn-group {
+    flex-wrap: wrap;
+  }
+
+  .btn-group button {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  .stats-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-item {
+    padding: 12px;
+  }
+
+  .stat-numero {
+    font-size: 1.5rem;
+  }
+}

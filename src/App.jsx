@@ -2,14 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { auth, db } from './firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
-import Login from './components/Login';
+import LandingPage from './components/LandingPage';
 import DocumentList from './components/documents/DocumentList';
 import MisArmas from './components/MisArmas';
 import MisDocumentosOficiales from './components/MisDocumentosOficiales';
 import WelcomeDialog from './components/WelcomeDialog';
 import AvisoPrivacidad from './components/privacidad/AvisoPrivacidad';
 import DashboardRenovaciones from './components/DashboardRenovaciones';
+import DashboardCumpleanos from './components/DashboardCumpleanos';
+import CalculadoraPCP from './components/CalculadoraPCP';
+import CalendarioTiradas from './components/CalendarioTiradas';
 import './App.css';
+
+// Detectar rutas públicas (sin necesidad de login)
+const isCalculadoraRoute = () => {
+  return window.location.pathname === '/calculadora' || 
+         window.location.hash === '#/calculadora';
+};
+
+const isCalendarioRoute = () => {
+  return window.location.pathname === '/calendario' || 
+         window.location.hash === '#/calendario' ||
+         window.location.pathname === '/tiradas' ||
+         window.location.hash === '#/tiradas';
+};
 
 function App() {
   const [user, setUser] = useState(null);
@@ -74,8 +90,18 @@ function App() {
     return <div className="loading">Cargando...</div>;
   }
 
+  // Ruta pública: Calculadora PCP (sin necesidad de login)
+  if (isCalculadoraRoute()) {
+    return <CalculadoraPCP />;
+  }
+
+  // Ruta pública: Calendario de Tiradas (sin necesidad de login)
+  if (isCalendarioRoute()) {
+    return <CalendarioTiradas />;
+  }
+
   if (!user) {
-    return <Login onLoginSuccess={() => {}} />;
+    return <LandingPage />;
   }
 
   return (
@@ -136,11 +162,27 @@ function App() {
                 <p>Verifica tu estado de pago anual</p>
               </div>
               
+              {/* Calculadora PCP - Pública */}
+              <div className="feature-card calculadora" onClick={() => window.location.href = '/calculadora'}>
+                <h3>🎯 Calculadora PCP</h3>
+                <p>Verifica si tu rifle requiere registro SEDENA</p>
+                <span className="feature-badge public-badge">Pública</span>
+              </div>
+              
               {/* Solo visible para el Secretario */}
               {user.email === 'smunozam@gmail.com' && (
                 <div className="feature-card admin" onClick={() => setActiveSection('renovaciones')}>
                   <h3>📊 Panel de Cobranza</h3>
                   <p>Dashboard de renovaciones 2026</p>
+                  <span className="feature-badge admin-badge">Secretario</span>
+                </div>
+              )}
+              
+              {/* Dashboard de Cumpleaños - Solo Secretario */}
+              {user.email === 'smunozam@gmail.com' && (
+                <div className="feature-card admin cumples" onClick={() => setActiveSection('cumpleanos')}>
+                  <h3>🎂 Cumpleaños</h3>
+                  <p>Calendario y demografía de socios</p>
                   <span className="feature-badge admin-badge">Secretario</span>
                 </div>
               )}
@@ -197,6 +239,15 @@ function App() {
               userEmail={user.email} 
               onVerDocumentos={handleVerDocumentosSocio}
             />
+          </div>
+        )}
+
+        {activeSection === 'cumpleanos' && user.email === 'smunozam@gmail.com' && (
+          <div className="section-cumpleanos">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <DashboardCumpleanos userEmail={user.email} />
           </div>
         )}
 

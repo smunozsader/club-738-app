@@ -1,0 +1,550 @@
+/* Dashboard Cumpleaños - Estilos */
+
+.dashboard-cumpleanos {
+  padding: 20px;
+}
+
+.dashboard-cumpleanos.acceso-denegado,
+.dashboard-cumpleanos.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+/* Header */
+.cumple-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.cumple-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.cumple-stats-mini {
+  display: flex;
+  gap: 15px;
+}
+
+.stat-item {
+  padding: 8px 15px;
+  background: #e8f5e9;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.stat-item.warning {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+/* Alerta cumpleaños hoy */
+.cumple-hoy-alert {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  padding: 20px;
+  background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+  border: 2px solid #fbc02d;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(251, 192, 45, 0.3); }
+  50% { box-shadow: 0 0 25px rgba(251, 192, 45, 0.6); }
+}
+
+.alert-icon {
+  font-size: 2.5rem;
+}
+
+.alert-content strong {
+  font-size: 1.2rem;
+  color: #f57f17;
+}
+
+.alert-content ul {
+  margin: 10px 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alert-content li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+}
+
+.btn-wa-mini {
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  background: #25d366;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+/* Tabs */
+.cumple-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.cumple-tabs button {
+  padding: 10px 20px;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.cumple-tabs button:hover {
+  background: #e0e0e0;
+}
+
+.cumple-tabs button.active {
+  background: #2196f3;
+  color: white;
+}
+
+/* Vista Próximos */
+.vista-proximos h3 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.no-cumples {
+  text-align: center;
+  color: #999;
+  padding: 40px;
+  background: #f5f5f5;
+  border-radius: 12px;
+}
+
+.lista-cumples {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cumple-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 15px 20px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.cumple-card:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transform: translateX(5px);
+}
+
+.cumple-card.pronto {
+  border-color: #4caf50;
+  background: linear-gradient(135deg, #e8f5e9 0%, white 100%);
+}
+
+.cumple-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 15px;
+  background: #2196f3;
+  color: white;
+  border-radius: 10px;
+  min-width: 60px;
+}
+
+.cumple-fecha .dia {
+  font-size: 1.8rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.cumple-fecha .mes {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.cumple-card.pronto .cumple-fecha {
+  background: #4caf50;
+}
+
+.cumple-info {
+  flex: 1;
+}
+
+.cumple-info h4 {
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.cumple-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.cumple-dias {
+  color: #2196f3 !important;
+  font-weight: 500;
+}
+
+.cumple-card.pronto .cumple-dias {
+  color: #4caf50 !important;
+}
+
+.cumple-signo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.signo-emoji {
+  font-size: 1.8rem;
+}
+
+.signo-nombre {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.cumple-acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-whatsapp,
+.btn-copiar {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-whatsapp {
+  background: #25d366;
+  color: white;
+}
+
+.btn-copiar {
+  background: #f5f5f5;
+}
+
+.btn-whatsapp:hover,
+.btn-copiar:hover {
+  transform: scale(1.1);
+}
+
+/* Vista Calendario */
+.selector-mes {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+@media (max-width: 768px) {
+  .selector-mes {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.mes-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  background: #f5f5f5;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mes-btn:hover {
+  background: #e3f2fd;
+}
+
+.mes-btn.active {
+  background: #2196f3;
+  color: white;
+}
+
+.mes-btn.tiene-cumples {
+  border-color: #4caf50;
+}
+
+.mes-nombre {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.mes-count {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.calendario-mes h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.tabla-cumples {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-cumples th,
+.tabla-cumples td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tabla-cumples th {
+  background: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.tabla-cumples tr:hover {
+  background: #f8f9fa;
+}
+
+.col-dia {
+  font-weight: bold;
+  color: #2196f3;
+}
+
+.btn-mini {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: #f0f0f0;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.btn-mini:hover {
+  background: #e0e0e0;
+}
+
+/* Vista Estadísticas */
+.stats-resumen {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+  .stats-resumen {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.stat-valor {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.stat-etiqueta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 5px;
+}
+
+.stat-box.masculino {
+  border-color: #2196f3;
+  background: #e3f2fd;
+}
+
+.stat-box.masculino .stat-valor {
+  color: #1976d2;
+}
+
+.stat-box.femenino {
+  border-color: #e91e63;
+  background: #fce4ec;
+}
+
+.stat-box.femenino .stat-valor {
+  color: #c2185b;
+}
+
+/* Secciones de stats */
+.stats-section {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.stats-section h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.stats-section.warning {
+  background: #fff8e1;
+  border-color: #ffb300;
+}
+
+.estados-grid,
+.decadas-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.estado-bar,
+.decada-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.estado-nombre,
+.decada-nombre {
+  width: 150px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.estado-barra,
+.decada-bar {
+  flex: 1;
+  height: 24px;
+  background: #f0f0f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.estado-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #81c784);
+  border-radius: 12px;
+  transition: width 0.5s ease;
+}
+
+.decada-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2196f3, #64b5f6);
+  border-radius: 12px;
+  transition: width 0.5s ease;
+}
+
+.estado-cantidad,
+.decada-cantidad {
+  width: 40px;
+  text-align: right;
+  font-weight: 600;
+  color: #666;
+}
+
+/* Destacados */
+.destacados-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+@media (max-width: 768px) {
+  .destacados-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.destacado-card {
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.destacado-emoji {
+  font-size: 2.5rem;
+}
+
+.destacado-card h4 {
+  margin: 0 0 5px 0;
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: normal;
+}
+
+.destacado-card p {
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+}
+
+.destacado-detalle {
+  font-size: 0.85rem;
+  color: #666 !important;
+  font-weight: normal !important;
+}
+
+/* Lista sin CURP */
+.lista-sin-curp {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 15px;
+  padding: 0;
+  list-style: none;
+}
+
+.lista-sin-curp li {
+  padding: 8px 12px;
+  background: white;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.lista-sin-curp li.mas {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
