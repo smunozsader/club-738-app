@@ -10,6 +10,52 @@
 
 ## 📅 Enero 2026
 
+### 3 de Enero - v1.3.0 OCR Validation + Centralización de Registros de Armas
+
+#### Problema resuelto: Upload de registros de armas fallaba por permisos
+
+**Error detectado**: Al subir PDF de registro de arma desde "Mis Armas", aparecía error de permisos de Firestore:
+```
+Missing or insufficient permissions
+```
+
+**Root cause**: Las reglas de Firestore tienen `allow write: if false` en `/socios/{email}/armas/{armaId}`, bloqueando actualizaciones desde cliente.
+
+**Solución implementada**: 
+
+1. **Centralizar uploads en "Documentos PETA"** - El documento "Registros de Armas (RFA)" ahora muestra las armas del socio con opción de subir cada registro individual.
+
+2. **Validación OCR automática** - Antes de subir, el sistema:
+   - Extrae texto del PDF usando pdfjs-dist
+   - Si es PDF escaneado, aplica OCR con tesseract.js
+   - Verifica que la matrícula del arma aparezca en el documento
+   - Solo permite upload si la matrícula coincide
+
+3. **MisArmas simplificado** - Vista de solo lectura mostrando estado de registros
+
+#### Archivos creados
+- `src/utils/ocrValidation.js` - Validador OCR con lazy loading
+- `src/components/documents/ArmasRegistroUploader.jsx` - Uploader especializado
+- `src/components/documents/ArmasRegistroUploader.css` - Estilos
+
+#### Archivos modificados
+- `src/components/MisArmas.jsx` - Simplificado a vista read-only
+- `src/components/MisArmas.css` - Estilos para nota informativa
+- `src/components/documents/DocumentCard.jsx` - Caso especial para registrosArmas
+- `src/components/documents/DocumentCard.css` - Estilos card armas
+
+#### Dependencias agregadas
+- `tesseract.js` - OCR en navegador
+- `pdfjs-dist` - Extracción de texto y rendering de PDFs
+
+#### Características técnicas
+- **Lazy loading** de bibliotecas pesadas para no afectar carga inicial
+- **Dos métodos de extracción**: texto nativo del PDF + OCR como fallback
+- **Variaciones de OCR**: Tolera confusiones comunes (0/O, 1/I/L, 5/S)
+- **Progress feedback**: Muestra progreso de validación al usuario
+
+---
+
 ### 3 de Enero - v1.2.0 Uploader con opción PDF preparado
 
 #### Mejora UX: Selector de modo de subida

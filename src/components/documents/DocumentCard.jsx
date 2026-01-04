@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import MultiImageUploader from './MultiImageUploader';
+import ArmasRegistroUploader from './ArmasRegistroUploader';
 import './DocumentCard.css';
 
 // Documentos que permiten múltiples imágenes (frente/vuelta)
-const MULTI_IMAGE_DOCS = ['ine', 'cartillaMilitar', 'registrosArmas'];
+const MULTI_IMAGE_DOCS = ['ine', 'cartillaMilitar'];
 
 export default function DocumentCard({ 
   userId,
@@ -12,9 +13,13 @@ export default function DocumentCard({
   description, 
   icon,
   documentData,
+  isPreloaded,
   onUploadComplete 
 }) {
   const [showUploader, setShowUploader] = useState(false);
+  
+  // Caso especial: Registros de Armas usa componente dedicado con OCR
+  const isArmasRegistro = documentType === 'registrosArmas';
   
   // Determinar si este documento permite múltiples imágenes
   const allowMultiple = MULTI_IMAGE_DOCS.includes(documentType);
@@ -22,6 +27,9 @@ export default function DocumentCard({
   const getStatusInfo = () => {
     if (!documentData) {
       return { status: 'pendiente', label: 'Pendiente', color: '#ff9800' };
+    }
+    if (isPreloaded || documentData.estado === 'precargado') {
+      return { status: 'precargado', label: 'Ya cargado ✓', color: '#8b5cf6' };
     }
     switch (documentData.estado) {
       case 'aprobado':
@@ -54,6 +62,25 @@ export default function DocumentCard({
       onUploadComplete(type, url);
     }
   };
+
+  // Caso especial: Registros de Armas usa componente dedicado con OCR
+  if (isArmasRegistro) {
+    return (
+      <div className="document-card armas-registro">
+        <div className="card-header">
+          <span className="card-icon">{icon}</span>
+          <div className="card-title-section">
+            <h4>{label}</h4>
+            <p className="card-description">{description}</p>
+          </div>
+        </div>
+        <ArmasRegistroUploader 
+          userId={userId}
+          onUploadComplete={onUploadComplete}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className={`document-card ${statusInfo.status}`}>

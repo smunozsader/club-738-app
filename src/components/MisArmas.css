@@ -194,7 +194,48 @@
   display: none;
 }
 
-/* Drag & Drop Zone */
+/* Nota sobre registros */
+.nota-registros {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  border: 1px solid #2196f3;
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.nota-registros p {
+  margin: 0;
+  color: #1565c0;
+  font-size: 0.95rem;
+}
+
+.nota-registros strong {
+  color: #0d47a1;
+}
+
+/* Estado pendiente (sin funcionalidad de upload) */
+.documento-pendiente-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: #fff8e1;
+  border-radius: 8px;
+  border: 1px dashed #ffc107;
+}
+
+.pendiente-icon {
+  font-size: 1.2rem;
+}
+
+.pendiente-text {
+  color: #856404;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Drag & Drop Zone - Legacy (puede eliminarse) */
 .drop-zone {
   border: 2px dashed #c9a227;
   border-radius: 10px;
