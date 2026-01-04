@@ -42,7 +42,9 @@ See [src/firebaseConfig.js](src/firebaseConfig.js) for all Firebase service init
 
 ### Styling
 - CSS files co-located with components ([src/components/Login.css](src/components/Login.css), [src/App.css](src/App.css))
-- Emoji used in headings (e.g., `🎯 Club 738`)
+- **NO usar emojis de armas** (🔫🎯🦆) - Mantener imagen profesional
+- Usar emojis neutros: 📋📄✅⚠️📌 para indicadores
+- Preferir texto o iconos SVG profesionales sobre emojis temáticos
 
 ## Development Workflow
 

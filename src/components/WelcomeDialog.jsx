@@ -58,7 +58,7 @@ export default function WelcomeDialog({ user, onClose }) {
       <div className="dialog-content">
         {step === 1 && (
           <>
-            <div className="dialog-icon">🎯</div>
+            <div className="dialog-icon">👋</div>
             <h2>¡Bienvenido al Portal del Club 738!</h2>
             <p className="dialog-greeting">
               Hola <strong>{socioData?.nombre || user.email}</strong>
@@ -99,7 +99,7 @@ export default function WelcomeDialog({ user, onClose }) {
 
         {step === 3 && (
           <>
-            <div className="dialog-icon">🔫</div>
+            <div className="dialog-icon">�</div>
             <h2>Tus Armas Registradas</h2>
             {totalArmas > 0 ? (
               <>
@@ -163,7 +163,7 @@ export default function WelcomeDialog({ user, onClose }) {
               <p>📌 <strong>Tip:</strong> Ten a la mano los PDFs de tus registros SEDENA</p>
             </div>
             <button className="dialog-btn primary large" onClick={handleComplete}>
-              Ir a Mis Armas 🔫
+              Ir a Mis Armas →
             </button>
           </>
         )}

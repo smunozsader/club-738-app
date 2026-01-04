@@ -160,3 +160,121 @@ p {
 .social-links a:hover svg {
   fill: #c9a227;
 }
+
+/* Botón de requisitos para no-socios */
+.btn-requisitos {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #c9a227 0%, #d4af37 100%);
+  color: #1a472a;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-requisitos:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201, 162, 39, 0.4);
+}
+
+/* Modal de requisitos */
+.requisitos-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.requisitos-modal {
+  background: white;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 30px;
+}
+
+.requisitos-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #666;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.requisitos-close:hover {
+  color: #1a472a;
+}
+
+.requisitos-modal h2 {
+  color: #1a472a;
+  margin: 0 0 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #c9a227;
+}
+
+.requisitos-content h3 {
+  color: #1a472a;
+  margin: 20px 0 10px;
+  font-size: 16px;
+}
+
+.requisitos-content ol,
+.requisitos-content ul {
+  text-align: left;
+  padding-left: 25px;
+  margin: 0;
+}
+
+.requisitos-content li {
+  margin: 8px 0;
+  color: #333;
+  font-size: 14px;
+}
+
+.cuotas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+.cuotas-table td {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.cuotas-table td:first-child {
+  background: #f9f9f9;
+  font-weight: 500;
+}
+
+.cuotas-table td:last-child {
+  text-align: right;
+  color: #1a472a;
+  font-weight: 600;
+}
+
+.requisitos-content p {
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+}

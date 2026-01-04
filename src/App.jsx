@@ -114,7 +114,7 @@ function App() {
                 <p>Descarga tu credencial del Club</p>
               </div>
               <div className="feature-card" onClick={() => setActiveSection('armas')}>
-                <h3>🔫 Mis Armas</h3>
+                <h3>Mis Armas</h3>
                 <p>Consulta tus armas registradas y sube documentos</p>
                 {socioData?.totalArmas > 0 && (
                   <span className="feature-badge">{socioData.totalArmas} armas</span>

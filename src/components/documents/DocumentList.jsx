@@ -97,7 +97,7 @@ const DOCUMENTOS_PETA = [
     id: 'registrosArmas',
     label: 'Registros de Armas (RFA)',
     description: 'Fotocopias legibles de hojas de registro SEDENA. Máximo 10 armas por PETA.',
-    icon: '🔫',
+    icon: '�',
     required: true,
     category: 'armas'
   },
@@ -105,7 +105,7 @@ const DOCUMENTOS_PETA = [
     id: 'licenciaCaza',
     label: 'Licencia de Caza SEMARNAT',
     description: 'Solo modalidad cacería. Verificar vigencia antes de subir.',
-    icon: '🦌',
+    icon: '📄',
     required: false,
     category: 'armas'
   },
@@ -152,7 +152,7 @@ const CATEGORIAS = {
   identificacion: { label: '🆔 Identificación', order: 1 },
   medico: { label: '🏥 Certificados Médicos', order: 2 },
   legal: { label: '⚖️ Documentos Legales', order: 3 },
-  armas: { label: '🔫 Armas y Permisos', order: 4 },
+  armas: { label: '� Armas y Permisos', order: 4 },
   fotos: { label: '📷 Fotografías', order: 5 },
   pago: { label: '💰 Pago', order: 6 }
 };

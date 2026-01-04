@@ -151,11 +151,11 @@ export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
 
   const getIconoClase = (clase) => {
     const claseNorm = clase?.toUpperCase() || '';
-    if (claseNorm.includes('PISTOLA')) return '🔫';
-    if (claseNorm.includes('REVOLVER')) return '🔫';
-    if (claseNorm.includes('RIFLE')) return '🎯';
-    if (claseNorm.includes('ESCOPETA')) return '🦆';
-    return '🔫';
+    if (claseNorm.includes('PISTOLA')) return '•';
+    if (claseNorm.includes('REVOLVER')) return '•';
+    if (claseNorm.includes('RIFLE')) return '•';
+    if (claseNorm.includes('ESCOPETA')) return '•';
+    return '•';
   };
 
   // Calcular progreso

@@ -9,6 +9,7 @@ export default function Login({ onLoginSuccess }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showRequisitos, setShowRequisitos] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,7 +91,76 @@ export default function Login({ onLoginSuccess }) {
             <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
           </a>
         </div>
+
+        {/* Botón para no-socios */}
+        <button 
+          type="button" 
+          className="btn-requisitos"
+          onClick={() => setShowRequisitos(true)}
+        >
+          📋 Revisa los requisitos de inscripción al club
+        </button>
       </div>
+
+      {/* Modal de requisitos */}
+      {showRequisitos && (
+        <div className="requisitos-overlay" onClick={() => setShowRequisitos(false)}>
+          <div className="requisitos-modal" onClick={e => e.stopPropagation()}>
+            <button className="requisitos-close" onClick={() => setShowRequisitos(false)}>×</button>
+            
+            <h2>Requisitos de Inscripción al Club</h2>
+            
+            <div className="requisitos-content">
+              <h3>Documentación Requerida</h3>
+              <ol>
+                <li>Solicitud formato libre</li>
+                <li>Compromiso Art. 80 Ley de Armas</li>
+                <li>Acta de Nacimiento (2 copias)</li>
+                <li>Cartilla Militar liberada (2 copias)</li>
+                <li>Registro Federal de Armas - RFA (2 copias c/u)</li>
+                <li>Fotografías color infantil (4)</li>
+                <li>CURP (2 copias)</li>
+                <li>RFC (2 copias)</li>
+                <li>INE - Credencial de elector (2 copias)</li>
+                <li>Comprobante de domicilio (2 copias)</li>
+                <li>Licencia de Cacería SEMARNAT vigente (2 copias)</li>
+                <li>Constancia Modo Honesto de Vivir (original + copia)</li>
+                <li>Constancia de Antecedentes Penales (original + copia)</li>
+                <li>Certificado Médico formato oficial (original + copia)</li>
+                <li>Certificado Toxicológico formato oficial (original + copia)</li>
+                <li>Certificado Psicológico formato oficial (original + copia)</li>
+              </ol>
+
+              <h3>Cuotas 2025</h3>
+              <table className="cuotas-table">
+                <tbody>
+                  <tr><td>Inscripción</td><td>$2,000.00 MXN</td></tr>
+                  <tr><td>Cuota Anual</td><td>$6,500.00 MXN</td></tr>
+                  <tr><td>FEMETI primer ingreso</td><td>$700.00 MXN</td></tr>
+                  <tr><td>FEMETI socios</td><td>$350.00 MXN</td></tr>
+                </tbody>
+              </table>
+
+              <h3>Notas Importantes</h3>
+              <ul>
+                <li><strong>Incluye:</strong> 1 trámite de permiso de transportación</li>
+                <li><strong>NO incluye:</strong> Pago de derechos (forma e5), costos de mensajería</li>
+                <li><strong>NO se acepta:</strong> Documentación digitalizada (solo físicos)</li>
+                <li><strong>Trámite personal:</strong> No enviar intermediarios</li>
+              </ul>
+
+              <h3>Contacto</h3>
+              <p>
+                <strong>Club de Caza, Tiro y Pesca de Yucatán, A.C.</strong><br/>
+                Calle 50 No. 531-E x 69 y 71<br/>
+                Colonia Centro, 97000 Mérida, Yucatán<br/>
+                Tel: +52 56 6582 4667<br/>
+                Email: tiropracticoyucatan@gmail.com
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

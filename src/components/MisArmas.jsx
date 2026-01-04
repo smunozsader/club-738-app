@@ -57,11 +57,11 @@ export default function MisArmas({ user }) {
 
   const getIconoClase = (clase) => {
     const claseNorm = clase?.toUpperCase() || '';
-    if (claseNorm.includes('PISTOLA')) return '🔫';
-    if (claseNorm.includes('REVOLVER')) return '🔫';
-    if (claseNorm.includes('RIFLE')) return '🎯';
-    if (claseNorm.includes('ESCOPETA')) return '🦆';
-    return '🔫';
+    if (claseNorm.includes('PISTOLA')) return '•';
+    if (claseNorm.includes('REVOLVER')) return '•';
+    if (claseNorm.includes('RIFLE')) return '•';
+    if (claseNorm.includes('ESCOPETA')) return '•';
+    return '•';
   };
 
   const armasConDocumento = armas.filter(a => a.documentoRegistro).length;
@@ -74,7 +74,7 @@ export default function MisArmas({ user }) {
   return (
     <div className="mis-armas">
       <div className="mis-armas-header">
-        <h2>🔫 Mis Armas Registradas</h2>
+        <h2>Mis Armas Registradas</h2>
         <p className="mis-armas-subtitle">
           Información de tus armas registradas en SEDENA
         </p>
