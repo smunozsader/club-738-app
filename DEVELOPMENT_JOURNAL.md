@@ -10,6 +10,98 @@
 
 ## 📅 Enero 2026
 
+### 4 de Enero - v1.6.0 Portal Público Completo
+
+#### Major Release: Landing Page + Calendario de Tiradas + Calculadora PCP
+
+**Objetivo**: Transformar la app de un simple login a un portal público informativo con acceso a socios.
+
+#### Nueva Arquitectura de Rutas Públicas
+
+| Ruta | Componente | Descripción |
+|------|------------|-------------|
+| `/` | LandingPage | Página principal con tarjetas de features |
+| `/calendario` | CalendarioTiradas | Calendario 2026 (Club 738 + Sureste) |
+| `/calculadora` | CalculadoraPCP | Calculadora de energía cinética |
+
+#### LandingPage.jsx - Portal de Entrada
+
+**Features implementados**:
+- Header oficial con logo y 3 registros (SEDENA 738, FEMETI YUC 05/2020, SEMARNAT)
+- 3 tarjetas de features: Calendario, Calculadora, Hazte Socio
+- Login integrado en la página (Portal de Socios)
+- Modal de requisitos para nuevos socios con cuotas 2026
+- Footer con ubicación, contacto y registros oficiales
+
+**Correcciones aplicadas**:
+- Año del club: Fundado 2005 (no "70+ años")
+- Cuotas actualizadas a 2026
+- Eliminado subheader duplicado
+- Eliminadas tarjetas de estadísticas (socios activos, años de historia)
+
+#### CalendarioTiradas.jsx - Competencias 2026
+
+**Fuente de datos**: `src/data/tiradasData.js`
+
+**Tiradas Club 738** (11 confirmadas):
+- Recorrido de Caza (RC): Tirada del Benemérito, Tirada del Padre, etc.
+- Tiro Práctico Mexicano (TPM): Competencias bimestrales
+- Blancos en Movimiento (BM)
+- Siluetas Metálicas (SM)
+
+**Región Sureste** (50+ tiradas):
+- Estados: Yucatán, Campeche, Quintana Roo, Tabasco, Chiapas, Veracruz
+- Fuente: FEMETI - Registro Nacional 2026
+
+**Features del calendario**:
+- 3 vistas: Calendario mensual, Lista, Solo Club 738
+- Filtros por modalidad y estado
+- Semana inicia en Lunes (Sáb/Dom a la derecha)
+- Link a Google Maps del campo de tiro
+- Navegación de regreso a landing
+
+#### CalculadoraPCP.jsx - Energía Cinética
+
+**Propósito**: Verificar si un rifle de aire requiere registro SEDENA (>140 joules)
+
+**Funcionalidad**:
+- Selector de calibres por categoría (pequeños, medianos, grandes)
+- Cálculo: E = 0.5 × m × v² (granos → kg, fps → m/s)
+- Resultado visual: ✅ No requiere / ⚠️ Requiere registro
+- Velocidad límite calculada para cada peso
+
+#### Archivos Creados
+
+| Archivo | Descripción |
+|---------|-------------|
+| `src/components/LandingPage.jsx` | Página de inicio pública |
+| `src/components/LandingPage.css` | Estilos responsive |
+| `src/components/CalendarioTiradas.jsx` | Calendario de competencias |
+| `src/components/CalendarioTiradas.css` | Estilos del calendario |
+| `src/components/CalculadoraPCP.jsx` | Calculadora de energía |
+| `src/components/CalculadoraPCP.css` | Estilos de la calculadora |
+| `src/data/tiradasData.js` | Datos de 60+ tiradas 2026 |
+| `public/assets/logo-club-738.jpg` | Logo oficial del club |
+
+#### Archivos Modificados
+
+| Archivo | Cambios |
+|---------|---------|
+| `src/App.jsx` | Detección de rutas públicas, import LandingPage |
+| `.github/copilot-instructions.md` | Documentación completa actualizada |
+
+#### Documentación Actualizada
+
+**copilot-instructions.md** - Reescrito completamente:
+- Información oficial del club (registros correctos)
+- Arquitectura de componentes actual
+- Estructura de rutas públicas
+- Cuotas 2026
+- Calendario de tiradas
+- Pending features actualizado
+
+---
+
 ### 3 de Enero - v1.3.0 OCR Validation + Centralización de Registros de Armas
 
 #### Problema resuelto: Upload de registros de armas fallaba por permisos

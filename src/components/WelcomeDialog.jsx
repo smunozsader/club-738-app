@@ -34,11 +34,12 @@ export default function WelcomeDialog({ user, onClose }) {
         bienvenidaVista: true,
         fechaBienvenida: new Date().toISOString()
       }, { merge: true });
-      onClose();
     } catch (error) {
-      console.error('Error:', error);
-      onClose();
+      console.error('Error guardando bienvenida:', error);
+      // Continuar aunque falle - no bloquear al usuario
     }
+    // Siempre cerrar el diálogo, aunque falle el guardado
+    onClose();
   };
 
   if (loading) {

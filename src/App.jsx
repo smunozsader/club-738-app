@@ -117,76 +117,113 @@ function App() {
         />
       )}
       
-      <header>
+      <header className="dashboard-header">
         <div className="header-brand">
-          <img src="/logo.jpg" alt="Logo Club 738" className="header-logo" />
+          <img src="/assets/logo-club-738.jpg" alt="Club 738" className="header-logo" />
           <div className="header-titles">
             <h1>Club de Caza, Tiro y Pesca de Yucatán, A.C.</h1>
-            <span className="header-subtitle">SEDENA: 738 | FEMETI: YUC 05/2020 | SEMARNAT: CIN-005-YUC-05</span>
+            <div className="header-badges">
+              <span className="badge">SEDENA 738</span>
+              <span className="badge">FEMETI YUC 05/2020</span>
+            </div>
           </div>
         </div>
         <div className="user-info">
-          <span>Hola, {user.email}</span>
+          <span className="user-email">{socioData?.nombre || user.email}</span>
           <button onClick={handleLogout}>Cerrar Sesión</button>
         </div>
       </header>
 
       <main>
         {activeSection === 'dashboard' && (
-          <div className="dashboard">
-            <h2>Bienvenido al Portal del Club 738</h2>
-            <p>Aquí podrás gestionar tus documentos para el PETA.</p>
-            
-            <div className="features">
-              <div className="feature-card" onClick={() => setActiveSection('docs-oficiales')}>
-                <h3>🆔 Documentos Oficiales</h3>
-                <p>Descarga tu CURP y Constancia de antecedentes</p>
-              </div>
-              <div className="feature-card" onClick={() => setActiveSection('documentos')}>
-                <h3>📄 Mis Documentos PETA</h3>
-                <p>Sube y gestiona tus documentos para el PETA</p>
-              </div>
-              <div className="feature-card">
-                <h3>🎫 Mi Credencial</h3>
-                <p>Descarga tu credencial del Club</p>
-              </div>
-              <div className="feature-card" onClick={() => setActiveSection('armas')}>
-                <h3>Mis Armas</h3>
-                <p>Consulta tus armas registradas y sube documentos</p>
-                {socioData?.totalArmas > 0 && (
-                  <span className="feature-badge">{socioData.totalArmas} armas</span>
-                )}
-              </div>
-              <div className="feature-card">
-                <h3>💳 Pagos</h3>
-                <p>Verifica tu estado de pago anual</p>
-              </div>
-              
-              {/* Calculadora PCP - Pública */}
-              <div className="feature-card calculadora" onClick={() => window.location.href = '/calculadora'}>
-                <h3>🎯 Calculadora PCP</h3>
-                <p>Verifica si tu rifle requiere registro SEDENA</p>
-                <span className="feature-badge public-badge">Pública</span>
-              </div>
-              
-              {/* Solo visible para el Secretario */}
-              {user.email === 'smunozam@gmail.com' && (
-                <div className="feature-card admin" onClick={() => setActiveSection('renovaciones')}>
-                  <h3>📊 Panel de Cobranza</h3>
-                  <p>Dashboard de renovaciones 2026</p>
-                  <span className="feature-badge admin-badge">Secretario</span>
-                </div>
-              )}
-              
-              {/* Dashboard de Cumpleaños - Solo Secretario */}
-              {user.email === 'smunozam@gmail.com' && (
-                <div className="feature-card admin cumples" onClick={() => setActiveSection('cumpleanos')}>
-                  <h3>🎂 Cumpleaños</h3>
-                  <p>Calendario y demografía de socios</p>
-                  <span className="feature-badge admin-badge">Secretario</span>
-                </div>
-              )}
+          <div className="dashboard-container">
+            <div className="dashboard-welcome">
+              <h2>Portal del Socio</h2>
+              <p>Gestiona tu expediente digital para trámites PETA</p>
             </div>
+            
+            <div className="dashboard-grid">
+              {/* Mi Expediente */}
+              <div className="dash-card expediente" onClick={() => setActiveSection('docs-oficiales')}>
+                <div className="dash-card-icon">🆔</div>
+                <h3>Documentos Oficiales</h3>
+                <p>Descarga tu CURP y Constancia de antecedentes penales</p>
+                <span className="dash-card-cta">Ver documentos →</span>
+              </div>
+              
+              <div className="dash-card documentos" onClick={() => setActiveSection('documentos')}>
+                <div className="dash-card-icon">📋</div>
+                <h3>Mis Documentos PETA</h3>
+                <p>Sube y gestiona los 16 documentos requeridos</p>
+                <span className="dash-card-cta">Subir documentos →</span>
+              </div>
+              
+              <div className="dash-card armas" onClick={() => setActiveSection('armas')}>
+                <div className="dash-card-icon">📄</div>
+                <h3>Mis Armas</h3>
+                <p>Consulta tus armas registradas en SEDENA</p>
+                {socioData?.totalArmas > 0 && (
+                  <span className="dash-card-badge">{socioData.totalArmas} armas</span>
+                )}
+                <span className="dash-card-cta">Ver armas →</span>
+              </div>
+              
+              <div className="dash-card credencial disabled">
+                <div className="dash-card-icon">🎫</div>
+                <h3>Mi Credencial</h3>
+                <p>Descarga tu credencial digital del Club</p>
+                <span className="dash-card-badge coming-soon">Próximamente</span>
+              </div>
+              
+              <div className="dash-card pagos disabled">
+                <div className="dash-card-icon">💳</div>
+                <h3>Estado de Pagos</h3>
+                <p>Verifica tu cuota anual 2026</p>
+                <span className="dash-card-badge coming-soon">Próximamente</span>
+              </div>
+            </div>
+            
+            {/* Sección Herramientas */}
+            <div className="dashboard-section">
+              <h3 className="section-title">Herramientas</h3>
+              <div className="dashboard-grid tools-grid">
+                <div className="dash-card calendario" onClick={() => window.location.href = '/calendario'}>
+                  <div className="dash-card-icon">📅</div>
+                  <h3>Calendario de Tiradas</h3>
+                  <p>Competencias 2026 del Club y región Sureste</p>
+                  <span className="dash-card-cta">Ver calendario →</span>
+                </div>
+                
+                <div className="dash-card calculadora" onClick={() => window.location.href = '/calculadora'}>
+                  <div className="dash-card-icon">🔢</div>
+                  <h3>Calculadora PCP</h3>
+                  <p>Verifica si tu rifle de aire requiere registro</p>
+                  <span className="dash-card-cta">Calcular →</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Panel Secretario */}
+            {user.email === 'smunozam@gmail.com' && (
+              <div className="dashboard-section admin-section">
+                <h3 className="section-title">Panel de Secretario</h3>
+                <div className="dashboard-grid admin-grid">
+                  <div className="dash-card admin" onClick={() => setActiveSection('renovaciones')}>
+                    <div className="dash-card-icon">📊</div>
+                    <h3>Panel de Cobranza</h3>
+                    <p>Dashboard de renovaciones 2026</p>
+                    <span className="dash-card-cta">Abrir panel →</span>
+                  </div>
+                  
+                  <div className="dash-card admin cumples" onClick={() => setActiveSection('cumpleanos')}>
+                    <div className="dash-card-icon">🎂</div>
+                    <h3>Cumpleaños</h3>
+                    <p>Calendario y demografía de socios</p>
+                    <span className="dash-card-cta">Ver cumpleaños →</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

@@ -54,7 +54,7 @@ service cloud.firestore {
       allow update: if isOwner(email) 
         // Campos que el usuario puede actualizar
         && request.resource.data.diff(resource.data).affectedKeys()
-           .hasOnly(['documentosPETA', 'bienvenidaVista', 'telefono', 'domicilio'])
+           .hasOnly(['documentosPETA', 'bienvenidaVista', 'fechaBienvenida', 'telefono', 'domicilio'])
         || isSecretario()
         // Campos que el secretario puede actualizar
         && request.resource.data.diff(resource.data).affectedKeys()
