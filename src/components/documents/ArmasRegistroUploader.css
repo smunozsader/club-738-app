@@ -102,6 +102,40 @@
   line-height: 1;
 }
 
+/* Sección para forzar subida */
+.force-upload-section {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ef9a9a;
+}
+
+.force-upload-section p {
+  margin: 0 0 12px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.force-upload-section strong {
+  color: #1a472a;
+}
+
+.btn-force-upload {
+  background: linear-gradient(135deg, #4caf50, #388e3c);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-force-upload:hover {
+  background: linear-gradient(135deg, #388e3c, #2e7d32);
+  transform: translateY(-1px);
+}
+
 /* Validating / uploading status */
 .armas-registro-validating {
   background: #e3f2fd;

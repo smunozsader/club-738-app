@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { ref, getDownloadURL } from 'firebase/storage';
+import { storage } from '../../firebaseConfig';
 import DocumentCard from './DocumentCard';
 import ProgressBar from './ProgressBar';
 import './DocumentList.css';
 
-// Lista completa de los 14 documentos PETA
+// Mapeo de documentos precargados (Storage) a IDs de documentos PETA
+const PRELOADED_DOCS_MAP = {
+  'curp': ['curp.pdf'],
+  'constanciaAntecedentes': ['constancia_antecedentes.pdf', 'constancia.pdf', 'antecedentes.pdf']
+};
+
+// Lista completa de los 15 documentos PETA (agregado CURP)
 // Referencia: Base datos/Requisitos PETA (1).docx
 const DOCUMENTOS_PETA = [
   // === IDENTIFICACIÓN ===
+  {
+    id: 'curp',
+    label: 'CURP',
+    description: 'Clave Única de Registro de Población. Copia legible.',
+    icon: '🆔',
+    required: true,
+    category: 'identificacion'
+  },
   {
     id: 'ine',
     label: 'INE (Identificación Oficial)',
@@ -142,10 +158,52 @@ const CATEGORIAS = {
 };
 
 export default function DocumentList({ userId, documentosData = {}, onUploadComplete }) {
+  const [preloadedDocs, setPreloadedDocs] = useState({});
+  const [loadingPreloaded, setLoadingPreloaded] = useState(true);
+
+  // Verificar documentos precargados en Storage
+  useEffect(() => {
+    const checkPreloadedDocs = async () => {
+      if (!userId) return;
+      
+      const found = {};
+      
+      for (const [docId, fileNames] of Object.entries(PRELOADED_DOCS_MAP)) {
+        for (const fileName of fileNames) {
+          try {
+            const docRef = ref(storage, `documentos/${userId}/${fileName}`);
+            const url = await getDownloadURL(docRef);
+            found[docId] = { url, fileName };
+            console.log(`✅ Documento precargado encontrado: ${docId} -> ${fileName}`);
+            break; // Encontrado, no buscar más nombres
+          } catch (error) {
+            // No encontrado con este nombre, continuar
+          }
+        }
+      }
+      
+      setPreloadedDocs(found);
+      setLoadingPreloaded(false);
+    };
+
+    checkPreloadedDocs();
+  }, [userId]);
+
+  // Combinar documentosData con precargados
+  const mergedDocData = { ...documentosData };
+  for (const [docId, preloaded] of Object.entries(preloadedDocs)) {
+    if (!mergedDocData[docId]?.url && preloaded.url) {
+      mergedDocData[docId] = {
+        url: preloaded.url,
+        estado: 'precargado',
+        isPreloaded: true
+      };
+    }
+  }
   
-  // Calcular progreso
+  // Calcular progreso (usando datos combinados)
   const requiredDocs = DOCUMENTOS_PETA.filter(d => d.required);
-  const completedDocs = requiredDocs.filter(d => documentosData[d.id]?.url).length;
+  const completedDocs = requiredDocs.filter(d => mergedDocData[d.id]?.url).length;
   const progressPercent = Math.round((completedDocs / requiredDocs.length) * 100);
 
   // Agrupar documentos por categoría
@@ -195,7 +253,8 @@ export default function DocumentList({ userId, documentosData = {}, onUploadComp
                 description={doc.description}
                 icon={doc.icon}
                 required={doc.required}
-                documentData={documentosData[doc.id]}
+                documentData={mergedDocData[doc.id]}
+                isPreloaded={mergedDocData[doc.id]?.isPreloaded}
                 onUploadComplete={onUploadComplete}
               />
             ))}

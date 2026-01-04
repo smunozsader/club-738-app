@@ -19,6 +19,7 @@ export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
   const [validating, setValidating] = useState(null); // ID del arma validando OCR
   const [progress, setProgress] = useState('');
   const [error, setError] = useState(null);
+  const [pendingUpload, setPendingUpload] = useState(null); // {armaId, file} para forzar subida
 
   useEffect(() => {
     cargarArmas();
@@ -62,13 +63,17 @@ export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
     }
   };
 
-  const handleFileSelect = async (armaId, file) => {
+  const handleFileSelect = async (armaId, file, forceUpload = false) => {
     if (!file) return;
     
     const arma = armas.find(a => a.id === armaId);
     if (!arma) return;
 
+    // Limpiar estados anteriores
     setError(null);
+    if (!forceUpload) {
+      setPendingUpload(null);
+    }
 
     // Validar tipo
     if (file.type !== 'application/pdf') {
@@ -83,28 +88,37 @@ export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
       return;
     }
 
-    // Paso 1: Validar con OCR
-    setValidating(armaId);
-    setProgress('Verificando documento...');
+    // Paso 1: Validar con OCR (a menos que sea forzado)
+    if (!forceUpload) {
+      setValidating(armaId);
+      setProgress('Verificando documento...');
+
+      try {
+        const validation = await validateArmaRegistro(
+          file, 
+          arma,
+          ({ message }) => setProgress(message)
+        );
+
+        if (!validation.valid) {
+          setValidating(null);
+          // Guardar archivo pendiente para opción de forzar
+          setPendingUpload({ armaId, file, matricula: arma.matricula });
+          setError(validation.message);
+          return;
+        }
+      } catch (err) {
+        console.warn('Error en validación OCR:', err);
+        // Si falla el OCR, permitir subir de todas formas
+      }
+    }
+
+    // Paso 2: Subir a Storage
+    setValidating(null);
+    setUploading(armaId);
+    setProgress('Subiendo documento...');
 
     try {
-      const validation = await validateArmaRegistro(
-        file, 
-        arma,
-        ({ message }) => setProgress(message)
-      );
-
-      if (!validation.valid) {
-        setValidating(null);
-        setError(validation.message);
-        return;
-      }
-
-      // Paso 2: Subir a Storage
-      setValidating(null);
-      setUploading(armaId);
-      setProgress('Subiendo documento...');
-
       const filePath = `documentos/${userId}/armas/${armaId}/registro.pdf`;
       const storageRef = ref(storage, filePath);
       
@@ -190,8 +204,20 @@ export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
       {/* Error global */}
       {error && (
         <div className="armas-registro-error">
-          <button className="error-close" onClick={() => setError(null)}>×</button>
+          <button className="error-close" onClick={() => { setError(null); setPendingUpload(null); }}>×</button>
           <pre>{error}</pre>
+          {/* Opción para forzar subida si el OCR falla */}
+          {pendingUpload && (
+            <div className="force-upload-section">
+              <p>¿Estás seguro de que este es el registro correcto para <strong>{pendingUpload.matricula}</strong>?</p>
+              <button 
+                className="btn-force-upload"
+                onClick={() => handleFileSelect(pendingUpload.armaId, pendingUpload.file, true)}
+              >
+                ✅ Sí, subir de todas formas
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -240,7 +266,10 @@ export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
                     <input
                       type="file"
                       accept="application/pdf"
-                      onChange={(e) => handleFileSelect(arma.id, e.target.files[0])}
+                      onChange={(e) => {
+                        handleFileSelect(arma.id, e.target.files[0]);
+                        e.target.value = ''; // Reset para permitir re-seleccionar mismo archivo
+                      }}
                       disabled={!!validating || !!uploading}
                     />
                   </label>
@@ -253,7 +282,10 @@ export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
                   <input
                     type="file"
                     accept="application/pdf"
-                    onChange={(e) => handleFileSelect(arma.id, e.target.files[0])}
+                    onChange={(e) => {
+                      handleFileSelect(arma.id, e.target.files[0]);
+                      e.target.value = ''; // Reset para permitir re-seleccionar mismo archivo
+                    }}
                     disabled={!!validating || !!uploading}
                   />
                 </label>
