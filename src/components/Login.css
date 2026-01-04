@@ -278,3 +278,41 @@ p {
   color: #333;
   line-height: 1.6;
 }
+
+/* WhatsApp contact button */
+.whatsapp-contact {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f0fdf4;
+  border-radius: 8px;
+  border: 1px solid #22c55e;
+}
+
+.whatsapp-contact p {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #25D366;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+  background: #128C7E;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-btn svg {
+  flex-shrink: 0;
+}
