@@ -33,22 +33,32 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.token.email.lower() == docId.lower();
     }
     
+    // Verificar si es el Secretario (tiene permisos de lectura de todos los socios)
+    function isSecretario() {
+      return isAuthenticated() && request.auth.token.email == 'smunozam@gmail.com';
+    }
+    
     // ========================================================================
     // COLECCIÓN: socios
     // ========================================================================
     // Cada socio solo puede leer/escribir su propio documento
+    // El Secretario puede leer todos los documentos para el panel de cobranza
     // El documento ID es el email del socio
     
     match /socios/{email} {
-      // Lectura: solo el propio socio puede leer sus datos
-      allow read: if isOwner(email);
+      // Lectura: el propio socio O el secretario pueden leer
+      allow read: if isOwner(email) || isSecretario();
       
       // Escritura: solo el propio socio puede actualizar sus datos
-      // No permitir crear nuevos documentos desde cliente (solo admin/scripts)
+      // El secretario puede actualizar campos de renovación
       allow update: if isOwner(email) 
         // Campos que el usuario puede actualizar
         && request.resource.data.diff(resource.data).affectedKeys()
-           .hasOnly(['documentosPETA', 'bienvenidaVista', 'telefono', 'domicilio']);
+           .hasOnly(['documentosPETA', 'bienvenidaVista', 'telefono', 'domicilio'])
+        || isSecretario()
+        // Campos que el secretario puede actualizar
+        && request.resource.data.diff(resource.data).affectedKeys()
+           .hasOnly(['renovacion2026']);
       
       // No permitir delete desde cliente
       allow delete: if false;
@@ -59,11 +69,12 @@ service cloud.firestore {
       // ======================================================================
       // SUBCOLECCIÓN: armas
       // ======================================================================
-      // Cada socio solo puede leer sus propias armas
+      // Cada socio puede leer sus propias armas
+      // El secretario puede leer las armas de cualquier socio
       // No permitir crear/modificar/eliminar desde cliente
       
       match /armas/{armaId} {
-        allow read: if isOwner(email);
+        allow read: if isOwner(email) || isSecretario();
         allow write: if false; // Solo admin puede modificar armas
       }
     }

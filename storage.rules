@@ -24,6 +24,11 @@ service firebase.storage {
       return isAuthenticated() && request.auth.token.email.lower() == email.lower();
     }
     
+    // Verificar si es el Secretario
+    function isSecretario() {
+      return isAuthenticated() && request.auth.token.email == 'smunozam@gmail.com';
+    }
+    
     // Verificar tipo de archivo permitido
     function isAllowedFileType() {
       return request.resource.contentType.matches('application/pdf')
@@ -43,15 +48,15 @@ service firebase.storage {
     // Solo puede subir PDFs e imágenes de máximo 5MB
     
     match /documentos/{email}/{fileName} {
-      // Lectura: solo el propio socio
-      allow read: if isOwner(email);
+      // Lectura: el propio socio O el secretario
+      allow read: if isOwner(email) || isSecretario();
       
-      // Escritura: solo el propio socio, con validaciones
-      allow write: if isOwner(email) 
+      // Escritura: el propio socio O el secretario, con validaciones
+      allow write: if (isOwner(email) || isSecretario())
                    && isAllowedFileType() 
                    && isUnderSizeLimit();
       
-      // Eliminar: solo el propio socio
+      // Eliminar: solo el propio socio (secretario no puede eliminar)
       allow delete: if isOwner(email);
     }
     
@@ -61,8 +66,8 @@ service firebase.storage {
     // Para documentos específicos de armas (registros, etc.)
     
     match /documentos/{email}/armas/{armaId}/{fileName} {
-      allow read: if isOwner(email);
-      allow write: if isOwner(email) 
+      allow read: if isOwner(email) || isSecretario();
+      allow write: if (isOwner(email) || isSecretario())
                    && isAllowedFileType() 
                    && isUnderSizeLimit();
       allow delete: if isOwner(email);

@@ -8,6 +8,7 @@ import MisArmas from './components/MisArmas';
 import MisDocumentosOficiales from './components/MisDocumentosOficiales';
 import WelcomeDialog from './components/WelcomeDialog';
 import AvisoPrivacidad from './components/privacidad/AvisoPrivacidad';
+import DashboardRenovaciones from './components/DashboardRenovaciones';
 import './App.css';
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
   const [documentosData, setDocumentosData] = useState({});
   const [showWelcome, setShowWelcome] = useState(false);
   const [socioData, setSocioData] = useState(null);
+  
+  // Para el secretario: ver documentos de otro socio
+  const [socioViendoDocumentos, setSocioViendoDocumentos] = useState(null);
 
   useEffect(() => {
     // Escuchar cambios en autenticación
@@ -52,11 +56,18 @@ function App() {
   const handleLogout = async () => {
     await signOut(auth);
     setActiveSection('dashboard');
+    setSocioViendoDocumentos(null);
   };
 
   const handleUploadComplete = (docType, url) => {
     // El estado se actualiza automáticamente via onSnapshot
     console.log(`Documento ${docType} subido: ${url}`);
+  };
+
+  // Handler para que el secretario vea documentos de otro socio
+  const handleVerDocumentosSocio = (email, nombre) => {
+    setSocioViendoDocumentos({ email, nombre });
+    setActiveSection('documentos-socio');
   };
 
   if (loading) {
@@ -124,6 +135,15 @@ function App() {
                 <h3>💳 Pagos</h3>
                 <p>Verifica tu estado de pago anual</p>
               </div>
+              
+              {/* Solo visible para el Secretario */}
+              {user.email === 'smunozam@gmail.com' && (
+                <div className="feature-card admin" onClick={() => setActiveSection('renovaciones')}>
+                  <h3>📊 Panel de Cobranza</h3>
+                  <p>Dashboard de renovaciones 2026</p>
+                  <span className="feature-badge admin-badge">Secretario</span>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -165,6 +185,40 @@ function App() {
               ← Volver al Dashboard
             </button>
             <AvisoPrivacidad />
+          </div>
+        )}
+
+        {activeSection === 'renovaciones' && user.email === 'smunozam@gmail.com' && (
+          <div className="section-renovaciones">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <DashboardRenovaciones 
+              userEmail={user.email} 
+              onVerDocumentos={handleVerDocumentosSocio}
+            />
+          </div>
+        )}
+
+        {/* Sección para que el secretario vea documentos de otro socio */}
+        {activeSection === 'documentos-socio' && user.email === 'smunozam@gmail.com' && socioViendoDocumentos && (
+          <div className="section-documentos-socio">
+            <button className="btn-back" onClick={() => {
+              setSocioViendoDocumentos(null);
+              setActiveSection('renovaciones');
+            }}>
+              ← Volver al Panel de Cobranza
+            </button>
+            <div className="socio-header-info">
+              <h3>📁 Documentos de: {socioViendoDocumentos.nombre}</h3>
+              <p className="socio-email">{socioViendoDocumentos.email}</p>
+            </div>
+            <DocumentList 
+              userId={socioViendoDocumentos.email.toLowerCase()}
+              documentosData={{}}
+              onUploadComplete={handleUploadComplete}
+              isSecretarioView={true}
+            />
           </div>
         )}
       </main>

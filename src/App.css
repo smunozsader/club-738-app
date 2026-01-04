@@ -141,6 +141,50 @@ main {
   margin-top: 10px;
 }
 
+/* Tarjeta de Admin/Secretario */
+.feature-card.admin {
+  border-left-color: #6366f1;
+  background: linear-gradient(135deg, #fafafe 0%, #f0f0ff 100%);
+}
+
+.feature-card.admin h3 {
+  color: #4338ca;
+}
+
+.feature-card .admin-badge {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+}
+
+/* Sección de renovaciones */
+.section-renovaciones {
+  animation: fadeIn 0.3s ease;
+}
+
+/* Sección de documentos de otro socio (vista secretario) */
+.section-documentos-socio {
+  animation: fadeIn 0.3s ease;
+}
+
+.socio-header-info {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border: 1px solid #4caf50;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.socio-header-info h3 {
+  color: #1a472a;
+  margin: 0 0 5px 0;
+  font-size: 18px;
+}
+
+.socio-header-info .socio-email {
+  color: #666;
+  margin: 0;
+  font-size: 14px;
+}
+
 /* Secciones */
 .section-documentos,
 .section-armas {
