@@ -1,0 +1,465 @@
+/**
+ * GeneradorPETA - Estilos para el generador de oficios PETA
+ */
+
+.generador-peta {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.generador-peta.acceso-denegado,
+.generador-peta.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.peta-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #2e7d32;
+}
+
+.peta-header h2 {
+  margin: 0 0 8px 0;
+  color: #1b5e20;
+  font-size: 1.8rem;
+}
+
+.peta-header p {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Secciones del formulario */
+.peta-section {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.peta-section h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.1rem;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.peta-section .nota {
+  font-size: 0.85rem;
+  color: #666;
+  margin: -10px 0 15px 0;
+}
+
+/* Búsqueda de socio */
+.peta-busqueda {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+.peta-busqueda:focus {
+  outline: none;
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+/* Lista de socios */
+.socios-lista {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 6px;
+}
+
+.socio-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  gap: 15px;
+}
+
+.socio-item:last-child {
+  border-bottom: none;
+}
+
+.socio-item:hover {
+  background-color: #f5f5f5;
+}
+
+.socio-item.selected {
+  background-color: #e8f5e9;
+  border-left: 3px solid #2e7d32;
+}
+
+.socio-num {
+  font-weight: bold;
+  color: #2e7d32;
+  min-width: 40px;
+}
+
+.socio-nombre {
+  flex: 1;
+  font-weight: 500;
+}
+
+.socio-email {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.socios-mas {
+  padding: 12px 15px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  background: #f5f5f5;
+}
+
+.socios-total {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #e3f2fd;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #1565c0;
+  text-align: center;
+}
+
+.socio-seleccionado {
+  margin-top: 15px;
+  padding: 12px;
+  background: #e8f5e9;
+  border-radius: 6px;
+  color: #2e7d32;
+}
+
+/* Tipo de PETA */
+.tipo-peta-opciones {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+@media (max-width: 768px) {
+  .tipo-peta-opciones {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tipo-opcion {
+  display: flex;
+  align-items: flex-start;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tipo-opcion:hover {
+  border-color: #a5d6a7;
+  background: #f9fdf9;
+}
+
+.tipo-opcion.selected {
+  border-color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.tipo-opcion input[type="radio"] {
+  margin-right: 12px;
+  margin-top: 4px;
+}
+
+.tipo-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tipo-info strong {
+  color: #333;
+}
+
+.tipo-info span {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.tipo-info .vigencia {
+  font-size: 0.8rem;
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+/* Formulario */
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  align-items: flex-end;
+}
+
+.form-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.form-row input[type="text"],
+.form-row input[type="date"] {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-row input:focus {
+  outline: none;
+  border-color: #2e7d32;
+}
+
+.form-row.direccion .calle {
+  flex: 2;
+}
+
+.form-row.direccion .colonia {
+  flex: 1;
+}
+
+.form-row.direccion2 .cp {
+  width: 120px;
+}
+
+.form-row.direccion2 .municipio {
+  flex: 1;
+}
+
+.renovacion-check {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 8px !important;
+  padding: 10px 0;
+}
+
+.renovacion-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+/* Fechas */
+.form-row.fechas {
+  align-items: flex-start;
+}
+
+.fecha-hint {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 5px;
+}
+
+/* Armas */
+.seleccion-info {
+  background: #fff3e0;
+  color: #e65100;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.sin-armas {
+  color: #888;
+  font-style: italic;
+  text-align: center;
+  padding: 30px;
+}
+
+.armas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.arma-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  gap: 12px;
+}
+
+.arma-item:hover {
+  border-color: #a5d6a7;
+  background: #f9fdf9;
+}
+
+.arma-item.selected {
+  border-color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.arma-check {
+  font-size: 1.2rem;
+  color: #2e7d32;
+  min-width: 24px;
+}
+
+.arma-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.arma-clase {
+  font-weight: 600;
+  color: #333;
+}
+
+.arma-detalle {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.arma-matricula {
+  font-size: 0.8rem;
+  color: #888;
+  font-family: monospace;
+}
+
+.arma-cartuchos {
+  padding-top: 8px;
+  border-top: 1px solid #c8e6c9;
+  margin-top: 8px;
+}
+
+.arma-cartuchos label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.arma-cartuchos input {
+  width: 80px;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* Estados */
+.estados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+.estado-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  gap: 8px;
+}
+
+.estado-item:hover {
+  border-color: #a5d6a7;
+  background: #f9fdf9;
+}
+
+.estado-item.selected {
+  border-color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.estado-check {
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.estado-nombre {
+  font-size: 0.9rem;
+}
+
+/* Acciones */
+.peta-actions {
+  padding: 20px;
+  text-align: center;
+  border-top: 2px solid #e0e0e0;
+  margin-top: 20px;
+}
+
+.btn-generar {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.btn-generar:hover:not(:disabled) {
+  background: #1b5e20;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.btn-generar:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+  
+  .form-row.direccion .calle,
+  .form-row.direccion .colonia,
+  .form-row.direccion2 .cp,
+  .form-row.direccion2 .municipio {
+    width: 100%;
+    flex: none;
+  }
+  
+  .socios-lista {
+    max-height: 200px;
+  }
+  
+  .socio-item {
+    flex-wrap: wrap;
+  }
+  
+  .socio-email {
+    width: 100%;
+    margin-top: 5px;
+  }
+}

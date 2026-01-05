@@ -10,6 +10,7 @@ import WelcomeDialog from './components/WelcomeDialog';
 import AvisoPrivacidad from './components/privacidad/AvisoPrivacidad';
 import DashboardRenovaciones from './components/DashboardRenovaciones';
 import DashboardCumpleanos from './components/DashboardCumpleanos';
+import GeneradorPETA from './components/GeneradorPETA';
 import CalculadoraPCP from './components/CalculadoraPCP';
 import CalendarioTiradas from './components/CalendarioTiradas';
 import './App.css';
@@ -221,6 +222,13 @@ function App() {
                     <p>Calendario y demografía de socios</p>
                     <span className="dash-card-cta">Ver cumpleaños →</span>
                   </div>
+                  
+                  <div className="dash-card admin peta" onClick={() => setActiveSection('generador-peta')}>
+                    <div className="dash-card-icon">📄</div>
+                    <h3>Generar PETA</h3>
+                    <p>Oficios de solicitud PETA</p>
+                    <span className="dash-card-cta">Generar oficio →</span>
+                  </div>
                 </div>
               </div>
             )}
@@ -285,6 +293,15 @@ function App() {
               ← Volver al Dashboard
             </button>
             <DashboardCumpleanos userEmail={user.email} />
+          </div>
+        )}
+
+        {activeSection === 'generador-peta' && user.email === 'smunozam@gmail.com' && (
+          <div className="section-generador-peta">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <GeneradorPETA userEmail={user.email} />
           </div>
         )}
 
