@@ -675,3 +675,204 @@ main {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.5);
 }
+
+/* ===================================
+   ESTILOS GLOBALES - Header & Footer
+   Compartidos por todas las páginas
+   =================================== */
+
+/* Header Oficial del Club */
+.landing-header {
+  background: linear-gradient(135deg, #1a365d 0%, #2d5a87 100%);
+  color: white;
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.landing-header .header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.landing-header .logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.landing-header .logo-link {
+  display: flex;
+  align-items: center;
+}
+
+.landing-header .logo-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.3);
+}
+
+.landing-header .logo-section h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.landing-header .header-badges {
+  display: flex;
+  gap: 10px;
+}
+
+.landing-header .badge {
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Footer Oficial del Club */
+.landing-footer {
+  background: #1e293b;
+  color: white;
+  padding: 48px 24px 24px;
+  margin-top: 40px;
+}
+
+.landing-footer .footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid #334155;
+}
+
+.landing-footer .footer-info h4 {
+  margin: 0 0 16px 0;
+  font-size: 1rem;
+}
+
+.landing-footer .footer-info p {
+  margin: 4px 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.landing-footer .map-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: #fbbf24;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.landing-footer .map-link:hover {
+  text-decoration: underline;
+}
+
+.landing-footer .footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 24px;
+  text-align: center;
+}
+
+.landing-footer .footer-bottom p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+/* WhatsApp Links - Global */
+.whatsapp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #25d366;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.whatsapp-link:hover {
+  color: #128c7e;
+  transform: translateX(2px);
+}
+
+.whatsapp-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Email Links - Global */
+.email-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.email-link:hover {
+  color: #fbbf24;
+  text-decoration: underline;
+}
+
+.modal-email {
+  display: block;
+  color: #166534;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.modal-email:hover {
+  color: #15803d;
+}
+
+/* Responsive - Header & Footer Global */
+@media (max-width: 900px) {
+  .landing-footer .footer-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-header .header-content {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .landing-header .logo-section {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .landing-header .logo-section h1 {
+    font-size: 1.2rem;
+  }
+
+  .landing-header .header-badges {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .landing-header .badge {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+}

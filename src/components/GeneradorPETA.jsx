@@ -56,6 +56,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   const [colonia, setColonia] = useState('');
   const [cp, setCp] = useState('');
   const [municipio, setMunicipio] = useState('');
+  const [estadoDomicilio, setEstadoDomicilio] = useState('');
   
   // Fechas
   const [fechaInicio, setFechaInicio] = useState('');
@@ -83,12 +84,20 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   useEffect(() => {
     if (socioSeleccionado) {
       cargarArmasSocio(socioSeleccionado.email);
-      // Pre-llenar dirección si existe
-      if (socioSeleccionado.direccion) {
-        setCalle(socioSeleccionado.direccion.calle || '');
-        setColonia(socioSeleccionado.direccion.colonia || '');
-        setCp(socioSeleccionado.direccion.cp || '');
-        setMunicipio(socioSeleccionado.direccion.municipio || '');
+      // Pre-llenar dirección si existe (desde campo 'domicilio' en Firestore)
+      if (socioSeleccionado.domicilio) {
+        setCalle(socioSeleccionado.domicilio.calle || '');
+        setColonia(socioSeleccionado.domicilio.colonia || '');
+        setCp(socioSeleccionado.domicilio.cp || '');
+        setMunicipio(socioSeleccionado.domicilio.municipio || '');
+        setEstadoDomicilio(socioSeleccionado.domicilio.estado || '');
+      } else {
+        // Limpiar campos si no hay domicilio
+        setCalle('');
+        setColonia('');
+        setCp('');
+        setMunicipio('');
+        setEstadoDomicilio('');
       }
     }
   }, [socioSeleccionado]);
@@ -126,7 +135,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
           nombre: nombreLimpio,
           noSocio: data.noSocio || '-',
           curp: data.curp || '',
-          direccion: data.direccion || null
+          domicilio: data.domicilio || null  // Usar 'domicilio' que es el campo correcto
         });
       });
       
@@ -294,7 +303,9 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       y += 5;
 
       doc.text(`C.P.: ${cp}`, margin, y);
-      doc.text(`DELG. O MPIO.: ${municipio.toUpperCase()}`, margin + 40, y);
+      // Incluir estado junto con municipio: "MÉRIDA, YUC."
+      const municipioConEstado = estadoDomicilio ? `${municipio}, ${estadoDomicilio}`.toUpperCase() : municipio.toUpperCase();
+      doc.text(`DELG. O MPIO.: ${municipioConEstado}`, margin + 40, y);
       y += 8;
 
       // ========== TIPO DE ACTIVIDAD ==========
@@ -633,12 +644,21 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                 />
               </label>
               <label className="municipio">
-                Municipio, Estado:
+                Municipio:
                 <input
                   type="text"
                   value={municipio}
                   onChange={(e) => setMunicipio(e.target.value)}
-                  placeholder="Mérida, Yucatán"
+                  placeholder="Mérida"
+                />
+              </label>
+              <label className="estado-domicilio">
+                Estado:
+                <input
+                  type="text"
+                  value={estadoDomicilio}
+                  onChange={(e) => setEstadoDomicilio(e.target.value)}
+                  placeholder="YUC."
                 />
               </label>
             </div>

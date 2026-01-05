@@ -126,6 +126,7 @@ function App() {
             <div className="header-badges">
               <span className="badge">SEDENA 738</span>
               <span className="badge">FEMETI YUC 05/2020</span>
+              <span className="badge">SEMARNAT-CLUB-CIN-005-YUC-05</span>
             </div>
           </div>
         </div>

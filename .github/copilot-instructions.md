@@ -29,6 +29,15 @@ Fundado: 2005
 - **Backend**: Firebase (Auth, Firestore, Storage, Hosting)
 - **Styling**: CSS co-localizados con componentes
 
+### Dependencias Clave
+| Paquete | Versión | Propósito |
+|---------|---------|----------|
+| `jspdf` | ^4.0.0 | Generación de PDFs (oficios PETA, credenciales) |
+| `heic2any` | ^0.0.4 | Conversión de fotos HEIC (iPhone) a JPG |
+| `pdfjs-dist` | ^5.4.530 | Renderizado y procesamiento de PDFs |
+| `tesseract.js` | ^7.0.0 | OCR para validación de documentos |
+| `xlsx` | ^0.18.5 | Lectura de archivos Excel (importación de datos) |
+
 ### Firebase Backend Integration
 - **Authentication**: Firebase Auth (email/password)
 - **Database**: Firestore (socios, armas, documentos)
@@ -48,6 +57,7 @@ https://club-738-app.web.app
 ```
 /                   → LandingPage (público)
 /calendario         → CalendarioTiradas (público)
+/tiradas            → CalendarioTiradas (alias de /calendario)
 /calculadora        → CalculadoraPCP (público)
 [login]             → Dashboard del socio (autenticado)
 ```
@@ -66,6 +76,13 @@ https://club-738-app.web.app
 | **DashboardRenovaciones.jsx** | Solo Secretario | Panel de cobranza 2026 |
 | **DashboardCumpleanos.jsx** | Solo Secretario | Demografía y cumpleaños de socios |
 | **WelcomeDialog.jsx** | Autenticado | Diálogo de bienvenida para nuevos usuarios |
+| **Login.jsx** | Público | Formulario de login standalone (usado en LandingPage) |
+| **GeneradorPETA.jsx** | Solo Secretario | Generador de oficios PETA en PDF (jsPDF) |
+| **AvisoPrivacidad.jsx** | Público | Componente de aviso de privacidad integral |
+| **ArmasRegistroUploader.jsx** | Autenticado | Subida de registros RFA por arma |
+| **ImageEditor.jsx** | Autenticado | Editor de imágenes (recorte, rotación) |
+| **MultiImageUploader.jsx** | Autenticado | Subida múltiple de imágenes (INE, fotos) |
+| **ProgressBar.jsx** | Autenticado | Barra de progreso para subidas |
 
 ### Archivos de Datos
 - **src/data/tiradasData.js**: Calendario de tiradas 2026 (Club 738 + regionales)
@@ -149,19 +166,26 @@ src/
 ├── main.jsx             # Entry point
 ├── components/
 │   ├── LandingPage.jsx/css      # Página pública de inicio
+│   ├── Login.jsx/css            # Formulario de login
 │   ├── CalendarioTiradas.jsx/css # Calendario público
 │   ├── CalculadoraPCP.jsx/css   # Calculadora pública
 │   ├── MisArmas.jsx/css         # Armas del socio
 │   ├── MisDocumentosOficiales.jsx/css
 │   ├── WelcomeDialog.jsx/css
+│   ├── GeneradorPETA.jsx/css    # Generador de oficios PETA
 │   ├── DashboardRenovaciones.jsx/css  # Solo secretario
 │   ├── DashboardCumpleanos.jsx/css    # Solo secretario
 │   ├── documents/       # Componentes de documentos PETA
 │   │   ├── DocumentList.jsx/css
 │   │   ├── DocumentCard.jsx/css
 │   │   ├── DocumentUploader.jsx/css
-│   │   └── ...
+│   │   ├── ArmasRegistroUploader.jsx/css  # Subida de RFA
+│   │   ├── ImageEditor.jsx/css    # Editor de imágenes
+│   │   ├── MultiImageUploader.jsx/css  # Subida múltiple
+│   │   └── ProgressBar.jsx/css    # Barra de progreso
 │   └── privacidad/      # Avisos de privacidad
+│       ├── AvisoPrivacidad.jsx/css
+│       └── ConsentimientoPriv.jsx/css
 ├── data/
 │   └── tiradasData.js   # Calendario de tiradas 2026
 └── utils/
@@ -352,9 +376,18 @@ Los scripts en /scripts/ requieren serviceAccountKey.json (nunca commitear):
 |--------|-----------|
 | importar-usuarios-firebase.cjs | Crear usuarios en Firebase Auth |
 | importar-armas-firestore.cjs | Poblar armas desde Excel |
+| importar-fechas-alta.cjs | Importar fechas de alta de socios |
 | actualizar-curps-firestore.cjs | Sincronizar CURPs |
 | subir-curps.cjs | Subir PDFs de CURP a Storage |
 | subir-constancias-firebase.cjs | Subir constancias a Storage |
+| subir-constancias-corregido.cjs | Versión corregida de subida de constancias |
+| agregar-socios-faltantes.cjs | Agregar socios que faltan en Firestore |
+| buscar-vips.cjs | Búsqueda de socios VIP |
+| check-storage.cjs | Verificar archivos en Storage |
+| comparar-emails.cjs | Comparar emails entre fuentes |
+| arqueo-curps.py | Arqueo de CURPs (Python) |
+| corregir-curps-excel.py | Corrección de CURPs en Excel |
+| crear_pdfs_credenciales.py | Generar PDFs de credenciales del club |
 
 ## Common Gotchas
 
@@ -387,7 +420,8 @@ Estados: Yucatán, Campeche, Quintana Roo, Tabasco, Chiapas, Veracruz
 
 ## Pending Features
 
-- [ ] Generación de credencial del club (PDF)
+- [x] Generación de credencial del club (PDF) - Script: `crear_pdfs_credenciales.py`, datos en `Credencial-Club-2026/`
+- [ ] Descarga de credencial desde portal del socio (integrar PDFs generados)
 - [ ] Estado de pagos/cobranza por socio
 - [ ] Notificaciones de vencimiento de documentos
 - [ ] Integración con forma e5cinco

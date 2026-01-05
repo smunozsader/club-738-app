@@ -6,10 +6,20 @@
 
 ## ✅ Completado
 
+### v1.8.0 - UI Consistency (5 Ene 2026)
+- [x] Headers unificados (LandingPage, CalendarioTiradas, CalculadoraPCP, Dashboard)
+- [x] Footers unificados con WhatsApp + Email funcional
+- [x] Badge SEMARNAT agregado a todos los headers
+- [x] Logos corregidos (paths a /assets/logo-club-738.jpg)
+- [x] WhatsApp clickable en footer y modales
+- [x] Email con mailto: funcional en todas las páginas
+- [x] copilot-instructions.md actualizado con componentes faltantes
+
 ### v1.7.0 - Credenciales 2026
 - [x] 35 credenciales generadas con Canva Bulk Create
 - [x] PDFs de impresión listos (ANVERSOS.pdf + REVERSOS.pdf)
 - [x] Fotos organizadas y renombradas
+- [x] Script crear_pdfs_credenciales.py funcional
 
 ### v1.6.x - Portal Base
 - [x] Landing Page pública
@@ -20,6 +30,7 @@
 - [x] Mis Documentos Oficiales (CURP + Constancia)
 - [x] Panel de Cobranza (DashboardRenovaciones)
 - [x] Panel de Cumpleaños (DashboardCumpleanos)
+- [x] GeneradorPETA - Oficios PDF para SEDENA
 
 ---
 
@@ -40,7 +51,14 @@
 | "Mi Credencial" | Media | Card en dashboard para descargar credencial digital |
 | Credenciales faltantes | Baja | 41 socios sin foto pendientes |
 
-### 💰 Módulo de Cobranza
+### � Base de Datos
+| Tarea | Prioridad | Descripción |
+|-------|-----------|-------------|
+| **Normalizar domicilios** | Alta | Agregar campos estructurados: calle, colonia, cp, municipio, estado |
+| Migrar datos Excel | Alta | Importar domicilios desde RELACION_SOCIOS_ARMAS NORMALIZADA.xlsx |
+| Validar CURPs | Media | Verificar formato y datos extraídos |
+
+### �💰 Módulo de Cobranza
 | Tarea | Prioridad | Descripción |
 |-------|-----------|-------------|
 | **Reminder semanal** | Alta | Notificación al secretario con lista de morosos |

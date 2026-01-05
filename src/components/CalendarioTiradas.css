@@ -1,82 +1,55 @@
 /* CalendarioTiradas.css - Estilos para el calendario de tiradas */
 
 .calendario-tiradas {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Navegación */
-.calendario-nav {
+/* Header de sección (título + nav) */
+.calendario-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
+  padding: 20px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
   background: white;
-  border-radius: 12px;
-  margin-bottom: 20px;
+  border-radius: 0 0 16px 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.nav-home {
+.header-titulo h2 {
+  font-size: 1.5rem;
+  margin: 0 0 4px 0;
   color: #1a365d;
-  text-decoration: none;
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.2s;
 }
 
-.nav-home:hover {
-  background: #f1f5f9;
+.header-titulo p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.95rem;
 }
 
-.nav-links {
+.calendario-nav {
   display: flex;
   gap: 12px;
 }
 
-.nav-links a {
+.calendario-nav .nav-link {
   color: #475569;
   text-decoration: none;
   padding: 8px 16px;
   border-radius: 8px;
   font-size: 0.9rem;
+  font-weight: 500;
   transition: all 0.2s;
-}
-
-.nav-links a:hover {
   background: #f1f5f9;
-  color: #1a365d;
 }
 
-/* Header */
-.calendario-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px;
-  background: linear-gradient(135deg, #1a365d 0%, #2d5a87 100%);
-  border-radius: 16px;
-  margin-bottom: 24px;
+.calendario-nav .nav-link:hover {
+  background: #1a365d;
   color: white;
-}
-
-.header-titulo h1 {
-  font-size: 2rem;
-  margin: 0 0 8px 0;
-}
-
-.header-titulo p {
-  margin: 0;
-  opacity: 0.9;
-  font-size: 1.1rem;
-}
-
-.header-logos {
-  display: flex;
-  gap: 24px;
 }
 
 .logo-femeti, .logo-club738 {
@@ -97,15 +70,23 @@
   opacity: 0.8;
 }
 
+/* Contenedor principal de contenido */
+.calendario-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 24px;
+}
+
 /* Filtros */
 .filtros-container {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
   padding: 16px;
-  background: #f8fafc;
+  background: white;
   border-radius: 12px;
   margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .filtros-grupo {
@@ -662,7 +643,7 @@
 .calendario-footer {
   margin-top: 32px;
   text-align: center;
-  padding: 20px;
+  padding: 24px;
   background: #f8fafc;
   border-radius: 12px;
   color: #64748b;
@@ -671,6 +652,40 @@
 
 .calendario-footer p {
   margin: 4px 0;
+}
+
+.calendario-footer .footer-contacto {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.calendario-footer .footer-contacto p {
+  color: #475569;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.calendario-footer .whatsapp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #25d366;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.calendario-footer .whatsapp-link:hover {
+  color: #128c7e;
+  transform: translateX(2px);
+}
+
+.calendario-footer .whatsapp-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
 }
 
 /* Responsive */

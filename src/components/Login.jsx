@@ -35,7 +35,7 @@ export default function Login({ onLoginSuccess }) {
   return (
     <div className="login-container">
       <div className="login-box">
-        <img src="/logo.jpg" alt="Logo Club 738" className="login-logo" />
+        <img src="/assets/logo-club-738.jpg" alt="Logo Club 738" className="login-logo" />
         <h1>Club de Caza, Tiro y Pesca de Yucatán, A.C.</h1>
         <div className="club-registros">
           <span>SEDENA: 738</span>
@@ -154,7 +154,7 @@ export default function Login({ onLoginSuccess }) {
                 <strong>Club de Caza, Tiro y Pesca de Yucatán, A.C.</strong><br/>
                 Calle 50 No. 531-E x 69 y 71<br/>
                 Colonia Centro, 97000 Mérida, Yucatán<br/>
-                Email: tiropracticoyucatan@gmail.com
+                <a href="mailto:tiropracticoyucatan@gmail.com" className="email-link">tiropracticoyucatan@gmail.com</a>
               </p>
               
               <div className="whatsapp-contact">

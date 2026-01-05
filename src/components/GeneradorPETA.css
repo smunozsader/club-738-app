@@ -243,11 +243,16 @@
 }
 
 .form-row.direccion2 .cp {
-  width: 120px;
+  width: 100px;
 }
 
 .form-row.direccion2 .municipio {
+  flex: 2;
+}
+
+.form-row.direccion2 .estado-domicilio {
   flex: 1;
+  min-width: 100px;
 }
 
 .renovacion-check {
@@ -445,7 +450,8 @@
   .form-row.direccion .calle,
   .form-row.direccion .colonia,
   .form-row.direccion2 .cp,
-  .form-row.direccion2 .municipio {
+  .form-row.direccion2 .municipio,
+  .form-row.direccion2 .estado-domicilio {
     width: 100%;
     flex: none;
   }

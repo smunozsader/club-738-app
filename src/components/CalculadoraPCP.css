@@ -2,43 +2,7 @@
 
 .calculadora-pcp {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  color: #fff;
-}
-
-/* Header */
-.calc-header {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 1rem 2rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.calc-header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.calc-logo {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.calc-header-text h1 {
-  font-size: 1.3rem;
-  margin: 0;
-  color: #fff;
-}
-
-.calc-header-text p {
-  font-size: 0.9rem;
-  margin: 0;
-  color: rgba(255, 255, 255, 0.7);
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
 /* Container */
@@ -59,12 +23,12 @@
 .calc-instructivo h2 {
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
-  color: #4ade80;
+  color: #1a365d;
 }
 
 .calc-subtitle {
   font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #475569;
   margin-bottom: 1rem;
 }
 
@@ -79,10 +43,11 @@
   display: flex;
   gap: 1rem;
   align-items: flex-start;
-  background: rgba(255, 255, 255, 0.05);
+  background: white;
   padding: 1rem;
   border-radius: 12px;
-  border-left: 3px solid #4ade80;
+  border-left: 3px solid #1a365d;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .paso-numero {
@@ -92,45 +57,47 @@
 .calc-paso h4 {
   margin: 0 0 0.3rem 0;
   font-size: 1rem;
-  color: #fff;
+  color: #1e293b;
 }
 
 .calc-paso p {
   margin: 0;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #64748b;
 }
 
 /* Formulario */
 .calc-formulario {
-  background: rgba(255, 255, 255, 0.1);
+  background: white;
   padding: 2rem;
   border-radius: 16px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  border: 1px solid #e2e8f0;
 }
 
 .calc-formulario h3 {
   text-align: center;
   margin-bottom: 1.5rem;
   font-size: 1.4rem;
+  color: #1a365d;
 }
 
 .calibre-seleccionado {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(74, 222, 128, 0.2);
+  background: #f0fdf4;
   padding: 0.75rem 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
-  border: 1px solid rgba(74, 222, 128, 0.3);
+  border: 1px solid #86efac;
+  color: #166534;
 }
 
 .btn-limpiar {
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: #64748b;
   cursor: pointer;
   font-size: 0.9rem;
 }
@@ -147,34 +114,36 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
+  color: #334155;
 }
 
 .form-group input {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1.1rem;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid #e2e8f0;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: #f8fafc;
+  color: #1e293b;
   transition: border-color 0.2s;
   box-sizing: border-box;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #4ade80;
+  border-color: #1a365d;
+  background: white;
 }
 
 .form-group input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: #94a3b8;
 }
 
 .input-hint {
   display: block;
   margin-top: 0.3rem;
   font-size: 0.8rem;
-  color: rgba(74, 222, 128, 0.8);
+  color: #22c55e;
 }
 
 .btn-calcular {
@@ -182,8 +151,8 @@
   padding: 1rem;
   font-size: 1.1rem;
   font-weight: 600;
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-  color: #000;
+  background: linear-gradient(135deg, #1a365d 0%, #2d5a87 100%);
+  color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -192,17 +161,17 @@
 
 .btn-calcular:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(74, 222, 128, 0.4);
+  box-shadow: 0 4px 20px rgba(26, 54, 93, 0.4);
 }
 
 .calc-error {
-  background: rgba(239, 68, 68, 0.2);
+  background: #fef2f2;
   border: 1px solid #ef4444;
   padding: 0.75rem;
   border-radius: 8px;
   margin-top: 1rem;
   text-align: center;
-  color: #fca5a5;
+  color: #dc2626;
 }
 
 /* Resultado */
@@ -219,12 +188,12 @@
 }
 
 .calc-resultado.no-requiere {
-  background: linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%);
-  border: 2px solid #4ade80;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #22c55e;
 }
 
 .calc-resultado.requiere {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%);
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
   border: 2px solid #ef4444;
 }
 
@@ -235,18 +204,19 @@
 }
 
 .calc-resultado.no-requiere h4 {
-  color: #4ade80;
+  color: #166534;
 }
 
 .calc-resultado.requiere h4 {
-  color: #ef4444;
+  color: #dc2626;
 }
 
 .resultado-datos {
-  background: rgba(255, 255, 255, 0.1);
+  background: white;
   padding: 0.75rem 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
+  color: #334155;
 }
 
 .resultado-datos p {
@@ -254,32 +224,35 @@
 }
 
 .resultado-limite {
-  background: rgba(59, 130, 246, 0.2);
+  background: #eff6ff;
   padding: 0.75rem 1rem;
   border-radius: 8px;
   border-left: 3px solid #3b82f6;
   margin-top: 1rem;
+  color: #1e40af;
 }
 
 .resultado-limite small {
-  color: rgba(255, 255, 255, 0.7);
+  color: #64748b;
 }
 
 .info-registro {
-  background: rgba(0, 0, 0, 0.2);
+  background: #fffbeb;
   padding: 1rem;
   border-radius: 8px;
   margin-top: 1rem;
+  border: 1px solid #fbbf24;
 }
 
 .info-registro h5 {
   margin: 0 0 0.75rem 0;
-  color: #fbbf24;
+  color: #b45309;
 }
 
 .info-registro ol {
   margin: 0;
   padding-left: 1.25rem;
+  color: #78350f;
 }
 
 .info-registro li {
@@ -296,11 +269,12 @@
   text-align: center;
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
+  color: #1a365d;
 }
 
 .preclasificador-desc {
   text-align: center;
-  color: rgba(255, 255, 255, 0.7);
+  color: #64748b;
   margin-bottom: 2rem;
 }
 
@@ -311,20 +285,21 @@
 .categoria-header {
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .categoria-header h4 {
   margin: 0;
   font-size: 1.1rem;
+  color: #1e293b;
 }
 
 .categoria-header small {
-  color: rgba(255, 255, 255, 0.6);
+  color: #64748b;
 }
 
 .calibre-categoria.grandes .categoria-header h4 {
-  color: #fbbf24;
+  color: #b45309;
 }
 
 .calibres-grid {
@@ -334,69 +309,74 @@
 }
 
 .calibre-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: white;
+  border: 2px solid #e2e8f0;
   border-radius: 12px;
   padding: 1.25rem;
   cursor: pointer;
   transition: all 0.2s;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .calibre-card:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(74, 222, 128, 0.5);
+  background: #f8fafc;
+  border-color: #1a365d;
   transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .calibre-card.selected {
-  background: rgba(74, 222, 128, 0.2);
-  border-color: #4ade80;
+  background: #f0fdf4;
+  border-color: #22c55e;
 }
 
 .calibre-nombre {
   font-weight: 600;
   font-size: 1rem;
   margin-bottom: 0.5rem;
+  color: #1e293b;
 }
 
 .calibre-peso {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #64748b;
 }
 
 .calibre-limite {
   font-size: 0.85rem;
-  color: #4ade80;
+  color: #166534;
   font-weight: 500;
   margin: 0.25rem 0;
 }
 
 .calibre-uso {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: #94a3b8;
   margin-top: 0.5rem;
 }
 
 .calibre-categoria.grandes .calibre-card .calibre-limite {
-  color: #fbbf24;
+  color: #b45309;
 }
 
 /* Marco Legal */
 .calc-legal {
-  background: rgba(255, 255, 255, 0.05);
+  background: white;
   border-radius: 16px;
   padding: 2rem;
   margin-bottom: 3rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .calc-legal h3 {
   text-align: center;
   margin-bottom: 1.5rem;
+  color: #1a365d;
 }
 
 .legal-articulo {
-  background: rgba(0, 0, 0, 0.2);
+  background: #f8fafc;
   padding: 1.5rem;
   border-radius: 12px;
   margin-bottom: 1.5rem;
@@ -411,6 +391,7 @@
 .legal-articulo p {
   margin: 0;
   line-height: 1.6;
+  color: #334155;
 }
 
 .legal-resumen {
@@ -428,13 +409,13 @@
 }
 
 .legal-item.verde {
-  background: rgba(74, 222, 128, 0.1);
-  border: 1px solid rgba(74, 222, 128, 0.3);
+  background: #f0fdf4;
+  border: 1px solid #86efac;
 }
 
 .legal-item.rojo {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
 }
 
 .legal-icon {
@@ -444,29 +425,13 @@
 .legal-item strong {
   display: block;
   margin-bottom: 0.25rem;
+  color: #1e293b;
 }
 
 .legal-item p {
   margin: 0;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-/* Footer */
-.calc-footer {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 2rem;
-  border-radius: 16px;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 2rem;
-  align-items: start;
-}
-
-.footer-club {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
+  color: #64748b;
 }
 
 .footer-logo {
