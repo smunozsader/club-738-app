@@ -1,10 +1,26 @@
 # Club 738 Web - TO-DO / Roadmap
 
-**Última actualización**: 5 de enero 2026
+**Última actualización**: 5 de enero 2026 (v1.9.1)
 
 ---
 
 ## ✅ Completado
+
+### v1.9.1 - Renombrado Sitio Web (5 Ene 2026)
+- [x] Título cambiado a "Club de Caza, Tiro y Pesca de Yucatán, A.C."
+- [x] Meta descripción actualizada
+- [x] 6 mensajes VIP actualizados con nuevo nombre
+- [x] Texto de ORIGINALES corregido en mensajes VIP
+- [x] Agregado: "Foto infantil; una para cada PETA"
+- [x] Agregado: "Formato de PAGO e5 por derechos"
+
+### v1.9.0 - Normalización Domicilios + UI (5 Ene 2026)
+- [x] 76 domicilios normalizados en Excel
+- [x] Domicilios importados a Firestore (calle, colonia, municipio, estado, cp)
+- [x] GeneradorPETA lee domicilio de Firestore y pre-llena campos
+- [x] Headers unificados (LandingPage, CalendarioTiradas, CalculadoraPCP)
+- [x] Footers unificados con WhatsApp + Email mailto:
+- [x] VIP Ariel Paredes agregado
 
 ### v1.8.0 - UI Consistency (5 Ene 2026)
 - [x] Headers unificados (LandingPage, CalendarioTiradas, CalculadoraPCP, Dashboard)
@@ -54,8 +70,8 @@
 ### � Base de Datos
 | Tarea | Prioridad | Descripción |
 |-------|-----------|-------------|
-| **Normalizar domicilios** | Alta | Agregar campos estructurados: calle, colonia, cp, municipio, estado |
-| Migrar datos Excel | Alta | Importar domicilios desde RELACION_SOCIOS_ARMAS NORMALIZADA.xlsx |
+| ~~**Normalizar domicilios**~~ | ~~Alta~~ | ✅ Completado v1.9.0 |
+| ~~Migrar datos Excel~~ | ~~Alta~~ | ✅ 76 domicilios importados a Firestore |
 | Validar CURPs | Media | Verificar formato y datos extraídos |
 
 ### �💰 Módulo de Cobranza
@@ -69,10 +85,10 @@
 | Tarea | Prioridad | Descripción |
 |-------|-----------|-------------|
 | **Solicitar PETA** | Alta | Formulario para socio solicite PETA (Tiro/Competencia/Caza) |
-| **Generador oficios** | Alta | Generar PDF solicitud PETA formato SEDENA |
+| ~~**Generador oficios**~~ | ~~Alta~~ | ✅ Completado v1.8.0 - GeneradorPETA.jsx |
 | **Tracker trámites** | Alta | Dashboard estado de cada solicitud |
-| Selección de armas | Alta | Elegir máx 10 armas del inventario del socio |
-| Selección de estados | Alta | Elegir máx 10 estados (Caza/Competencia) |
+| ~~Selección de armas~~ | ~~Alta~~ | ✅ Máx 10 armas del inventario del socio |
+| ~~Selección de estados~~ | ~~Alta~~ | ✅ Máx 10 estados (Caza/Competencia) |
 | **Alertas vencimiento** | Media | Notificar cuando PETA esté por vencer |
 | Historial PETAs | Media | Ver PETAs anteriores del socio |
 
@@ -127,9 +143,10 @@ documentacion_proceso → documentacion_completa → enviado_32zm → revision_s
 | Métrica | Valor |
 |---------|-------|
 | Total socios en BD | 76 |
+| Domicilios en Firestore | 76 (100%) |
 | Credenciales generadas | 35 |
 | Credenciales pendientes | 41 (sin foto) |
-| Versión actual | v1.7.0 |
+| Versión actual | v1.9.1 |
 | Última release | 5 Ene 2026 |
 
 ---
