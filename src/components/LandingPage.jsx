@@ -163,8 +163,8 @@ const LandingPage = () => {
               <div className="requisitos-section">
                 <h3>📄 Documentación Requerida</h3>
                 <ul>
-                  <li>Solicitud en formato libre</li>
-                  <li>Compromiso Art. 80 Ley de Armas</li>
+                  <li>Solicitud en formato del club (se proporciona)</li>
+                  <li>Compromiso Art. 80 Ley de Armas (se proporciona)</li>
                   <li>Acta de Nacimiento (2 copias)</li>
                   <li>Cartilla Militar liberada (2 copias)</li>
                   <li>Registro Federal de Armas - RFA (2 copias por arma)</li>
@@ -174,8 +174,8 @@ const LandingPage = () => {
                   <li>INE vigente (2 copias)</li>
                   <li>Comprobante de domicilio (2 copias)</li>
                   <li>Licencia de Caza SEMARNAT vigente (2 copias)</li>
-                  <li>Constancia Modo Honesto de Vivir (original + copia)</li>
-                  <li>Constancia de No Antecedentes Penales (original + copia)</li>
+                  <li>Constancia Modo Honesto de Vivir (original + copia) - Se proporciona formato</li>
+                  <li>Constancia de Antecedentes Penales Federales (original + copia) - <a href="https://constancias.oadprs.gob.mx/" target="_blank" rel="noopener noreferrer">Tramitar aquí</a></li>
                   <li>Certificado Médico (original + copia)</li>
                   <li>Certificado Toxicológico (original + copia)</li>
                   <li>Certificado Psicológico (original + copia)</li>
@@ -220,7 +220,6 @@ const LandingPage = () => {
                 <ul>
                   <li>NO incluye pago de derechos (forma e5cinco)</li>
                   <li>NO incluye costos de mensajería</li>
-                  <li>NO se acepta documentación digitalizada</li>
                   <li>Trámite personal, no enviar intermediarios</li>
                 </ul>
               </div>

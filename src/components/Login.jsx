@@ -131,11 +131,11 @@ export default function Login({ onLoginSuccess }) {
                 <li>Certificado Psicológico formato oficial (original + copia)</li>
               </ol>
 
-              <h3>Cuotas 2025</h3>
+              <h3>Cuotas 2026</h3>
               <table className="cuotas-table">
                 <tbody>
                   <tr><td>Inscripción</td><td>$2,000.00 MXN</td></tr>
-                  <tr><td>Cuota Anual</td><td>$6,500.00 MXN</td></tr>
+                  <tr><td>Cuota Anual</td><td>$6,000.00 MXN</td></tr>
                   <tr><td>FEMETI primer ingreso</td><td>$700.00 MXN</td></tr>
                   <tr><td>FEMETI socios</td><td>$350.00 MXN</td></tr>
                 </tbody>
@@ -145,7 +145,6 @@ export default function Login({ onLoginSuccess }) {
               <ul>
                 <li><strong>Incluye:</strong> 1 trámite de permiso de transportación</li>
                 <li><strong>NO incluye:</strong> Pago de derechos (forma e5), costos de mensajería</li>
-                <li><strong>NO se acepta:</strong> Documentación digitalizada (solo físicos)</li>
                 <li><strong>Trámite personal:</strong> No enviar intermediarios</li>
               </ul>
 

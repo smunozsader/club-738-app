@@ -146,8 +146,8 @@ async function importarFechasAlta() {
   console.log(`Total socios: ${actualizados}`);
   console.log(`Exentos: ${totalExentos}`);
   console.log(`Deben pagar: ${debenPagar}`);
-  console.log(`Cuota anual: $6,500 MXN`);
-  console.log(`Ingreso estimado: $${(debenPagar * 6500).toLocaleString()} MXN`);
+  console.log(`Cuota anual: $6,000 MXN`);
+  console.log(`Ingreso estimado: $${(debenPagar * 6000).toLocaleString()} MXN`);
   console.log(`Fecha límite: 28 de febrero 2026`);
 }
 

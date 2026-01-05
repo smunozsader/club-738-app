@@ -10,7 +10,7 @@ import { db } from '../firebaseConfig';
 import './DashboardRenovaciones.css';
 
 // Configuración de cuotas
-const CUOTA_CLUB = 6500;
+const CUOTA_CLUB = 6000;
 const CUOTA_FEMETI_SOCIO = 350;
 const CUOTA_FEMETI_NUEVO = 700;
 const FECHA_LIMITE = new Date('2026-02-28');
@@ -414,7 +414,7 @@ export default function DashboardRenovaciones({ userEmail, onVerDocumentos }) {
             <div className="pago-info">
               <p><strong>Socio:</strong> {socioSeleccionado.nombre}</p>
               <p><strong>Email:</strong> {socioSeleccionado.email}</p>
-              <p><strong>Cuota:</strong> $6,500 MXN</p>
+              <p><strong>Cuota:</strong> $6,000 MXN</p>
             </div>
 
             <div className="pago-form">
