@@ -210,6 +210,65 @@
 .arma-details {
   font-size: 0.85rem;
   color: #7f8c8d;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Modalidad tag en lista de armas */
+.modalidad-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.modalidad-tag.caza {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.modalidad-tag.tiro {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.modalidad-tag.ambas {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.modalidad-tag.pendiente {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+/* Arma con advertencia de modalidad (informativo, no bloquea) */
+.arma-checkbox.advertencia {
+  border-color: #fff3cd;
+  background: #fffbf0;
+}
+
+.arma-checkbox.advertencia:hover {
+  background: #fff8e1;
+  cursor: pointer;
+}
+
+.arma-checkbox.sin-modalidad {
+  border-color: #ffe0b2;
+  background: #fff8e1;
+}
+
+.modalidad-advertencia {
+  font-size: 0.8rem;
+  color: #856404;
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: #fff3cd;
+  border-radius: 4px;
 }
 
 /* Estados grid */
@@ -245,6 +304,41 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
+}
+
+/* Estados sugeridos */
+.estados-sugeridos {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border: 1px solid #4caf50;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.btn-sugerir {
+  background: linear-gradient(135deg, #4caf50, #388e3c);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.btn-sugerir:hover {
+  background: linear-gradient(135deg, #388e3c, #2e7d32);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.sugeridos-info {
+  margin: 12px 0 0 0;
+  font-size: 0.85rem;
+  color: #2e7d32;
 }
 
 /* Alerts */

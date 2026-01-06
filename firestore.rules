@@ -70,12 +70,29 @@ service cloud.firestore {
       // SUBCOLECCIÓN: armas
       // ======================================================================
       // Cada socio puede leer sus propias armas
-      // El secretario puede leer las armas de cualquier socio
-      // No permitir crear/modificar/eliminar desde cliente
+      // El secretario puede leer y actualizar las armas (para asignar modalidad)
+      // No permitir crear/eliminar desde cliente
       
       match /armas/{armaId} {
         allow read: if isOwner(email) || isSecretario();
-        allow write: if false; // Solo admin puede modificar armas
+        // Secretario puede actualizar modalidad de armas
+        allow update: if isSecretario() 
+          && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['modalidad']);
+        allow create, delete: if false; // Solo admin puede crear/eliminar armas
+      }
+      
+      // ======================================================================
+      // SUBCOLECCIÓN: petas
+      // ======================================================================
+      // Cada socio puede leer/crear sus propias solicitudes PETA
+      // El secretario puede leer y actualizar todas las PETAs
+      
+      match /petas/{petaId} {
+        allow read: if isOwner(email) || isSecretario();
+        allow create: if isOwner(email);
+        allow update: if isOwner(email) || isSecretario();
+        allow delete: if false; // No permitir eliminar solicitudes
       }
     }
     

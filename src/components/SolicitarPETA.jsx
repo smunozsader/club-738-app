@@ -21,6 +21,33 @@ const ESTADOS_MEXICO = [
   'Yucatán', 'Zacatecas'
 ];
 
+// Estados sugeridos para Tiro Práctico/Competencia Nacional FEMETI 2026
+// Basado en sedes de competencias nacionales registradas
+const ESTADOS_SUGERIDOS_TIRO = [
+  'Yucatán',           // Base del club
+  'Baja California',   // Sede FEMETI
+  'Coahuila',          // Sede FEMETI
+  'Estado de México',  // Sede FEMETI
+  'Guanajuato',        // Sede FEMETI
+  'Hidalgo',           // Sede FEMETI
+  'Jalisco',           // Sede FEMETI
+  'Michoacán',         // Sede FEMETI
+  'San Luis Potosí',   // Sede FEMETI
+  'Tabasco'            // Sede FEMETI (región Sureste)
+];
+
+// Estados sugeridos para Caza (región Sureste y zonas cinégeticas populares)
+const ESTADOS_SUGERIDOS_CAZA = [
+  'Yucatán',           // Base del club
+  'Campeche',          // Región Sureste - UMAs
+  'Quintana Roo',      // Región Sureste - UMAs
+  'Tabasco',           // Región Sureste
+  'Chiapas',           // Región Sureste
+  'Veracruz',          // Región Sureste
+  'Tamaulipas',        // Zona cinégetica popular
+  'Sonora'             // Zona cinégetica popular
+];
+
 export default function SolicitarPETA({ userEmail, onBack }) {
   const [loading, setLoading] = useState(true);
   const [enviando, setEnviando] = useState(false);
@@ -131,6 +158,36 @@ export default function SolicitarPETA({ userEmail, onBack }) {
     if (armasSeleccionadas.length === 0) {
       alert('Debes seleccionar al menos 1 arma');
       return false;
+    }
+    
+    // ⚠️ ADVERTENCIA (no bloqueo) si la modalidad sugerida no coincide
+    const armasConAdvertencia = armasSeleccionadas.map(armaId => {
+      const arma = armas.find(a => a.id === armaId);
+      if (!arma.modalidad) {
+        return { arma, razon: 'sin modalidad sugerida' };
+      }
+      // Si es PETA de caza, arma tiene modalidad sugerida 'tiro'
+      if (tipoPETA === 'caza' && arma.modalidad === 'tiro') {
+        return { arma, razon: 'modalidad sugerida: TIRO' };
+      }
+      // Si es PETA de tiro/competencia, arma tiene modalidad sugerida 'caza'
+      if ((tipoPETA === 'tiro' || tipoPETA === 'competencia') && arma.modalidad === 'caza') {
+        return { arma, razon: 'modalidad sugerida: CAZA' };
+      }
+      return null;
+    }).filter(Boolean);
+    
+    // Mostrar advertencia pero permitir continuar
+    if (armasConAdvertencia.length > 0) {
+      const lista = armasConAdvertencia.map(({ arma, razon }) => 
+        `• ${arma.marca} ${arma.modelo} (${arma.matricula}): ${razon}`
+      ).join('\n');
+      const continuar = confirm(
+        `⚠️ ADVERTENCIA: Las siguientes armas tienen una modalidad sugerida diferente a "${tipoPETA.toUpperCase()}":\n\n${lista}\n\n` +
+        `La modalidad real depende de tu Registro Federal de Armas (RFA).\n\n` +
+        `¿Deseas continuar con la solicitud?`
+      );
+      if (!continuar) return false;
     }
     
     // Validar estados (solo para competencia/caza)
@@ -337,21 +394,44 @@ export default function SolicitarPETA({ userEmail, onBack }) {
             </div>
           ) : (
             <div className="armas-list">
-              {armas.map(arma => (
-                <label key={arma.id} className={`arma-checkbox ${armasSeleccionadas.includes(arma.id) ? 'selected' : ''}`}>
-                  <input
-                    type="checkbox"
-                    checked={armasSeleccionadas.includes(arma.id)}
-                    onChange={() => toggleArma(arma.id)}
-                  />
-                  <div className="arma-info">
-                    <div className="arma-clase">{arma.clase} {arma.marca} {arma.calibre}</div>
-                    <div className="arma-details">
-                      Modelo: {arma.modelo || 'N/A'} | Matrícula: {arma.matricula}
+              {armas.map(arma => {
+                // Verificar si la modalidad SUGERIDA coincide con tipo de PETA
+                const modalidadCoincide = arma.modalidad === 'ambas' || 
+                  (tipoPETA === 'caza' && arma.modalidad === 'caza') ||
+                  ((tipoPETA === 'tiro' || tipoPETA === 'competencia') && arma.modalidad === 'tiro');
+                const sinModalidad = !arma.modalidad;
+                
+                return (
+                  <label 
+                    key={arma.id} 
+                    className={`arma-checkbox ${armasSeleccionadas.includes(arma.id) ? 'selected' : ''} ${!modalidadCoincide && !sinModalidad ? 'advertencia' : ''} ${sinModalidad ? 'sin-modalidad' : ''}`}
+                    title={!modalidadCoincide && !sinModalidad ? `Modalidad sugerida: ${arma.modalidad.toUpperCase()} (verifica tu RFA)` : ''}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={armasSeleccionadas.includes(arma.id)}
+                      onChange={() => toggleArma(arma.id)}
+                    />
+                    <div className="arma-info">
+                      <div className="arma-clase">{arma.clase} {arma.marca} {arma.calibre}</div>
+                      <div className="arma-details">
+                        Modelo: {arma.modelo || 'N/A'} | Matrícula: {arma.matricula}
+                        <span className={`modalidad-tag ${arma.modalidad || 'pendiente'}`}>
+                          {arma.modalidad === 'caza' && '🦌 Caza'}
+                          {arma.modalidad === 'tiro' && '🎯 Tiro'}
+                          {arma.modalidad === 'ambas' && '✅ Ambas'}
+                          {!arma.modalidad && '⏳ Pendiente'}
+                        </span>
+                      </div>
+                      {!modalidadCoincide && !sinModalidad && (
+                        <div className="modalidad-advertencia">
+                          💡 Modalidad sugerida: {arma.modalidad} — Verifica tu RFA
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </label>
-              ))}
+                  </label>
+                );
+              })}
             </div>
           )}
         </div>
@@ -361,6 +441,26 @@ export default function SolicitarPETA({ userEmail, onBack }) {
           <div className="form-section">
             <h3>Selecciona estados (máximo 10)</h3>
             <p className="help-text">Seleccionaste: {estadosSeleccionados.length}/10</p>
+            
+            {/* Botón de estados sugeridos */}
+            <div className="estados-sugeridos">
+              <button 
+                type="button"
+                className="btn-sugerir"
+                onClick={() => {
+                  const sugeridos = tipoPETA === 'caza' ? ESTADOS_SUGERIDOS_CAZA : ESTADOS_SUGERIDOS_TIRO;
+                  setEstadosSeleccionados(sugeridos);
+                }}
+              >
+                ✨ Usar estados sugeridos para {tipoPETA === 'caza' ? 'Caza (Sureste + UMAs)' : 'Tiro Práctico (FEMETI 2026)'}
+              </button>
+              <p className="sugeridos-info">
+                {tipoPETA === 'caza' 
+                  ? '🦌 Incluye: Yucatán, Campeche, Q. Roo, Tabasco, Chiapas, Veracruz, Tamaulipas, Sonora'
+                  : '🎯 Incluye: Yucatán, Baja California, Coahuila, Edo. Méx, Guanajuato, Hidalgo, Jalisco, Michoacán, SLP, Tabasco'
+                }
+              </p>
+            </div>
             
             <div className="estados-grid">
               {ESTADOS_MEXICO.map(estado => (

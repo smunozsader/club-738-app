@@ -6,6 +6,18 @@
 
 ## ✅ Completado
 
+### v1.10.1 - Modalidad Armas + Estados Sugeridos (5 Ene 2026)
+- [x] **Campo modalidad en armas** - 'caza', 'tiro', 'ambas'
+- [x] **Script actualizar-modalidad-armas.cjs** - Inferencia automática
+- [x] 310 armas clasificadas (46 caza, 180 tiro, 84 ambas)
+- [x] **MisArmas.jsx** - Secretario puede editar modalidad con dropdown
+- [x] **SolicitarPETA.jsx** - Advertencia (no bloqueo) por modalidad
+- [x] **Estados sugeridos FEMETI 2026** - 10 estados para Tiro Práctico
+- [x] **Estados sugeridos Caza** - 8 estados región Sureste + UMAs
+- [x] Botón "Usar estados sugeridos" en formulario PETA
+- [x] Firestore rules para subcolección petas
+- [x] Secretario puede actualizar modalidad de armas
+
 ### v1.10.0 - Módulo PETA Completo (5 Ene 2026)
 - [x] **SolicitarPETA.jsx** - Formulario para socios soliciten PETAs
 - [x] **MisPETAs.jsx** - Vista de estado de solicitudes PETA

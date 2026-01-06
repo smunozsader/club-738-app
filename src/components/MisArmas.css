@@ -384,6 +384,93 @@
   color: #666;
 }
 
+/* Modalidad del arma */
+.arma-modalidad {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #e0e0e0;
+  font-size: 0.9rem;
+}
+
+.arma-modalidad strong {
+  color: #555;
+}
+
+.modalidad-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.modalidad-badge.caza {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.modalidad-badge.tiro {
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+
+.modalidad-badge.ambas {
+  background: #f3e5f5;
+  color: #7b1fa2;
+  border: 1px solid #ce93d8;
+}
+
+.modalidad-badge.sin-asignar {
+  background: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffcc80;
+}
+
+/* Select para secretario */
+.modalidad-select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 2px solid #ddd;
+  background: white;
+  transition: all 0.2s;
+}
+
+.modalidad-select:hover {
+  border-color: #1a472a;
+}
+
+.modalidad-select:focus {
+  outline: none;
+  border-color: #1a472a;
+  box-shadow: 0 0 0 3px rgba(26, 71, 42, 0.1);
+}
+
+.modalidad-select.caza {
+  border-color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.modalidad-select.tiro {
+  border-color: #1565c0;
+  background: #e3f2fd;
+}
+
+.modalidad-select.ambas {
+  border-color: #7b1fa2;
+  background: #f3e5f5;
+}
+
+.modalidad-select:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 .tips-content h4 {
   margin: 0 0 15px 0;
   color: #1a472a;

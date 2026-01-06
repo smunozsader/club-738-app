@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, doc } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebaseConfig';
 import './MisArmas.css';
@@ -11,10 +11,33 @@ import './MisArmas.css';
 export default function MisArmas({ user }) {
   const [armas, setArmas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [actualizando, setActualizando] = useState(null);
+
+  // Verificar si es secretario
+  const isSecretario = user.email.toLowerCase() === 'smunozam@gmail.com';
 
   useEffect(() => {
     cargarArmas();
   }, [user.email]);
+
+  // Función para cambiar modalidad de un arma
+  const cambiarModalidad = async (armaId, nuevaModalidad) => {
+    setActualizando(armaId);
+    try {
+      const armaRef = doc(db, 'socios', user.email.toLowerCase(), 'armas', armaId);
+      await updateDoc(armaRef, { modalidad: nuevaModalidad });
+      
+      // Actualizar estado local
+      setArmas(armas.map(a => 
+        a.id === armaId ? { ...a, modalidad: nuevaModalidad } : a
+      ));
+    } catch (error) {
+      console.error('Error actualizando modalidad:', error);
+      alert('Error al actualizar la modalidad');
+    } finally {
+      setActualizando(null);
+    }
+  };
 
   const cargarArmas = async () => {
     try {
@@ -123,6 +146,31 @@ export default function MisArmas({ user }) {
                   <span><strong>Calibre:</strong> {arma.calibre}</span>
                   <span><strong>Matrícula:</strong> {arma.matricula}</span>
                   <span><strong>Folio:</strong> {arma.folio}</span>
+                </div>
+                
+                {/* Modalidad del arma */}
+                <div className="arma-modalidad">
+                  <strong>Modalidad PETA:</strong>
+                  {isSecretario ? (
+                    <select 
+                      value={arma.modalidad || ''}
+                      onChange={(e) => cambiarModalidad(arma.id, e.target.value)}
+                      disabled={actualizando === arma.id}
+                      className={`modalidad-select ${arma.modalidad || 'sin-asignar'}`}
+                    >
+                      <option value="">Sin asignar</option>
+                      <option value="caza">🦌 Caza</option>
+                      <option value="tiro">🎯 Tiro</option>
+                      <option value="ambas">✅ Ambas</option>
+                    </select>
+                  ) : (
+                    <span className={`modalidad-badge ${arma.modalidad || 'sin-asignar'}`}>
+                      {arma.modalidad === 'caza' && '🦌 Caza'}
+                      {arma.modalidad === 'tiro' && '🎯 Tiro'}
+                      {arma.modalidad === 'ambas' && '✅ Ambas'}
+                      {!arma.modalidad && '⏳ Pendiente'}
+                    </span>
+                  )}
                 </div>
               </div>
 
