@@ -11,7 +11,7 @@
 Club de Caza, Tiro y Pesca de Yucatán, A.C.
 Calle 50 No. 531-E x 69 y 71
 Col. Centro, 97000 Mérida, Yucatán
-Tel: +52 56 6582 4667
+Tel: +52 56 6582 4667 (WhatsApp)
 Email: tiropracticoyucatan@gmail.com
 
 Registros Oficiales:
@@ -21,6 +21,63 @@ Registros Oficiales:
 
 Fundado: 2005
 ```
+
+---
+
+## 🔄 Git Workflow (Multi-Machine Development)
+
+### Repositorio
+```
+https://github.com/smunozsader/club-738-app.git
+```
+
+### Máquinas de Desarrollo
+| Máquina | OS | Ruta |
+|---------|-----|------|
+| iMac Desktop | macOS | `/Applications/club-738-web` |
+| Laptop | Windows | `C:\Users\smuno\Club_738_Webapp\club-738-app` |
+
+### Flujo Diario OBLIGATORIO
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  AL EMPEZAR A TRABAJAR (en cualquier máquina)          │
+├─────────────────────────────────────────────────────────┤
+│  git pull                                               │
+│  (o en VS Code: Source Control → ... → Pull)           │
+└─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│  AL TERMINAR DE TRABAJAR                               │
+├─────────────────────────────────────────────────────────┤
+│  git add .                                              │
+│  git commit -m "descripción de cambios"                │
+│  git push                                               │
+│                                                         │
+│  (o en VS Code: Source Control → + → Commit → Push)    │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Resolución de Conflictos
+Si olvidaste hacer pull y hay cambios remotos:
+```bash
+git pull --rebase
+# Si hay conflictos, resolverlos manualmente
+git add .
+git rebase --continue
+git push
+```
+
+### Archivos que NO se sincronizan (en .gitignore)
+```
+node_modules/           # Se regenera con npm install
+scripts/serviceAccountKey.json  # Credenciales Firebase Admin
+dist/                   # Build de producción
+```
+
+**IMPORTANTE**: El archivo `serviceAccountKey.json` debe copiarse manualmente a cada máquina (USB, email seguro, etc.)
+
+---
 
 ## Architecture
 
@@ -225,8 +282,8 @@ src/
 ## Requisitos para Socios Nuevos
 
 ### Documentación (16 puntos)
-1. Solicitud formato libre
-2. Compromiso Art. 80 Ley de Armas
+1. Solicitud en formato del club (se proporciona)
+2. Compromiso Art. 80 Ley de Armas (se proporciona)
 3. Acta de Nacimiento (2 copias)
 4. Cartilla Militar liberada (2 copias)
 5. Registro Federal de Armas - RFA (2 copias por arma)
@@ -236,8 +293,8 @@ src/
 9. INE vigente (2 copias)
 10. Comprobante de domicilio (2 copias)
 11. Licencia de Caza SEMARNAT vigente (2 copias)
-12. Constancia Modo Honesto de Vivir (original + copia)
-13. Constancia de No Antecedentes Penales (original + copia)
+12. Constancia Modo Honesto de Vivir (original + copia) - Se proporciona formato
+13. Constancia de Antecedentes Penales Federales (original + copia) - https://constancias.oadprs.gob.mx/
 14. Certificado Médico (original + copia)
 15. Certificado Toxicológico (original + copia)
 16. Certificado Psicológico (original + copia)
@@ -303,6 +360,13 @@ socios/{email}
 ├── fechaAlta: timestamp
 ├── totalArmas: number
 ├── bienvenidaVista: boolean
+├── domicilio: {              # Agregado v1.9.0
+│     calle: string
+│     colonia: string
+│     municipio: string
+│     estado: string
+│     cp: string
+│   }
 ├── documentosPETA: {
 │     curp: { url, verificado, fechaSubida }
 │     constancia: { url, verificado, fechaSubida }
@@ -372,21 +436,47 @@ curp_socios/*.pdf
 
 Los scripts en /scripts/ requieren serviceAccountKey.json (nunca commitear):
 
+### Scripts de Importación
 | Script | Propósito |
 |--------|-----------|
 | importar-usuarios-firebase.cjs | Crear usuarios en Firebase Auth |
 | importar-armas-firestore.cjs | Poblar armas desde Excel |
 | importar-fechas-alta.cjs | Importar fechas de alta de socios |
+| importar-domicilios-firestore.cjs | Importar domicilios estructurados |
 | actualizar-curps-firestore.cjs | Sincronizar CURPs |
+| agregar-socios-faltantes.cjs | Agregar socios que faltan en Firestore |
+
+### Scripts de Storage
+| Script | Propósito |
+|--------|-----------|
 | subir-curps.cjs | Subir PDFs de CURP a Storage |
 | subir-constancias-firebase.cjs | Subir constancias a Storage |
-| subir-constancias-corregido.cjs | Versión corregida de subida de constancias |
-| agregar-socios-faltantes.cjs | Agregar socios que faltan en Firestore |
-| buscar-vips.cjs | Búsqueda de socios VIP |
+| subir-constancias-corregido.cjs | Versión corregida de subida |
 | check-storage.cjs | Verificar archivos en Storage |
-| comparar-emails.cjs | Comparar emails entre fuentes |
-| arqueo-curps.py | Arqueo de CURPs (Python) |
+
+### Scripts de Normalización (Excel)
+| Script | Propósito |
+|--------|-----------|
+| normalizar-domicilios.cjs | Convertir saltos de línea a comas |
+| normalizar-domicilios-paso2.cjs | Ajustes finos de formato |
+| eliminar-filas-totales.cjs | Eliminar filas "TOTAL POR PERSONA" |
+| domicilios-compartidos.cjs | Identificar familias con mismo domicilio |
 | corregir-curps-excel.py | Corrección de CURPs en Excel |
+
+### Scripts de Verificación
+| Script | Propósito |
+|--------|-----------|
+| verificar-domicilios-firestore.cjs | Verificar domicilios en Firestore |
+| comparar-emails.cjs | Comparar emails entre fuentes |
+| buscar-vips.cjs | Búsqueda de socios VIP |
+| buscar-ariel.cjs | Buscar socio específico |
+| buscar-richfer.cjs | Buscar socio específico |
+| agregar-richfer0304.cjs | Agregar socio faltante |
+| arqueo-curps.py | Arqueo de CURPs (Python) |
+
+### Scripts de Credenciales
+| Script | Propósito |
+|--------|-----------|
 | crear_pdfs_credenciales.py | Generar PDFs de credenciales del club |
 
 ## Common Gotchas
@@ -421,7 +511,19 @@ Estados: Yucatán, Campeche, Quintana Roo, Tabasco, Chiapas, Veracruz
 ## Pending Features
 
 - [x] Generación de credencial del club (PDF) - Script: `crear_pdfs_credenciales.py`, datos en `Credencial-Club-2026/`
+- [x] Normalización de domicilios - 76 socios con domicilio estructurado en Firestore
+- [x] GeneradorPETA lee domicilio de Firestore y pre-llena campos
 - [ ] Descarga de credencial desde portal del socio (integrar PDFs generados)
 - [ ] Estado de pagos/cobranza por socio
 - [ ] Notificaciones de vencimiento de documentos
 - [ ] Integración con forma e5cinco
+
+## Version History
+
+| Versión | Fecha | Descripción |
+|---------|-------|-------------|
+| v1.9.1 | 5 Ene 2026 | Renombrado sitio, mensajes VIP, cuotas $6,000 |
+| v1.9.0 | 5 Ene 2026 | Domicilios normalizados, UI unificada |
+| v1.8.0 | 5 Ene 2026 | GeneradorPETA, headers/footers unificados |
+| v1.7.0 | 4 Ene 2026 | Credenciales 2026 con Canva |
+| v1.6.x | Dic 2025 | Landing page, calendario, calculadora |
