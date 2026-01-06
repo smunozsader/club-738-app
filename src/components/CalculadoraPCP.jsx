@@ -107,7 +107,7 @@ function CalculadoraPCP() {
       <header className="landing-header">
         <div className="header-content">
           <div className="logo-section">
-            <a href="/" className="logo-link">
+            <a href="/" className="logo-home-link">
               <img src="/assets/logo-club-738.jpg" alt="Club de Caza, Tiro y Pesca de Yucatán" className="logo-img" />
             </a>
             <div>

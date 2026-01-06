@@ -156,7 +156,13 @@ export default function RegistroPagos({ userEmail, onBack }) {
       
       const socioRef = doc(db, 'socios', socioSeleccionado.email);
       
+      // Calcular cuotas separadas para sincronizar con DashboardRenovaciones
+      const cuotaClub = conceptosSeleccionados.cuota_anual ? CONCEPTOS_PAGO.cuota_anual.monto : 0;
+      const cuotaFemeti = (conceptosSeleccionados.femeti ? CONCEPTOS_PAGO.femeti.monto : 0) +
+                         (conceptosSeleccionados.femeti_nuevo ? CONCEPTOS_PAGO.femeti_nuevo.monto : 0);
+      
       // Actualizar documento del socio
+      // Sincronizar con renovacion2026 para que DashboardRenovaciones lo reconozca
       await updateDoc(socioRef, {
         pagos: arrayUnion(registroPago),
         membresia2026: {
@@ -166,6 +172,15 @@ export default function RegistroPagos({ userEmail, onBack }) {
           metodoPago: metodoPago,
           numeroRecibo: numeroRecibo
         },
+        // Sincronizar con renovacion2026 para el panel de cobranza
+        'renovacion2026.estado': 'pagado',
+        'renovacion2026.fechaPago': Timestamp.fromDate(new Date(fechaPago)),
+        'renovacion2026.cuotaClub': cuotaClub,
+        'renovacion2026.cuotaFemeti': cuotaFemeti,
+        'renovacion2026.montoTotal': total,
+        'renovacion2026.metodoPago': metodoPago,
+        'renovacion2026.comprobante': numeroRecibo,
+        'renovacion2026.registradoPor': userEmail,
         ultimaActualizacion: Timestamp.now()
       });
       

@@ -30,7 +30,9 @@ const LandingPage = () => {
       <header className="landing-header">
         <div className="header-content">
           <div className="logo-section">
-            <img src="/assets/logo-club-738.jpg" alt="Club de Caza, Tiro y Pesca de Yucatán" className="logo-img" />
+            <a href="/" className="logo-home-link">
+              <img src="/assets/logo-club-738.jpg" alt="Club de Caza, Tiro y Pesca de Yucatán" className="logo-img" />
+            </a>
             <div>
               <h1>Club de Caza, Tiro y Pesca de Yucatán, A.C.</h1>
             </div>

@@ -1,3 +1,43 @@
+/* ===================================
+   PALETA DE COLORES - Club 738
+   Sistema de diseño unificado
+   =================================== */
+:root {
+  /* Colores Principales (Brand) */
+  --color-primary-dark: #1a365d;
+  --color-primary: #2563eb;
+  --color-primary-light: #3b82f6;
+  
+  /* Colores Neutros (UI) */
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  
+  /* Colores Semánticos */
+  --color-success: #16a34a;
+  --color-success-light: #dcfce7;
+  --color-warning: #d97706;
+  --color-warning-light: #fef3c7;
+  --color-error: #dc2626;
+  --color-error-light: #fee2e2;
+  --color-info: #0284c7;
+  --color-info-light: #e0f2fe;
+  
+  /* Colores Especiales */
+  --color-gold: #b45309;
+  --color-footer-bg: #1e293b;
+  --color-footer-text: #cbd5e1;
+  --color-footer-muted: #94a3b8;
+  
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +46,7 @@
 
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
-  background: #f5f5f5;
+  background: var(--color-background);
 }
 
 .loading {
@@ -15,19 +55,19 @@ body {
   align-items: center;
   min-height: 100vh;
   font-size: 20px;
-  color: #1a472a;
+  color: var(--color-primary-dark);
 }
 
 .app-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-border) 100%);
   display: flex;
   flex-direction: column;
 }
 
 /* Dashboard Header */
 .dashboard-header {
-  background: linear-gradient(135deg, #1a365d 0%, #2d5a87 100%);
+  background: linear-gradient(135deg, var(--color-primary-dark) 0%, #2d5a87 100%);
   color: white;
   padding: 16px 24px;
   display: flex;
@@ -48,6 +88,16 @@ body {
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid rgba(255,255,255,0.3);
+}
+
+.logo-home-link {
+  display: flex;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.logo-home-link:hover {
+  transform: scale(1.05);
 }
 
 .header-titles h1 {
@@ -113,13 +163,13 @@ main {
 }
 
 .dashboard-welcome h2 {
-  color: #1a365d;
+  color: var(--color-primary-dark);
   font-size: 2rem;
   margin-bottom: 8px;
 }
 
 .dashboard-welcome p {
-  color: #64748b;
+  color: var(--color-text-muted);
   font-size: 1.1rem;
 }
 
@@ -144,16 +194,16 @@ main {
 }
 
 .section-title {
-  color: #1a365d;
+  color: var(--color-primary-dark);
   font-size: 1.25rem;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid var(--color-border);
 }
 
 .admin-section .section-title {
-  color: #6366f1;
-  border-bottom-color: #c7d2fe;
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary-light);
 }
 
 /* Dashboard Cards */
@@ -182,25 +232,25 @@ main {
 .dash-card h3 {
   margin: 0 0 10px 0;
   font-size: 1.15rem;
-  color: #1e293b;
+  color: var(--color-text-primary);
 }
 
 .dash-card p {
   margin: 0 0 16px 0;
-  color: #64748b;
+  color: var(--color-text-muted);
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
 .dash-card-cta {
-  color: #1a365d;
+  color: var(--color-primary-dark);
   font-weight: 600;
   font-size: 0.85rem;
 }
 
 .dash-card-badge {
   display: inline-block;
-  background: linear-gradient(135deg, #c9a227, #b8922a);
+  background: linear-gradient(135deg, var(--color-gold), #92400e);
   color: white;
   padding: 4px 12px;
   border-radius: 20px;
@@ -209,7 +259,17 @@ main {
 }
 
 .dash-card-badge.coming-soon {
-  background: #94a3b8;
+  background: var(--color-text-muted);
+}
+
+.dash-card-badge.alert {
+  background: linear-gradient(135deg, var(--color-error), #b91c1c);
+  animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
 /* Card States */
@@ -225,17 +285,17 @@ main {
 
 /* Card Variants */
 .dash-card.expediente:hover {
-  border-color: #059669;
+  border-color: var(--color-success);
 }
 .dash-card.expediente .dash-card-cta {
-  color: #059669;
+  color: var(--color-success);
 }
 
 .dash-card.documentos:hover {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
 }
 .dash-card.documentos .dash-card-cta {
-  color: #2563eb;
+  color: var(--color-primary);
 }
 
 .dash-card.armas:hover {
@@ -246,42 +306,42 @@ main {
 }
 
 .dash-card.calendario:hover {
-  border-color: #2E7D32;
+  border-color: var(--color-success);
 }
 .dash-card.calendario .dash-card-cta {
-  color: #2E7D32;
+  color: var(--color-success);
 }
 
 .dash-card.calculadora:hover {
-  border-color: #1565C0;
+  border-color: var(--color-info);
 }
 .dash-card.calculadora .dash-card-cta {
-  color: #1565C0;
+  color: var(--color-info);
 }
 
 /* Admin Cards */
 .dash-card.admin {
-  background: linear-gradient(135deg, #fafafe 0%, #f0f0ff 100%);
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
 }
 
 .dash-card.admin:hover {
-  border-color: #6366f1;
+  border-color: var(--color-primary);
 }
 
 .dash-card.admin .dash-card-cta {
-  color: #6366f1;
+  color: var(--color-primary);
 }
 
 .dash-card.admin.cumples {
-  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  background: linear-gradient(135deg, var(--color-warning-light) 0%, #fde68a 100%);
 }
 
 .dash-card.admin.cumples:hover {
-  border-color: #f59e0b;
+  border-color: var(--color-warning);
 }
 
 .dash-card.admin.cumples .dash-card-cta {
-  color: #d97706;
+  color: var(--color-warning);
 }
 
 /* Responsive */
@@ -324,12 +384,12 @@ main {
 
 /* Legacy styles for features grid - keep for compatibility */
 .dashboard h2 {
-  color: #1a365d;
+  color: var(--color-primary-dark);
   margin-bottom: 10px;
 }
 
 .dashboard > p {
-  color: #64748b;
+  color: var(--color-text-muted);
   margin-bottom: 30px;
 }
 
@@ -343,32 +403,32 @@ main {
   background: white;
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
   cursor: pointer;
-  border-left: 4px solid #c9a227;
+  border-left: 4px solid var(--color-primary);
 }
 
 .feature-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .feature-card h3 {
-  color: #1a472a;
+  color: var(--color-primary-dark);
   margin-bottom: 10px;
   font-size: 18px;
 }
 
 .feature-card p {
-  color: #666;
+  color: var(--color-text-secondary);
   font-size: 14px;
   line-height: 1.5;
 }
 
 .feature-card .feature-badge {
   display: inline-block;
-  background: linear-gradient(135deg, #c9a227, #b8922a);
+  background: linear-gradient(135deg, var(--color-gold), #92400e);
   color: white;
   padding: 4px 12px;
   border-radius: 20px;
@@ -378,16 +438,16 @@ main {
 
 /* Tarjeta de Admin/Secretario */
 .feature-card.admin {
-  border-left-color: #6366f1;
-  background: linear-gradient(135deg, #fafafe 0%, #f0f0ff 100%);
+  border-left-color: var(--color-primary);
+  background: linear-gradient(135deg, #f0f9ff 0%, var(--color-info-light) 100%);
 }
 
 .feature-card.admin h3 {
-  color: #4338ca;
+  color: var(--color-primary);
 }
 
 .feature-card .admin-badge {
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
 }
 
 /* Tarjeta Calculadora PCP */
@@ -473,7 +533,7 @@ main {
 
 /* Footer */
 .app-footer {
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--color-footer-bg);
   color: white;
   padding: 20px;
   text-align: center;
@@ -504,19 +564,19 @@ main {
 }
 
 .footer-social a:hover {
-  color: #c9a227;
+  color: var(--color-primary-light);
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
 
 .footer-content p {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-footer-text);
 }
 
 .footer-registros {
   font-size: 11px !important;
-  color: #c9a227 !important;
+  color: var(--color-footer-muted) !important;
   margin-top: 5px;
 }
 
@@ -527,7 +587,7 @@ main {
 .link-privacidad {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-footer-text);
   cursor: pointer;
   font-size: 12px;
   padding: 0;
@@ -536,7 +596,7 @@ main {
 }
 
 .link-privacidad:hover {
-  color: #c9a227;
+  color: var(--color-primary-light);
 }
 
 /* Section Privacidad */
@@ -660,20 +720,27 @@ main {
 }
 
 .btn-back {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-primary-dark);
   color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 10px 20px;
-  border-radius: 6px;
+  border: 2px solid var(--color-primary-light);
+  padding: 12px 24px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 600;
   margin-bottom: 20px;
   transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow-md);
 }
 
 .btn-back:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: var(--color-primary);
+  border-color: var(--color-primary-light);
+  transform: translateX(-3px);
+  box-shadow: var(--shadow-lg);
 }
 
 /* ===================================
@@ -683,13 +750,13 @@ main {
 
 /* Header Oficial del Club */
 .landing-header {
-  background: linear-gradient(135deg, #1a365d 0%, #2d5a87 100%);
+  background: linear-gradient(135deg, var(--color-primary-dark) 0%, #2d5a87 100%);
   color: white;
   padding: 16px 24px;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: var(--shadow-md);
 }
 
 .landing-header .header-content {
@@ -740,7 +807,7 @@ main {
 
 /* Footer Oficial del Club */
 .landing-footer {
-  background: #1e293b;
+  background: var(--color-footer-bg);
   color: white;
   padding: 48px 24px 24px;
   margin-top: 40px;
@@ -763,14 +830,14 @@ main {
 
 .landing-footer .footer-info p {
   margin: 4px 0;
-  color: #94a3b8;
+  color: var(--color-footer-text);
   font-size: 0.9rem;
 }
 
 .landing-footer .map-link {
   display: inline-block;
   margin-top: 8px;
-  color: #fbbf24;
+  color: var(--color-primary-light);
   text-decoration: none;
   font-weight: 500;
 }
@@ -788,7 +855,7 @@ main {
 
 .landing-footer .footer-bottom p {
   margin: 0;
-  color: #64748b;
+  color: var(--color-footer-muted);
   font-size: 0.85rem;
 }
 

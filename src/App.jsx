@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from './firebaseConfig';
 import { signOut } from 'firebase/auth';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, collection, getDocs, query, where, collectionGroup } from 'firebase/firestore';
 import LandingPage from './components/LandingPage';
 import DocumentList from './components/documents/DocumentList';
 import MisArmas from './components/MisArmas';
@@ -17,6 +17,7 @@ import SolicitarPETA from './components/SolicitarPETA';
 import MisPETAs from './components/MisPETAs';
 import VerificadorPETA from './components/VerificadorPETA';
 import RegistroPagos from './components/RegistroPagos';
+import ReporteCaja from './components/ReporteCaja';
 import './App.css';
 
 // Detectar rutas públicas (sin necesidad de login)
@@ -42,6 +43,9 @@ function App() {
   
   // Para el secretario: ver documentos de otro socio
   const [socioViendoDocumentos, setSocioViendoDocumentos] = useState(null);
+  
+  // Contador de PETAs pendientes (solo secretario)
+  const [petasPendientes, setPetasPendientes] = useState(0);
 
   useEffect(() => {
     // Escuchar cambios en autenticación
@@ -72,6 +76,42 @@ function App() {
     });
 
     return () => unsubscribe();
+  }, [user]);
+
+  // Cargar contador de PETAs pendientes (solo secretario)
+  useEffect(() => {
+    if (!user || user.email !== 'smunozam@gmail.com') return;
+    
+    const cargarPetasPendientes = async () => {
+      try {
+        // Obtener todos los socios y sus PETAs
+        const sociosRef = collection(db, 'socios');
+        const sociosSnap = await getDocs(sociosRef);
+        
+        let pendientes = 0;
+        for (const socioDoc of sociosSnap.docs) {
+          const petasRef = collection(db, 'socios', socioDoc.id, 'petas');
+          const petasSnap = await getDocs(petasRef);
+          
+          petasSnap.docs.forEach(petaDoc => {
+            const estado = petaDoc.data().estado;
+            // Contar PETAs en estados que requieren acción del secretario
+            if (estado === 'documentacion_proceso' || estado === 'documentacion_completa') {
+              pendientes++;
+            }
+          });
+        }
+        
+        setPetasPendientes(pendientes);
+      } catch (error) {
+        console.error('Error cargando PETAs pendientes:', error);
+      }
+    };
+    
+    cargarPetasPendientes();
+    // Refrescar cada 5 minutos
+    const interval = setInterval(cargarPetasPendientes, 5 * 60 * 1000);
+    return () => clearInterval(interval);
   }, [user]);
 
   const handleLogout = async () => {
@@ -124,7 +164,9 @@ function App() {
       
       <header className="dashboard-header">
         <div className="header-brand">
-          <img src="/assets/logo-club-738.jpg" alt="Club 738" className="header-logo" />
+          <a href="/" onClick={(e) => { e.preventDefault(); setActiveSection('principal'); }} className="logo-home-link">
+            <img src="/assets/logo-club-738.jpg" alt="Club 738" className="header-logo" />
+          </a>
           <div className="header-titles">
             <h1>Club de Caza, Tiro y Pesca de Yucatán, A.C.</h1>
             <div className="header-badges">
@@ -246,6 +288,9 @@ function App() {
                     <div className="dash-card-icon">✅</div>
                     <h3>Verificador PETA</h3>
                     <p>Checklist de documentación</p>
+                    {petasPendientes > 0 && (
+                      <span className="dash-card-badge alert">{petasPendientes} pendientes</span>
+                    )}
                     <span className="dash-card-cta">Verificar solicitudes →</span>
                   </div>
                   
@@ -254,6 +299,13 @@ function App() {
                     <h3>Registro de Pagos</h3>
                     <p>Cobranza y activación de membresías</p>
                     <span className="dash-card-cta">Registrar pagos →</span>
+                  </div>
+                  
+                  <div className="dash-card admin reporte" onClick={() => setActiveSection('reporte-caja')}>
+                    <div className="dash-card-icon">📊</div>
+                    <h3>Corte de Caja</h3>
+                    <p>Reporte de pagos recibidos</p>
+                    <span className="dash-card-cta">Ver reporte →</span>
                   </div>
                 </div>
               </div>
@@ -371,6 +423,12 @@ function App() {
               ← Volver al Dashboard
             </button>
             <RegistroPagos userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
+          </div>
+        )}
+
+        {activeSection === 'reporte-caja' && user.email === 'smunozam@gmail.com' && (
+          <div className="section-reporte-caja">
+            <ReporteCaja userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
           </div>
         )}
 

@@ -448,7 +448,7 @@
 .footer-club p {
   margin: 0;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #cbd5e1;
 }
 
 .footer-contacto a {
@@ -472,7 +472,7 @@
 .footer-afiliaciones p {
   margin: 0.25rem 0;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #cbd5e1;
 }
 
 .footer-copy {
@@ -481,7 +481,7 @@
   padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: #94a3b8;
 }
 
 /* Responsive */

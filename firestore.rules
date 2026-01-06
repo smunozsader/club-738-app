@@ -50,15 +50,13 @@ service cloud.firestore {
       allow read: if isOwner(email) || isSecretario();
       
       // Escritura: solo el propio socio puede actualizar sus datos
-      // El secretario puede actualizar campos de renovación
+      // El secretario puede actualizar campos de renovación y pagos
       allow update: if isOwner(email) 
         // Campos que el usuario puede actualizar
         && request.resource.data.diff(resource.data).affectedKeys()
            .hasOnly(['documentosPETA', 'bienvenidaVista', 'fechaBienvenida', 'telefono', 'domicilio'])
-        || isSecretario()
-        // Campos que el secretario puede actualizar
-        && request.resource.data.diff(resource.data).affectedKeys()
-           .hasOnly(['renovacion2026']);
+        || isSecretario();
+        // Secretario puede actualizar cualquier campo (pagos, membresía, etc.)
       
       // No permitir delete desde cliente
       allow delete: if false;

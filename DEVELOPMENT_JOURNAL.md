@@ -10,6 +10,107 @@
 
 ## 📅 Enero 2026
 
+### 6 de Enero - v1.11.0 Módulo Corte de Caja + Sincronización de Pagos
+
+#### Major Feature: Reporte de Pagos / Corte de Caja
+
+**Objetivo**: Crear un módulo de reportes que muestre el estado de cobranza con corte de caja.
+
+#### ReporteCaja.jsx - Nuevo Módulo
+
+**Features implementados**:
+- 4 tarjetas de resumen: Total recaudado, Socios pagados, Pendientes, Desglose
+- Agrupación por método de pago (efectivo, transferencia, tarjeta, cheque)
+- Filtros: Estado (todos/pagados/pendientes/exentos), búsqueda, rango de fechas
+- Ordenamiento por nombre, fecha de pago, o monto
+- Tabla detallada con: nombre, estado, fecha, cuota club, FEMETI, total, método, comprobante
+- Exportar a CSV con encoding UTF-8 (BOM)
+- Vista optimizada para impresión
+
+**Integración**:
+- Acceso desde Dashboard del Secretario → "📊 Corte de Caja"
+- Lee datos de `renovacion2026` y `membresia2026` (dual-source)
+
+#### Bug Fix: Sincronización de Sistemas de Pago
+
+**Problema detectado**: El módulo RegistroPagos y DashboardRenovaciones usaban campos diferentes:
+- `RegistroPagos` → `membresia2026.activa`, `pagos[]`
+- `DashboardRenovaciones` → `renovacion2026.estado`, `renovacion2026.cuotaClub/cuotaFemeti`
+
+**Solución implementada**:
+
+1. **RegistroPagos.jsx modificado** - Ahora actualiza ambos sistemas:
+   ```javascript
+   await updateDoc(socioRef, {
+     pagos: arrayUnion(registroPago),
+     membresia2026: { activa: true, ... },
+     'renovacion2026.estado': 'pagado',
+     'renovacion2026.cuotaClub': cuotaClub,
+     'renovacion2026.cuotaFemeti': cuotaFemeti,
+     ...
+   });
+   ```
+
+2. **DashboardRenovaciones.jsx modificado** - Detecta pagos de ambas fuentes:
+   ```javascript
+   if (estado !== 'pagado' && data.membresia2026?.activa) {
+     estado = 'pagado';
+   }
+   ```
+
+3. **firestore.rules actualizado** - Permite al secretario actualizar todos los campos:
+   ```javascript
+   allow update: if isSecretario();
+   ```
+
+4. **Migración de datos** - Script para sincronizar pagos existentes (ej: Santiago Quintal Paredes)
+
+#### Archivos Creados
+
+| Archivo | Descripción |
+|---------|-------------|
+| `src/components/ReporteCaja.jsx` | Módulo de corte de caja |
+| `src/components/ReporteCaja.css` | Estilos responsive + impresión |
+
+#### Archivos Modificados
+
+| Archivo | Cambios |
+|---------|---------|
+| `src/App.jsx` | Import ReporteCaja, botón en menú admin, sección de visualización |
+| `src/components/RegistroPagos.jsx` | Sincroniza renovacion2026 al registrar pago |
+| `src/components/DashboardRenovaciones.jsx` | Lee de ambas fuentes de pago |
+| `firestore.rules` | Permisos de escritura para secretario |
+
+---
+
+### 5 de Enero - v1.10.0 Paleta de Colores + Mejoras UI
+
+#### Implementación de Variables CSS
+
+**Objetivo**: Centralizar colores del proyecto para mantener consistencia visual.
+
+**Variables definidas en :root**:
+```css
+--color-primary: #2d5a2d;
+--color-primary-dark: #1a2e1a;
+--color-primary-light: #e8f5e8;
+--color-success: #2d7a2d;
+--color-warning: #f0a020;
+--color-danger: #dc3545;
+--color-text-primary: #1a2e1a;
+--color-text-muted: #888;
+...
+```
+
+#### Mejoras de UI
+
+1. **Footer legibilidad** - Texto amarillo cambiado a color visible
+2. **Logo como botón home** - Click en logo regresa a landing
+3. **Botones "Volver"** - Estilizados consistentemente en todas las secciones
+4. **Firebase Functions** - Deploy de funciones de email (onPetaCreated, testEmail)
+
+---
+
 ### 4 de Enero - v1.6.0 Portal Público Completo
 
 #### Major Release: Landing Page + Calendario de Tiradas + Calculadora PCP

@@ -52,12 +52,28 @@ export default function DashboardRenovaciones({ userEmail, onVerDocumentos }) {
         const renovacion = data.renovacion2026 || {};
         
         // Calcular estado actual
+        // Verificar también membresia2026 (registros desde RegistroPagos)
         let estado = renovacion.estado || 'pendiente';
+        
+        // Si membresia2026 está activa pero renovacion2026 no está marcada, sincronizar
+        if (estado !== 'pagado' && data.membresia2026?.activa) {
+          estado = 'pagado';
+        }
         
         // Si no está pagado ni exento, verificar si está vencido
         if (estado === 'pendiente' && hoy > FECHA_LIMITE) {
           estado = 'vencido';
         }
+        
+        // Obtener fecha de pago de cualquiera de las dos fuentes
+        const fechaPago = renovacion.fechaPago?.toDate() || 
+                         data.membresia2026?.fechaPago?.toDate() || null;
+        
+        // Obtener cuotas de renovacion2026 o calcular desde membresia2026
+        const cuotaClub = renovacion.cuotaClub || 
+                         (data.membresia2026?.activa ? CUOTA_CLUB : 0);
+        const cuotaFemeti = renovacion.cuotaFemeti || 
+                          (data.membresia2026?.activa ? CUOTA_FEMETI_SOCIO : 0);
         
         // Limpiar nombre: quitar prefijo "XXX. " si existe (ej: "157. NOMBRE" -> "NOMBRE")
         let nombreLimpio = data.nombre || doc.id;
@@ -74,9 +90,11 @@ export default function DashboardRenovaciones({ userEmail, onVerDocumentos }) {
           renovacion: {
             ...renovacion,
             estado,
+            cuotaClub,
+            cuotaFemeti,
             prioridad: renovacion.prioridad || 'normal',
             fechaLimite: renovacion.fechaLimite?.toDate() || FECHA_LIMITE,
-            fechaPago: renovacion.fechaPago?.toDate() || null
+            fechaPago: fechaPago
           }
         });
       });
