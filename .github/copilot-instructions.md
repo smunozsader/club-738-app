@@ -386,11 +386,16 @@ socios/{email}
 ## Security
 
 ### Roles
-| Rol | Email | Permisos |
-|-----|-------|----------|
-| **Administrador** | smunozam@gmail.com | Acceso total (vía Console/Admin SDK) |
-| **Secretario** | smunozam@gmail.com | Lectura de todos los socios, paneles admin |
-| **Socio** | {email} | Solo sus propios datos |
+| Rol | Email | Permisos | Notas |
+|-----|-------|----------|-------|
+| **Administrador** | smunozam@gmail.com | Acceso total (vía Console/Admin SDK) | Cuenta del secretario (webapp) |
+| **Secretario** | smunozam@gmail.com | Lectura de todos los socios, paneles admin | Cuenta del secretario (webapp) |
+| **Socio** | {email} | Solo sus propios datos | Todos los socios incluido smunozam@gmail.com |
+
+**IMPORTANTE**: 
+- Usuario GitHub: `smunozsader` (SERGIO MUÑOZ SADER) - Solo para desarrollo
+- Usuario webapp secretario: `smunozam@gmail.com` - Cuenta de socio + permisos admin
+- NO confundir: El nombre del socio con email `smunozam@gmail.com` está registrado en Firestore
 
 ### Firestore Rules Summary
 ```javascript

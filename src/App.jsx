@@ -13,6 +13,10 @@ import DashboardCumpleanos from './components/DashboardCumpleanos';
 import GeneradorPETA from './components/GeneradorPETA';
 import CalculadoraPCP from './components/CalculadoraPCP';
 import CalendarioTiradas from './components/CalendarioTiradas';
+import SolicitarPETA from './components/SolicitarPETA';
+import MisPETAs from './components/MisPETAs';
+import VerificadorPETA from './components/VerificadorPETA';
+import RegistroPagos from './components/RegistroPagos';
 import './App.css';
 
 // Detectar rutas públicas (sin necesidad de login)
@@ -170,6 +174,13 @@ function App() {
                 <span className="dash-card-cta">Ver armas →</span>
               </div>
               
+              <div className="dash-card petas" onClick={() => setActiveSection('mis-petas')}>
+                <div className="dash-card-icon">🎯</div>
+                <h3>Mis PETAs</h3>
+                <p>Solicita y gestiona tus permisos de transporte</p>
+                <span className="dash-card-cta">Ver solicitudes →</span>
+              </div>
+              
               <div className="dash-card credencial disabled">
                 <div className="dash-card-icon">🎫</div>
                 <h3>Mi Credencial</h3>
@@ -230,6 +241,20 @@ function App() {
                     <p>Oficios de solicitud PETA</p>
                     <span className="dash-card-cta">Generar oficio →</span>
                   </div>
+                  
+                  <div className="dash-card admin verificador" onClick={() => setActiveSection('verificador-peta')}>
+                    <div className="dash-card-icon">✅</div>
+                    <h3>Verificador PETA</h3>
+                    <p>Checklist de documentación</p>
+                    <span className="dash-card-cta">Verificar solicitudes →</span>
+                  </div>
+                  
+                  <div className="dash-card admin pagos" onClick={() => setActiveSection('registro-pagos')}>
+                    <div className="dash-card-icon">💰</div>
+                    <h3>Registro de Pagos</h3>
+                    <p>Cobranza y activación de membresías</p>
+                    <span className="dash-card-cta">Registrar pagos →</span>
+                  </div>
                 </div>
               </div>
             )}
@@ -264,6 +289,31 @@ function App() {
               ← Volver al Dashboard
             </button>
             <MisArmas user={user} />
+          </div>
+        )}
+
+        {activeSection === 'mis-petas' && (
+          <div className="section-mis-petas">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <MisPETAs 
+              userEmail={user.email}
+              onNuevoPETA={() => setActiveSection('solicitar-peta')}
+              onBack={() => setActiveSection('dashboard')}
+            />
+          </div>
+        )}
+
+        {activeSection === 'solicitar-peta' && (
+          <div className="section-solicitar-peta">
+            <button className="btn-back" onClick={() => setActiveSection('mis-petas')}>
+              ← Volver a Mis PETAs
+            </button>
+            <SolicitarPETA 
+              userEmail={user.email}
+              onBack={() => setActiveSection('mis-petas')}
+            />
           </div>
         )}
 
@@ -303,6 +353,24 @@ function App() {
               ← Volver al Dashboard
             </button>
             <GeneradorPETA userEmail={user.email} />
+          </div>
+        )}
+
+        {activeSection === 'verificador-peta' && user.email === 'smunozam@gmail.com' && (
+          <div className="section-verificador-peta">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <VerificadorPETA userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
+          </div>
+        )}
+
+        {activeSection === 'registro-pagos' && user.email === 'smunozam@gmail.com' && (
+          <div className="section-registro-pagos">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <RegistroPagos userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
           </div>
         )}
 

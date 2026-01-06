@@ -1,10 +1,26 @@
 # Club 738 Web - TO-DO / Roadmap
 
-**Última actualización**: 5 de enero 2026 (v1.9.1)
+**Última actualización**: 5 de enero 2026 (v1.10.0)
 
 ---
 
 ## ✅ Completado
+
+### v1.10.0 - Módulo PETA Completo (5 Ene 2026)
+- [x] **SolicitarPETA.jsx** - Formulario para socios soliciten PETAs
+- [x] **MisPETAs.jsx** - Vista de estado de solicitudes PETA
+- [x] **VerificadorPETA.jsx** - Checklist de verificación para secretario
+- [x] **RegistroPagos.jsx** - Módulo de cobranza y activación membresías
+- [x] Integración en App.jsx (dashboard socio + panel secretario)
+- [x] Manual de usuario completo (MANUAL_USUARIO.md)
+- [x] Estructura Firestore para colección `petas`
+- [x] 6 estados de tracking del trámite PETA
+- [x] Historial de cambios con timeline
+- [x] Selección de hasta 10 armas por PETA
+- [x] Selección de hasta 10 estados (Competencia/Caza)
+- [x] Cálculo automático de vigencias según tipo
+- [x] Registro de pagos con 4 conceptos
+- [x] Activación automática de membresía 2026
 
 ### v1.9.1 - Renombrado Sitio Web (5 Ene 2026)
 - [x] Título cambiado a "Club de Caza, Tiro y Pesca de Yucatán, A.C."
@@ -55,6 +71,7 @@
 ### Credenciales
 - [ ] **Firma del Presidente** - Conseguir firma limpia para agregar al diseño Canva
 - [ ] Regenerar 35 credenciales con firma
+- [ ] Integrar descarga de credencial desde portal del socio
 
 ---
 
@@ -63,46 +80,38 @@
 ### 🎫 Credenciales Digitales
 | Tarea | Prioridad | Descripción |
 |-------|-----------|-------------|
-| Firma digital del socio | Media | Componente canvas para firma en web app |
-| "Mi Credencial" | Media | Card en dashboard para descargar credencial digital |
+| **Firma digital del socio** | Alta | Componente canvas para capturar firma (teléfono/mouse) |
+| Impresión PVC | Alta | Evaluar proveedor para impresión tipo licencia de conducir |
+| "Mi Credencial" | Alta | Card en dashboard para descargar credencial digital |
 | Credenciales faltantes | Baja | 41 socios sin foto pendientes |
 
-### � Base de Datos
+### 📄 Módulo PETA - Features Adicionales
+| Tarea | Prioridad | Descripción |
+|-------|-----------|-------------|
+| ~~**Solicitar PETA**~~ | ~~Alta~~ | ✅ Completado v1.10.0 - SolicitarPETA.jsx |
+| ~~**Tracker trámites**~~ | ~~Alta~~ | ✅ Completado v1.10.0 - MisPETAs.jsx |
+| ~~**Verificador docs**~~ | ~~Alta~~ | ✅ Completado v1.10.0 - VerificadorPETA.jsx |
+| **Cambio de estado a "Enviado 32ZM"** | Alta | Secretario marca cuando envía a Zona Militar |
+| **Registro número PETA asignado** | Alta | Secretario ingresa número oficial de SEDENA |
+| **Alertas vencimiento** | Media | Notificar cuando PETA esté por vencer (30 días) |
+| Historial PETAs | Media | Ver PETAs anteriores del socio (años pasados) |
+| Descargar oficio PDF | Media | Generar PDF del oficio PETA desde solicitud |
+
+### 💰 Módulo de Cobranza
+| Tarea | Prioridad | Descripción |
+|-------|-----------|-------------|
+| ~~**Registro de pagos**~~ | ~~Alta~~ | ✅ Completado v1.10.0 - RegistroPagos.jsx |
+| **Reminder semanal** | Alta | Notificación al secretario con lista de morosos |
+| **Generador comunicados** | Alta | Templates email/WhatsApp de cobro personalizados |
+| Histórico de pagos | Media | Ver pagos de años anteriores por socio |
+| Dashboard de cobranza | Media | Gráficas de ingresos, pendientes, etc. |
+
+### 🗄️ Base de Datos
 | Tarea | Prioridad | Descripción |
 |-------|-----------|-------------|
 | ~~**Normalizar domicilios**~~ | ~~Alta~~ | ✅ Completado v1.9.0 |
 | ~~Migrar datos Excel~~ | ~~Alta~~ | ✅ 76 domicilios importados a Firestore |
 | Validar CURPs | Media | Verificar formato y datos extraídos |
-
-### �💰 Módulo de Cobranza
-| Tarea | Prioridad | Descripción |
-|-------|-----------|-------------|
-| **Reminder semanal** | Alta | Notificación al secretario con lista de morosos |
-| **Generador comunicados** | Alta | Templates email/WhatsApp de cobro personalizados |
-| Histórico de pagos | Media | Ver pagos de años anteriores por socio |
-
-### 📄 Módulo PETA (Nuevo)
-| Tarea | Prioridad | Descripción |
-|-------|-----------|-------------|
-| **Solicitar PETA** | Alta | Formulario para socio solicite PETA (Tiro/Competencia/Caza) |
-| ~~**Generador oficios**~~ | ~~Alta~~ | ✅ Completado v1.8.0 - GeneradorPETA.jsx |
-| **Tracker trámites** | Alta | Dashboard estado de cada solicitud |
-| ~~Selección de armas~~ | ~~Alta~~ | ✅ Máx 10 armas del inventario del socio |
-| ~~Selección de estados~~ | ~~Alta~~ | ✅ Máx 10 estados (Caza/Competencia) |
-| **Alertas vencimiento** | Media | Notificar cuando PETA esté por vencer |
-| Historial PETAs | Media | Ver PETAs anteriores del socio |
-
-#### Tipos de PETA
-| Tipo | Vigencia | Requisitos Especiales |
-|------|----------|----------------------|
-| Práctica de Tiro | Ene → Dic (mismo año) | Ninguno |
-| Competencia Nacional | Ene → Dic (mismo año) | 10 estados + Calendario FEMETI |
-| Caza | Jul → Jun (siguiente año) | 10 estados + Licencia caza SEMARNAT |
-
-#### Estados del Trámite
-```
-documentacion_proceso → documentacion_completa → enviado_32zm → revision_sedena → aprobado/rechazado
-```
 
 ### 🔔 Notificaciones
 | Tarea | Prioridad | Descripción |
@@ -122,19 +131,21 @@ documentacion_proceso → documentacion_completa → enviado_32zm → revision_s
 ## 🗓️ Calendario de Implementación Sugerido
 
 ### Enero 2026
+- [x] Módulo PETA completo (solicitud + verificación + cobranza)
+- [x] Manual de usuario
 - [ ] Completar credenciales (firma presidente)
-- [ ] Implementar reminder semanal cobranza
-- [ ] Generador de comunicados WhatsApp/Email
+- [ ] Implementar cambio de estado a "Enviado 32ZM"
 
 ### Febrero 2026
-- [ ] Módulo PETA - Formulario de solicitud
-- [ ] Módulo PETA - Generador de oficios PDF
-- [ ] Módulo PETA - Tracker de trámites
+- [ ] Reminder semanal cobranza
+- [ ] Generador de comunicados WhatsApp/Email
+- [ ] Alertas de vencimiento de PETAs
+- [ ] Descargar oficio PDF desde solicitud
 
 ### Marzo 2026
-- [ ] Alertas de vencimiento (documentos + PETA)
-- [ ] Mi Credencial digital
+- [ ] Mi Credencial digital descargable
 - [ ] Firma digital del socio
+- [ ] Dashboard de cobranza con gráficas
 
 ---
 
@@ -146,8 +157,9 @@ documentacion_proceso → documentacion_completa → enviado_32zm → revision_s
 | Domicilios en Firestore | 76 (100%) |
 | Credenciales generadas | 35 |
 | Credenciales pendientes | 41 (sin foto) |
-| Versión actual | v1.9.1 |
+| Versión actual | v1.10.0 |
 | Última release | 5 Ene 2026 |
+| Componentes PETA | 4 (SolicitarPETA, MisPETAs, VerificadorPETA, RegistroPagos) |
 
 ---
 

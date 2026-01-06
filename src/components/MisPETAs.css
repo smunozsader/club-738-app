@@ -1,0 +1,418 @@
+.mis-petas-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.mis-petas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.mis-petas-header h2 {
+  color: #2c3e50;
+  margin: 0;
+}
+
+.btn-nuevo-peta {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-nuevo-peta:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  color: #7f8c8d;
+  margin-bottom: 30px;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+/* PETAs list */
+.petas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.peta-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-left: 4px solid #bdc3c7;
+}
+
+.peta-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.peta-card.estado-warning {
+  border-left-color: #f39c12;
+}
+
+.peta-card.estado-success {
+  border-left-color: #27ae60;
+}
+
+.peta-card.estado-info {
+  border-left-color: #3498db;
+}
+
+.peta-card.estado-danger {
+  border-left-color: #e74c3c;
+}
+
+/* Card header */
+.peta-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  cursor: pointer;
+  background: #f8f9fa;
+  transition: background 0.2s ease;
+}
+
+.peta-card-header:hover {
+  background: #ecf0f1;
+}
+
+.peta-titulo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.peta-icono {
+  font-size: 1.5rem;
+}
+
+.peta-titulo h3 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.peta-estado {
+  margin: 0;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.btn-expandir {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: transform 0.3s ease;
+}
+
+/* Summary */
+.peta-card-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  padding: 15px 20px;
+  background: white;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.summary-value {
+  font-size: 1rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Details */
+.peta-card-details {
+  padding: 20px;
+  background: #fafafa;
+}
+
+.detail-section {
+  margin-bottom: 25px;
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.detail-section h4 {
+  color: #2c3e50;
+  margin: 0 0 12px 0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Armas detail */
+.armas-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.arma-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: white;
+  border-radius: 4px;
+  border-left: 3px solid #3498db;
+}
+
+.arma-numero {
+  font-weight: 700;
+  color: #3498db;
+  min-width: 25px;
+}
+
+.arma-descripcion {
+  flex: 1;
+  color: #2c3e50;
+}
+
+.arma-cartuchos {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  background: #ecf0f1;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+/* Estados chips */
+.estados-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.estado-chip {
+  background: #3498db;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Timeline */
+.historial-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 12px;
+  position: relative;
+}
+
+.timeline-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 30px;
+  bottom: -15px;
+  width: 2px;
+  background: #ddd;
+}
+
+.timeline-dot {
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 2px solid #3498db;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  z-index: 1;
+}
+
+.timeline-content {
+  flex: 1;
+  padding: 5px 0;
+}
+
+.timeline-title {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 3px;
+}
+
+.timeline-fecha {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-bottom: 5px;
+}
+
+.timeline-notas {
+  font-size: 0.9rem;
+  color: #555;
+  font-style: italic;
+  padding: 8px;
+  background: white;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+/* Info boxes */
+.info-box {
+  padding: 15px;
+  border-radius: 6px;
+  background: #e7f3ff;
+  border-left: 4px solid #3498db;
+}
+
+.info-box.success {
+  background: #d4edda;
+  border-left-color: #27ae60;
+}
+
+.info-box.danger {
+  background: #f8d7da;
+  border-left-color: #e74c3c;
+}
+
+.info-box.warning {
+  background: #fff3cd;
+  border-left-color: #f39c12;
+}
+
+.info-box strong {
+  color: #2c3e50;
+}
+
+.info-box h4 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
+
+.info-box ol {
+  margin: 10px 0 0 0;
+  padding-left: 20px;
+}
+
+.info-box li {
+  margin-bottom: 5px;
+  color: #555;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mis-petas-container {
+    padding: 10px;
+  }
+  
+  .mis-petas-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .btn-nuevo-peta {
+    width: 100%;
+  }
+  
+  .peta-card-summary {
+    grid-template-columns: 1fr;
+  }
+  
+  .peta-titulo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .arma-detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .estados-chips {
+    gap: 6px;
+  }
+  
+  .estado-chip {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+}
