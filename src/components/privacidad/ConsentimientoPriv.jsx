@@ -3,7 +3,7 @@
 // Uso: Agregar en el formulario de registro de socios
 
 import React, { useState } from 'react';
-import './ConsentimientoPriv.css';
+import './ConsentimientoPrivacidad.css';
 
 export default function ConsentimientoPrivacidad({ onConsentChange }) {
   const [consentimientoPrimario, setConsentimientoPrimario] = useState(false);

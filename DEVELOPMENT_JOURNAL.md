@@ -12,6 +12,45 @@
 
 ### 6 de Enero - v1.11.0 Módulo Corte de Caja + Sincronización de Pagos
 
+#### Housekeeping: Reorganización de Estructura del Proyecto
+
+**Objetivo**: Limpiar el root del proyecto y organizar archivos por categoría.
+
+**Nueva estructura de carpetas**:
+```
+club-738-web/
+├── data/                    # DATOS LOCALES (no se suben a Git)
+│   ├── socios/              # Excel, CSVs, auth imports
+│   ├── credenciales/        # Canva exports, PDFs impresión
+│   ├── constancias/         # Constancias antecedentes penales
+│   ├── curps/pdfs/          # PDFs de CURPs
+│   └── fotos/               # Fotos infantiles socios
+│
+├── docs/                    # DOCUMENTACIÓN
+│   ├── formatos-peta/       # Formatos Word solicitudes
+│   ├── legal/               # Ley de Armas, privacidad
+│   └── Tiradas Club 738/    # Info de tiradas
+│
+├── src/components/privacidad/  # Componentes React de privacidad
+└── public/assets/           # Logos e imágenes públicas
+```
+
+**Archivos movidos**:
+| Origen | Destino |
+|--------|---------|
+| `Base datos/*.xlsx` | `data/socios/` |
+| `credenciales_socios.*` | `data/socios/` |
+| `Credencial-Club-2026/` | `data/credenciales/` |
+| `2025. 738. CONSTANCIAS...` | `data/constancias/` |
+| `curp_socios/` | `data/curps/pdfs/` |
+| `fotos infantiles socios/` | `data/fotos/` |
+| `privacidad/*.jsx,css` | `src/components/privacidad/` |
+| `privacidad/*.md,pdf` | `docs/legal/` |
+
+**.gitignore actualizado** para nueva estructura `data/`
+
+---
+
 #### Major Feature: Reporte de Pagos / Corte de Caja
 
 **Objetivo**: Crear un módulo de reportes que muestre el estado de cobranza con corte de caja.

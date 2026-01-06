@@ -30,15 +30,22 @@ scripts/serviceAccountKey.json
 serviceAccountKey.json
 **/serviceAccountKey.json
 
-# Data files - keep locally only
-Base datos/
-2025. 738. CONSTANCIAS NO ANTECEDENTES/
+# ====================================
+# DATA FILES - Keep locally only
+# ====================================
+
+# Socios data (Excel, CSVs con info personal)
+data/socios/
+data/credenciales/
+data/constancias/
+data/curps/
+data/fotos/
+
+# Any Office documents
 *.xlsx
 *.docx
+
+# Context file (may contain sensitive info)
 CONTEXT.md
 
-# Credentials files - sensitive
-credenciales_socios.csv
-credenciales_socios.json
-firebase_auth_import.json
-docs/MENSAJES_VIP_WEB_LAUNCH.md
+# VIP messages (contain contact info)

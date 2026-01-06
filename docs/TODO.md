@@ -1,10 +1,23 @@
 # Club 738 Web - TO-DO / Roadmap
 
-**Última actualización**: 5 de enero 2026 (v1.10.0)
+**Última actualización**: 6 de enero 2026 (v1.11.0)
 
 ---
 
 ## ✅ Completado
+
+### v1.11.0 - Módulo Corte de Caja + Sincronización (6 Ene 2026)
+- [x] **ReporteCaja.jsx** - Módulo de corte de caja / reporte de pagos
+  - 4 tarjetas resumen (total recaudado, pagados, pendientes, desglose)
+  - Agrupación por método de pago (efectivo, transferencia, tarjeta, cheque)
+  - Filtros: estado, búsqueda, rango de fechas
+  - Exportar a CSV, vista optimizada para impresión
+- [x] **Sincronización de pagos** - RegistroPagos ahora actualiza `renovacion2026` + `membresia2026`
+- [x] **DashboardRenovaciones** - Lee de ambas fuentes de pago
+- [x] **firestore.rules** - Secretario puede actualizar todos los campos
+- [x] **Firebase Functions** - Deploy de funciones email (onPetaCreated, testEmail)
+- [x] **Paleta CSS centralizada** - Variables :root para colores consistentes
+- [x] **UI mejorada** - Logo como botón home, footer legible, botones volver estilizados
 
 ### v1.10.1 - Modalidad Armas + Estados Sugeridos (5 Ene 2026)
 - [x] **Campo modalidad en armas** - 'caza', 'tiro', 'ambas'
@@ -113,10 +126,11 @@
 | Tarea | Prioridad | Descripción |
 |-------|-----------|-------------|
 | ~~**Registro de pagos**~~ | ~~Alta~~ | ✅ Completado v1.10.0 - RegistroPagos.jsx |
+| ~~**Corte de caja**~~ | ~~Alta~~ | ✅ Completado v1.11.0 - ReporteCaja.jsx |
 | **Reminder semanal** | Alta | Notificación al secretario con lista de morosos |
 | **Generador comunicados** | Alta | Templates email/WhatsApp de cobro personalizados |
 | Histórico de pagos | Media | Ver pagos de años anteriores por socio |
-| Dashboard de cobranza | Media | Gráficas de ingresos, pendientes, etc. |
+| ~~Dashboard de cobranza~~ | ~~Media~~ | ✅ Completado - Gráficas en ReporteCaja |
 
 ### 🗄️ Base de Datos
 | Tarea | Prioridad | Descripción |
@@ -169,9 +183,10 @@
 | Domicilios en Firestore | 76 (100%) |
 | Credenciales generadas | 35 |
 | Credenciales pendientes | 41 (sin foto) |
-| Versión actual | v1.10.0 |
-| Última release | 5 Ene 2026 |
+| Versión actual | v1.11.0 |
+| Última release | 6 Ene 2026 |
 | Componentes PETA | 4 (SolicitarPETA, MisPETAs, VerificadorPETA, RegistroPagos) |
+| Componentes Cobranza | 3 (RegistroPagos, DashboardRenovaciones, ReporteCaja) |
 
 ---
 
