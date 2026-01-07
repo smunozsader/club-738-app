@@ -1,10 +1,19 @@
 # Firebase Studio Prompt - Club 738 Web Portal Redesign
 
+## ⚠️ IMPORTANT: Before You Start
+
+1. **Analyze the codebase first** - Review the existing components, CSS files, and structure before making any changes
+2. **Create a new branch** - All changes must be on a separate branch:
+   ```bash
+   git checkout -b facelift/visual-redesign
+   ```
+3. **Club logo is at:** `public/assets/logo-club-738.jpg` - incorporate it into your designs
+
+---
+
 ## Project Overview
 
-I have a functional React + Vite web application deployed on Firebase Hosting. It serves as the member portal for a sport shooting club in Mexico (Club de Caza, Tiro y Pesca de Yucatán, A.C. - Hunting, Shooting & Fishing Club of Yucatan).
-
-**GitHub Repository:** https://github.com/smunozsader/club-738-app.git
+This is a functional React + Vite web application deployed on Firebase Hosting. It serves as the member portal for a sport shooting club in Mexico (Club de Caza, Tiro y Pesca de Yucatán, A.C. - Hunting, Shooting & Fishing Club of Yucatan).
 
 **Production URL:** https://club-738-app.web.app
 
@@ -237,6 +246,16 @@ Before starting, please consider:
 
 ## Let's Begin!
 
-Please analyze my current codebase and propose a comprehensive visual redesign that transforms this functional portal into a modern, professional, and visually stunning web application.
+**Scope: COMPLETE REDESIGN** - Redesign ALL pages and components in a single comprehensive effort.
+
+**Workflow:**
+1. Create branch `facelift/visual-redesign`
+2. Analyze existing code structure
+3. Propose your design vision (colors, typography, layout approach)
+4. Implement changes across all components
+5. Test responsiveness and accessibility
+6. Commit changes with clear messages
+
+Please analyze the current codebase and transform this functional portal into a modern, professional, and visually stunning web application.
 
 Remember: **You have creative freedom** - surprise me with innovative ideas while respecting the technical constraints and accessibility requirements.
