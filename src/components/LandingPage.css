@@ -415,6 +415,30 @@
   text-decoration: underline;
 }
 
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 0;
+  border-top: 1px solid var(--color-border-light, #334155);
+  border-bottom: 1px solid var(--color-border-light, #334155);
+  margin: 0 auto 16px auto;
+  max-width: 300px;
+}
+
+.footer-social a {
+  color: var(--color-footer-text, #cbd5e1);
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-social a:hover {
+  color: var(--color-primary, #3b82f6);
+  transform: scale(1.15);
+}
+
 .footer-bottom {
   max-width: 1200px;
   margin: 0 auto;
