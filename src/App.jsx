@@ -46,6 +46,9 @@ function App() {
   
   // Contador de PETAs pendientes (solo secretario)
   const [petasPendientes, setPetasPendientes] = useState(0);
+  
+  // Modal de estado de pagos
+  const [showPagosModal, setShowPagosModal] = useState(false);
 
   useEffect(() => {
     // Escuchar cambios en autenticación
@@ -162,6 +165,79 @@ function App() {
         />
       )}
       
+      {/* Modal Estado de Pagos */}
+      {showPagosModal && (
+        <div className="modal-overlay" onClick={() => setShowPagosModal(false)}>
+          <div className="modal-pagos" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setShowPagosModal(false)}>×</button>
+            <h2>💳 Estado de Pagos 2026</h2>
+            
+            <div className={`pago-status ${socioData?.renovacion2026?.estado === 'pagado' ? 'pagado' : 'pendiente'}`}>
+              {socioData?.renovacion2026?.estado === 'pagado' ? (
+                <>
+                  <span className="status-icon">✅</span>
+                  <span className="status-text">Membresía al corriente</span>
+                </>
+              ) : (
+                <>
+                  <span className="status-icon">⏳</span>
+                  <span className="status-text">Pago pendiente</span>
+                </>
+              )}
+            </div>
+            
+            {socioData?.renovacion2026?.estado === 'pagado' ? (
+              <div className="pago-detalles">
+                <div className="pago-row">
+                  <span className="pago-label">Cuota Club:</span>
+                  <span className="pago-valor">${socioData?.renovacion2026?.cuotaClub?.toLocaleString() || '6,000'} MXN</span>
+                </div>
+                <div className="pago-row">
+                  <span className="pago-label">Cuota FEMETI:</span>
+                  <span className="pago-valor">${socioData?.renovacion2026?.cuotaFemeti?.toLocaleString() || '350'} MXN</span>
+                </div>
+                <div className="pago-row total">
+                  <span className="pago-label">Total pagado:</span>
+                  <span className="pago-valor">
+                    ${((socioData?.renovacion2026?.cuotaClub || 0) + (socioData?.renovacion2026?.cuotaFemeti || 0)).toLocaleString()} MXN
+                  </span>
+                </div>
+                <div className="pago-row">
+                  <span className="pago-label">Fecha de pago:</span>
+                  <span className="pago-valor">
+                    {socioData?.renovacion2026?.fechaPago?.toDate?.()?.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' }) || 'No registrada'}
+                  </span>
+                </div>
+                <div className="pago-row">
+                  <span className="pago-label">Método:</span>
+                  <span className="pago-valor">{socioData?.renovacion2026?.metodoPago || 'No especificado'}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="pago-pendiente-info">
+                <p>Tu membresía 2026 está pendiente de pago.</p>
+                <div className="pago-instrucciones">
+                  <h4>Para realizar tu pago:</h4>
+                  <ol>
+                    <li>Agenda una cita con el Secretario</li>
+                    <li>Trae tus documentos originales</li>
+                    <li>Realiza el pago de tu cuota anual + FEMETI</li>
+                  </ol>
+                </div>
+                <a 
+                  href="https://wa.me/525665824667" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn-agendar-pago"
+                >
+                  📱 Agendar cita por WhatsApp
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <header className="dashboard-header">
         <div className="header-brand">
           <a href="/" onClick={(e) => { e.preventDefault(); setActiveSection('principal'); }} className="logo-home-link">
@@ -200,10 +276,10 @@ function App() {
               </div>
               
               <div className="dash-card documentos" onClick={() => setActiveSection('documentos')}>
-                <div className="dash-card-icon">📋</div>
-                <h3>Mis Documentos PETA</h3>
-                <p>Sube y gestiona los 16 documentos requeridos</p>
-                <span className="dash-card-cta">Subir documentos →</span>
+                <div className="dash-card-icon">�</div>
+                <h3>Mi Expediente Digital</h3>
+                <p>Documentos para facilitar tu trámite PETA</p>
+                <span className="dash-card-cta">Ver expediente →</span>
               </div>
               
               <div className="dash-card armas" onClick={() => setActiveSection('armas')}>
@@ -223,18 +299,16 @@ function App() {
                 <span className="dash-card-cta">Ver solicitudes →</span>
               </div>
               
-              <div className="dash-card credencial disabled">
-                <div className="dash-card-icon">🎫</div>
-                <h3>Mi Credencial</h3>
-                <p>Descarga tu credencial digital del Club</p>
-                <span className="dash-card-badge coming-soon">Próximamente</span>
-              </div>
-              
-              <div className="dash-card pagos disabled">
+              <div className="dash-card pagos" onClick={() => setShowPagosModal(true)}>
                 <div className="dash-card-icon">💳</div>
                 <h3>Estado de Pagos</h3>
-                <p>Verifica tu cuota anual 2026</p>
-                <span className="dash-card-badge coming-soon">Próximamente</span>
+                <p>Tu membresía 2026</p>
+                {socioData?.renovacion2026?.estado === 'pagado' ? (
+                  <span className="dash-card-badge pagado">✅ Al corriente</span>
+                ) : (
+                  <span className="dash-card-badge pendiente">⏳ Pendiente</span>
+                )}
+                <span className="dash-card-cta">Ver detalles →</span>
               </div>
             </div>
             

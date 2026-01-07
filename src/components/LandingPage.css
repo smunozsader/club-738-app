@@ -464,6 +464,22 @@
   color: #1a365d;
 }
 
+.contacto-cuotas {
+  color: #374151;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.contacto-cuotas a {
+  color: #1a5f2a;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.contacto-cuotas a:hover {
+  text-decoration: underline;
+}
+
 .requisitos-contacto {
   background: #f0fdf4;
   padding: 20px;

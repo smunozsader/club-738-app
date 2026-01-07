@@ -185,27 +185,12 @@ const LandingPage = () => {
               </div>
               
               <div className="requisitos-section">
-                <h3>💰 Cuotas 2026</h3>
-                <table className="cuotas-table">
-                  <tbody>
-                    <tr>
-                      <td>Inscripción</td>
-                      <td className="monto">$2,000.00 MXN</td>
-                    </tr>
-                    <tr>
-                      <td>Cuota Anual</td>
-                      <td className="monto">$6,000.00 MXN</td>
-                    </tr>
-                    <tr>
-                      <td>FEMETI primer ingreso</td>
-                      <td className="monto">$700.00 MXN</td>
-                    </tr>
-                    <tr>
-                      <td>FEMETI socios</td>
-                      <td className="monto">$350.00 MXN</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <h3>💰 Cuotas y Costos</h3>
+                <p className="contacto-cuotas">
+                  Para información sobre cuotas de inscripción y anualidad, contáctanos por 
+                  <a href="https://wa.me/525665824667" target="_blank" rel="noopener noreferrer"> WhatsApp</a> o 
+                  escríbenos a <a href="mailto:tiropracticoyucatan@gmail.com">tiropracticoyucatan@gmail.com</a>
+                </p>
               </div>
               
               <div className="requisitos-section">

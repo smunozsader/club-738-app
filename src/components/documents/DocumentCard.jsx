@@ -6,6 +6,9 @@ import './DocumentCard.css';
 // Documentos que permiten múltiples imágenes (frente/vuelta)
 const MULTI_IMAGE_DOCS = ['ine', 'cartillaMilitar'];
 
+// Documentos que se suben como imagen (JPG) no como PDF
+const IMAGE_ONLY_DOCS = ['fotoCredencial'];
+
 export default function DocumentCard({ 
   userId,
   documentType, 
@@ -23,6 +26,9 @@ export default function DocumentCard({
   
   // Determinar si este documento permite múltiples imágenes
   const allowMultiple = MULTI_IMAGE_DOCS.includes(documentType);
+  
+  // Determinar si este documento es solo imagen (no PDF)
+  const imageOnly = IMAGE_ONLY_DOCS.includes(documentType);
 
   const getStatusInfo = () => {
     if (!documentData) {
@@ -125,6 +131,7 @@ export default function DocumentCard({
             documentType={documentType}
             documentLabel={label}
             allowMultiple={allowMultiple}
+            imageOnly={imageOnly}
             onUploadComplete={handleUploadComplete}
           />
           {showUploader && (

@@ -10,6 +10,92 @@
 
 ## 📅 Enero 2026
 
+### 6 de Enero - v1.12.0 Rediseño UX Expediente Digital + Foto Credencial
+
+#### Rediseño del Flujo de Documentos PETA
+
+**Cambios conceptuales**:
+- Renombrado "Mis Documentos PETA" → "Mi Expediente Digital"
+- Enfoque en facilitar el trámite, no en "subir 16 documentos"
+- Separación clara: documentos digitales vs físicos
+
+**Documentos eliminados del upload** (se entregan físicos):
+- ❌ `fotoPETA` - Foto infantil para PETA
+- ❌ `reciboe5cinco` - Recibo de pago de derechos
+
+**Documentos ahora opcionales** (originales físicos):
+- 🟡 Certificado Médico
+- 🟡 Certificado Psicológico
+- 🟡 Certificado Toxicológico
+
+#### Nueva Bienvenida e Instrucciones al Socio
+
+**Sección de bienvenida** en Mi Expediente Digital:
+```
+👋 ¡Bienvenido!
+Para la renovación de tu membresía y trámite PETA:
+1. Sube tu documentación digital
+2. Prepara los originales físicos
+3. Agenda una cita para entrega y pago
+```
+
+**Información de entrega física**:
+```
+📍 MVZ Sergio Muñoz de Alba Medrano
+   Secretario del Club
+   Calle 26 #246-B x 15 y 15A
+   Col. Vista Alegre, 97130, Mérida
+   📍 Google Maps | 📱 WhatsApp para cita
+```
+
+#### Tarjeta Estado de Pagos Habilitada
+
+**Cambios en Dashboard del Socio**:
+- ❌ Eliminada tarjeta "Mi Credencial" (se imprime física)
+- ✅ Habilitada tarjeta "Estado de Pagos" con badge dinámico:
+  - `✅ Al corriente` (verde) si `renovacion2026.estado === 'pagado'`
+  - `⏳ Pendiente` (amarillo) si no
+
+**Modal de Estado de Pagos**:
+- Si pagado: muestra monto, fecha, método de pago
+- Si pendiente: instrucciones y botón "Agendar cita por WhatsApp"
+
+#### Foto para Credencial como JPG
+
+**Problema**: El uploader convertía todo a PDF, pero necesitamos JPG para Canva.
+
+**Solución**: Nuevo modo `imageOnly` en `MultiImageUploader`:
+- Interfaz simplificada: "📸 Sube tu foto"
+- Acepta JPG, PNG, HEIC (convierte a JPG)
+- Se sube directamente como `.jpg` (no PDF)
+- Usado solo para `fotoCredencial`
+
+#### Script: Subida Masiva de Fotos Existentes
+
+**Nuevo script**: `scripts/subir-fotos-credencial.cjs`
+- Lee fotos de `data/fotos/fotos_para_canva_bis/`
+- Formato nombre: `{seq}_{numCredencial}_{NOMBRE}.jpeg`
+- Mapea credencial → email via `credenciales_socios.json`
+- Sube a Storage: `documentos/{email}/fotoCredencial_{timestamp}.jpg`
+- Actualiza Firestore con estado `precargado`
+
+**Resultado**: 35 fotos subidas exitosamente
+
+#### Archivos Modificados
+
+| Archivo | Cambios |
+|---------|---------|
+| `DocumentList.jsx` | Eliminados fotoPETA, reciboe5cinco; certificados opcionales; nueva bienvenida |
+| `DocumentList.css` | Estilos para bienvenida, dirección entrega, contacto |
+| `DocumentCard.jsx` | Nuevo array `IMAGE_ONLY_DOCS`, prop `imageOnly` |
+| `MultiImageUploader.jsx` | Prop `imageOnly`, función `handleImageOnlyUpload`, upload como JPG |
+| `MultiImageUploader.css` | Estilos para modo imagen simplificado |
+| `App.jsx` | Modal estado pagos, eliminada tarjeta credencial, badge dinámico |
+| `App.css` | Estilos modal pagos, badges pagado/pendiente |
+| `LandingPage.jsx` | Cuotas reemplazadas por contacto WhatsApp/email |
+
+---
+
 ### 6 de Enero - v1.11.0 Módulo Corte de Caja + Sincronización de Pagos
 
 #### Housekeeping: Reorganización de Estructura del Proyecto

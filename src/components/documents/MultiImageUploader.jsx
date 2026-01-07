@@ -11,6 +11,7 @@ export default function MultiImageUploader({
   documentType, 
   documentLabel,
   allowMultiple = false, // true para INE (frente/vuelta)
+  imageOnly = false, // true para fotoCredencial (sube JPG, no PDF)
   onUploadComplete 
 }) {
   const [images, setImages] = useState([]);
@@ -163,6 +164,36 @@ export default function MultiImageUploader({
     await uploadFile(file);
   };
 
+  // Manejar subida directa de imagen (JPG) - para fotoCredencial
+  const handleImageOnlyUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setError('');
+    
+    // Validar que sea imagen
+    const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+    const isImage = file.type.startsWith('image/') || isHeic;
+    if (!isImage) {
+      setError('Solo se permiten imágenes (JPG, PNG, HEIC)');
+      return;
+    }
+    if (file.size > maxSizeImage) {
+      setError('La imagen no debe superar 10MB');
+      return;
+    }
+    
+    try {
+      // Procesar (convertir HEIC si es necesario)
+      const processedFile = await processFile(file);
+      
+      // Subir como imagen (no PDF)
+      await uploadFile(processedFile, true);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   // Manejar fotos para convertir a PDF
   const handlePhotoUpload = async (e) => {
     const files = Array.from(e.target.files);
@@ -256,12 +287,14 @@ export default function MultiImageUploader({
     }
   };
 
-  const uploadFile = async (file) => {
+  const uploadFile = async (file, asImage = false) => {
     setUploading(true);
     setProgress(60);
 
     const timestamp = Date.now();
-    const fileName = `${documentType}_${timestamp}.pdf`;
+    const extension = asImage ? 'jpg' : 'pdf';
+    const mimeType = asImage ? 'image/jpeg' : 'application/pdf';
+    const fileName = `${documentType}_${timestamp}.${extension}`;
     const storagePath = `documentos/${userId}/${fileName}`;
     
     // 🔍 Debug: mostrar información de upload
@@ -270,7 +303,8 @@ export default function MultiImageUploader({
       userId: userId,
       fileName: fileName,
       fileType: file.type,
-      fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`
+      fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+      asImage: asImage
     });
 
     const storageRef = ref(storage, storagePath);
@@ -322,7 +356,7 @@ export default function MultiImageUploader({
               uploadDate: serverTimestamp(),
               estado: 'pendiente_revision',
               fileSize: file.size,
-              fileType: 'application/pdf'
+              fileType: asImage ? 'image/jpeg' : 'application/pdf'
             }
           });
 
@@ -380,6 +414,52 @@ export default function MultiImageUploader({
   const handleFileSelect = (e) => {
     handleFiles(Array.from(e.target.files));
   };
+
+  // Si es imageOnly (fotoCredencial), mostrar interfaz simplificada
+  if (imageOnly) {
+    return (
+      <div className={`multi-image-uploader image-only ${isDragging ? 'dragging' : ''}`}>
+        {!uploading ? (
+          <div className="image-only-upload">
+            <div className="image-only-info">
+              <p className="image-only-title">📸 Sube tu foto</p>
+              <p className="image-only-desc">Formato JPG o PNG, fondo blanco, tamaño infantil</p>
+            </div>
+            
+            <label className="file-select-btn image-btn">
+              📷 Seleccionar imagen
+              <input
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/heic,image/heif"
+                capture="environment"
+                onChange={handleImageOnlyUpload}
+                hidden
+              />
+            </label>
+            
+            <p className="image-only-hint">
+              💡 Puedes tomar la foto con tu celular o seleccionar una imagen guardada
+            </p>
+          </div>
+        ) : (
+          <div className="upload-progress-container">
+            <div className="upload-progress">
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+              </div>
+              <span>
+                {converting ? '🔄 Procesando imagen...' : 
+                 progress < 100 ? `⬆️ ${progress}% subiendo...` : 
+                 '✅ ¡Completado!'}
+              </span>
+            </div>
+          </div>
+        )}
+        
+        {error && <div className="upload-error">{error}</div>}
+      </div>
+    );
+  }
 
   return (
     <div className={`multi-image-uploader ${isDragging ? 'dragging' : ''}`}>

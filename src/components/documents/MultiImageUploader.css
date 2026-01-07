@@ -378,3 +378,60 @@
   color: #fbbf24;
   line-height: 1.4;
 }
+
+/* ========================================
+   MODO IMAGE ONLY (fotoCredencial)
+   ======================================== */
+.multi-image-uploader.image-only {
+  padding: 10px 0;
+}
+
+.image-only-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  text-align: center;
+}
+
+.image-only-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.image-only-title {
+  color: #c9a227;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.image-only-desc {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.file-select-btn.image-btn {
+  background: linear-gradient(135deg, #c9a227 0%, #b8860b 100%);
+  color: #1a1a2e;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.file-select-btn.image-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201, 162, 39, 0.4);
+}
+
+.image-only-hint {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  margin: 0;
+  max-width: 280px;
+}

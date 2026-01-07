@@ -48,29 +48,29 @@ const DOCUMENTOS_PETA = [
     category: 'identificacion'
   },
   
-  // === CERTIFICADOS MÉDICOS ===
+  // === CERTIFICADOS MÉDICOS (Opcionales - originales se entregan físicamente) ===
   {
     id: 'certificadoMedico',
     label: 'Certificado Médico',
-    description: 'Certificado de no impedimento físico para portar armas. Original requerido.',
+    description: 'Opcional. El original se entrega físicamente en 32 ZM.',
     icon: '🩺',
-    required: true,
+    required: false,
     category: 'medico'
   },
   {
     id: 'certificadoPsicologico',
     label: 'Certificado Psicológico',
-    description: 'Certificado de aptitud mental. Original requerido.',
+    description: 'Opcional. El original se entrega físicamente en 32 ZM.',
     icon: '🧠',
-    required: true,
+    required: false,
     category: 'medico'
   },
   {
     id: 'certificadoToxicologico',
     label: 'Certificado Toxicológico',
-    description: 'Prueba de drogas negativa. Original requerido.',
+    description: 'Opcional. El original se entrega físicamente en 32 ZM.',
     icon: '🧪',
-    required: true,
+    required: false,
     category: 'medico'
   },
   
@@ -118,43 +118,24 @@ const DOCUMENTOS_PETA = [
     category: 'armas'
   },
   
-  // === FOTOGRAFÍAS ===
+  // === FOTOGRAFÍA PARA CREDENCIAL ===
   {
     id: 'fotoCredencial',
     label: 'Foto para Credencial del Club',
-    description: 'Fotografía tamaño infantil para tu credencial de socio.',
+    description: 'Foto infantil fondo blanco. Se usa para generar tu credencial oficial.',
     icon: '📸',
     required: true,
     category: 'fotos'
-  },
-  {
-    id: 'fotoPETA',
-    label: 'Foto para PETA',
-    description: 'Fotografía a color, fondo blanco, tamaño infantil. También entregar física en 32 ZM.',
-    icon: '🖼️',
-    required: true,
-    category: 'fotos'
-  },
-  
-  // === PAGO ===
-  {
-    id: 'reciboe5cinco',
-    label: 'Recibo de Pago e5cinco',
-    description: 'Comprobante del pago de derechos SEDENA. Original se presenta en 32 ZM.',
-    icon: '💳',
-    required: true,
-    category: 'pago'
   }
 ];
 
 // Agrupación por categoría para mostrar
 const CATEGORIAS = {
   identificacion: { label: '🆔 Identificación', order: 1 },
-  medico: { label: '🏥 Certificados Médicos', order: 2 },
+  medico: { label: '🏥 Certificados Médicos (Opcionales)', order: 2 },
   legal: { label: '⚖️ Documentos Legales', order: 3 },
-  armas: { label: '� Armas y Permisos', order: 4 },
-  fotos: { label: '📷 Fotografías', order: 5 },
-  pago: { label: '💰 Pago', order: 6 }
+  armas: { label: '📋 Armas y Permisos', order: 4 },
+  fotos: { label: '📸 Foto para Credencial', order: 5 }
 };
 
 export default function DocumentList({ userId, documentosData = {}, onUploadComplete }) {
@@ -221,8 +202,8 @@ export default function DocumentList({ userId, documentosData = {}, onUploadComp
   return (
     <div className="document-list">
       <div className="document-list-header">
-        <h3>📄 Mis Documentos PETA</h3>
-        <p>Sube los documentos requeridos para tu Permiso Extraordinario de Transportación de Armas</p>
+        <h3>� Mi Expediente Digital</h3>
+        <p>Documentación para tu renovación de membresía y trámite PETA</p>
       </div>
 
       <ProgressBar 
@@ -231,13 +212,32 @@ export default function DocumentList({ userId, documentosData = {}, onUploadComp
         total={requiredDocs.length} 
       />
 
-      <div className="documents-info-box">
-        <h4>ℹ️ Información Importante</h4>
-        <ul>
-          <li>Los documentos marcados como <strong>"Original requerido"</strong> deben entregarse físicamente al secretario</li>
-          <li>Sube aquí una copia escaneada para tener tu expediente digital completo</li>
-          <li>Los originales se presentan en la <strong>32 Zona Militar (Valladolid)</strong></li>
-        </ul>
+      <div className="documents-info-box bienvenida">
+        <h4>👋 ¡Bienvenido!</h4>
+        <p>Para la <strong>renovación de tu membresía</strong> en el Club y el trámite de tu <strong>PETA</strong>, por favor:</p>
+        <ol>
+          <li><strong>Sube tu documentación</strong> en formato digital (escaneos o fotos legibles)</li>
+          <li><strong>Prepara los originales</strong> que se entregarán físicamente</li>
+          <li><strong>Agenda una cita</strong> para entregar documentos y realizar el pago</li>
+        </ol>
+      </div>
+
+      <div className="documents-info-box entrega">
+        <h4>📍 Entrega de Documentos Físicos</h4>
+        <p>Los documentos originales y el pago de inscripción + FEMETI se entregan <strong>previa cita</strong> en:</p>
+        <div className="direccion-entrega">
+          <p><strong>MVZ Sergio Muñoz de Alba Medrano</strong></p>
+          <p className="cargo-secretario">Secretario del Club</p>
+          <p>Calle 26 #246-B x 15 y 15A</p>
+          <p>Col. Vista Alegre, 97130</p>
+          <p>Mérida, Yucatán</p>
+          <a href="https://goo.gl/maps/T2gFh3NUeuTKzBKV7" target="_blank" rel="noopener noreferrer" className="maps-link">
+            📍 Ver en Google Maps
+          </a>
+        </div>
+        <p className="cita-contacto">
+          <strong>Agendar cita:</strong> <a href="https://wa.me/525665824667" target="_blank" rel="noopener noreferrer">WhatsApp +52 56 6582 4667</a>
+        </p>
       </div>
 
       {sortedCategories.map(category => (
