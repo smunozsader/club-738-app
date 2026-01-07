@@ -58,6 +58,56 @@ https://github.com/smunozsader/club-738-app.git
 └─────────────────────────────────────────────────────────┘
 ```
 
+### 📔 Journaling de Desarrollo (OBLIGATORIO para AI Agent)
+
+**Después de cada cambio significativo**, el AI coding agent DEBE:
+
+1. **Documentar en el Journal** (`docs/DEVELOPMENT_JOURNAL.md`):
+   - Fecha y versión (si aplica)
+   - Qué se modificó/creó
+   - Archivos afectados
+   - Problemas resueltos o features agregados
+
+2. **Commit descriptivo** con formato:
+   ```
+   tipo(scope): descripción breve
+   
+   - Detalle 1
+   - Detalle 2
+   ```
+   Tipos: `feat`, `fix`, `docs`, `refactor`, `style`, `chore`
+
+3. **Push a GitHub** para sincronizar entre máquinas
+
+**¿Cuándo sugerir journaling al usuario?**
+- ✅ Después de crear un nuevo componente
+- ✅ Después de corregir un bug significativo
+- ✅ Después de modificar múltiples archivos (3+)
+- ✅ Después de actualizar configuración (firebase, rules, etc.)
+- ✅ Después de agregar nuevas dependencias
+- ✅ Al finalizar una sesión de desarrollo extensa
+
+**Frase sugerida al usuario**:
+> "Los cambios están completos. ¿Quieres que actualice el journal, haga commit y push a GitHub?"
+
+**Estructura del Journal entry**:
+```markdown
+### [Fecha] - v[X.Y.Z] Descripción breve
+
+#### [Nombre del feature/fix]
+
+**Objetivo**: [Qué se quería lograr]
+
+**Cambios realizados**:
+- [Cambio 1]
+- [Cambio 2]
+
+**Archivos modificados/creados**:
+- `path/to/file.jsx` - [descripción]
+
+**Deploy**: [Si se desplegó a producción]
+```
+
 ### Resolución de Conflictos
 Si olvidaste hacer pull y hay cambios remotos:
 ```bash
