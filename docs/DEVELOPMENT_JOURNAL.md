@@ -70,7 +70,7 @@ DOCUMENTOS_DIGITALES.forEach(docItem => {
 
 ---
 
-### 6 de Enero - v1.12.1 Enlaces SEDENA en Landing Page
+### 6 de Enero - v1.12.1 Enlaces SEDENA + Redes Sociales
 
 #### Nueva Sección: Enlaces SEDENA
 
@@ -91,8 +91,12 @@ DOCUMENTOS_DIGITALES.forEach(docItem => {
 | 💰 | Todos los Formatos e5cinco | Catálogo completo SEDENA |
 | 🏪 | Comercialización de Armas | Portal DCAM |
 
+#### Redes Sociales en Footer
+
+**Agregados**: Facebook, Instagram, Google Maps en footer de landing page.
+
 **Archivos modificados**:
-- `LandingPage.jsx`: Nueva sección `sedena-links-section` con grid de 4 enlaces
+- `LandingPage.jsx`: Nueva sección `sedena-links-section` + iconos redes sociales
 - `LandingPage.css`: Estilos `.sedena-links-section`, `.sedena-links-grid`, `.sedena-link-card`, `.sedena-subtitle`
 
 ---
@@ -168,19 +172,6 @@ Para la renovación de tu membresía y trámite PETA:
 
 **Resultado**: 35 fotos subidas exitosamente
 
-#### Archivos Modificados
-
-| Archivo | Cambios |
-|---------|---------|
-| `DocumentList.jsx` | Eliminados fotoPETA, reciboe5cinco; certificados opcionales; nueva bienvenida |
-| `DocumentList.css` | Estilos para bienvenida, dirección entrega, contacto |
-| `DocumentCard.jsx` | Nuevo array `IMAGE_ONLY_DOCS`, prop `imageOnly` |
-| `MultiImageUploader.jsx` | Prop `imageOnly`, función `handleImageOnlyUpload`, upload como JPG |
-| `MultiImageUploader.css` | Estilos para modo imagen simplificado |
-| `App.jsx` | Modal estado pagos, eliminada tarjeta credencial, badge dinámico |
-| `App.css` | Estilos modal pagos, badges pagado/pendiente |
-| `LandingPage.jsx` | Cuotas reemplazadas por contacto WhatsApp/email |
-
 ---
 
 ### 6 de Enero - v1.11.0 Módulo Corte de Caja + Sincronización de Pagos
@@ -208,27 +199,11 @@ club-738-web/
 └── public/assets/           # Logos e imágenes públicas
 ```
 
-**Archivos movidos**:
-| Origen | Destino |
-|--------|---------|
-| `Base datos/*.xlsx` | `data/socios/` |
-| `credenciales_socios.*` | `data/socios/` |
-| `Credencial-Club-2026/` | `data/credenciales/` |
-| `2025. 738. CONSTANCIAS...` | `data/constancias/` |
-| `curp_socios/` | `data/curps/pdfs/` |
-| `fotos infantiles socios/` | `data/fotos/` |
-| `privacidad/*.jsx,css` | `src/components/privacidad/` |
-| `privacidad/*.md,pdf` | `docs/legal/` |
-
-**.gitignore actualizado** para nueva estructura `data/`
-
----
-
 #### Major Feature: Reporte de Pagos / Corte de Caja
 
 **Objetivo**: Crear un módulo de reportes que muestre el estado de cobranza con corte de caja.
 
-#### ReporteCaja.jsx - Nuevo Módulo
+##### ReporteCaja.jsx - Nuevo Módulo
 
 **Features implementados**:
 - 4 tarjetas de resumen: Total recaudado, Socios pagados, Pendientes, Desglose
@@ -263,65 +238,268 @@ club-738-web/
    });
    ```
 
-2. **DashboardRenovaciones.jsx modificado** - Detecta pagos de ambas fuentes:
-   ```javascript
-   if (estado !== 'pagado' && data.membresia2026?.activa) {
-     estado = 'pagado';
-   }
-   ```
+2. **DashboardRenovaciones.jsx modificado** - Detecta pagos de ambas fuentes
 
-3. **firestore.rules actualizado** - Permite al secretario actualizar todos los campos:
-   ```javascript
-   allow update: if isSecretario();
-   ```
-
-4. **Migración de datos** - Script para sincronizar pagos existentes (ej: Santiago Quintal Paredes)
-
-#### Archivos Creados
-
-| Archivo | Descripción |
-|---------|-------------|
-| `src/components/ReporteCaja.jsx` | Módulo de corte de caja |
-| `src/components/ReporteCaja.css` | Estilos responsive + impresión |
-
-#### Archivos Modificados
-
-| Archivo | Cambios |
-|---------|---------|
-| `src/App.jsx` | Import ReporteCaja, botón en menú admin, sección de visualización |
-| `src/components/RegistroPagos.jsx` | Sincroniza renovacion2026 al registrar pago |
-| `src/components/DashboardRenovaciones.jsx` | Lee de ambas fuentes de pago |
-| `firestore.rules` | Permisos de escritura para secretario |
+3. **firestore.rules actualizado** - Permite al secretario actualizar todos los campos
 
 ---
 
-### 5 de Enero - v1.10.0 Paleta de Colores + Mejoras UI
+### 5 de Enero - v1.10.1 Modalidad de Armas + Estados Sugeridos
 
-#### Implementación de Variables CSS
+**Tiempo de sesión**: ~1.5 horas
 
-**Objetivo**: Centralizar colores del proyecto para mantener consistencia visual.
+#### 1. Campo Modalidad en Armas
 
-**Variables definidas en :root**:
-```css
---color-primary: #2d5a2d;
---color-primary-dark: #1a2e1a;
---color-primary-light: #e8f5e8;
---color-success: #2d7a2d;
---color-warning: #f0a020;
---color-danger: #dc3545;
---color-text-primary: #1a2e1a;
---color-text-muted: #888;
-...
+**Problema identificado**: Socios pueden solicitar PETA de CAZA con armas registradas para TIRO (y viceversa), lo cual es rechazado en la 32 Zona Militar.
+
+**Solución implementada**:
+- Nuevo campo `modalidad` en cada arma: `'caza'`, `'tiro'`, `'ambas'`
+- Script de inferencia automática basado en clase/calibre
+- 310 armas actualizadas automáticamente
+
+**Script creado**: `scripts/actualizar-modalidad-armas.cjs`
+- Inferencia por clase: Escopetas → ambas, Pistolas/Revólveres → tiro
+- Inferencia por calibre: .30-06, .308, .270 → caza | .22, 9mm, .45 → tiro
+- Modo batch (automático) o interactivo (-i)
+
+**Resultados de inferencia**:
+| Modalidad | Cantidad |
+|-----------|----------|
+| 🦌 Caza | 46 armas |
+| 🎯 Tiro | 180 armas |
+| ✅ Ambas | 84 armas |
+
+#### 2. Cambio de Bloqueo a Advertencia
+
+**Problema**: El .223 puede ser CAZA o TIRO según el RFA de cada persona. No debemos bloquear.
+
+**Cambios realizados**:
+- ❌ Antes: Alert bloqueante que impedía continuar
+- ✅ Ahora: Confirm informativo que permite continuar
+
+**Nuevo flujo**:
+1. Armas con modalidad diferente muestran advertencia amarilla (no roja)
+2. Al enviar, si hay discrepancias → confirm pregunta si desea continuar
+3. Mensaje aclara: "La modalidad real depende de tu RFA"
+
+#### 3. MisArmas.jsx - Edición de Modalidad
+
+**Para secretario** (smunozam@gmail.com):
+- Dropdown para cambiar modalidad de cualquier arma
+- Estilos según modalidad (verde/azul/púrpura)
+
+**Para socios**:
+- Badge de solo lectura mostrando modalidad sugerida
+
+#### 4. Estados Sugeridos para PETA
+
+**OCR ejecutado** en imagen de estados de tiro práctico FEMETI.
+
+**Estados sugeridos para Tiro Práctico (10)**:
+1. Yucatán (base)
+2. Baja California
+3. Jalisco
+4. Coahuila
+5. Hidalgo
+6. Tabasco
+7. Estado de México
+8. Michoacán
+9. San Luis Potosí
+10. Guanajuato
+
+**Estados sugeridos para Caza (8)**:
+- Yucatán, Campeche, Quintana Roo, Tabasco, Chiapas, Veracruz, Tamaulipas, Sonora
+
+**Botón agregado**: "✨ Usar estados sugeridos para Tiro Práctico (FEMETI 2026)"
+
+#### 5. Firestore Rules Actualizado
+
+```javascript
+match /armas/{armaId} {
+  allow read: if isOwner(email) || isSecretario();
+  // Secretario puede actualizar modalidad
+  allow update: if isSecretario() 
+    && request.resource.data.diff(resource.data).affectedKeys()
+       .hasOnly(['modalidad']);
+}
 ```
 
-#### Mejoras de UI
+---
 
-1. **Footer legibilidad** - Texto amarillo cambiado a color visible
-2. **Logo como botón home** - Click en logo regresa a landing
-3. **Botones "Volver"** - Estilizados consistentemente en todas las secciones
-4. **Firebase Functions** - Deploy de funciones de email (onPetaCreated, testEmail)
+### 5 de Enero - v1.10.0 Módulo PETA Completo
+
+**Tiempo de sesión**: ~4 horas
+
+#### Componentes Creados (4)
+
+1. **SolicitarPETA.jsx** + CSS (450 líneas)
+   - Formulario completo de solicitud PETA
+   - 3 tipos: Tiro, Competencia Nacional, Caza
+   - Selección de hasta 10 armas
+   - Selección de hasta 10 estados (Competencia/Caza)
+   - Pre-llenado de domicilio desde Firestore
+   - Cálculo automático de vigencias
+   - Validaciones completas
+
+2. **MisPETAs.jsx** + CSS (380 líneas)
+   - Vista de solicitudes PETA del socio
+   - Cards expandibles con detalles
+   - Timeline de estados con iconos
+   - 6 estados tracking
+   - Filtrado por estado
+
+3. **VerificadorPETA.jsx** + CSS (520 líneas)
+   - Panel de secretario para verificación
+   - Checklist dual: digital (10 docs) + físico (9-11 docs)
+   - Barra de progreso (%)
+   - Notas del secretario
+   - Cambios de estado documentados
+
+4. **RegistroPagos.jsx** + CSS (490 líneas)
+   - Sistema de cobranza y membresías
+   - 4 conceptos de pago
+   - Auto-detección socio nuevo vs existente
+   - 4 métodos de pago
+   - Activación automática membresía 2026
+   - Historial de pagos
+
+#### Estados PETA Implementados
+
+| Estado | Icono | Responsable |
+|--------|-------|-------------|
+| documentacion_proceso | 🟡 | Socio |
+| documentacion_completa | 🟢 | Secretario |
+| enviado_32zm | 📤 | Secretario |
+| revision_sedena | ⏳ | SEDENA |
+| aprobado | ✅ | SEDENA |
+| rechazado | ❌ | SEDENA |
+
+#### Flujo de Trabajo PETA
+
+1. Socio completa expediente (16 docs)
+2. Socio solicita PETA → `documentacion_proceso`
+3. Secretario verifica docs físicos
+4. Secretario marca completo → `documentacion_completa`
+5. Secretario registra pago → Membresía 2026 ✅
+6. Secretario envía a 32ZM → `enviado_32zm`
+7. SEDENA revisa → `revision_sedena`
+8. Resolución → `aprobado` o `rechazado`
+
+#### Documentación Creada
+
+1. **MANUAL_USUARIO.md** (326 líneas)
+   - 5 pasos completos
+   - Tabla de 16 documentos
+   - Cuotas 2026
+   - FAQ (8 preguntas)
+   - Contacto
+
+2. **FLUJO_PETA.md** (320 líneas)
+   - Diagrama ASCII del flujo
+   - Tabla de 6 estados con iconos y responsables
+   - Componentes implementados (4)
+   - Estructura de datos Firestore completa
+   - 3 casos de uso detallados
 
 ---
+
+### 5 de Enero - v1.9.1 Renombrado Sitio Web + Mensajes VIP
+
+**Tiempo aproximado**: 30 minutos
+
+#### Renombrado del Sitio
+- **Antes**: "Club 738 - Portal de Socios"
+- **Ahora**: "Club de Caza, Tiro y Pesca de Yucatán, A.C."
+- Actualizado `<title>` y meta descripción en index.html
+
+#### Mensajes VIP Actualizados (6 mensajes)
+- Cambiado "Portal Web del Club 738" → "Sitio Web del Club de Caza, Tiro y Pesca de Yucatán"
+- Corregido texto de ORIGINALES
+- Agregado: "Foto tamaño infantil (física); una para cada PETA"
+- Agregado: "Formato de PAGO e5 por los derechos de cada PETA"
+
+**VIPs actualizados**:
+1. Gral. Ricardo Fernández (Presidente)
+2. Joaquín Gardoni (Tesorero)
+3. Iván Cabo
+4. Santiago Quintal
+5. Ángel García
+6. Ariel Paredes
+
+---
+
+### 5 de Enero - v1.9.0 Normalización de Domicilios + UI Unificada
+
+**Tiempo aproximado**: 3 horas
+
+#### Auditoría de copilot-instructions.md
+- Revisado contra estructura real del proyecto
+- Agregados 7 componentes faltantes
+- Agregadas dependencias clave (jspdf, heic2any, pdfjs-dist, tesseract.js, xlsx)
+- Documentados 9 scripts de administración
+
+#### Integración WhatsApp
+- Agregado ícono SVG de WhatsApp en footers
+- Link directo: `https://wa.me/525665824667`
+- Implementado en: LandingPage, CalendarioTiradas, CalculadoraPCP
+
+#### Unificación de Headers y Footers
+- Headers con logo + 3 badges: SEDENA 738, FEMETI, SEMARNAT
+- Footer con ubicación, contacto (WhatsApp + mailto), registros oficiales
+
+#### Normalización de Domicilios (Excel)
+**Formato:** `CALLE, COLONIA, MUNICIPIO, ESTADO, CP XXXXX` (4 comas)
+
+| Paso | Resultado |
+|------|-----------|
+| Saltos de línea → comas | 35 filas |
+| Ajustes finos | 122 filas |
+| Eliminar totales | 77 filas |
+| **Total**: 76 socios, 74 domicilios únicos, 100% normalizados |
+
+#### Importación a Firestore
+- 76/76 socios con domicilio estructurado
+- Campos: calle, colonia, municipio, estado, cp
+
+#### Scripts Creados
+
+| Script | Propósito |
+|--------|-----------|
+| `normalizar-domicilios.cjs` | Saltos de línea → comas |
+| `normalizar-domicilios-paso2.cjs` | Ajustes finos |
+| `eliminar-filas-totales.cjs` | Limpia "TOTAL POR PERSONA" |
+| `domicilios-compartidos.cjs` | Identifica duplicados |
+| `importar-domicilios-firestore.cjs` | Importa a Firestore |
+| `verificar-domicilios-firestore.cjs` | Verifica en Firestore |
+
+---
+
+### 5 de Enero - v1.8.0 Generador de Oficios PETA
+
+**Tiempo aproximado**: 2 horas
+
+#### Módulo GeneradorPETA completo
+- Componente React con formulario paso a paso
+- Generación de PDF con jsPDF
+- Formato oficial SEDENA replicado fielmente
+- 3 tipos de PETA: Tiro, Competencia Nacional, Caza
+
+#### Funcionalidades implementadas
+- Búsqueda de socios por nombre/email/número
+- Selección de tipo con vigencias automáticas
+- Tabla de armas con cartuchos editables (máx 10)
+- Selector de estados para Competencia/Caza (máx 10)
+- Datos del solicitante (NPS, PETA anterior, dirección)
+
+#### Documentación creada
+- `docs/PETA_SCHEMA.md` - Esquema completo del módulo
+- `docs/TODO.md` - Roadmap actualizado
+
+**Deploy a producción**: https://club-738-app.web.app
+
+---
+
+## 📅 Diciembre 2025 - Enero 2026
 
 ### 4 de Enero - v1.6.0 Portal Público Completo
 
@@ -346,12 +524,6 @@ club-738-web/
 - Modal de requisitos para nuevos socios con cuotas 2026
 - Footer con ubicación, contacto y registros oficiales
 
-**Correcciones aplicadas**:
-- Año del club: Fundado 2005 (no "70+ años")
-- Cuotas actualizadas a 2026
-- Eliminado subheader duplicado
-- Eliminadas tarjetas de estadísticas (socios activos, años de historia)
-
 #### CalendarioTiradas.jsx - Competencias 2026
 
 **Fuente de datos**: `src/data/tiradasData.js`
@@ -366,13 +538,6 @@ club-738-web/
 - Estados: Yucatán, Campeche, Quintana Roo, Tabasco, Chiapas, Veracruz
 - Fuente: FEMETI - Registro Nacional 2026
 
-**Features del calendario**:
-- 3 vistas: Calendario mensual, Lista, Solo Club 738
-- Filtros por modalidad y estado
-- Semana inicia en Lunes (Sáb/Dom a la derecha)
-- Link a Google Maps del campo de tiro
-- Navegación de regreso a landing
-
 #### CalculadoraPCP.jsx - Energía Cinética
 
 **Propósito**: Verificar si un rifle de aire requiere registro SEDENA (>140 joules)
@@ -383,81 +548,25 @@ club-738-web/
 - Resultado visual: ✅ No requiere / ⚠️ Requiere registro
 - Velocidad límite calculada para cada peso
 
-#### Archivos Creados
-
-| Archivo | Descripción |
-|---------|-------------|
-| `src/components/LandingPage.jsx` | Página de inicio pública |
-| `src/components/LandingPage.css` | Estilos responsive |
-| `src/components/CalendarioTiradas.jsx` | Calendario de competencias |
-| `src/components/CalendarioTiradas.css` | Estilos del calendario |
-| `src/components/CalculadoraPCP.jsx` | Calculadora de energía |
-| `src/components/CalculadoraPCP.css` | Estilos de la calculadora |
-| `src/data/tiradasData.js` | Datos de 60+ tiradas 2026 |
-| `public/assets/logo-club-738.jpg` | Logo oficial del club |
-
-#### Archivos Modificados
-
-| Archivo | Cambios |
-|---------|---------|
-| `src/App.jsx` | Detección de rutas públicas, import LandingPage |
-| `.github/copilot-instructions.md` | Documentación completa actualizada |
-
-#### Documentación Actualizada
-
-**copilot-instructions.md** - Reescrito completamente:
-- Información oficial del club (registros correctos)
-- Arquitectura de componentes actual
-- Estructura de rutas públicas
-- Cuotas 2026
-- Calendario de tiradas
-- Pending features actualizado
-
 ---
 
 ### 3 de Enero - v1.3.0 OCR Validation + Centralización de Registros de Armas
 
 #### Problema resuelto: Upload de registros de armas fallaba por permisos
 
-**Error detectado**: Al subir PDF de registro de arma desde "Mis Armas", aparecía error de permisos de Firestore:
-```
-Missing or insufficient permissions
-```
-
 **Root cause**: Las reglas de Firestore tienen `allow write: if false` en `/socios/{email}/armas/{armaId}`, bloqueando actualizaciones desde cliente.
 
 **Solución implementada**: 
-
-1. **Centralizar uploads en "Documentos PETA"** - El documento "Registros de Armas (RFA)" ahora muestra las armas del socio con opción de subir cada registro individual.
-
-2. **Validación OCR automática** - Antes de subir, el sistema:
-   - Extrae texto del PDF usando pdfjs-dist
-   - Si es PDF escaneado, aplica OCR con tesseract.js
-   - Verifica que la matrícula del arma aparezca en el documento
-   - Solo permite upload si la matrícula coincide
-
-3. **MisArmas simplificado** - Vista de solo lectura mostrando estado de registros
+1. **Centralizar uploads en "Documentos PETA"**
+2. **Validación OCR automática** - Verifica matrícula antes de subir
 
 #### Archivos creados
 - `src/utils/ocrValidation.js` - Validador OCR con lazy loading
 - `src/components/documents/ArmasRegistroUploader.jsx` - Uploader especializado
-- `src/components/documents/ArmasRegistroUploader.css` - Estilos
-
-#### Archivos modificados
-- `src/components/MisArmas.jsx` - Simplificado a vista read-only
-- `src/components/MisArmas.css` - Estilos para nota informativa
-- `src/components/documents/DocumentCard.jsx` - Caso especial para registrosArmas
-- `src/components/documents/DocumentCard.css` - Estilos card armas
 
 #### Dependencias agregadas
 - `tesseract.js` - OCR en navegador
 - `pdfjs-dist` - Extracción de texto y rendering de PDFs
-
-#### Características técnicas
-- **Lazy loading** de bibliotecas pesadas para no afectar carga inicial
-- **Dos métodos de extracción**: texto nativo del PDF + OCR como fallback
-- **Variaciones de OCR**: Tolera confusiones comunes (0/O, 1/I/L, 5/S)
-- **Progress feedback**: Muestra progreso de validación al usuario
 
 ---
 
@@ -465,33 +574,9 @@ Missing or insufficient permissions
 
 #### Mejora UX: Selector de modo de subida
 
-**Problema identificado**: Las fotos tomadas desde iPhone y convertidas a PDF resultaban de muy baja calidad. Los documentos oficiales (especialmente INE) requieren ampliación al 200% y buena resolución.
+**Problema identificado**: Las fotos tomadas desde iPhone y convertidas a PDF resultaban de muy baja calidad.
 
 **Solución**: Dar al usuario la opción clara de subir un PDF ya preparado correctamente.
-
-#### MultiImageUploader - Selector de modo
-
-Ahora muestra **dos opciones claras** al iniciar:
-
-1. **📄 "Ya tengo PDF listo"**
-   - Requisitos mostrados: Tamaño carta, 200 DPI, ampliado 200%, máx 5MB
-   - Link directo a iLovePDF.com para preparar documentos
-   - Solo acepta archivos PDF
-
-2. **📷 "Tomar foto"**  
-   - Convierte fotos a PDF automáticamente
-   - Advertencia especial para INE sobre preparar PDF al 200%
-
-#### MisArmas - Solo PDFs
-
-- **Eliminada opción de imágenes** - Solo acepta PDFs
-- Requisitos claros: Tamaño carta, 200-300 DPI, máx 5MB
-- Mensaje de error informativo con link a iLovePDF
-
-#### Archivos modificados
-- `src/components/documents/MultiImageUploader.jsx` - Selector de modo PDF/Foto
-- `src/components/documents/MultiImageUploader.css` - Estilos para selector
-- `src/components/MisArmas.jsx` - Solo acepta PDFs
 
 ---
 
@@ -499,19 +584,11 @@ Ahora muestra **dos opciones claras** al iniciar:
 
 #### Bug crítico corregido: Error de permisos en upload
 
-**Problema**: Al subir documentos desde iPhone aparecía error:
-```
-User does not have permission to access 'documentos/EQASQOwPz1PRZRxjcBt695dD2tl1/ine_xxx.pdf'
-```
+**Problema**: Al subir documentos desde iPhone aparecía error de permisos.
 
 **Root cause**: `DocumentUploader.jsx` usaba ruta incorrecta:
 - ❌ Antes: `socios/${userId}/documentos/${fileName}`
 - ✅ Ahora: `documentos/${userId}/${fileName}`
-
-**Solución aplicada**:
-1. Corregí ruta en `DocumentUploader.jsx` línea 48
-2. Instalé Google Cloud SDK (`brew install --cask google-cloud-sdk`)
-3. Configuré CORS para Firebase Storage
 
 **CORS configurado** (`cors.json`):
 ```json
@@ -522,46 +599,16 @@ User does not have permission to access 'documentos/EQASQOwPz1PRZRxjcBt695dD2tl1
 }
 ```
 
-**Comando ejecutado**:
-```bash
-gsutil cors set cors.json gs://club-738-app.firebasestorage.app
-```
-
-#### Mejoras de debugging
-- Agregué console.log con emojis en `MisDocumentosOficiales.jsx`
-- Agregué display de código de error en UI cuando documento no carga
-
-#### Archivos modificados
-- `src/components/documents/DocumentUploader.jsx` - Fix ruta Storage
-- `src/components/MisDocumentosOficiales.jsx` - Logs de debug
-- `src/components/MisDocumentosOficiales.css` - Estilo error code
-- `cors.json` - Configuración CORS (nuevo)
-
 ---
 
 ### 3 de Enero - v1.1.0 Privacidad LFPDPPP
 
 #### Implementación de Protección de Datos Personales
 
-**Contexto legal**: La Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) requiere que los sitios web que manejan datos personales:
-1. Publiquen un Aviso de Privacidad
-2. Informen sobre Derechos ARCO (Acceso, Rectificación, Cancelación, Oposición)
-3. Obtengan consentimiento expreso para datos sensibles
-
 **Implementación completa**:
-
-1. **Página de Aviso de Privacidad** (`/aviso-privacidad`)
-   - 3 tabs: Simplificado, Integral, Derechos ARCO
-   - Diseño responsive con estilos del club
-   - Formulario para ejercer derechos ARCO (abre mailto:)
-
-2. **Componente ConsentimientoPriv.jsx**
-   - 3 checkboxes: primario (obligatorio), sensibles (obligatorio), secundario (opcional)
-   - Para integrar en formulario de registro de socios
-
-3. **Links en footer**
-   - "📋 Aviso de Privacidad"
-   - "⚖️ Derechos ARCO"
+1. **Página de Aviso de Privacidad** (`/aviso-privacidad`) - 3 tabs
+2. **Componente ConsentimientoPriv.jsx** - 3 checkboxes
+3. **Links en footer** - "📋 Aviso de Privacidad" + "⚖️ Derechos ARCO"
 
 **Cumplimiento LFPDPPP**:
 | Requisito | Artículo | ✅ |
@@ -572,16 +619,6 @@ gsutil cors set cors.json gs://club-738-app.firebasestorage.app
 | Datos sensibles con consentimiento | Art. 8 | ✅ |
 | Derechos ARCO | Art. 22-27 | ✅ |
 | Transferencias | Art. 36-37 | ✅ |
-
-#### Archivos creados
-- `src/components/privacidad/AvisoPrivacidad.jsx` (450+ líneas)
-- `src/components/privacidad/AvisoPrivacidad.css`
-- `src/components/privacidad/ConsentimientoPriv.jsx`
-- `src/components/privacidad/ConsentimientoPriv.css`
-
-#### Archivos modificados
-- `src/App.jsx` - Import AvisoPrivacidad, sección privacidad, links en footer
-- `src/App.css` - Estilos para links de privacidad
 
 ---
 
@@ -594,88 +631,21 @@ gsutil cors set cors.json gs://club-738-app.firebasestorage.app
 **Solución implementada**:
 1. Instalé `heic2any` para convertir HEIC → JPEG
 2. Instalé `jsPDF` para convertir imágenes → PDF
-3. Creé `MultiImageUploader.jsx` - componente que permite:
-   - Seleccionar múltiples fotos (ej: INE frente y reverso)
-   - Convertir automáticamente a PDF
-   - Preview de imágenes antes de subir
-   - Progress bar durante conversión
+3. Creé `MultiImageUploader.jsx`
 
-**Bug crítico encontrado**: Al probar en iPhone, apareció error de permisos:
-```
-User does not have permission to access 'documentos/EQASQOwPz1PRZRxjcBt695dD2tl1/...'
-```
-
-**Root cause**: El componente usaba `user.uid` (UID de Firebase Auth) pero las Storage Rules esperaban `user.email`. 
-
-**Fix aplicado en App.jsx**:
-```jsx
-// Antes (incorrecto)
-userId={user.uid}
-
-// Después (correcto)
-userId={user.email.toLowerCase()}
-```
-
-**Optimización móvil**: Agregué media queries para pantallas <480px:
-- Header más compacto
-- Cards de documentos con padding reducido
-- Botones full-width para mejor touch target
-- Grid de documentos en columna única
-
-#### Archivos creados/modificados
-- `src/components/documents/MultiImageUploader.jsx` (372 líneas)
-- `src/components/documents/MultiImageUploader.css`
-- `src/App.jsx` - Fix userId
-- `src/App.css` - Mobile styles
-- `src/components/documents/DocumentCard.css` - Mobile styles
-- `src/components/documents/DocumentList.css` - Mobile styles
+**Bug crítico encontrado y corregido**: El componente usaba `user.uid` pero las Storage Rules esperaban `user.email`.
 
 ---
 
-### 2 de Enero - v0.2.0
+### 2 de Enero - v0.2.0 Expansión de documentos PETA
 
-#### Expansión de documentos PETA
-
-**Contexto**: Revisé el documento oficial "Requisitos PETA (1).docx" y encontré que se necesitan 16 documentos, no 8.
-
-**Cambios**:
-- Expandí `DocumentList.jsx` de 8 a 14 tipos de documentos
-- Organicé en 6 categorías: Identificación, Médicos, Legales, Armas, Fotos, Pago
-- Actualicé `copilot-instructions.md` con tabla de requisitos completa
-
-**Documentos agregados**:
-- Certificado Toxicológico
-- Carta Modo Honesto de Vivir
-- Licencia de Caza
-- Registros de Armas (RFA)
-- Fotografía
-- Recibo e5cinco
-
-#### Nuevo logo
-- Subí el nuevo logo del club (escudo verde/dorado)
-- Actualicé `public/logo-club-738.png`
+Expandí `DocumentList.jsx` de 8 a 14 tipos de documentos, organizados en 6 categorías.
 
 ---
 
-### 1 de Enero - v0.1.0
+### 1 de Enero - v0.1.0 Setup inicial y seguridad
 
-#### Setup inicial y seguridad
-
-**Reglas de seguridad implementadas**:
-
-```javascript
-// firestore.rules
-match /socios/{email} {
-  allow read, write: if request.auth.token.email.lower() == email;
-}
-
-// storage.rules
-match /documentos/{email}/{document=**} {
-  allow read, write: if request.auth.token.email.lower() == email;
-}
-```
-
-**Principio**: Cada socio solo puede acceder a sus propios datos.
+**Reglas de seguridad implementadas** - Cada socio solo puede acceder a sus propios datos.
 
 **Scripts de migración creados**:
 - `scripts/subir-curps.cjs` - Subir 76 CURPs a Storage
@@ -692,21 +662,32 @@ club-738-web/
 │   ├── App.jsx              # Router principal + auth state
 │   ├── firebaseConfig.js    # Firebase services init
 │   └── components/
-│       ├── Login.jsx        # Auth (login/signup)
-│       ├── MisArmas.jsx     # Listado de armas
-│       ├── MisDocumentosOficiales.jsx  # CURP + Constancia viewer
-│       ├── WelcomeDialog.jsx           # Onboarding modal
+│       ├── Login.jsx                    # Auth (login/signup)
+│       ├── LandingPage.jsx              # Portal público
+│       ├── CalendarioTiradas.jsx        # Calendario competencias
+│       ├── CalculadoraPCP.jsx           # Calculadora energía
+│       ├── MisArmas.jsx                 # Listado de armas
+│       ├── MisDocumentosOficiales.jsx   # CURP + Constancia viewer
+│       ├── WelcomeDialog.jsx            # Onboarding modal
+│       ├── GeneradorPETA.jsx            # Generador oficios PDF
+│       ├── SolicitarPETA.jsx            # Formulario solicitud PETA
+│       ├── MisPETAs.jsx                 # Estado de solicitudes
+│       ├── VerificadorPETA.jsx          # Panel verificación secretario
+│       ├── ExpedienteImpresor.jsx       # Preparar impresiones
+│       ├── RegistroPagos.jsx            # Cobranza y membresías
+│       ├── ReporteCaja.jsx              # Corte de caja
+│       ├── DashboardRenovaciones.jsx    # Panel cobranza
+│       ├── DashboardCumpleanos.jsx      # Demografía socios
 │       ├── documents/
-│       │   ├── DocumentList.jsx        # Grid de 14 documentos
-│       │   ├── DocumentCard.jsx        # Card individual
-│       │   ├── DocumentUploader.jsx    # Upload simple (PDF)
-│       │   └── MultiImageUploader.jsx  # Upload multi-foto → PDF
+│       │   ├── DocumentList.jsx         # Grid de documentos
+│       │   ├── DocumentCard.jsx         # Card individual
+│       │   ├── DocumentUploader.jsx     # Upload simple (PDF)
+│       │   ├── MultiImageUploader.jsx   # Upload multi-foto → PDF
+│       │   └── ArmasRegistroUploader.jsx # Upload registros armas
 │       └── privacidad/
-│           ├── AvisoPrivacidad.jsx     # Página completa LFPDPPP
-│           ├── AvisoPrivacidad.css
-│           ├── ConsentimientoPriv.jsx  # Checkbox consentimiento
-│           └── ConsentimientoPriv.css
-├── privacidad/              # Documentos legales fuente (MD)
+│           ├── AvisoPrivacidad.jsx      # Página completa LFPDPPP
+│           └── ConsentimientoPriv.jsx   # Checkbox consentimiento
+├── docs/                    # Documentación
 ├── scripts/                 # Node.js migration scripts
 ├── firestore.rules          # Security rules DB
 ├── storage.rules            # Security rules files
@@ -721,33 +702,34 @@ club-738-web/
 |---------|-------|
 | Socios registrados | 76 |
 | Tipos de documentos | 14 |
-| Tamaño bundle | 2.4 MB (649 KB gzip) |
-| Lighthouse Performance | Pending |
-| Cobertura de tests | 0% (TODO) |
+| Componentes React | 20+ |
+| Versión actual | v1.13.0 |
+| Última release | 7 Ene 2026 |
+
+---
+
+## 📝 Notas de Negocio
+
+1. **Donativos**: Club opera con cuotas como donativos, sin emisión de facturas fiscales
+2. **Métodos de pago**: Solo efectivo confirmado, transferencia bancaria pendiente autorización
+3. **Credenciales PVC**: Evaluando proveedor en Mérida para impresión profesional tipo licencia de conducir
+4. **RFA digitalizados**: Beneficio clave - socios suben una vez, secretario imprime cuando necesita
 
 ---
 
 ## 🔮 Roadmap
 
-### v1.2.0 (Próximo)
-- [ ] Generación de Credencial del Club (PDF)
-- [ ] Notificaciones de documentos por vencer
-- [ ] Panel de administrador para secretario
+### Próximo (v1.14.0+)
+- [ ] Firma del Presidente para credenciales
+- [ ] Cambio de estado a "Enviado 32ZM"
+- [ ] Registro número PETA asignado por SEDENA
+- [ ] Mi Credencial digital descargable
 
-### v1.3.0
-- [ ] Exportar expediente completo (ZIP)
-- [ ] Firma digital en solicitud PETA
-- [ ] Integración con calendario de vencimientos
-
-### v2.0.0
+### Futuro
+- [ ] Reminder semanal cobranza
+- [ ] Generador de comunicados WhatsApp/Email
+- [ ] Alertas de vencimiento de PETAs
 - [ ] PWA con modo offline
-- [ ] Push notifications
-- [ ] Chat de soporte
-
-### ✅ Completado en v1.1.0
-- [x] Aviso de Privacidad (LFPDPPP)
-- [x] Derechos ARCO
-- [x] Consentimiento para datos sensibles
 
 ---
 

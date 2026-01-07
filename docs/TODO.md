@@ -228,4 +228,4 @@
 - [PETA_SCHEMA.md](./PETA_SCHEMA.md) - Esquema detallado del módulo PETA
 - [MANUAL_USUARIO.md](./MANUAL_USUARIO.md) - Manual de usuario del portal
 - [copilot-instructions.md](../.github/copilot-instructions.md) - Instrucciones del proyecto
-- [DEVELOPMENT_JOURNAL.md](../DEVELOPMENT_JOURNAL.md) - Bitácora de desarrollo
+- [DEVELOPMENT_JOURNAL.md](./DEVELOPMENT_JOURNAL.md) - Bitácora de desarrollo
