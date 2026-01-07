@@ -10,20 +10,31 @@
  */
 import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, updateDoc, Timestamp, arrayUnion } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { ref, getDownloadURL, listAll } from 'firebase/storage';
+import { db, storage } from '../firebaseConfig';
 import './VerificadorPETA.css';
+
+// Mapeo de documentos precargados (subidos via scripts a Storage)
+// Estos archivos están en Storage pero pueden no estar registrados en Firestore
+const PRELOADED_DOCS_MAP = {
+  'curp': ['curp.pdf'],
+  'constanciaAntecedentes': ['constancia_antecedentes.pdf', 'constancia.pdf', 'antecedentes.pdf']
+};
+
+// Documentos que se buscan por prefijo (tienen timestamp en el nombre)
+const PREFIX_DOCS = ['fotoCredencial'];
 
 const DOCUMENTOS_DIGITALES = [
   { id: 'curp', nombre: 'CURP' },
-  { id: 'constancia', nombre: 'Constancia Antecedentes Penales' },
+  { id: 'constanciaAntecedentes', nombre: 'Constancia Antecedentes Penales' },
   { id: 'ine', nombre: 'INE (ambas caras)' },
-  { id: 'cartilla-militar', nombre: 'Cartilla Militar / Acta Nacimiento' },
-  { id: 'comprobante-domicilio', nombre: 'Comprobante de Domicilio' },
-  { id: 'certificado-medico', nombre: 'Certificado Médico' },
-  { id: 'certificado-psicologico', nombre: 'Certificado Psicológico' },
-  { id: 'certificado-toxicologico', nombre: 'Certificado Toxicológico' },
-  { id: 'modo-honesto', nombre: 'Modo Honesto de Vivir' },
-  { id: 'foto', nombre: 'Foto Infantil (para credencial)' }
+  { id: 'cartillaMilitar', nombre: 'Cartilla Militar / Acta Nacimiento' },
+  { id: 'comprobanteDomicilio', nombre: 'Comprobante de Domicilio' },
+  { id: 'certificadoMedico', nombre: 'Certificado Médico' },
+  { id: 'certificadoPsicologico', nombre: 'Certificado Psicológico' },
+  { id: 'certificadoToxicologico', nombre: 'Certificado Toxicológico' },
+  { id: 'cartaModoHonesto', nombre: 'Modo Honesto de Vivir' },
+  { id: 'fotoCredencial', nombre: 'Foto Infantil (para credencial)' }
 ];
 
 const DOCUMENTOS_FISICOS_BASE = [
@@ -45,12 +56,55 @@ export default function VerificadorPETA({ userEmail, onBack }) {
   const [socioSeleccionado, setSocioSeleccionado] = useState(null);
   const [petaSeleccionado, setPetaSeleccionado] = useState(null);
   const [busqueda, setBusqueda] = useState('');
+  const [preloadedDocs, setPreloadedDocs] = useState({}); // Documentos precargados en Storage
   
   // Estado de verificación
   const [docsDigitalesVerif, setDocsDigitalesVerif] = useState({});
   const [docsFisicosVerif, setDocsFisicosVerif] = useState({});
   const [notas, setNotas] = useState('');
 
+  // Función para buscar documentos precargados en Storage
+  const checkPreloadedDocs = async (userEmail) => {
+    const found = {};
+    
+    // 1. Buscar archivos con nombres exactos
+    for (const [docId, fileNames] of Object.entries(PRELOADED_DOCS_MAP)) {
+      for (const fileName of fileNames) {
+        try {
+          const docRef = ref(storage, `documentos/${userEmail}/${fileName}`);
+          const url = await getDownloadURL(docRef);
+          found[docId] = { url, fileName };
+          console.log(`✅ Doc precargado: ${docId} -> ${fileName}`);
+          break; // Encontrado, no buscar más nombres
+        } catch (error) {
+          // No encontrado con este nombre, continuar
+        }
+      }
+    }
+    
+    // 2. Buscar archivos por prefijo (ej: fotoCredencial_xxxxx.jpg)
+    try {
+      const folderRef = ref(storage, `documentos/${userEmail}`);
+      const fileList = await listAll(folderRef);
+      
+      for (const prefix of PREFIX_DOCS) {
+        const matchingFile = fileList.items.find(item => item.name.startsWith(prefix));
+        if (matchingFile && !found[prefix]) {
+          try {
+            const url = await getDownloadURL(matchingFile);
+            found[prefix] = { url, fileName: matchingFile.name };
+            console.log(`✅ Doc por prefijo: ${prefix} -> ${matchingFile.name}`);
+          } catch (error) {
+            console.log(`⚠️ Error obteniendo URL: ${matchingFile.name}`);
+          }
+        }
+      }
+    } catch (error) {
+      console.log(`⚠️ Error listando carpeta: ${error.message}`);
+    }
+    
+    return found;
+  };
   useEffect(() => {
     cargarSocios();
   }, []);
@@ -94,12 +148,30 @@ export default function VerificadorPETA({ userEmail, onBack }) {
     }
   };
 
-  const seleccionarPETA = (socio, peta) => {
+  const seleccionarPETA = async (socio, peta) => {
     setSocioSeleccionado(socio);
     setPetaSeleccionado(peta);
     
-    // Pre-cargar estado de verificación si existe
-    setDocsDigitalesVerif(peta.verificacionDigitales || {});
+    // Buscar documentos precargados en Storage
+    const preloaded = await checkPreloadedDocs(socio.email);
+    setPreloadedDocs(preloaded);
+    
+    // Auto-marcar como verificados los documentos que EXISTEN
+    // Combina: verificación manual guardada + documentos encontrados (Firestore o Storage)
+    const autoVerifDigitales = { ...(peta.verificacionDigitales || {}) };
+    
+    DOCUMENTOS_DIGITALES.forEach(docItem => {
+      const existeEnFirestore = socio.documentosPETA?.[docItem.id]?.url;
+      const existeEnStorage = preloaded[docItem.id]?.url;
+      
+      // Si el documento existe Y no tiene verificación guardada, marcarlo automáticamente
+      if ((existeEnFirestore || existeEnStorage) && autoVerifDigitales[docItem.id] === undefined) {
+        autoVerifDigitales[docItem.id] = true;
+      }
+    });
+    
+    // Pre-cargar estado de verificación
+    setDocsDigitalesVerif(autoVerifDigitales);
     setDocsFisicosVerif(peta.verificacionFisicos || {});
     setNotas(peta.notasSecretario || '');
   };
@@ -365,19 +437,21 @@ export default function VerificadorPETA({ userEmail, onBack }) {
                 <div className="docs-section">
                   <h4>📋 Documentos Digitales (ya subidos)</h4>
                   <div className="docs-checklist">
-                    {DOCUMENTOS_DIGITALES.map(doc => {
-                      const docData = socioSeleccionado.documentosPETA[doc.id];
+                    {DOCUMENTOS_DIGITALES.map(docItem => {
+                      // Buscar en documentosPETA de Firestore o en preloadedDocs de Storage
+                      const docData = socioSeleccionado.documentosPETA[docItem.id] || preloadedDocs[docItem.id];
+                      const isPrecargado = !socioSeleccionado.documentosPETA[docItem.id] && preloadedDocs[docItem.id];
                       return (
-                        <label key={doc.id} className="doc-check-item">
+                        <label key={docItem.id} className="doc-check-item">
                           <input
                             type="checkbox"
-                            checked={docsDigitalesVerif[doc.id] || false}
-                            onChange={() => toggleDocDigital(doc.id)}
+                            checked={docsDigitalesVerif[docItem.id] || false}
+                            onChange={() => toggleDocDigital(docItem.id)}
                           />
-                          <span className="doc-nombre">{doc.nombre}</span>
+                          <span className="doc-nombre">{docItem.nombre}</span>
                           {docData?.url && (
                             <a href={docData.url} target="_blank" rel="noopener noreferrer" className="btn-ver-doc">
-                              Ver PDF
+                              {isPrecargado ? '📁 Ver (precargado)' : 'Ver PDF'}
                             </a>
                           )}
                           {!docData?.url && <span className="doc-faltante">❌ No subido</span>}

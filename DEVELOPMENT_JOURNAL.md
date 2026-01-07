@@ -10,6 +10,66 @@
 
 ## 📅 Enero 2026
 
+### 7 de Enero - v1.13.0 ExpedienteImpresor + Fix VerificadorPETA
+
+#### Nuevo Módulo: ExpedienteImpresor
+
+**Objetivo**: Herramienta para el secretario que permite verificar y preparar documentos digitales para impresión cuando el socio trae sus documentos físicos.
+
+**Funcionalidades**:
+- Búsqueda de socio por nombre o email
+- Vista de todos los documentos del expediente con estado (✅/❌)
+- Indicador de copias requeridas por documento
+- Botón "Ver / Imprimir" individual por documento
+- Botón "Abrir todos para imprimir" (abre múltiples pestañas)
+- Lista de registros de armas (RFA) del socio
+- Notas de impresión (INE 200%, etc.)
+
+**Documentos verificados**:
+| Documento | Copias requeridas |
+|-----------|-------------------|
+| INE (ambas caras) | 2 copias ampliadas 200% |
+| CURP | 2 copias |
+| Cartilla Militar / Acta Nacimiento | 2 copias |
+| Constancia Antecedentes Penales | 1 copia (original se entrega) |
+| Comprobante de Domicilio | 2 copias |
+| Certificado Médico | 1 copia (original se entrega) |
+| Certificado Psicológico | 1 copia (original se entrega) |
+| Certificado Toxicológico | 1 copia (original se entrega) |
+| Modo Honesto de Vivir | 1 copia (original se entrega) |
+| Licencia SEMARNAT (opcional) | 2 copias |
+| Foto Infantil Digital (opcional) | Para credencial del club |
+
+**Archivos creados**:
+- `src/components/ExpedienteImpresor.jsx`: Componente principal
+- `src/components/ExpedienteImpresor.css`: Estilos
+
+**Archivos modificados**:
+- `src/App.jsx`: Import del componente + tarjeta en panel admin + renderizado de sección
+
+#### Fix: VerificadorPETA - Progreso dinámico
+
+**Problema**: El badge de progreso mostraba "0/19 docs" aunque había documentos encontrados en Storage y checkboxes marcados.
+
+**Causa**: La función `seleccionarPETA()` solo cargaba `peta.verificacionDigitales || {}` pero no auto-marcaba los documentos que ya existían.
+
+**Solución**: Modificar `seleccionarPETA()` para que itere sobre `DOCUMENTOS_DIGITALES` y auto-marque como verificados los documentos que existen en Firestore (`documentosPETA`) o Storage (`preloadedDocs`).
+
+**Código clave agregado**:
+```javascript
+// Auto-marcar como verificados los documentos que EXISTEN
+DOCUMENTOS_DIGITALES.forEach(docItem => {
+  const existeEnFirestore = socio.documentosPETA?.[docItem.id]?.url;
+  const existeEnStorage = preloaded[docItem.id]?.url;
+  
+  if ((existeEnFirestore || existeEnStorage) && autoVerifDigitales[docItem.id] === undefined) {
+    autoVerifDigitales[docItem.id] = true;
+  }
+});
+```
+
+---
+
 ### 6 de Enero - v1.12.1 Enlaces SEDENA en Landing Page
 
 #### Nueva Sección: Enlaces SEDENA

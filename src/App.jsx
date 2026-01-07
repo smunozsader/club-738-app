@@ -16,6 +16,7 @@ import CalendarioTiradas from './components/CalendarioTiradas';
 import SolicitarPETA from './components/SolicitarPETA';
 import MisPETAs from './components/MisPETAs';
 import VerificadorPETA from './components/VerificadorPETA';
+import ExpedienteImpresor from './components/ExpedienteImpresor';
 import RegistroPagos from './components/RegistroPagos';
 import ReporteCaja from './components/ReporteCaja';
 import './App.css';
@@ -368,6 +369,13 @@ function App() {
                     <span className="dash-card-cta">Verificar solicitudes →</span>
                   </div>
                   
+                  <div className="dash-card admin imprimir" onClick={() => setActiveSection('expediente-impresor')}>
+                    <div className="dash-card-icon">🖨️</div>
+                    <h3>Expediente Digital</h3>
+                    <p>Verificar e imprimir documentos</p>
+                    <span className="dash-card-cta">Preparar impresión →</span>
+                  </div>
+                  
                   <div className="dash-card admin pagos" onClick={() => setActiveSection('registro-pagos')}>
                     <div className="dash-card-icon">💰</div>
                     <h3>Registro de Pagos</h3>
@@ -488,6 +496,12 @@ function App() {
               ← Volver al Dashboard
             </button>
             <VerificadorPETA userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
+          </div>
+        )}
+
+        {activeSection === 'expediente-impresor' && user.email === 'smunozam@gmail.com' && (
+          <div className="section-expediente-impresor">
+            <ExpedienteImpresor userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
           </div>
         )}
 

@@ -1,0 +1,416 @@
+/**
+ * ExpedienteImpresor - Estilos
+ */
+
+.expediente-impresor {
+  min-height: 100vh;
+  background: var(--bg-primary, #f8f9fa);
+  padding-bottom: 2rem;
+}
+
+.expediente-header {
+  background: var(--header-bg, #1a3c34);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.expediente-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.btn-volver {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-volver:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Layout principal */
+.expediente-content {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .expediente-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Panel de búsqueda */
+.panel-busqueda {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  height: fit-content;
+  max-height: calc(100vh - 120px);
+  position: sticky;
+  top: 80px;
+}
+
+.busqueda-container {
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.input-busqueda {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.input-busqueda:focus {
+  outline: none;
+  border-color: var(--primary-color, #1a3c34);
+}
+
+.lista-socios {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.socio-item {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.socio-item:hover {
+  background: #f8f9fa;
+}
+
+.socio-item.seleccionado {
+  background: var(--primary-light, #e8f5e9);
+  border-left: 4px solid var(--primary-color, #1a3c34);
+}
+
+.socio-nombre {
+  font-weight: 500;
+  color: var(--text-primary, #212529);
+}
+
+.socio-armas {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #6c757d);
+  background: #f0f0f0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.mas-resultados {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  color: var(--text-secondary, #6c757d);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Panel de documentos */
+.panel-documentos {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+}
+
+.sin-seleccion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: var(--text-secondary, #6c757d);
+  font-size: 1.1rem;
+}
+
+/* Info del socio seleccionado */
+.socio-info {
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
+  margin-bottom: 1.5rem;
+}
+
+.socio-info h3 {
+  margin: 0 0 0.25rem 0;
+  color: var(--text-primary, #212529);
+}
+
+.socio-email {
+  color: var(--text-secondary, #6c757d);
+  margin: 0 0 1rem 0;
+}
+
+.resumen-docs {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.badge-progreso {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.badge-progreso.completo {
+  background: #d4edda;
+  color: #155724;
+}
+
+.badge-progreso.parcial {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.badge-progreso.incompleto {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.badge-armas {
+  background: #e2e3e5;
+  color: #383d41;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.btn-imprimir-todos {
+  background: var(--primary-color, #1a3c34);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-imprimir-todos:hover:not(:disabled) {
+  background: var(--primary-dark, #0d2620);
+  transform: translateY(-1px);
+}
+
+.btn-imprimir-todos:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Lista de documentos */
+.documentos-lista {
+  margin-bottom: 1.5rem;
+}
+
+.documentos-lista h4 {
+  margin: 0 0 1rem 0;
+  color: var(--text-primary, #212529);
+  font-size: 1.1rem;
+}
+
+.documento-row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s;
+}
+
+.documento-row.encontrado {
+  background: #f8fff8;
+  border: 1px solid #c3e6cb;
+}
+
+.documento-row.faltante {
+  background: #fff8f8;
+  border: 1px solid #f5c6cb;
+}
+
+.documento-row.opcional.faltante {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+}
+
+.doc-status {
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.doc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.doc-nombre {
+  font-weight: 500;
+  color: var(--text-primary, #212529);
+}
+
+.doc-copias {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #6c757d);
+}
+
+.doc-opcional {
+  font-size: 0.8rem;
+  color: var(--text-muted, #adb5bd);
+  font-style: italic;
+}
+
+.doc-acciones {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-ver {
+  background: var(--primary-color, #1a3c34);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.btn-ver:hover {
+  background: var(--primary-dark, #0d2620);
+}
+
+.estado-faltante {
+  color: var(--text-muted, #adb5bd);
+  font-size: 0.9rem;
+}
+
+/* Lista de armas */
+.armas-lista {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e9ecef;
+}
+
+/* Notas de impresión */
+.notas-impresion {
+  background: #fffbf0;
+  border: 1px solid #ffe5a0;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+}
+
+.notas-impresion h4 {
+  margin: 0 0 0.75rem 0;
+  color: #856404;
+}
+
+.notas-impresion ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.notas-impresion li {
+  margin-bottom: 0.5rem;
+  color: var(--text-primary, #212529);
+  font-size: 0.95rem;
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary-color, #1a3c34);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .expediente-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .expediente-header h2 {
+    font-size: 1.1rem;
+  }
+  
+  .expediente-content {
+    padding: 1rem;
+  }
+  
+  .documento-row {
+    grid-template-columns: 30px 1fr;
+    gap: 0.5rem;
+  }
+  
+  .doc-acciones {
+    grid-column: span 2;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .expediente-header,
+  .panel-busqueda,
+  .btn-ver,
+  .btn-imprimir-todos,
+  .btn-volver {
+    display: none !important;
+  }
+  
+  .expediente-content {
+    display: block;
+  }
+  
+  .panel-documentos {
+    box-shadow: none;
+  }
+}
