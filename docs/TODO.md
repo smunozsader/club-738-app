@@ -1,10 +1,41 @@
 # Club 738 Web - TO-DO / Roadmap
 
-**Última actualización**: 6 de enero 2026 (v1.11.0)
+**Última actualización**: 7 de enero 2026 (v1.13.0)
 
 ---
 
 ## ✅ Completado
+
+### v1.13.0 - ExpedienteImpresor + Fix VerificadorPETA (7 Ene 2026)
+- [x] **ExpedienteImpresor.jsx** - Nuevo módulo para preparar impresión de expedientes
+  - Búsqueda de socio por nombre o email
+  - Vista de todos los documentos digitales con estado (✅/❌)
+  - Indicador de copias requeridas por documento
+  - Botón "Ver / Imprimir" individual por documento
+  - Botón "Abrir todos para imprimir" (múltiples pestañas)
+  - Lista de registros de armas (RFA) del socio
+  - Notas de impresión (INE 200%, etc.)
+- [x] **Fix VerificadorPETA** - Badge de progreso ahora dinámico
+  - Auto-marca documentos existentes en Firestore/Storage
+  - Progreso refleja documentos realmente encontrados
+- [x] **WCAG 2.1 AA** - Mejoras de contraste de color
+  - App.css variables actualizadas
+  - DocumentList.css, MultiImageUploader.css reescritos
+
+### v1.12.1 - Enlaces SEDENA + Redes Sociales (6 Ene 2026)
+- [x] **Enlaces SEDENA** - Nueva sección en landing page
+  - Pago PETA (hasta 3 armas) - formato e5cinco
+  - Pago por Arma Adicional
+  - Todos los Formatos e5cinco
+  - Portal DCAM (Comercialización)
+- [x] **Redes sociales en footer** - Facebook, Instagram, Google Maps
+
+### v1.12.0 - Rediseño UX Expediente Digital (6 Ene 2026)
+- [x] Renombrado "Mis Documentos PETA" → "Mi Expediente Digital"
+- [x] Documentos eliminados del upload (se entregan físicos): fotoPETA, reciboe5cinco
+- [x] Certificados médicos ahora opcionales en digital
+- [x] Tarjeta "Estado de Pagos" habilitada con badge dinámico
+- [x] Foto credencial acepta JPG directo (sin conversión forzada)
 
 ### v1.11.0 - Módulo Corte de Caja + Sincronización (6 Ene 2026)
 - [x] **ReporteCaja.jsx** - Módulo de corte de caja / reporte de pagos
@@ -149,7 +180,7 @@
 ### 💳 Integración e5cinco
 | Tarea | Prioridad | Descripción |
 |-------|-----------|-------------|
-| Link a portal e5cinco | Baja | Información de cómo pagar derechos SEDENA |
+| ~~Link a portal e5cinco~~ | ~~Baja~~ | ✅ Completado v1.12.1 - Enlaces SEDENA en landing |
 | Verificar pago | Baja | Subir comprobante y validar |
 
 ---
@@ -159,6 +190,8 @@
 ### Enero 2026
 - [x] Módulo PETA completo (solicitud + verificación + cobranza)
 - [x] Manual de usuario
+- [x] ExpedienteImpresor para preparar impresiones
+- [x] Enlaces SEDENA e5cinco
 - [ ] Completar credenciales (firma presidente)
 - [ ] Implementar cambio de estado a "Enviado 32ZM"
 
@@ -171,7 +204,7 @@
 ### Marzo 2026
 - [ ] Mi Credencial digital descargable
 - [ ] Firma digital del socio
-- [ ] Dashboard de cobranza con gráficas
+- [ ] Histórico de pagos años anteriores
 
 ---
 
@@ -183,9 +216,9 @@
 | Domicilios en Firestore | 76 (100%) |
 | Credenciales generadas | 35 |
 | Credenciales pendientes | 41 (sin foto) |
-| Versión actual | v1.11.0 |
-| Última release | 6 Ene 2026 |
-| Componentes PETA | 4 (SolicitarPETA, MisPETAs, VerificadorPETA, RegistroPagos) |
+| Versión actual | v1.13.0 |
+| Última release | 7 Ene 2026 |
+| Componentes PETA | 5 (SolicitarPETA, MisPETAs, VerificadorPETA, ExpedienteImpresor, GeneradorPETA) |
 | Componentes Cobranza | 3 (RegistroPagos, DashboardRenovaciones, ReporteCaja) |
 
 ---
@@ -193,4 +226,6 @@
 ## 📁 Documentación Relacionada
 
 - [PETA_SCHEMA.md](./PETA_SCHEMA.md) - Esquema detallado del módulo PETA
+- [MANUAL_USUARIO.md](./MANUAL_USUARIO.md) - Manual de usuario del portal
 - [copilot-instructions.md](../.github/copilot-instructions.md) - Instrucciones del proyecto
+- [DEVELOPMENT_JOURNAL.md](../DEVELOPMENT_JOURNAL.md) - Bitácora de desarrollo

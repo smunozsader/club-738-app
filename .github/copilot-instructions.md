@@ -123,18 +123,24 @@ https://club-738-app.web.app
 
 | Componente | Tipo | Descripción |
 |------------|------|-------------|
-| **LandingPage.jsx** | Público | Página de inicio con tarjetas de features, login integrado, modal de requisitos |
+| **LandingPage.jsx** | Público | Página de inicio con tarjetas de features, login integrado, modal de requisitos, enlaces SEDENA |
 | **CalendarioTiradas.jsx** | Público | Calendario de competencias 2026 (Club 738 + región Sureste) |
 | **CalculadoraPCP.jsx** | Público | Calculadora de energía cinética para rifles de aire |
-| **MisArmas.jsx** | Autenticado | Vista read-only de armas registradas del socio |
+| **MisArmas.jsx** | Autenticado | Vista de armas registradas del socio. Secretario puede editar modalidad |
 | **MisDocumentosOficiales.jsx** | Autenticado | CURP y Constancia de antecedentes descargables |
-| **DocumentList.jsx** | Autenticado | Lista de 16 documentos PETA con estado |
+| **DocumentList.jsx** | Autenticado | Lista de documentos PETA con estado (Mi Expediente Digital) |
 | **DocumentUploader.jsx** | Autenticado | Subida de documentos con validación |
+| **SolicitarPETA.jsx** | Autenticado | Formulario para solicitar trámite PETA (hasta 10 armas, 10 estados) |
+| **MisPETAs.jsx** | Autenticado | Vista de estado de solicitudes PETA del socio con timeline |
+| **VerificadorPETA.jsx** | Solo Secretario | Checklist de verificación de documentos por socio/PETA |
+| **ExpedienteImpresor.jsx** | Solo Secretario | Preparar e imprimir documentos digitales del socio |
+| **RegistroPagos.jsx** | Solo Secretario | Registro de pagos y activación de membresías |
+| **ReporteCaja.jsx** | Solo Secretario | Corte de caja, reporte de pagos con filtros y exportar CSV |
 | **DashboardRenovaciones.jsx** | Solo Secretario | Panel de cobranza 2026 |
 | **DashboardCumpleanos.jsx** | Solo Secretario | Demografía y cumpleaños de socios |
+| **GeneradorPETA.jsx** | Solo Secretario | Generador de oficios PETA en PDF (jsPDF) |
 | **WelcomeDialog.jsx** | Autenticado | Diálogo de bienvenida para nuevos usuarios |
 | **Login.jsx** | Público | Formulario de login standalone (usado en LandingPage) |
-| **GeneradorPETA.jsx** | Solo Secretario | Generador de oficios PETA en PDF (jsPDF) |
 | **AvisoPrivacidad.jsx** | Público | Componente de aviso de privacidad integral |
 | **ArmasRegistroUploader.jsx** | Autenticado | Subida de registros RFA por arma |
 | **ImageEditor.jsx** | Autenticado | Editor de imágenes (recorte, rotación) |
@@ -218,22 +224,33 @@ firebase deploy
 ```
 src/
 ├── App.jsx              # Router principal + auth state
-├── App.css              # Estilos globales
+├── App.css              # Estilos globales + variables CSS :root
 ├── firebaseConfig.js    # Firebase initialization
 ├── main.jsx             # Entry point
 ├── components/
-│   ├── LandingPage.jsx/css      # Página pública de inicio
+│   ├── LandingPage.jsx/css      # Página pública de inicio + enlaces SEDENA
 │   ├── Login.jsx/css            # Formulario de login
 │   ├── CalendarioTiradas.jsx/css # Calendario público
 │   ├── CalculadoraPCP.jsx/css   # Calculadora pública
-│   ├── MisArmas.jsx/css         # Armas del socio
+│   ├── MisArmas.jsx/css         # Armas del socio (editable por secretario)
 │   ├── MisDocumentosOficiales.jsx/css
 │   ├── WelcomeDialog.jsx/css
+│   │
+│   │  # Módulo PETA (v1.10.0+)
+│   ├── SolicitarPETA.jsx/css    # Socio solicita trámite PETA
+│   ├── MisPETAs.jsx/css         # Socio ve estado de sus PETAs
+│   ├── VerificadorPETA.jsx/css  # Secretario verifica documentos
+│   ├── ExpedienteImpresor.jsx/css  # Secretario prepara impresión
 │   ├── GeneradorPETA.jsx/css    # Generador de oficios PETA
-│   ├── DashboardRenovaciones.jsx/css  # Solo secretario
-│   ├── DashboardCumpleanos.jsx/css    # Solo secretario
+│   │
+│   │  # Módulo Cobranza (v1.10.0+)
+│   ├── RegistroPagos.jsx/css    # Registrar pagos de socios
+│   ├── ReporteCaja.jsx/css      # Corte de caja / reportes
+│   ├── DashboardRenovaciones.jsx/css  # Panel cobranza 2026
+│   ├── DashboardCumpleanos.jsx/css    # Demografía socios
+│   │
 │   ├── documents/       # Componentes de documentos PETA
-│   │   ├── DocumentList.jsx/css
+│   │   ├── DocumentList.jsx/css     # Mi Expediente Digital
 │   │   ├── DocumentCard.jsx/css
 │   │   ├── DocumentUploader.jsx/css
 │   │   ├── ArmasRegistroUploader.jsx/css  # Subida de RFA
@@ -367,20 +384,48 @@ socios/{email}
 │     estado: string
 │     cp: string
 │   }
+├── renovacion2026: {         # Agregado v1.10.0
+│     estado: 'pagado' | 'pendiente'
+│     monto: number
+│     fecha: timestamp
+│     metodo: string
+│   }
+├── membresia2026: {          # Agregado v1.11.0
+│     fechaPago: timestamp
+│     monto: number
+│     metodoPago: string
+│     registradoPor: string
+│   }
 ├── documentosPETA: {
 │     curp: { url, verificado, fechaSubida }
-│     constancia: { url, verificado, fechaSubida }
+│     constanciaAntecedentes: { url, verificado, fechaSubida }
+│     ine: { url, verificado, fechaSubida }
 │     ...
 │   }
-└── armas/ (subcollection)
-    └── {armaId}
-        ├── clase: string
-        ├── calibre: string
-        ├── marca: string
-        ├── modelo: string
-        ├── matricula: string
-        ├── folio: string
-        └── documentoRegistro: string (URL)
+├── armas/ (subcollection)
+│   └── {armaId}
+│       ├── clase: string
+│       ├── calibre: string
+│       ├── marca: string
+│       ├── modelo: string
+│       ├── matricula: string
+│       ├── folio: string
+│       ├── modalidad: 'caza' | 'tiro' | 'ambas'  # Agregado v1.10.1
+│       └── documentoRegistro: string (URL)
+└── petas/ (subcollection)    # Agregado v1.10.0
+    └── {petaId}
+        ├── tipo: 'caza' | 'tiro'
+        ├── estado: 'borrador' | 'pendiente' | 'en_revision' | 'aprobado' | 'enviado_zm' | 'completado'
+        ├── armasIncluidas: array<{armaId, clase, calibre, marca, matricula}>
+        ├── estadosSeleccionados: array<string>
+        ├── fechaSolicitud: timestamp
+        ├── fechaVigenciaInicio: timestamp
+        ├── fechaVigenciaFin: timestamp
+        ├── esRenovacion: boolean
+        ├── verificacionDigitales: object
+        ├── verificacionFisicos: object
+        ├── notasSecretario: string
+        └── historial: array<{fecha, estado, usuario, nota}>
 ```
 
 ## Security
@@ -449,6 +494,7 @@ Los scripts en /scripts/ requieren serviceAccountKey.json (nunca commitear):
 | importar-fechas-alta.cjs | Importar fechas de alta de socios |
 | importar-domicilios-firestore.cjs | Importar domicilios estructurados |
 | actualizar-curps-firestore.cjs | Sincronizar CURPs |
+| actualizar-modalidad-armas.cjs | Clasificar armas por modalidad (caza/tiro/ambas) |
 | agregar-socios-faltantes.cjs | Agregar socios que faltan en Firestore |
 
 ### Scripts de Storage
@@ -457,6 +503,7 @@ Los scripts en /scripts/ requieren serviceAccountKey.json (nunca commitear):
 | subir-curps.cjs | Subir PDFs de CURP a Storage |
 | subir-constancias-firebase.cjs | Subir constancias a Storage |
 | subir-constancias-corregido.cjs | Versión corregida de subida |
+| subir-fotos-credencial.cjs | Subir fotos infantiles para credenciales |
 | check-storage.cjs | Verificar archivos en Storage |
 
 ### Scripts de Normalización (Excel)
@@ -518,15 +565,23 @@ Estados: Yucatán, Campeche, Quintana Roo, Tabasco, Chiapas, Veracruz
 - [x] Generación de credencial del club (PDF) - Script: `crear_pdfs_credenciales.py`, datos en `Credencial-Club-2026/`
 - [x] Normalización de domicilios - 76 socios con domicilio estructurado en Firestore
 - [x] GeneradorPETA lee domicilio de Firestore y pre-llena campos
+- [x] Estado de pagos/cobranza por socio - RegistroPagos.jsx + ReporteCaja.jsx
+- [x] Enlaces SEDENA e5cinco en landing page
+- [x] Redes sociales en footer (Facebook, Instagram, Google Maps)
 - [ ] Descarga de credencial desde portal del socio (integrar PDFs generados)
-- [ ] Estado de pagos/cobranza por socio
 - [ ] Notificaciones de vencimiento de documentos
-- [ ] Integración con forma e5cinco
+- [ ] Firma del presidente para credenciales
 
 ## Version History
 
 | Versión | Fecha | Descripción |
 |---------|-------|-------------|
+| v1.13.0 | 7 Ene 2026 | ExpedienteImpresor, fix VerificadorPETA progreso |
+| v1.12.1 | 6 Ene 2026 | Enlaces SEDENA, redes sociales footer |
+| v1.12.0 | 6 Ene 2026 | Rediseño UX Expediente Digital, foto credencial JPG |
+| v1.11.0 | 6 Ene 2026 | ReporteCaja (corte de caja), sincronización pagos |
+| v1.10.1 | 5 Ene 2026 | Modalidad armas, estados sugeridos FEMETI |
+| v1.10.0 | 5 Ene 2026 | Módulo PETA completo (SolicitarPETA, MisPETAs, VerificadorPETA, RegistroPagos) |
 | v1.9.1 | 5 Ene 2026 | Renombrado sitio, mensajes VIP, cuotas $6,000 |
 | v1.9.0 | 5 Ene 2026 | Domicilios normalizados, UI unificada |
 | v1.8.0 | 5 Ene 2026 | GeneradorPETA, headers/footers unificados |
