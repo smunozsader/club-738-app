@@ -69,6 +69,61 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Enlaces SEDENA */}
+      <section className="sedena-links-section">
+        <h2>🏛️ Enlaces Útiles SEDENA</h2>
+        <p className="sedena-subtitle">Dirección General del Registro Federal de Armas de Fuego y Control de Explosivos</p>
+        <div className="sedena-links-grid">
+          <a 
+            href="https://www.gob.mx/cms/uploads/attachment/file/1045710/42-HOJA_DE_AYUDA_DEFENSA-02-045.pdf" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="sedena-link-card"
+          >
+            <div className="sedena-icon">📄</div>
+            <h3>Pago PETA (hasta 3 armas)</h3>
+            <p>Hoja de ayuda e5cinco para permiso de transportación de armas</p>
+            <span className="sedena-cta">Descargar PDF →</span>
+          </a>
+          
+          <a 
+            href="https://www.gob.mx/cms/uploads/attachment/file/1045714/43-HOJA_DE_AYUDA_DEFENSA-02-046_POR_CADA_ARMA_ADICIONAL.pdf" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="sedena-link-card"
+          >
+            <div className="sedena-icon">➕</div>
+            <h3>Pago por Arma Adicional</h3>
+            <p>Hoja de ayuda e5cinco por cada arma adicional a las 3 primeras</p>
+            <span className="sedena-cta">Descargar PDF →</span>
+          </a>
+          
+          <a 
+            href="https://www.gob.mx/defensa/acciones-y-programas/formatos-de-pagos-e5-del-2023?state=published" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="sedena-link-card"
+          >
+            <div className="sedena-icon">💰</div>
+            <h3>Todos los Formatos e5cinco</h3>
+            <p>Catálogo completo de hojas de ayuda para pago de derechos</p>
+            <span className="sedena-cta">Ver catálogo →</span>
+          </a>
+          
+          <a 
+            href="https://www.gob.mx/defensa/acciones-y-programas/comercializacion-de-armas" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="sedena-link-card"
+          >
+            <div className="sedena-icon">🏪</div>
+            <h3>Comercialización de Armas</h3>
+            <p>DCAM - Compra de armas y municiones autorizadas</p>
+            <span className="sedena-cta">Ver información →</span>
+          </a>
+        </div>
+      </section>
+
       {/* Portal de Socios - Login */}
       <section className="login-section">
         <div className="login-card">

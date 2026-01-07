@@ -10,6 +10,33 @@
 
 ## 📅 Enero 2026
 
+### 6 de Enero - v1.12.1 Enlaces SEDENA en Landing Page
+
+#### Nueva Sección: Enlaces SEDENA
+
+**Objetivo**: Facilitar a los socios el acceso a formatos de pago e5cinco.
+
+**Ubicación**: Landing page pública, arriba del pie de página.
+
+**Diseño**:
+- **Título**: 📋 Enlaces SEDENA
+- **Subtítulo**: *Dirección General del Registro Federal de Armas de Fuego y Control de Explosivos*
+- **Grid**: 4 tarjetas con iconos y descripciones
+
+**Tarjetas**:
+| Icono | Título | URL |
+|-------|--------|-----|
+| 📄 | Pago PETA (hasta 3 armas) | PDF formato e5cinco PETA |
+| ➕ | Pago por Arma Adicional | PDF formato arma adicional |
+| 💰 | Todos los Formatos e5cinco | Catálogo completo SEDENA |
+| 🏪 | Comercialización de Armas | Portal DCAM |
+
+**Archivos modificados**:
+- `LandingPage.jsx`: Nueva sección `sedena-links-section` con grid de 4 enlaces
+- `LandingPage.css`: Estilos `.sedena-links-section`, `.sedena-links-grid`, `.sedena-link-card`, `.sedena-subtitle`
+
+---
+
 ### 6 de Enero - v1.12.0 Rediseño UX Expediente Digital + Foto Credencial
 
 #### Rediseño del Flujo de Documentos PETA
