@@ -10,6 +10,83 @@
 
 ## 📅 Enero 2026
 
+### 7 de Enero - v1.14.0 Repoblación de Armas y Fechas desde Excel Maestro
+
+#### Repoblación completa de colección `armas` y `fechaAlta`
+
+**Problema**: Los archivos Excel anteriores estaban corruptos o desactualizados. Se identificó un archivo maestro con datos correctos al 31 de diciembre de 2025.
+
+**Archivo fuente**:
+```
+/Applications/club-738-web/data/socios/2025.31.12_RELACION_SOCIOS_ARMAS.xlsx
+```
+
+**Hojas utilizadas**:
+- `CLUB 738. RELACION SOCIOS 31 DI`: Relación de armas por socio (471 filas)
+- `Anexo A`: Fechas de alta de socios (77 registros)
+
+**Proceso ejecutado**:
+1. ✅ Eliminación de archivos Excel corruptos:
+   - `CLUB 738-31-DE-DICIEMBRE-2025_RELACION_SOCIOS_ARMAS NORMALIZADA.xlsx` (múltiples versiones)
+   - `RELACION-738-30 DE SEPTIEMBRE-2025.xlsx` (múltiples copias)
+2. ✅ Limpieza de colección `socios/{email}/armas/`
+3. ✅ Repoblación con 276 armas de 65 socios
+4. ✅ Actualización de 65 fechas de ingreso (`fechaAlta`)
+
+**Datos importados por arma**:
+```javascript
+{
+  clase: string,         // PISTOLA, RIFLE, ESCOPETA, etc.
+  calibre: string,       // .380", 9mm, 12GA, etc.
+  marca: string,
+  modelo: string,
+  matricula: string,     // Matrícula única
+  folio: string,         // Folio SEDENA
+  modalidad: string,     // 'tiro' | 'caza' (auto-determinado)
+  fechaActualizacion: timestamp
+}
+```
+
+**Script creado**:
+- `scripts/repoblar-armas-y-fechas.py`: Script Python con Firebase Admin SDK
+
+**Dependencias Python instaladas**:
+- `firebase-admin`: SDK de administración de Firebase
+- `openpyxl`: Lectura de archivos Excel .xlsx
+
+**Resultados**:
+```
+✅ Fechas cargadas: 75 socios desde Anexo A
+✅ Armas cargadas: 65 socios validados en Firestore
+✅ Armas eliminadas: 0 (ya limpiadas)
+✅ Total de armas insertadas: 276
+✅ Total de fechas actualizadas: 65
+```
+
+**Estructura Firestore actualizada**:
+```
+socios/{email}
+├── fechaAlta: timestamp (desde Anexo A)
+├── fechaActualizacionFecha: timestamp
+└── armas/ (subcollection)
+    └── {uuid}
+        ├── clase
+        ├── calibre
+        ├── marca
+        ├── modelo
+        ├── matricula
+        ├── folio
+        ├── modalidad
+        └── fechaActualizacion
+```
+
+**Notas**:
+- Se usa UUID v4 para IDs de armas (evita problemas con caracteres especiales en matrículas)
+- La modalidad se determina automáticamente basada en la clase de arma
+- Este es ahora el **único archivo Excel válido** para datos maestros de socios/armas
+
+---
+
 ### 7 de Enero - v1.13.0 ExpedienteImpresor + Fix VerificadorPETA
 
 #### Nuevo Módulo: ExpedienteImpresor

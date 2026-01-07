@@ -323,13 +323,16 @@ export default function MultiImageUploader({
           code: err.code,
           message: err.message,
           serverResponse: err.serverResponse,
-          path: storagePath
+          path: storagePath,
+          userId: userId,
+          fileType: file.type,
+          fileSize: file.size
         });
         
         // Mostrar código de error específico al usuario
         let errorMsg = 'Error al subir: ';
         if (err.code === 'storage/unauthorized') {
-          errorMsg += 'Sin permisos. Verifica que estés logueado.';
+          errorMsg += `Sin permisos (${userId}). Verifica tu sesión o contacta al administrador.`;
         } else if (err.code === 'storage/canceled') {
           errorMsg += 'Subida cancelada.';
         } else if (err.code === 'storage/retry-limit-exceeded') {
