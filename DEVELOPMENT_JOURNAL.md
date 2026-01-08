@@ -10,6 +10,82 @@
 
 ## 📅 Enero 2026
 
+### 8 de Enero - v1.15.0 Normalización Completa de Base de Datos CSV
+
+#### Sistema de Normalización de Datos
+
+**Objetivo**: Crear pipeline completo de normalización de datos desde Excel/CSV hasta Firestore, resolviendo problemas de calidad de datos (saltos de línea, campos concatenados, filas basura).
+
+**Problema**: CSV original con 471 filas contenía:
+- Saltos de línea (`\n`) dentro de celdas que rompían el formato
+- 184 filas completamente vacías (solo comas)
+- Columnas vacías al final de cada fila
+- Campo "NOMBRE DEL SOCIO" con número de credencial concatenado
+- 10 socios sin armas registradas causando errores de importación
+
+**Solución implementada**:
+
+1. **Normalización de saltos de línea y limpieza** (`normalizar-csv-saltos-linea.py`):
+   - Reemplaza `\n` y `\r` por espacios
+   - Elimina espacios múltiples
+   - Remueve columnas vacías al final
+   - Elimina filas completamente vacías
+   - Resultado: 287 filas (header + 286 registros)
+
+2. **Separación de campos concatenados** (`separar-nombre-credencial.py`):
+   - Separa "1. RICARDO JESÚS FERNÁNDEZ Y GASQUE" en dos columnas:
+     - Columna 3: `No. CREDENCIAL` (1, 30, 46...)
+     - Columna 4: `NOMBRE DEL SOCIO` (nombre limpio)
+   - Regex: `^(\d+)\.\s+(.+)$`
+
+3. **Importación inteligente a Firestore** (`importar-csv-normalizado.cjs`):
+   - Agrupa armas por email (socio)
+   - Maneja socios sin armas (`totalArmas: 0`)
+   - Solo crea documentos de armas si matrícula existe
+   - Usa matrícula como ID de documento
+   - Actualiza domicilio con 6 campos normalizados
+
+4. **Diagnóstico de problemas** (`buscar-armas-sin-matricula.py`):
+   - Identifica 10 socios sin armas registradas
+   - Evita errores de validación en Firestore
+
+**Archivos creados**:
+- `scripts/normalizar-csv-saltos-linea.py`
+- `scripts/separar-nombre-credencial.py`
+- `scripts/importar-csv-normalizado.cjs`
+- `scripts/buscar-armas-sin-matricula.py`
+- `data/socios/2025.31.12_RELACION_SOCIOS_ARMAS_SEPARADO.csv` (CSV maestro normalizado)
+
+**Archivos eliminados** (obsoletos):
+- `2025.31.12_RELACION_SOCIOS_ARMAS copia con direccion, para firebase.csv`
+- `2025.31.12_RELACION_SOCIOS_ARMAS copia con direccion.csv`
+- `2025.31.12_RELACION_SOCIOS_ARMAS_NORMALIZADO.csv`
+- `direcciones_separadas.csv`
+
+**Resultado Final en Firestore**:
+- ✅ 75 socios actualizados con estructura completa:
+  - `numeroCredencial`: String
+  - `nombre`: String
+  - `curp`: String
+  - `telefono`: String
+  - `domicilio`: Object con 6 campos (calle, colonia, ciudad, municipio, estado, cp)
+  - `totalArmas`: Number
+- ✅ 276 armas en subcollections `socios/{email}/armas/{matricula}`
+- ✅ 10 socios sin armas con `totalArmas: 0` (sin errores)
+
+**Estadísticas de normalización**:
+- Filas originales: 471
+- Filas eliminadas (basura): 184
+- Filas válidas: 287 (1 header + 286 armas)
+- Celdas modificadas: 71 (saltos de línea reemplazados)
+- Socios únicos: 75
+- Socios con armas: 65
+- Socios sin armas: 10
+
+**Calidad de datos**: 100% de socios importados exitosamente, 0 errores de validación
+
+---
+
 ### 8 de Enero - v1.14.0 Campo Ciudad en PDF PETA
 
 #### Optimización de Formato PDF
