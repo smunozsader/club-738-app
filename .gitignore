@@ -30,6 +30,11 @@ scripts/serviceAccountKey.json
 serviceAccountKey.json
 **/serviceAccountKey.json
 
+# Credentials and passwords
+CREDENTIALS*.txt
+*_CREDENTIALS.txt
+passwords.txt
+
 # ====================================
 # DATA FILES - Keep locally only
 # ====================================

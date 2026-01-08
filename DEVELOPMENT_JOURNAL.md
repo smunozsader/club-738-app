@@ -10,6 +10,86 @@
 
 ## 📅 Enero 2026
 
+### 8 de Enero - v1.16.0 SEO Completo + Dominio Personalizado yucatanctp.org
+
+#### Optimización SEO y Adquisición de Dominio
+
+**Objetivo**: Mejorar la visibilidad en buscadores y establecer identidad profesional con dominio personalizado .org apropiado para Asociación Civil.
+
+**Dominio adquirido**:
+- **yucatanctp.org** ($7.18 USD - descuento NEW YEAR SALE)
+- Registrar: NameCheap
+- Renovación automática: Activada
+- WhoisGuard: Incluido GRATIS
+- Fecha renovación: 8 enero 2027
+
+**Optimizaciones SEO implementadas**:
+
+1. **Meta Tags Completos** (`index.html`):
+   - Title optimizado: "YucatanCTP - Club de Caza, Tiro y Pesca Yucatán | SEDENA 738"
+   - Meta description con palabras clave estratégicas
+   - Keywords: club de tiro yucatan, FEMETI, tiro practico mexicano, sporting clays, skeet, trap, recorrido de caza
+   - Open Graph para redes sociales (Facebook, WhatsApp)
+   - Twitter Cards
+   - Geo tags (Mérida, Yucatán)
+   - Canonical URL
+
+2. **Datos Estructurados JSON-LD**:
+   - Schema.org tipo "SportsOrganization"
+   - Información completa: nombre, ubicación, contacto
+   - AlternateName: "YucatanCTP", "Club 738"
+   - Afiliación FEMETI
+   - Geolocalización (20.9674, -89.5926)
+
+3. **Sitemap XML** (`public/sitemap.xml`):
+   - Páginas indexables: /, /calendario, /tiradas, /calculadora
+   - Prioridades y frecuencias de cambio
+   - URLs con dominio personalizado
+
+4. **Robots.txt** (`public/robots.txt`):
+   - Allow: Rutas públicas
+   - Disallow: Dashboard y rutas privadas de socios
+   - Sitemap reference
+   - Bloqueo de bots maliciosos (AhrefsBot, SemrushBot)
+
+**DNS Configurado (NameCheap → Firebase)**:
+```
+A Record:     @ → 199.36.158.100
+TXT Record:   @ → hosting-site=club-738-app
+CNAME Record: www → yucatanctp.org
+```
+
+**Seguridad**:
+- 2FA activado con Authy (TOTP)
+- 10 códigos de respaldo guardados
+- Credenciales documentadas en `CREDENTIALS_NAMECHEAP.txt` (gitignored)
+- WhoisGuard protege datos personales del WHOIS
+
+**Archivos creados**:
+- `public/sitemap.xml`
+- `public/robots.txt`
+- `CREDENTIALS_NAMECHEAP.txt` (local, no se sube a GitHub)
+
+**Archivos modificados**:
+- `index.html`: Meta tags completos + JSON-LD
+- `.gitignore`: Protección de credenciales
+
+**Estado actual**:
+- ⏳ DNS propagándose (24-48 hrs máximo)
+- ⏳ Firebase verificará dominio automáticamente
+- ⏳ SSL/HTTPS se configurará automáticamente
+- ✅ SEO optimizado desplegado en producción
+
+**Próximos pasos** (cuando DNS propague):
+- [ ] Registrar en Google Search Console
+- [ ] Enviar sitemap.xml
+- [ ] Crear Google Business Profile
+- [ ] Actualizar redes sociales con nuevo dominio
+
+**Deploy**: Aplicado a producción - URL transición de club-738-app.web.app a yucatanctp.org
+
+---
+
 ### 8 de Enero - v1.15.0 Normalización Completa de Base de Datos CSV
 
 #### Sistema de Normalización de Datos

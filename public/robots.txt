@@ -1,0 +1,30 @@
+# Robots.txt para YucatanCTP
+# Club de Caza, Tiro y Pesca de Yucatán A.C.
+
+User-agent: *
+Allow: /
+Allow: /calendario
+Allow: /tiradas
+Allow: /calculadora
+
+# Bloquear portal privado de socios
+Disallow: /dashboard
+Disallow: /mis-armas
+Disallow: /mis-documentos
+
+# Sitemap
+Sitemap: https://yucatanctp.org/sitemap.xml
+
+# Rastreadores específicos
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Bloquear bots maliciosos
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
