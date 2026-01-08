@@ -51,9 +51,10 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   const [petaAnterior, setPetaAnterior] = useState('');
   const [esRenovacion, setEsRenovacion] = useState(false);
   
-  // Dirección del solicitante
+  // Dirección del solicitante (6 campos)
   const [calle, setCalle] = useState('');
   const [colonia, setColonia] = useState('');
+  const [ciudad, setCiudad] = useState('');
   const [cp, setCp] = useState('');
   const [municipio, setMunicipio] = useState('');
   const [estadoDomicilio, setEstadoDomicilio] = useState('');
@@ -85,9 +86,11 @@ export default function GeneradorPETA({ userEmail, onBack }) {
     if (socioSeleccionado) {
       cargarArmasSocio(socioSeleccionado.email);
       // Pre-llenar dirección si existe (desde campo 'domicilio' en Firestore)
+      // Estructura actualizada con 6 campos: calle, colonia, ciudad, municipio, estado, cp
       if (socioSeleccionado.domicilio) {
         setCalle(socioSeleccionado.domicilio.calle || '');
         setColonia(socioSeleccionado.domicilio.colonia || '');
+        setCiudad(socioSeleccionado.domicilio.ciudad || '');
         setCp(socioSeleccionado.domicilio.cp || '');
         setMunicipio(socioSeleccionado.domicilio.municipio || '');
         setEstadoDomicilio(socioSeleccionado.domicilio.estado || '');
@@ -95,6 +98,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
         // Limpiar campos si no hay domicilio
         setCalle('');
         setColonia('');
+        setCiudad('');
         setCp('');
         setMunicipio('');
         setEstadoDomicilio('');
@@ -303,9 +307,9 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       y += 5;
 
       doc.text(`C.P.: ${cp}`, margin, y);
-      // Incluir estado junto con municipio: "MÉRIDA, YUC."
-      const municipioConEstado = estadoDomicilio ? `${municipio}, ${estadoDomicilio}`.toUpperCase() : municipio.toUpperCase();
-      doc.text(`DELG. O MPIO.: ${municipioConEstado}`, margin + 40, y);
+      // Mostrar ciudad y estado juntos: "MÉRIDA, YUCATÁN"
+      const ciudadEstado = estadoDomicilio ? `${ciudad}, ${estadoDomicilio}`.toUpperCase() : ciudad.toUpperCase();
+      doc.text(`CIUDAD Y ESTADO: ${ciudadEstado}`, margin + 40, y);
       y += 8;
 
       // ========== TIPO DE ACTIVIDAD ==========
