@@ -4,7 +4,92 @@
 
 **Club 738 Web** es el portal de socios del Club de Caza, Tiro y Pesca de Yucatán, A.C. (SEDENA #738). Permite a los socios gestionar su documentación para trámites PETA ante la 32 Zona Militar de Valladolid.
 
-**URL de Producción**: https://club-738-app.web.app
+**URL de Producción**: https://club-738-app.web.app  
+**Dominio Principal**: https://yucatanctp.org
+
+---
+
+## 📅 Enero 2026
+
+### 9 de Enero - v1.18.0 Campaña de Emails y Corrección de Datos
+
+#### Campaña de Emails para Lanzamiento de yucatanctp.org
+
+**Objetivo**: Anunciar el nuevo portal web a todos los socios (77) y gestionar renovaciones de membresía 2026.
+
+**Segmentación de socios**:
+- **Total socios**: 77
+- **Exentos** (no pagan pero SÍ usan portal): 2 (Aimee, Sergio)
+- **Al corriente**: 8 socios
+- **Morosos 2026**: 67 socios
+  - Con armas: 60 socios → Mensaje "Borrón y Cuenta Nueva"
+  - Sin armas: 7 socios → Renovación + Club como intermediario DN27
+
+**Templates HTML creados** (3):
+1. `TEMPLATE_MAIL_MERGE.html` - Email general (76 socios)
+   - Anuncio portal yucatanctp.org
+   - Credenciales de acceso
+   - Funciones del portal
+   
+2. `TEMPLATE_MOROSOS_BORRON_Y_CUENTA_NUEVA.html` - Morosos con armas (59 CSVs)
+   - Oferta: Solo pagar 2026 ($6,000), se perdona 2025
+   - Válido hasta 31 marzo 2026
+   
+3. `TEMPLATE_MOROSOS_SIN_ARMAS.html` - Morosos sin armas (7)
+   - Renovación 2026
+   - Mensaje sobre el club como intermediario SEDENA (Ley Federal de Armas)
+   - Oferta de apoyo para trámite de compra de primera arma ante DN27
+
+**CSVs generados para mail merge** (3):
+- `mail-merge-data.csv` - 76 socios (todos menos Sergio)
+- `morosos-con-armas-mail-merge.csv` - 59 socios
+- `morosos-sin-armas-mail-merge.csv` - 7 socios
+
+**Plan de envío** (4 días, límite YAMM 50/día):
+- DÍA 1 (9 Ene): 50 emails generales
+- DÍA 2 (10 Ene): 26 emails generales
+- DÍA 3 (11 Ene): 50 morosos con armas
+- DÍA 4 (12 Ene): 9 morosos con armas + 7 sin armas
+
+**Total emails**: 142
+
+**Guías creadas**:
+- `GUIA_MAIL_MERGE_2026.md` - Procedimiento completo paso a paso con YAMM
+- `RESUMEN_EJECUTIVO.md` - Vista rápida de la estrategia
+
+#### Corrección de Datos en Firestore
+
+**1. Registro de pago - Luis Fernando Guillermo Gamboa**
+- **Email**: oso.guigam@gmail.com
+- **Status anterior**: Moroso (por error)
+- **Status corregido**: AL CORRIENTE
+- **Pago registrado**: 8 enero 2026
+  - Inscripción socio nuevo: $2,000 MXN
+  - Anualidad 2026: $6,000 MXN
+  - FEMETI primer ingreso: $700 MXN
+  - **Total**: $8,700 MXN
+- **Campo actualizado**: `renovacion2026.estado = 'pagado'`
+
+**2. Corrección de teléfono - Ariel Baltazar Córdoba Wilson**
+- **Email**: atietzbabam@gmail.com
+- **Problema**: Datos cruzados con Ariel Antonio Paredes Cetina
+- **Teléfono anterior**: 9994912883 (incorrecto, era del otro Ariel)
+- **Teléfono corregido**: 9992003314 (+52 999 200 3314)
+
+**Scripts creados**:
+- `scripts/identificar-morosos-reales.cjs` - Identificar morosos excluyendo exentos
+- `scripts/generar-csvs-morosos.cjs` - Generar CSVs para mail merge
+- `scripts/registrar-pago-luis-fernando.cjs` - Registrar pago de socio nuevo
+- `scripts/corregir-telefono-ariel-baltazar.cjs` - Corregir teléfono cruzado
+
+**Archivos modificados**:
+- `emails-socios/TEMPLATE_MOROSOS_SIN_ARMAS.html`
+- `emails-socios/GUIA_MAIL_MERGE_2026.md`
+- `emails-socios/RESUMEN_EJECUTIVO.md`
+- `emails-socios/morosos-con-armas-mail-merge.csv`
+- `emails-socios/morosos-sin-armas-mail-merge.csv`
+
+**Deploy**: Pendiente envío de emails (inicio 9 enero 2026)
 
 ---
 
