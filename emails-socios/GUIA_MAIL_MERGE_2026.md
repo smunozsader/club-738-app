@@ -1,19 +1,23 @@
 # 📧 Guía de Envío Masivo de Emails - YucatanCTP 2026
 
+> **Actualizado**: 9 enero 2026  
+> **Nombre oficial**: Club de Caza, Tiro y Pesca de Yucatán, A.C.  
+> **Portal**: https://yucatanctp.org
+
 ## 📊 Estrategia de Segmentación
 
 ### Resumen de Grupos
 
 | Grupo | Cantidad | Template | CSV | Asunto |
 |-------|----------|----------|-----|--------|
-| **General** | 76 | TEMPLATE_MAIL_MERGE.html | mail-merge-data.csv | ¡Bienvenido al nuevo portal YucatanCTP! |
-| **Morosos con armas** | 59 | TEMPLATE_MOROSOS_BORRON_Y_CUENTA_NUEVA.html | morosos-con-armas-mail-merge.csv | Borrón y Cuenta Nueva - Renovación 2026 |
-| **Morosos sin armas** | 7 | TEMPLATE_MOROSOS_SIN_ARMAS.html | morosos-sin-armas-mail-merge.csv | Renovación 2026 - Club YucatanCTP |
+| **Socios al corriente** | 57 | TEMPLATE_GENERAL.html | mail-merge-general.csv | Nuevo Portal YucatanCTP - Tu Expediente Digital |
+| **Morosos 2025** | 19 | TEMPLATE_MOROSOS.html | morosos-2025-mail-merge.csv | Importante: Regularización de Membresía 2026 - Requisito Legal |
 
 **IMPORTANTE**: 
-- El email general (76) incluye a Aimee y otros exentos (solo acceso al portal, sin cobro)
-- NO incluye a Sergio (secretario)
-- Luis Fernando está AL CORRIENTE (pagó ayer $8,700)
+- ✅ Total de emails: 76 (77 socios - Sergio)
+- ✅ Arqueo validado: sin duplicados, todos existen en credenciales
+- ✅ Distribución corregida: 57 general + 19 morosos (NO 10 + 59)
+- ⚠️ Los 19 morosos son los que NO pagaron 2025 (verificados en Firestore)
 
 ---
 
@@ -34,52 +38,34 @@
 
 ---
 
-## 📅 Plan de Envío (3 días)
+## 📅 Plan de Envío (2 días)
 
-### **DÍA 1** (Hoy - 9 Enero 2026)
+### **DÍA 1** (HOY - 9 Enero 2026)
 
-#### Envío #1: General (50 de 76)
-- **CSV**: `mail-merge-data.csv` (primeras 50 filas)
-- **Template**: `TEMPLATE_MAIL_MERGE.html`
-- **Asunto**: `¡Bienvenido al nuevo portal YucatanCTP!`
+#### Envío #1: Socios al corriente (50 de 57)
+- **CSV**: `mail-merge-general.csv` (primeras 50 filas + header)
+- **Template**: `TEMPLATE_GENERAL.html`
+- **Asunto**: `Nuevo Portal YucatanCTP - Tu Expediente Digital`
+- **Horario recomendado**: 9:00 AM - 11:00 AM
 - **Cantidad**: 50 emails
 
 ---
 
 ### **DÍA 2** (10 Enero 2026)
 
-#### Envío #2: General (26 restantes)
-- **CSV**: `mail-merge-data.csv` (filas 51-76)
-- **Template**: `TEMPLATE_MAIL_MERGE.html`
-- **Asunto**: `¡Bienvenido al nuevo portal YucatanCTP!`
-- **Cantidad**: 26 emails
+#### Envío #2: Socios al corriente (7 restantes)
+- **CSV**: `mail-merge-general.csv` (filas 51-57)
+- **Template**: `TEMPLATE_GENERAL.html`
+- **Asunto**: `Nuevo Portal YucatanCTP - Tu Expediente Digital`
+- **Cantidad**: 7 emails
 
----
+#### Envío #3: Morosos 2025 (todos)
+- **CSV**: `morosos-2025-mail-merge.csv` (todas las filas)
+- **Template**: `TEMPLATE_MOROSOS.html`
+- **Asunto**: `Importante: Regularización de Membresía 2026 - Requisito Legal`
+- **Cantidad**: 19 emails
 
-### **DÍA 3** (11 Enero 2026)
-
-#### Envío #3: Morosos con armas (50 de 59)
-- **CSV**: `morosos-con-armas-mail-merge.csv` (primeras 50 filas)
-- **Template**: `TEMPLATE_MOROSOS_BORRON_Y_CUENTA_NUEVA.html`
-- **Asunto**: `Borrón y Cuenta Nueva - Renovación 2026`
-- **Cantidad**: 50 emails
-
----
-
-### **DÍA 4** (12 Enero 2026)
-
-#### Envío #4: Morosos con armas (9 restantes) + Morosos sin armas
-- **CSV 1**: `morosos-con-armas-mail-merge.csv` (filas 51-59)
-  - Template: `TEMPLATE_MOROSOS_BORRON_Y_CUENTA_NUEVA.html`
-  - Asunto: `Borrón y Cuenta Nueva - Renovación 2026`
-  - Cantidad: 9 emails
-
-- **CSV 2**: `morosos-sin-armas-mail-merge.csv` (todas)
-  - Template: `TEMPLATE_MOROSOS_SIN_ARMAS.html`
-  - Asunto: `Renovación 2026 - Club YucatanCTP`
-  - Cantidad: 7 emails
-
-**Total DÍA 4**: 16 emails
+**Total DÍA 2**: 26 emails (dentro del límite de 50/día)
 
 ---
 
@@ -134,10 +120,13 @@
    - ⚠️ **IMPORTANTE**: Revisa que no haya errores de formato
 
 ### PASO 6: Envío Final
-
-1. Si el test está OK, en YAMM:
-   - Click en "Send emails"
-   - Confirma el número de emails a enviar
+:
+   - General: `Nuevo Portal YucatanCTP - Tu Expediente Digital`
+   - Morosos: `Importante: Regularización de Membresía 2026 - Requisito Legal`
+4. **Cuerpo**: 
+   - Pega el HTML completo del template (TEMPLATE_GENERAL.html o TEMPLATE_MOROSOS.html)
+   - Verifica que las variables estén correctas: `{{Nombre}}`, `{{Email}}`, `{{Credencial}}`, `{{Password}}`
+   - **IMPORTANTE**: Verifica que diga "Club de Caza, Tiro y Pesca de Yucatán, A.C." (NO "Club 738")
 2. Espera a que YAMM termine (verás el progreso)
 3. ✅ Verás "Mail merge complete" cuando termine
 
@@ -177,12 +166,10 @@
 ## 📋 Checklist Pre-Envío
 
 Antes de cada envío, verifica:
-
-- [ ] CSV importado correctamente en Google Sheets
-- [ ] Número de filas correcto (header + socios)
-- [ ] Template HTML copiado sin errores
+ (TEMPLATE_GENERAL.html o TEMPLATE_MOROSOS.html)
 - [ ] Variables {{Nombre}}, {{Email}}, {{Credencial}}, {{Password}} presentes
 - [ ] Asunto correcto para el grupo
+- [ ] Nombre oficial del club presente: "Club de Caza, Tiro y Pesca de Yucatán, A.C."
 - [ ] Email de prueba enviado y verificado
 - [ ] Portal https://yucatanctp.org accesible
 - [ ] Límite de 50 emails/día no excedido
@@ -193,14 +180,19 @@ Antes de cada envío, verifica:
 ## 📊 Registro de Envíos
 
 ### DÍA 1 (9 Ene)
-- [ ] General 1-50: ___ emails enviados a las _____
+- [ ] Socios al corriente 1-50: ___ emails enviados a las _____
+  - CSV: mail-merge-general.csv (filas 1-50)
+  - Template: TEMPLATE_GENERAL.html
 
 ### DÍA 2 (10 Ene)
-- [ ] General 51-76: ___ emails enviados a las _____
+- [ ] Socios al corriente 51-57: ___ emails enviados a las _____
+  - CSV: mail-merge-general.csv (filas 51-57)
+  - Template: TEMPLATE_GENERAL.html
+- [ ] Morosos 2025 (todos): ___ emails enviados a las _____
+  - CSV: morosos-2025-mail-merge.csv (19 filas)
+  - Template: TEMPLATE_MOROSOS.html
 
-### DÍA 3 (11 Ene)
-- [ ] Morosos con armas 1-50: ___ emails enviados a las _____
-
+**Total enviado**: ___ / 76 emails
 ### DÍA 4 (12 Ene)
 - [ ] Morosos con armas 51-59: ___ emails enviados a las _____
 - [ ] Morosos sin armas 1-7: ___ emails enviados a las _____
@@ -218,19 +210,41 @@ Si tienes problemas:
 ---
 
 ## 📌 Resumen de Archivos
-
-```
-emails-socios/
-├── TEMPLATE_MAIL_MERGE.html (General - 76 socios)
-├── TEMPLATE_MOROSOS_BORRON_Y_CUENTA_NUEVA.html (59 morosos con armas)
-├── TEMPLATE_MOROSOS_SIN_ARMAS.html (7 morosos sin armas)
-├── mail-merge-data.csv (76 filas)
-├── morosos-con-armas-mail-merge.csv (59 filas)
-└── morosos-sin-armas-mail-merge.csv (7 filas)
+GENERAL.html              → Socios al corriente (57)
+├── TEMPLATE_MOROSOS.html              → Morosos 2025 (19)
+├── mail-merge-general.csv             → 57 filas + header
+├── morosos-2025-mail-merge.csv        → 19 filas + header
+├── PROPUESTAS_REDACCION_EMAILS.md     → Redacciones finales aprobadas
+└── GUIA_MAIL_MERGE_2026.md            → Esta guía
 ```
 
-**Total de emails a enviar**: 76 + 59 + 7 = **142 emails**
+**Total de emails a enviar**: 57 + 19 = **76 emails**
 
+---
+
+## 📝 Cambios vs Versión Anterior
+
+### ✅ Correcciones Aplicadas
+
+1. **Distribución corregida**: 57 general + 19 morosos (vs anterior 10 + 59 + 7)
+2. **Nombre oficial**: "Club de Caza, Tiro y Pesca de Yucatán, A.C." en todos los templates
+3. **CSVs regenerados**: mail-merge-general.csv y morosos-2025-mail-merge.csv
+4. **Arqueo validado**: 76 emails únicos, sin duplicados
+5. **Mensaje morosos**: "Regularización obligatoria" (requisito legal) en vez de "Borrón y Cuenta Nueva"
+6. **Calendario reducido**: 2 días (vs anterior 4 días)
+
+### ❌ Archivos Obsoletos (NO usar)
+
+- ~~TEMPLATE_MAIL_MERGE.html~~
+- ~~TEMPLATE_MOROSOS_BORRON_Y_CUENTA_NUEVA.html~~
+- ~~TEMPLATE_MOROSOS_SIN_ARMAS.html~~
+- ~~mail-merge-data.csv~~
+- ~~morosos-con-armas-mail-merge.csv~~
+- ~~morosos-sin-armas-mail-merge.csv~~
+
+---
+
+**¡Éxito con el lanzamiento del portal del Club de Caza, Tiro y Pesca de Yucatán, A.C.
 ---
 
 **¡Éxito con el lanzamiento del portal YucatanCTP!** 🎯

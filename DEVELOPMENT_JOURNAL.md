@@ -10,6 +10,149 @@
 
 ## 📅 Enero 2026
 
+### 9 de Enero - Campaña Email: Regeneración CSVs + Nombre Oficial del Club
+
+#### Corrección Crítica de Distribución de Campaña
+
+**Problema detectado**: La segmentación inicial de la campaña de emails estaba basada en datos incorrectos.
+
+**Distribución INCORRECTA (anterior)**:
+- Email general: 10 socios
+- Morosos con armas: 59 socios
+- Morosos sin armas: 7 socios
+- **Total**: 76 emails
+
+**Distribución CORRECTA (actual)**:
+- Socios al corriente: 57 (pagaron 2025)
+- Morosos 2025: 19 (NO pagaron 2025)
+- Sergio (excluido): 1
+- **Total**: 76 emails
+
+**Cambios realizados**:
+
+1. **Script de regeneración** (`scripts/regenerar-csvs-campana.cjs`):
+   - Lee credenciales_socios.csv (77 socios)
+   - Excluye a Sergio (smunozam@gmail.com)
+   - Filtra 19 morosos confirmados en Firestore
+   - Genera 2 CSVs finales:
+     - `mail-merge-general.csv` (57 socios)
+     - `morosos-2025-mail-merge.csv` (19 socios)
+
+2. **Arqueo de validación** (`scripts/arqueo-morosos-vs-firestore.cjs`):
+   - ✅ Cross-validación de 19 morosos vs Firestore
+   - ✅ Verificación de exentos (7 socios)
+   - ✅ Verificación de recién pagados (3 socios)
+   - ✅ Todos los 19 morosos confirmados con estado='pendiente'
+   - ✅ Cero conflictos
+
+3. **Archivos eliminados** (obsoletos):
+   - mail-merge-data.csv (10 socios - INCORRECTO)
+   - morosos-con-armas-mail-merge.csv (59 socios - INCORRECTO)
+   - morosos-sin-armas-mail-merge.csv (7 socios)
+
+#### Estandarización del Nombre Oficial del Club
+
+**Regla establecida**: En TODOS los comunicados a socios y externos, usar el nombre oficial completo.
+
+**Nombre oficial**: "Club de Caza, Tiro y Pesca de Yucatán, A.C."  
+**NO usar**: "Club 738" (es solo el número de registro SEDENA)
+
+**Archivos actualizados**:
+- `.github/copilot-instructions.md` - Regla agregada en sección "Nombre Oficial del Club"
+- `emails-socios/TEMPLATE_GENERAL.html` - Headers y footers con nombre oficial
+- `emails-socios/TEMPLATE_MOROSOS.html` - Headers y footers con nombre oficial
+- `emails-socios/PROPUESTAS_REDACCION_EMAILS.md` - Todas las referencias actualizadas
+
+**Contexto de uso**:
+- ✅ Comunicados a socios (emails, oficios, credenciales)
+- ✅ Documentos oficiales (PETAs, constancias)
+- ✅ Comunicación externa (autoridades, otras organizaciones)
+- ❌ NO usar en código (variables, archivos, componentes)
+- ❌ NO usar en URLs o paths internos
+
+#### Templates HTML Finales
+
+**TEMPLATE_GENERAL.html** (57 destinatarios):
+- Asunto: "Nuevo Portal YucatanCTP - Tu Expediente Digital"
+- Mensaje: Portal como herramienta de enlace, expediente digital "una sola vez"
+- Beneficios: Apoyo en trámites DN27/DCAM, derecho a participar en tiradas
+
+**TEMPLATE_MOROSOS.html** (19 destinatarios):
+- Asunto: "Importante: Regularización de Membresía 2026 - Requisito Legal"
+- Mensaje: Marco legal (Ley Federal de Armas), regularización sin liquidar adeudos anteriores
+- Plazo: Antes del 31 de marzo 2026
+
+#### Corrección de Beneficios Incluidos en Cuota $6,000
+
+**Cuota de Regularización 2026**: $6,000.00 MXN
+
+**Incluye** (corregido):
+- ✅ Membresía activa 2026
+- ✅ 1 trámite PETA completo
+- ✅ Acceso al nuevo portal web
+- ✅ Expediente digital
+- ✅ Derecho a participar en tiradas del club **(cuota individual por evento)**
+- ✅ Apoyo del club en trámites de adquisición de armas ante DN27 y compra en DCAM
+
+**Eliminado** (era confuso):
+- ❌ "Participación en 11 tiradas programadas 2026" (NO incluye inscripciones)
+
+**Aclaración**: Las tiradas del club tienen cuota individual por evento. La membresía da el DERECHO a participar como socio activo, pero no cubre las inscripciones.
+
+**DN27**: Dirección General del Registro Federal de Armas de Fuego y Control de Explosivos  
+**DCAM**: Dirección de Comercialización de Armas y Municiones
+
+#### Documentación Actualizada
+
+**PROPUESTAS_REDACCION_EMAILS.md**:
+- Estado: "Redacciones Finales - Aprobadas e implementadas en HTML"
+- Distribución corregida: 57 + 19 = 76
+- Nombre oficial del club en todas las referencias
+- Beneficios corregidos (tiradas con cuota individual, apoyo DN27/DCAM)
+- Sección de implementación con resumen de mejoras
+
+**GUIA_MAIL_MERGE_2026.md**:
+- Plan de envío: 2 días (DÍA 1: 50 general, DÍA 2: 7 general + 19 morosos)
+- Templates correctos: TEMPLATE_GENERAL.html y TEMPLATE_MOROSOS.html
+- CSVs regenerados: mail-merge-general.csv y morosos-2025-mail-merge.csv
+- Checklist con verificación de nombre oficial
+- Sección de archivos obsoletos marcados como NO usar
+
+**RESUMEN_EJECUTIVO.md**:
+- Distribución final: 57 general + 19 morosos = 76 emails
+- Calendario: 2 días (no 4)
+- Nombre oficial del club destacado
+- Archivos de campaña actualizados
+
+#### Arqueo Final
+
+**Validación exitosa** (`scripts/arqueo-emails-socios.cjs`):
+```
+Total socios activos: 77
+Total emails en campaña: 76
+Emails únicos en campaña: 76
+Socios NO incluidos: 1 (smunozam@gmail.com)
+
+✅ ARQUEO EXITOSO - Campaña coherente con base de socios
+✓ 76 emails listos para enviar
+```
+
+**Archivos listos para envío**:
+- `emails-socios/TEMPLATE_GENERAL.html` → 57 socios
+- `emails-socios/TEMPLATE_MOROSOS.html` → 19 socios
+- `emails-socios/mail-merge-general.csv` → 57 registros
+- `emails-socios/morosos-2025-mail-merge.csv` → 19 registros
+
+**Deploy**: No requiere rebuild (solo cambios en emails-socios/)
+
+**Próximos pasos**:
+1. Instalar YAMM en Chrome
+2. Enviar lote piloto (1-2 emails de prueba)
+3. Ejecutar campaña DÍA 1: 50 emails generales (9-11 AM)
+4. Ejecutar campaña DÍA 2: 7 generales + 19 morosos
+
+---
+
 ### 8 de Enero - v1.17.0 Google Search Console + Nuevo Socio
 
 #### Google Search Console Verificado

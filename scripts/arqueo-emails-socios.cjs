@@ -34,9 +34,8 @@ console.log(`   Emails únicos: ${emailsSocios.size}`);
 const emailsDir = path.join(__dirname, '../emails-socios');
 
 const mailMergeFiles = [
-  'mail-merge-data.csv',
-  'morosos-con-armas-mail-merge.csv',
-  'morosos-sin-armas-mail-merge.csv'
+  'mail-merge-general.csv',
+  'morosos-2025-mail-merge.csv'
 ];
 
 let totalEmailsCampana = 0;

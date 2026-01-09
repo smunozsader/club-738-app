@@ -247,6 +247,18 @@ const unsubscribe = onSnapshot(socioRef, (docSnap) => {
 - Preferir texto o iconos SVG sobre emojis temáticos
 - Logo oficial: /public/assets/logo-club-738.jpg
 
+### Nombre Oficial del Club
+- **SIEMPRE usar**: "Club de Caza, Tiro y Pesca de Yucatán, A.C."
+- **NUNCA usar**: "Club 738" en comunicados oficiales a socios o externos
+- **Nota**: "738" es el número de registro ante SEDENA, NO forma parte del nombre oficial
+- **Contexto de uso**:
+  - ✅ Comunicados a socios (emails, oficios, credenciales)
+  - ✅ Documentos oficiales (PETAs, constancias)
+  - ✅ Comunicación externa (autoridades, otras organizaciones)
+  - ✅ Footer de emails y documentos
+  - ❌ NO usar en código (variables, archivos, componentes)
+  - ❌ NO usar en URLs o paths internos
+
 ## Development Workflow
 
 ### Commands
