@@ -380,12 +380,35 @@ src/
 
 ## Data Sources
 
-### Master Database
+### Master Database (Fuente de Verdad - Actualizada 31 Dic 2025)
+
+**Archivos CSV Maestros:**
+```
+data/socios/2025.31.12_RELACION_SOCIOS_ARMAS_SEPARADO.csv  # 77 socios + armas
+data/socios/credenciales_socios.csv                        # Credenciales de acceso (77 líneas)
+```
+
+**IMPORTANTE**: Estos CSVs son la **única fuente de verdad** para:
+- Lista de socios activos (77 total)
+- Credenciales de acceso al portal
+- Datos de armas registradas
+- Emails válidos para envío de comunicaciones
+
+**Archivo Excel original (referencia histórica):**
 ```
 Base datos/CLUB 738-31-DE-DICIEMBRE-2025_RELACION_SOCIOS_ARMAS NORMALIZADA.xlsx
 ```
 
-| Columna | Campo |
+**Estructura de credenciales_socios.csv:**
+| Columna | Campo | Descripción |
+|---------|-------|-------------|
+| No. | Número secuencial | 1-77 |
+| Credencial | Número de credencial del club | Ej: 1, 30, 236 |
+| Nombre | Nombre completo del socio | MAYÚSCULAS |
+| Email | Email de acceso al portal | Único por socio |
+| Password | Contraseña temporal | Formato: Club738-{CURP6} o personalizada |
+
+**Estructura de Excel (referencia):**
 |---------|-------|
 | A | No. REGISTRO DEL CLUB |
 | C | NOMBRE DEL SOCIO (No. CREDENCIAL) |

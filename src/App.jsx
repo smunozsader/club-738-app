@@ -19,6 +19,7 @@ import VerificadorPETA from './components/VerificadorPETA';
 import ExpedienteImpresor from './components/ExpedienteImpresor';
 import RegistroPagos from './components/RegistroPagos';
 import ReporteCaja from './components/ReporteCaja';
+import MiPerfil from './components/MiPerfil';
 import './App.css';
 
 // Detectar rutas públicas (sin necesidad de login)
@@ -255,6 +256,7 @@ function App() {
         </div>
         <div className="user-info">
           <span className="user-email">{socioData?.nombre || user.email}</span>
+          <button onClick={() => setActiveSection('mi-perfil')} className="btn-perfil">⚙️ Mi Perfil</button>
           <button onClick={handleLogout}>Cerrar Sesión</button>
         </div>
       </header>
@@ -298,6 +300,13 @@ function App() {
                 <h3>Mis PETAs</h3>
                 <p>Solicita y gestiona tus permisos de transporte</p>
                 <span className="dash-card-cta">Ver solicitudes →</span>
+              </div>
+              
+              <div className="dash-card perfil" onClick={() => setActiveSection('mi-perfil')}>
+                <div className="dash-card-icon">⚙️</div>
+                <h3>Mi Perfil</h3>
+                <p>Cambia tu contraseña y configuración de cuenta</p>
+                <span className="dash-card-cta">Configurar →</span>
               </div>
               
               <div className="dash-card pagos" onClick={() => setShowPagosModal(true)}>
@@ -436,6 +445,12 @@ function App() {
               onNuevoPETA={() => setActiveSection('solicitar-peta')}
               onBack={() => setActiveSection('dashboard')}
             />
+          </div>
+        )}
+
+        {activeSection === 'mi-perfil' && (
+          <div className="section-mi-perfil">
+            <MiPerfil user={user} onBack={() => setActiveSection('dashboard')} />
           </div>
         )}
 
