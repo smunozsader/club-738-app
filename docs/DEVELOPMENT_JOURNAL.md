@@ -11,6 +11,63 @@
 
 ## 📅 Enero 2026
 
+### 9 de Enero - v1.19.1 Preparación WAPI Sender - Formato Excel Oficial
+
+#### Corrección de Formato Excel para Compatibilidad WAPI Sender
+
+**Objetivo**: Generar Excel compatible con WAPI Sender Chrome Extension para envío masivo.
+
+**Problema detectado**:
+- WAPI Sender requiere formato Excel específico, no acepta CSV directamente
+- Primera columna debe llamarse: `WhatsApp Number(with country code)`
+- Números deben tener formato: `+52XXXXXXXXXX` (con signo +)
+
+**Solución implementada**:
+
+1. **Script de conversión CSV → Excel**
+   - Creado: `convertir-csv-a-excel.cjs`
+   - Genera: `whatsapp-difusion-portal.xlsx`
+   - Primera versión funcional pero incompatible con WAPI
+
+2. **Archivos alternativos para pruebas**
+   - Script: `generar-archivos-wapi-alternos.cjs`
+   - Generados:
+     - `wapi-prueba-5-socios.xlsx` (5 socios para testing)
+     - `numeros-whatsapp.txt` (73 números separados por coma)
+
+3. **Análisis del template oficial**
+   - Descargado: `WAPlusSenderTemplate1.xlsx` (muestra oficial)
+   - Identificada estructura correcta:
+     ```
+     WhatsApp Number(with country code) | First Name | Last Name | Other | Tips
+     +8613161611906                      | Sender     | WAPI      | ...   | ...
+     ```
+
+4. **Generación de Excel con formato oficial**
+   - Script final: `generar-excel-wapi-oficial.cjs`
+   - Archivo producido: `WAPI-Sender-Difusion-Portal.xlsx`
+   - Correcciones aplicadas:
+     - ✅ Columna 1: `WhatsApp Number(with country code)` (nombre exacto)
+     - ✅ Números: `+529999490494` (agregado signo +)
+     - ✅ Hoja: `Sheet1` (nombre estándar)
+     - ✅ 73 socios con formato correcto
+
+**Archivos creados**:
+- `scripts/convertir-csv-a-excel.cjs`
+- `scripts/generar-archivos-wapi-alternos.cjs`
+- `scripts/generar-excel-wapi-oficial.cjs`
+- `emails-socios/WAPI-Sender-Difusion-Portal.xlsx` ← **Archivo final**
+- `emails-socios/wapi-prueba-5-socios.xlsx`
+- `emails-socios/numeros-whatsapp.txt`
+
+**Pendiente**:
+- Ejecutar campaña WAPI Sender con archivo corregido
+- Enviar credenciales por email a KRISZTIAN GOR (sin WhatsApp)
+
+**Deploy**: No aplica (archivos de datos, no código de producción)
+
+---
+
 ### 9 de Enero - v1.19.0 Campaña WhatsApp - Difusión Lanzamiento Portal
 
 #### Desarrollo del Sistema de Mensajería WhatsApp
