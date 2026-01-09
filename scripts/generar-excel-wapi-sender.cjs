@@ -116,8 +116,9 @@ El *Club de Caza, Tiro y Pesca de Yucatán, A.C.* estrena portal web:
 
 📞 Dudas: Responde este mensaje
 
-Saludos,
-Secretaría`;
+Saludos
+MVZ Sergio Muñoz de Alba Medrano
+Secretario del Club de Caza, Tiro y Pesca de Yucatán, A.C.`;
 
     const templatePath = path.join(__dirname, '../emails-socios/WAPI-Sender-Template-Mensaje.txt');
     fs.writeFileSync(templatePath, templateMensaje, 'utf-8');

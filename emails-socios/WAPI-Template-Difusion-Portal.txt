@@ -1,0 +1,32 @@
+Hola {First Name} 👋
+
+El *Club de Caza, Tiro y Pesca de Yucatán, A.C.* estrena portal web:
+
+🌐 *yucatanctp.org*
+
+🔐 TUS CREDENCIALES:
+• Usuario: {Email}
+• Contraseña: {Password}
+• Credencial: #{Credencial}
+
+📋 DESDE EL PORTAL PUEDES:
+✅ Generar tu expediente electrónico PETA
+✅ Subir tus documentos digitales
+✅ Solicitar trámites de transportación
+✅ Consultar tus armas registradas
+✅ Ver calendario de tiradas 2026
+
+💰 *RENOVACIÓN 2026*: $6,000 MXN
+Incluye: 1 PETA gratis
+
+📤 *COMPLETA TU EXPEDIENTE DIGITAL*:
+Sube tus documentos para agilizar trámites
+
+⚠️ *Cambia tu contraseña al entrar*
+(Menú → Mi Perfil)
+
+📞 Dudas o para renovar: Responde este mensaje
+
+Saludos
+MVZ Sergio Muñoz de Alba Medrano
+Secretario del Club de Caza, Tiro y Pesca de Yucatán, A.C.

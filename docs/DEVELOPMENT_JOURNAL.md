@@ -11,6 +11,98 @@
 
 ## 📅 Enero 2026
 
+### 9 de Enero - v1.19.0 Campaña WhatsApp - Difusión Lanzamiento Portal
+
+#### Desarrollo del Sistema de Mensajería WhatsApp
+
+**Objetivo**: Difusión masiva del lanzamiento de yucatanctp.org a todos los socios vía WhatsApp.
+
+**Cambios realizados**:
+
+1. **Sincronización con GitHub**
+   - Git pull exitoso: 126 archivos actualizados
+   - Archivos nuevos: emails-socios/, scripts de morosos, MiPerfil.jsx, SEO (robots.txt, sitemap.xml)
+
+2. **Verificación del módulo de mensajes WhatsApp**
+   - Revisión de archivos generados por scripts previos
+   - 75 mensajes individuales .txt generados
+   - 1 socio sin teléfono (KRISZTIAN GOR)
+   - CSV para WAPI Sender con 74 socios
+
+3. **Actualización de firma oficial**
+   - Cambio de "Secretaría" a firma completa:
+     ```
+     MVZ Sergio Muñoz de Alba Medrano
+     Secretario del Club de Caza, Tiro y Pesca de Yucatán, A.C.
+     ```
+   - Archivos actualizados:
+     - `generar-mensajes-whatsapp.cjs`
+     - `generar-excel-wapi-sender.cjs`
+     - Templates de mensajes
+
+4. **Pivote estratégico: De segmentación a difusión única**
+   - **Inicial**: Intentó segmentar mensajes (general vs morosos)
+   - **Decisión final**: UN SOLO MENSAJE para todos los socios
+   - **Razón**: Simplificar campaña, enfoque en portal y expediente digital
+   - Eliminación de mensajes individuales (carpetas .txt)
+
+5. **Creación de sistema de difusión masiva**
+   - Script: `generar-wapi-difusion.cjs`
+   - Archivos generados:
+     - `whatsapp-difusion-portal.csv` (73 socios)
+     - `WAPI-Template-Difusion-Portal.txt`
+     - `GUIA_DIFUSION_WHATSAPP.md`
+   - **Excluido**: Sergio (secretario)
+   - **Sin teléfono**: 1 socio (envío por email)
+
+6. **Correcciones técnicas al CSV**
+   - **Problema**: Faltaba columna "First Name" requerida por WAPI Sender
+   - **Solución**: Modificación de script para incluir columna "First Name"
+   - **Encoding**: Corrección UTF-8 para preservar acentos y Ñ
+   - **Casos especiales**: 
+     - J. JESÚS Valencia Rojas (era solo "J.")
+     - Nombres con ÑÁÉÍÓÚ preservados correctamente
+
+7. **Limpieza de archivos obsoletos**
+   - Eliminadas carpetas:
+     - `mensajes-whatsapp/` (74 archivos)
+     - `mensajes-whatsapp-general/` (55 archivos)
+     - `mensajes-whatsapp-morosos/` (18 archivos)
+   - Eliminados archivos:
+     - `whatsapp-general.csv`, `whatsapp-morosos.csv`
+     - `WAPI-Template-General.txt`, `WAPI-Template-Morosos.txt`
+     - `WAPI-Sender-Socios.xlsx`, `whatsapp-socios.csv`
+   - Eliminadas guías:
+     - `GUIA_WAPI_SENDER.md`
+     - `GUIA_WHATSAPP_SEGMENTADO.md`
+
+**Contenido del mensaje único**:
+- Anuncio del portal yucatanctp.org
+- Credenciales de acceso personalizadas
+- Invitación a renovar membresía 2026 ($6,000)
+- **Llamado a acción**: Generar expediente digital PETA
+- Motivación para subir documentos
+- Lista de funciones del portal
+
+**Archivos finales de la campaña**:
+```
+emails-socios/
+├── whatsapp-difusion-portal.csv           → 73 socios + First Name
+├── WAPI-Template-Difusion-Portal.txt      → Template con placeholders
+├── GUIA_DIFUSION_WHATSAPP.md              → Guía paso a paso
+└── socios-sin-telefono-whatsapp.txt       → 1 socio sin teléfono
+```
+
+**Scripts desarrollados**:
+- `generar-whatsapp-segmentado.cjs` - Generación segmentada (descartado)
+- `generar-wapi-difusion.cjs` - Generación de difusión única (FINAL)
+
+**Tiempo estimado de envío**: 14 minutos (73 mensajes × 11 seg/mensaje)
+
+**Deploy**: No requiere deploy, archivos listos para WAPI Sender en Chrome
+
+---
+
 ### 9 de Enero - v1.18.0 Campaña de Emails y Corrección de Datos
 
 #### Campaña de Emails para Lanzamiento de yucatanctp.org

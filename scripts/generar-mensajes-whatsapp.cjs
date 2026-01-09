@@ -172,8 +172,9 @@ El *Club de Caza, Tiro y Pesca de Yucatán, A.C.* estrena portal web:
 
 📞 Dudas: Responde este mensaje
 
-Saludos,
-Secretaría`;
+Saludos
+MVZ Sergio Muñoz de Alba Medrano
+Secretario del Club de Caza, Tiro y Pesca de Yucatán, A.C.`;
 }
 
 function generarTemplateDifusion() {
@@ -197,8 +198,9 @@ Les informamos que estrenamos portal web:
 
 📞 Para más información: +52 56 6582 4667
 
-Saludos,
-Secretaría Club 738`;
+Saludos
+MVZ Sergio Muñoz de Alba Medrano
+Secretario del Club de Caza, Tiro y Pesca de Yucatán, A.C.`;
 }
 
 // Ejecutar
