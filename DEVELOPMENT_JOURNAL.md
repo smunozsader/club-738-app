@@ -10,7 +10,184 @@
 
 ## 📅 Enero 2026
 
-### 9 de Enero - Campaña Email: Regeneración CSVs + Nombre Oficial del Club
+### 9 de Enero - Parte 2: Estrategia WhatsApp + Automatización WAPI Sender
+
+#### Cambio de Estrategia: WhatsApp Business en lugar de Email
+
+**Decisión**: Después de analizar tasas de apertura, se decidió usar WhatsApp como canal principal:
+- Email: ~20-30% tasa de apertura
+- WhatsApp: ~98% tasa de lectura
+- Confirmación de lectura (palomitas azules)
+- Interacción bidireccional inmediata
+
+#### Extracción de Teléfonos desde Firestore
+
+**Script creado**: `scripts/generar-mensajes-whatsapp.cjs`
+
+**Funcionalidad**:
+1. Lee credenciales desde `credenciales_socios.csv`
+2. Extrae teléfonos desde Firestore (campo `telefono`)
+3. Valida formato (10 dígitos)
+4. Genera múltiples formatos de salida
+
+**Resultados**:
+- ✅ 75 socios con teléfono válido
+- ❌ 1 socio sin teléfono: KRISZTIAN GOR (Credencial #227)
+- ⚠️ 1 email en Firestore sin credenciales: agus_tin1_@hotmail.com (conocido)
+
+#### Archivos Generados para WhatsApp
+
+**1. CSV para extensiones Chrome** (`whatsapp-socios.csv`):
+```csv
+phone,name,email,password,credencial
+529999490494,"ALEJANDRO GOMORY",agm@galletasdonde.com,qXb662ZRE$,147
+```
+- 75 socios
+- Formato: +52 + 10 dígitos
+
+**2. Mensajes individuales .txt** (`mensajes-whatsapp/`):
+- 75 archivos pre-formateados
+- Nomenclatura: `001-9999490494-NOMBRE.txt`
+- Mensajes listos para copiar/pegar
+- Backup para envío manual
+
+**3. Template para Lista de Difusión** (`mensaje-lista-difusion.txt`):
+- Mensaje genérico sin credenciales
+- Para usar como último recurso
+
+**4. Lista de socios sin teléfono** (`socios-sin-telefono.txt`):
+- 1 socio (Krisztian Gor)
+- Recibirá comunicación solo por email
+
+#### Solución WAPI Sender (Chrome Extension)
+
+**Problema inicial**: Primera extensión evaluada (WA Sender) no disponible en Chrome Web Store.
+
+**Solución encontrada**: WAPI Sender
+- URL: https://chromewebstore.google.com/detail/wapi-sender-wa-whatsapp-a/eacpodndpkokbialnikcedfbpjgkipil
+- ✅ Soporta variables personalizadas
+- ✅ Carga Excel con columnas custom
+- ✅ Intervalo configurable entre mensajes
+- ✅ Pausar/reanudar campaña
+- ✅ Exportar reporte de envíos
+
+#### Formato Excel para WAPI Sender
+
+**Script creado**: `scripts/generar-excel-wapi-sender.cjs`
+
+**Excel generado**: `WAPI-Sender-Socios.xlsx`
+
+**Estructura**:
+| Columna | Contenido | Variable en mensaje |
+|---------|-----------|---------------------|
+| WhatsApp Number(with country code) | +529991234567 | N/A |
+| First Name | RICARDO | `{First Name}` |
+| Email | richfegas@icloud.com | `{Email}` |
+| Password | mFq323zbN# | `{Password}` |
+| Credencial | 1 | `{Credencial}` |
+
+**Template de mensaje** (`WAPI-Sender-Template-Mensaje.txt`):
+```
+Hola {First Name} 👋
+
+El *Club de Caza, Tiro y Pesca de Yucatán, A.C.* estrena portal web:
+
+🌐 *yucatanctp.org*
+
+🔐 TUS CREDENCIALES:
+• Usuario: {Email}
+• Contraseña: {Password}
+• Credencial: #{Credencial}
+
+📋 FUNCIONES:
+✅ Expediente digital PETA
+✅ Solicitar trámites
+✅ Consultar tus armas
+✅ Calendario tiradas 2026
+
+⚠️ *Cambia tu contraseña al entrar*
+(Menú → Mi Perfil)
+
+📞 Dudas: Responde este mensaje
+
+Saludos,
+Secretaría
+```
+
+#### Instrucciones de Envío WAPI Sender
+
+**Procedimiento**:
+1. Abrir WhatsApp Web (web.whatsapp.com)
+2. Escanear QR
+3. Click en extensión WAPI Sender
+4. Upload Excel: `WAPI-Sender-Socios.xlsx`
+5. Pegar template de mensaje con variables
+6. Configurar intervalo: 10-12 segundos (evita bloqueo WhatsApp)
+7. Click "Send now"
+
+**Tiempo estimado**:
+- Setup: 5 minutos
+- Envío: 15-20 minutos (75 mensajes × 12 seg)
+- Total: ~25 minutos vs 3+ horas manual
+
+**Ventajas**:
+- ✅ 100% personalizado (cada socio recibe SUS credenciales)
+- ✅ Automático (solo supervisar)
+- ✅ Seguro (intervalo evita bloqueos)
+- ✅ Pausable/reanudable
+- ✅ Reporte de entregas exportable
+
+#### Corrección de Beneficios en Templates Email
+
+**Cambio aplicado**: Beneficios incluidos en cuota $6,000
+
+**ANTES** (confuso):
+- ✅ Participación en 11 tiradas programadas 2026
+
+**AHORA** (claro):
+- ✅ Derecho a participar en tiradas del club (cuota individual por evento)
+- ✅ Apoyo del club en trámites de adquisición de armas ante DN27 (Dirección General del Registro Federal de Armas de Fuego y Control de Explosivos) y compra en DCAM
+
+**Archivos actualizados**:
+- `emails-socios/TEMPLATE_GENERAL.html`
+- `emails-socios/TEMPLATE_MOROSOS.html`
+- `emails-socios/PROPUESTAS_REDACCION_EMAILS.md`
+
+**Aclaración**: Las tiradas tienen costo individual por evento. La membresía da el DERECHO a participar, NO cubre inscripciones.
+
+#### Archivos Listos para Campaña
+
+**WhatsApp** (canal principal):
+```
+emails-socios/
+├── WAPI-Sender-Socios.xlsx              → Excel para WAPI Sender (75 socios)
+├── WAPI-Sender-Template-Mensaje.txt     → Template con variables
+├── whatsapp-socios.csv                  → CSV alternativo (75 socios)
+├── mensaje-lista-difusion.txt           → Backup: mensaje genérico
+├── socios-sin-telefono.txt              → 1 socio (Krisztian Gor)
+└── mensajes-whatsapp/                   → 75 archivos .txt (backup manual)
+```
+
+**Email** (respaldo):
+```
+emails-socios/
+├── TEMPLATE_GENERAL.html                → 57 socios al corriente
+├── TEMPLATE_MOROSOS.html                → 19 morosos
+├── mail-merge-general.csv               → 57 registros
+└── morosos-2025-mail-merge.csv          → 19 registros
+```
+
+**Deploy**: No requiere rebuild (solo archivos de campaña)
+
+**Próximos pasos**:
+1. Enviar WhatsApp con WAPI Sender (75 socios)
+2. Enviar email a Krisztian Gor (1 socio sin teléfono)
+3. Monitorear respuestas y dudas
+4. Exportar reporte de entregas
+
+---
+
+### 9 de Enero - Parte 1: Campaña Email: Regeneración CSVs + Nombre Oficial del Club
 
 #### Corrección Crítica de Distribución de Campaña
 
