@@ -10,6 +10,79 @@
 
 ## 📅 Enero 2026
 
+### 8 de Enero - v1.17.0 Google Search Console + Nuevo Socio
+
+#### Google Search Console Verificado
+
+**Objetivo**: Indexar el sitio en Google para aparecer en búsquedas orgánicas.
+
+**Pasos completados**:
+1. **Dominio verificado en Google Search Console**:
+   - Método: Proveedor de nombres de dominio (DNS TXT)
+   - Registro TXT agregado: `google-site-verification=w-Kkbf98VWF0N1Wq3LvEpuTbv_SqYBu7cSONR_bVYpk`
+   - Estado: ✅ Propiedad verificada correctamente
+
+2. **Sitemap enviado**:
+   - URL: https://yucatanctp.org/sitemap.xml
+   - Estado: ✅ Correcto
+   - Páginas detectadas: **4**
+   - Enviado: 8 enero 2026
+   - Última lectura: 8 enero 2026
+
+**Registros DNS activos** (verificado con nslookup):
+```
+yucatanctp.org TXT = "hosting-site=club-738-app"
+yucatanctp.org TXT = "google-site-verification=w-Kkbf98VWF0N1Wq3LvEpuTbv_SqYBu7cSONR_bVYpk"
+yucatanctp.org TXT = "v=spf1 include:spf.efwd.registrar-servers.com ~all"
+```
+
+**Impacto esperado**:
+- 📈 Indexación en Google en 24-48 horas
+- 🔍 Aparición en búsquedas: "club de tiro merida", "YucatanCTP", "FEMETI yucatan"
+- 📊 Reportes de tráfico en Search Console
+
+#### Nuevo Socio Agregado
+
+**Socio**: LUIS FERNANDO GUILLERMO GAMBOA
+- Credencial: **236**
+- CURP: GUGL750204HYNLMS04
+- Email: oso.guigam@gmail.com
+- Teléfono: 9992420621
+- Domicilio: Calle 32 x 9 Cedro, Tablaje 23222, Loc. Tixcuytun, Mérida, Yucatán 97305
+- No. Consecutivo: **77**
+- Fecha de alta: **08/01/2026**
+- Total armas: 0
+
+**Acciones realizadas**:
+1. ✅ Usuario creado en Firebase Auth
+   - UID: vpLW9ShJshTy7cctdGd4zsqKear2
+   - Password temporal: `Club738-GUGL75`
+
+2. ✅ Documento creado en Firestore (`socios/oso.guigam@gmail.com`)
+   - Estructura completa con domicilio normalizado
+   - `bienvenidaVista: false`
+   - `totalArmas: 0`
+
+3. ✅ CSV master actualizado
+   - Archivo: `data/socios/2025.31.12_RELACION_SOCIOS_ARMAS_SEPARADO.csv`
+   - Línea 289 agregada
+
+**Script creado**: `scripts/agregar-socio-236.cjs`
+- Crea usuario en Auth
+- Crea documento en Firestore
+- Maneja duplicados (si usuario ya existe)
+
+**Estado**: El socio puede acceder al portal yucatanctp.org con sus credenciales.
+
+**Pendiente**:
+- [ ] Google Business Profile (requiere acceso de Fabiola - fa...@gmail.com)
+- [ ] Eliminar perfil duplicado en Google Maps
+- [ ] Envío de credenciales al socio
+
+**Deploy**: No requiere deploy (solo datos backend)
+
+---
+
 ### 8 de Enero - v1.16.0 SEO Completo + Dominio Personalizado yucatanctp.org
 
 #### Optimización SEO y Adquisición de Dominio
