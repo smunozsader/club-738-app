@@ -10,6 +10,198 @@
 
 ## 📅 Enero 2026
 
+### 10 de Enero - Módulo de Gestión de Arsenal
+
+#### Contexto: Necesidad Identificada
+
+**Problema reportado por Joaquin Gardoni (Tesorero):**
+> "Ya subí todos los documentos a mi perfil, solo que noté que varios están duplicados, otros ya los vendí, y otros ya están a nombre de mi esposa"
+
+**Situación del tesorero:**
+- Shadow 2 DP25087: No aparece en portal
+- Grand Power LP 380 K084384: Vendida a Daniel Manrique
+- Grand Power LP 380 K084385: Vendida a Jose Alberto Manrique
+- 3 armas transferidas a su esposa María Fernanda Guadalupe Arechiga Ramos
+
+**Necesidad:**
+- Permitir a socios reportar bajas de arsenal (venta, transferencia, extravío, robo)
+- Gestionar alta en arsenal del comprador (si es socio)
+- Generar avisos a 32 Zona Militar (Valladolid)
+- Informar a DN27 (Dirección General del Registro Federal de Armas de Fuego)
+
+#### Análisis de Formato SEDENA
+
+**PDF analizado:**
+`/Applications/club-738-web/armas_socios/H. REGISTRO. TIRO. CZ RIFLE 600 ALPHA .223 J032612.pdf`
+
+**Herramienta:** pdfplumber (Python)
+
+**Campos identificados:**
+
+**Manifestante:**
+- Apellido Paterno, Materno, Nombre(s)
+- Fecha de Nacimiento, Sexo, CURP, Nacionalidad
+- Profesión/Oficio
+
+**Domicilio:**
+- Calle, Número Ext/Int, Código Postal
+- Colonia, Municipio, Entidad Federativa
+
+**Arma:**
+- Tipo/Clase: RIFLE DE REPETICION
+- Calibre: .223" REM
+- Marca: CESKA ZBROJOVKA
+- Modelo: CZ 600 ALPHA
+- Matrícula: J032612
+- Uso: TIRO DEPORTIVO
+- Tipo Manifestación: INICIAL
+
+**Recepción:**
+- Número de Folio: A3892689
+- Zona Militar
+- Fecha de Manifestación
+
+#### Componentes Implementados
+
+**1. GestionArsenal.jsx** - Portal del Socio
+
+**Funcionalidades:**
+- ✅ Vista completa del arsenal del socio
+- ✅ Formulario de reporte de baja
+- ✅ 5 motivos de baja:
+  - 💰 Venta
+  - 👥 Transferencia familiar
+  - ❓ Extravío
+  - ⚠️ Robo
+  - 🔨 Destrucción
+- ✅ Captura de datos del receptor (nombre, CURP, email)
+- ✅ Detección automática de socios del club
+- ✅ Registro opcional de transferencia SEDENA ya tramitada
+- ✅ Vista de solicitudes pendientes con estado
+
+**2. AdminBajasArsenal.jsx** - Panel del Secretario
+
+**Funcionalidades:**
+- ✅ Dashboard con contadores (pendientes, aprobadas, procesadas)
+- ✅ Filtros por estado de solicitud
+- ✅ Modal de detalles completos
+- ✅ Aprobar solicitudes
+- ✅ Marcar como procesada
+- ✅ Notificación automática a socio receptor
+- 🚧 Generador de oficio 32 ZM (placeholder)
+- 🚧 Generador de oficio DN27 (placeholder)
+
+#### Estructura Firestore
+
+```
+socios/{email}/solicitudesBaja/{solicitudId}
+├── armaId: string
+├── armaDetalles: {clase, calibre, marca, modelo, matricula, folio}
+├── motivo: 'venta' | 'transferencia' | 'perdida' | 'robo' | 'destruccion'
+├── fechaBaja: date
+├── observaciones: string
+├── receptor: {nombre, curp, esSocioClub, email}
+├── transferencia: {folio, zonaMilitar, fecha}
+├── estado: 'pendiente' | 'aprobada' | 'procesada'
+├── fechaSolicitud: timestamp
+├── solicitadoPor: string
+└── nombreSolicitante: string
+```
+
+#### Workflow de Baja
+
+```
+[Socio] Reporta baja del arma
+   ↓
+[pendiente] - Esperando revisión del secretario
+   ↓
+[Secretario] Revisa y aprueba
+   ↓
+[aprobada] - Generación de oficios habilitada
+   ↓
+[Secretario] Genera oficios 32 ZM + DN27
+[Secretario] Marca como procesada
+   ↓
+[procesada] - Tramitada ante autoridades
+   ↓
+Si receptor es socio del club → Notificación automática
+```
+
+#### Integración en App.jsx
+
+**Dashboard del Socio:**
+- Nueva tarjeta "Gestión de Arsenal" agregada
+- Ruta: `activeSection === 'gestion-arsenal'`
+
+**Panel del Secretario:**
+- Nueva tarjeta "Gestión de Bajas" en admin
+- Ruta: `activeSection === 'admin-bajas-arsenal'`
+
+#### Archivos Creados/Modificados
+
+**Nuevos archivos:**
+```
+src/components/
+├── GestionArsenal.jsx          # 600 líneas - Portal del socio
+├── GestionArsenal.css          # 400 líneas - Estilos responsivos
+├── AdminBajasArsenal.jsx       # 450 líneas - Panel admin
+└── AdminBajasArsenal.css       # 350 líneas - Estilos admin
+
+docs/
+└── GESTION_ARSENAL.md          # Documentación completa del módulo
+
+armas_socios/
+└── registro_ocr_output.txt     # Output OCR del formato SEDENA
+```
+
+**Archivos modificados:**
+```
+src/App.jsx
+├── Imports: GestionArsenal, AdminBajasArsenal
+├── Dashboard: tarjeta "Gestión de Arsenal"
+├── Panel admin: tarjeta "Gestión de Bajas"
+├── Rutas: gestion-arsenal, admin-bajas-arsenal
+```
+
+#### Pendientes de Implementación
+
+**Generadores de Oficios (Alta Prioridad):**
+1. Oficio 32 Zona Militar (Valladolid)
+   - Template PDF con jsPDF
+   - Membrete oficial del club
+   - Datos del socio, arma y transacción
+
+2. Oficio DN27 (Ciudad de México)
+   - Template PDF con jsPDF
+   - Formato oficial SEDENA
+   - Copias de documentación soporte
+
+**Mejoras Futuras:**
+- Subida de documentación soporte (comprobante venta, acta transferencia)
+- Dashboard de estadísticas de bajas
+- Notificaciones email automáticas
+- Exportación CSV para reportes anuales
+
+#### Notas Técnicas
+
+**Dependencias instaladas:**
+```bash
+pip install pdfplumber  # OCR de PDFs
+```
+
+**Referencias legales:**
+- Ley Federal de Armas de Fuego y Explosivos, Artículo 7
+- Aviso obligatorio a SEDENA dentro de 30 días naturales
+- Enajenación, extravío, robo o destrucción
+
+**Caso de prueba:**
+- Usuario: Joaquin Gardoni (joaquingardoni@gmail.com)
+- 7 armas requieren gestión (3 vendidas, 3 transferidas, 1 faltante)
+
+**Deploy:** Pendiente test en staging antes de producción
+
+---
+
 ### 9 de Enero - Parte 2: Estrategia WhatsApp + Automatización WAPI Sender
 
 #### Cambio de Estrategia: WhatsApp Business en lugar de Email

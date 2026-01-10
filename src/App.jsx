@@ -20,6 +20,8 @@ import ExpedienteImpresor from './components/ExpedienteImpresor';
 import RegistroPagos from './components/RegistroPagos';
 import ReporteCaja from './components/ReporteCaja';
 import MiPerfil from './components/MiPerfil';
+import GestionArsenal from './components/GestionArsenal';
+import AdminBajasArsenal from './components/AdminBajasArsenal';
 import './App.css';
 
 // Detectar rutas públicas (sin necesidad de login)
@@ -295,6 +297,13 @@ function App() {
                 <span className="dash-card-cta">Ver armas →</span>
               </div>
               
+              <div className="dash-card arsenal" onClick={() => setActiveSection('gestion-arsenal')}>
+                <div className="dash-card-icon">📦</div>
+                <h3>Gestión de Arsenal</h3>
+                <p>Reporta bajas, ventas o transferencias de armas</p>
+                <span className="dash-card-cta">Actualizar arsenal →</span>
+              </div>
+              
               <div className="dash-card petas" onClick={() => setActiveSection('mis-petas')}>
                 <div className="dash-card-icon">🎯</div>
                 <h3>Mis PETAs</h3>
@@ -398,6 +407,13 @@ function App() {
                     <p>Reporte de pagos recibidos</p>
                     <span className="dash-card-cta">Ver reporte →</span>
                   </div>
+                  
+                  <div className="dash-card admin bajas-arsenal" onClick={() => setActiveSection('admin-bajas-arsenal')}>
+                    <div className="dash-card-icon">📦</div>
+                    <h3>Gestión de Bajas</h3>
+                    <p>Administrar solicitudes de baja de armas</p>
+                    <span className="dash-card-cta">Ver solicitudes →</span>
+                  </div>
                 </div>
               </div>
             )}
@@ -432,6 +448,15 @@ function App() {
               ← Volver al Dashboard
             </button>
             <MisArmas user={user} />
+          </div>
+        )}
+
+        {activeSection === 'gestion-arsenal' && (
+          <div className="section-gestion-arsenal">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <GestionArsenal />
           </div>
         )}
 
@@ -532,6 +557,15 @@ function App() {
         {activeSection === 'reporte-caja' && user.email === 'smunozam@gmail.com' && (
           <div className="section-reporte-caja">
             <ReporteCaja userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
+          </div>
+        )}
+
+        {activeSection === 'admin-bajas-arsenal' && user.email === 'smunozam@gmail.com' && (
+          <div className="section-admin-bajas-arsenal">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <AdminBajasArsenal />
           </div>
         )}
 
