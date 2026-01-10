@@ -11,6 +11,83 @@
 
 ## 📅 Enero 2026
 
+### 10 de Enero - Mensajes Individualizados WhatsApp + Aclaración Costos PETA
+
+#### Generación de Mensajes Manuales para WhatsApp
+
+**Objetivo**: Como WAPI Sender no funcionó, generar mensajes individualizados para copiar/pegar manualmente en WhatsApp.
+
+**Problema**: 
+- WAPI Sender Chrome Extension no compatible con WhatsApp Web actual
+- Necesidad de envío manual a 73 socios
+
+**Solución implementada**:
+
+1. **Script generador de mensajes**
+   - Creado: `scripts/generar-mensajes-individuales.cjs`
+   - Lee CSV de socios con credenciales
+   - Genera mensajes personalizados (nombre, email, password, credencial)
+   - Output: `emails-socios/mensajes-individuales-whatsapp.txt` (3,515 líneas)
+
+2. **Aclaración de costos PETA**
+   - **Problema detectado**: Mensaje original decía "Incluye: 1 PETA gratis" - generaba confusión
+   - **Corrección aplicada**: Diferenciar entre:
+     - Renovación $6,000 = Tramitación del PETA ante 32 ZM SEDENA
+     - Derechos SEDENA (pago aparte):
+       - Formato 045: $1,819 (hasta 3 armas)
+       - Formato 046: $604 (por cada arma adicional)
+       - Se pagan con hojas de ayuda E5cinco
+
+3. **Documentación generada**
+   - `emails-socios/GUIA_ENVIO_MANUAL.md` - Instrucciones paso a paso
+   - `emails-socios/checklist-envio-whatsapp.txt` - Control imprimible de 73 socios
+   - `emails-socios/RESUMEN_ENVIO_MANUAL.md` - Resumen ejecutivo
+   - Script adicional: `generar-checklist-envio.cjs`
+
+**Estructura del mensaje final**:
+```
+Hola [NOMBRE] 👋
+
+🌐 *yucatanctp.org*
+
+🔐 TUS CREDENCIALES:
+• Usuario: [email]
+• Contraseña: [password]
+• Credencial: #[numero]
+
+📋 DESDE EL PORTAL PUEDES:
+✅ Generar expediente PETA
+✅ Subir documentos
+✅ Solicitar transportación
+✅ Ver calendario 2026
+
+💰 *RENOVACIÓN 2026*: $6,000 MXN
+Incluye: Tramitación de 1 PETA ante 32 ZM SEDENA
+
+💳 *DERECHOS SEDENA (PAGO APARTE)*:
+• Formato 045: $1,819 (hasta 3 armas)
+• Formato 046: $604 (por cada arma adicional)
+• Se pagan con hojas de ayuda E5cinco
+
+⚠️ *Cambia tu contraseña al entrar*
+
+Saludos
+MVZ Sergio Muñoz de Alba Medrano
+Secretario del Club...
+```
+
+**Archivos modificados**:
+- `scripts/generar-mensajes-individuales.cjs` - Template del mensaje
+- `emails-socios/mensajes-individuales-whatsapp.txt` - 73 mensajes regenerados
+- `emails-socios/GUIA_ENVIO_MANUAL.md` - Guía actualizada
+- `emails-socios/RESUMEN_ENVIO_MANUAL.md` - Resumen actualizado
+
+**Tiempo estimado de envío**: 2.5-3.5 horas (2-3 min por mensaje)
+
+**Deploy**: No aplica (archivos locales para envío manual)
+
+---
+
 ### 9 de Enero - v1.19.1 Preparación WAPI Sender - Formato Excel Oficial
 
 #### Corrección de Formato Excel para Compatibilidad WAPI Sender

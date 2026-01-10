@@ -1,0 +1,127 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    CHECKLIST DE ENVÍO - DIFUSIÓN PORTAL CLUB 738
+═══════════════════════════════════════════════════════════════════════════════
+
+Fecha inicio: _____/_____/2026          Hora: _____:_____
+Fecha fin:    _____/_____/2026          Hora: _____:_____
+
+Total socios: 73
+Enviados:     _____ / 73
+Pendientes:   _____ / 73
+
+═══════════════════════════════════════════════════════════════════════════════
+
+┌────┬────────────────────────────────────────────────┬──────────────┬──────┬───────┐
+│ #  │ NOMBRE                                         │ TELÉFONO     │ CRED │   ✓   │
+├────┼────────────────────────────────────────────────┼──────────────┼──────┼───────┤
+│ 01 │ ALEJANDRO GOMORY MARTINEZ                      │ 529999490494 │  147 │  ☐    │
+│ 02 │ AIMEE GOMEZ MENDOZA                            │ 529997300081 │  235 │  ☐    │
+│ 03 │ ALEJANDRO FRANCISCO RIVAS PINTADO              │ 529997720959 │   99 │  ☐    │
+│ 04 │ ALEJANDRA GEORGINA PINTADO VILLAFAÑA           │ 529999479199 │  167 │  ☐    │
+│ 05 │ JESUS ALEJANDRO PUC SOSA                       │ 529993778311 │  223 │  ☐    │
+│ 06 │ MARIA FERNANDA GUADALUPE ARECHIGA RAMOS        │ 525530565722 │  212 │  ☐    │
+│ 07 │ ARMANDO PARDIÑAZ ALCANTARA                     │ 529994992099 │  196 │  ☐    │
+│ 08 │ ALEJANDRO OLIVER ROBERT EASTMOND               │ 529999967145 │  217 │  ☐    │
+│ 09 │ ARIEL BALTAZAR CÓRDOBA WILSON                  │ 529992003314 │  226 │  ☐    │
+│ 10 │ BRAYER KERMITH VERDE CHIN                      │ 529992247551 │  201 │  ☐    │
+│ 11 │ CARLOS ANTONIO GRANJA PEREZ                    │ 529999431556 │  113 │  ☐    │
+│ 12 │ CLAUDIO MAURICIO CANAVATI FARAH                │ 525554536965 │   97 │  ☐    │
+│ 13 │ CHAFI XACUR RIVERA                             │ 529999477957 │  181 │  ☐    │
+│ 14 │ EDGARDO RAUL GÓMEZ ARZAMENDI                   │ 529991450399 │  206 │  ☐    │
+│ 15 │ ALEJANDRO JAVIER GARCÍA GAMBOA                 │ 529999001272 │  142 │  ☐    │
+│ 16 │ DAVID AZAR CÁMARA                              │ 529991369874 │  194 │  ☐    │
+│ 17 │ DAVID HOMERO SCHOLZ MORENO                     │ 529999494819 │  151 │  ☐    │
+│ 18 │ RICARDO ERNESTO CASTILLO MANCERA               │ 529901011913 │  205 │  ☐    │
+│ 19 │ ERNESTO GONZALEZ PICCOLO                       │ 529995328570 │  211 │  ☐    │
+│ 20 │ FABIAN MARQUEZ ORTEGA                          │ 529993772793 │  228 │  ☐    │
+│ 21 │ ADOLFO XACUR RIVERA                            │ 529992442613 │   31 │  ☐    │
+│ 22 │ EZEQUIEL GALVAN VAZQUEZ                        │ 529991335899 │  157 │  ☐    │
+│ 23 │ GERARDO ANTONIO FERNÁNDEZ QUIJANO              │ 529811204947 │  214 │  ☐    │
+│ 24 │ GADDI OTHONIEL CAAMAL PUC                      │ 524431302953 │  219 │  ☐    │
+│ 25 │ GUIDO RENY CUEVAS ABRAHAM                      │ 529993354270 │  220 │  ☐    │
+│ 26 │ HANS JURGEN THIES BARBACHANO                   │ 529999415052 │  149 │  ☐    │
+│ 27 │ HUGO MARTINEZ HERNANDEZ                        │ 529961006288 │  123 │  ☐    │
+│ 28 │ IVAN TSUIS CABO TORRES                         │ 529992315040 │  222 │  ☐    │
+│ 29 │ JOSE JACINTO LIZARRAGA AVILA                   │ 529991336764 │   30 │  ☐    │
+│ 30 │ JAVIER RUZ PERAZA                              │ 529992429052 │  148 │  ☐    │
+│ 31 │ JUAN CARLOS BRICEÑO GONZALEZ                   │ 529991637860 │  107 │  ☐    │
+│ 32 │ JUAN CARLOS MAÑE ORTIZ                         │ 529991229424 │  182 │  ☐    │
+│ 33 │ JOSE GIL HEREDIA HAGAR                         │ 529999001366 │  224 │  ☐    │
+│ 34 │ JUAN CARLOS JORDAN LOPEZ                       │ 529999258499 │   74 │  ☐    │
+│ 35 │ JORGE ALFREDO DAWN MEDINA                      │ 529999005153 │   87 │  ☐    │
+│ 36 │ JOSE HIPOLITO BARRERA AKE                      │ 529818296516 │  137 │  ☐    │
+│ 37 │ JOSE GILBERTO HERNANDEZ CARRILLO               │ 529992389961 │  153 │  ☐    │
+│ 38 │ JULIO RETANA VILLARREAL                        │ 529993356071 │  193 │  ☐    │
+│ 39 │ JOAQUIN RODOLFO GARDONI NUÑEZ                  │ 525530565722 │  199 │  ☐    │
+│ 40 │ JOSE VICENTE TRUJILLO LUCIC                    │ 529999600269 │  102 │  ☐    │
+│ 41 │ EDUARDO DENIS HERRERA                          │ 525520869685 │  186 │  ☐    │
+│ 42 │ ARIEL ANTONIO PAREDES CETINA                   │ 529994912883 │  204 │  ☐    │
+│ 43 │ YAEL ROMERO DE DIOS                            │ 529995287779 │  234 │  ☐    │
+│ 44 │ MARIA DOLORES DAVIS BETANZOS                   │ 525543900616 │  209 │  ☐    │
+│ 45 │ ROBERTO JOSE MADAHUAR BOEHM                    │ 529999473478 │  115 │  ☐    │
+│ 46 │ MANUEL JESÚS CHAIDEZ PALACIOS                  │ 529992771732 │   51 │  ☐    │
+│ 47 │ MARCO ANTONIO SANTA CRUZ POLANCO CORDOVA       │ 529992978103 │  179 │  ☐    │
+│ 48 │ SERGIO FERNANDO MARTINEZ AGUILAR               │ 529831549084 │  216 │  ☐    │
+│ 49 │ EDUARDO JOSE ARZAMENDI MONTEJO                 │ 529991276042 │  188 │  ☐    │
+│ 50 │ MANUEL JESÚS TZAB CHUC                         │ 529991518266 │  203 │  ☐    │
+│ 51 │ EDGAR EDILBERTO MONFORTE ESCOBEDO              │ 529993349575 │  103 │  ☐    │
+│ 52 │ JUAN CARLOS RAMIREZ GOMEZ                      │ 525543426160 │  218 │  ☐    │
+│ 53 │ DANIEL DE JESUS PADILLA ROBLES                 │ 529991650849 │  229 │  ☐    │
+│ 54 │ ENRIQUE GAONA CASTAÑEDA                        │ 525520985073 │  195 │  ☐    │
+│ 55 │ RAFAEL RIVAS POLANCO                           │ 529999477501 │  166 │  ☐    │
+│ 56 │ ROGER IRÁN MÉNDEZ CARRILLO                     │ 529991356502 │  202 │  ☐    │
+│ 57 │ RAÚL CERVANTES CEBALLOS                        │ 529993382222 │  231 │  ☐    │
+│ 58 │ RIGOMAR HINOJOSA SHIELDS                       │ 529381200721 │   70 │  ☐    │
+│ 59 │ RICARDO JESÚS FERNÁNDEZ Y GASQUE               │ 529999470480 │    1 │  ☐    │
+│ 60 │ RICARDO DANIEL FERNÁNDEZ PÉREZ                 │ 529991639981 │  232 │  ☐    │
+│ 61 │ RICARDO MANUEL FERNÁNDEZ QUIJANO               │ 529999473043 │  233 │  ☐    │
+│ 62 │ RICARDO ALBERTO DESQUENS BONILLA               │ 529993940909 │  215 │  ☐    │
+│ 63 │ RODRIGO GARCÍA ESCALANTE                       │ 529991375427 │  192 │  ☐    │
+│ 64 │ RICARDO ANTONIO SOBERANIS GAMBOA               │ 529993437376 │  230 │  ☐    │
+│ 65 │ SANTIAGO LAMAS RINGENBACH                      │ 529993359825 │  210 │  ☐    │
+│ 66 │ SANTIAGO RUEDA ESCOBEDO                        │ 529381526811 │  221 │  ☐    │
+│ 67 │ SANTIAGO ALEJANDRO QUINTAL PAREDES             │ 529995759542 │  225 │  ☐    │
+│ 68 │ SERGIO SANTINELLI GRAJALES                     │ 525554388308 │   88 │  ☐    │
+│ 69 │ REMIGIO BEETHOVEN AGUILAR CANTO                │ 529999238686 │   46 │  ☐    │
+│ 70 │ PAULINO EDILBERTO MONFORTE TRAVA               │ 529999810995 │   53 │  ☐    │
+│ 71 │ CELESTINO SÁNCHEZ FERNÁNDEZ                    │ 529992403110 │  183 │  ☐    │
+│ 72 │ ANTONIO RAMÓN SANTA CRUZ POLANCO CABRALES      │ 529992243874 │  178 │  ☐    │
+│ 73 │ J. JESÚS VALENCIA ROJAS                        │ 529971248940 │  200 │  ☐    │
+└────┴────────────────────────────────────────────────┴──────────────┴──────┴───────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+                                   NOTAS / ERRORES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. _______________________________________________________________________
+
+2. _______________________________________________________________________
+
+3. _______________________________________________________________________
+
+4. _______________________________________________________________________
+
+5. _______________________________________________________________________
+
+6. _______________________________________________________________________
+
+7. _______________________________________________________________________
+
+8. _______________________________________________________________________
+
+9. _______________________________________________________________________
+
+10. _______________________________________________________________________
+
+═══════════════════════════════════════════════════════════════════════════════
+                                  RESUMEN FINAL
+═══════════════════════════════════════════════════════════════════════════════
+
+Enviados exitosos:     _____ / 73
+Errores/Rebotes:       _____ / 73
+Sin WhatsApp:          _____ / 73
+Pendientes:            _____ / 73
+
+Responsable: _________________________________
+Firma:       _________________________________
+
