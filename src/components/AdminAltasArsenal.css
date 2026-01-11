@@ -1,0 +1,472 @@
+/* AdminAltasArsenal.css */
+
+.admin-altas-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
+
+.admin-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.admin-header .subtitle {
+  margin: 10px 0 0 0;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+/* CONTADORES */
+.contadores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.contador-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #95a5a6;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contador-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.contador-card.pendiente {
+  border-left-color: #f39c12;
+  background: linear-gradient(135deg, #fff9e6 0%, #fffbf0 100%);
+}
+
+.contador-card.aprobada {
+  border-left-color: #27ae60;
+  background: linear-gradient(135deg, #e8f8f5 0%, #f0fdf4 100%);
+}
+
+.contador-card.registrada {
+  border-left-color: #3498db;
+  background: linear-gradient(135deg, #ebf5fb 0%, #f0f8ff 100%);
+}
+
+.contador-card.rechazada {
+  border-left-color: #e74c3c;
+  background: linear-gradient(135deg, #fadbd8 0%, #ffe0e0 100%);
+}
+
+.contador-num {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #2c3e50;
+}
+
+.contador-label {
+  font-size: 13px;
+  color: #7f8c8d;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* FILTROS */
+.filtros-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  padding: 15px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filtro-active,
+.filtro-inactive {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.filtro-inactive {
+  background: #ecf0f1;
+  color: #7f8c8d;
+}
+
+.filtro-inactive:hover {
+  background: #d5dbdb;
+}
+
+.filtro-active {
+  background: #3498db;
+  color: white;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+/* LISTA DE SOLICITUDES */
+.solicitudes-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.solicitud-admin-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #3498db;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.solicitud-admin-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.solicitud-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.solicitud-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.solicitud-info h3 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 18px;
+}
+
+.socio-name {
+  margin: 5px 0;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.arma-details-compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+  font-size: 12px;
+  color: #34495e;
+}
+
+.arma-details-compact span {
+  background: #ecf0f1;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.modalidad-badge {
+  display: inline-block;
+  background: #fef5e7;
+  color: #d68910;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.solicitud-actions-compact {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.btn-ver-detalles,
+.btn-aprobar,
+.btn-rechazar,
+.btn-registrar {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-ver-detalles {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.btn-ver-detalles:hover {
+  background: #d5dbdb;
+}
+
+.btn-aprobar {
+  background: #27ae60;
+  color: white;
+}
+
+.btn-aprobar:hover {
+  background: #229954;
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.btn-rechazar {
+  background: #e74c3c;
+  color: white;
+}
+
+.btn-rechazar:hover {
+  background: #c0392b;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.btn-registrar {
+  background: #3498db;
+  color: white;
+}
+
+.btn-registrar:hover {
+  background: #2980b9;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.fecha-solicitud-admin {
+  font-size: 12px;
+  color: #7f8c8d;
+  padding-top: 12px;
+  border-top: 1px solid #ecf0f1;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 12px;
+  color: #7f8c8d;
+  font-size: 16px;
+}
+
+.empty-state strong {
+  color: #2c3e50;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #ecf0f1;
+  background: #f8f9fa;
+  border-radius: 12px 12px 0 0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #2c3e50;
+}
+
+.btn-close-modal {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #7f8c8d;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.btn-close-modal:hover {
+  color: #2c3e50;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.detail-section {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+}
+
+.detail-section h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.detail-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7f8c8d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 14px;
+  color: #2c3e50;
+  word-break: break-word;
+}
+
+.observaciones-modal {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.observaciones-modal .detail-label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.observaciones-modal p {
+  margin: 0;
+  color: #34495e;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #ecf0f1;
+  background: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn-modal-close {
+  padding: 10px 20px;
+  background: #ecf0f1;
+  color: #2c3e50;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-modal-close:hover {
+  background: #d5dbdb;
+}
+
+/* LOADING */
+.loading-spinner {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  color: #7f8c8d;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .admin-header h1 {
+    font-size: 22px;
+  }
+
+  .contadores-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filtros-bar {
+    flex-direction: column;
+  }
+
+  .filtro-active,
+  .filtro-inactive {
+    width: 100%;
+  }
+
+  .solicitud-main {
+    flex-direction: column;
+  }
+
+  .solicitud-actions-compact {
+    justify-content: flex-start;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

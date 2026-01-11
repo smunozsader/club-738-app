@@ -22,6 +22,7 @@ import ReporteCaja from './components/ReporteCaja';
 import MiPerfil from './components/MiPerfil';
 import GestionArsenal from './components/GestionArsenal';
 import AdminBajasArsenal from './components/AdminBajasArsenal';
+import AdminAltasArsenal from './components/AdminAltasArsenal';
 import AgendarCita from './components/AgendarCita';
 import MiAgenda from './components/MiAgenda';
 import ManualUsuario from './components/ManualUsuario';
@@ -431,6 +432,13 @@ function App() {
                     <p>Administrar solicitudes de baja de armas</p>
                     <span className="dash-card-cta">Ver solicitudes →</span>
                   </div>
+
+                  <div className="dash-card admin altas-arsenal" onClick={() => setActiveSection('admin-altas-arsenal')}>
+                    <div className="dash-card-icon">📝</div>
+                    <h3>Gestión de Altas</h3>
+                    <p>Administrar solicitudes de alta de armas nuevas</p>
+                    <span className="dash-card-cta">Ver solicitudes →</span>
+                  </div>
                   
                   <div className="dash-card admin agenda" onClick={() => setActiveSection('mi-agenda')}>
                     <div className="dash-card-icon">📅</div>
@@ -590,6 +598,15 @@ function App() {
               ← Volver al Dashboard
             </button>
             <AdminBajasArsenal />
+          </div>
+        )}
+
+        {activeSection === 'admin-altas-arsenal' && user.email === 'smunozam@gmail.com' && (
+          <div className="section-admin-altas-arsenal">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Dashboard
+            </button>
+            <AdminAltasArsenal />
           </div>
         )}
         

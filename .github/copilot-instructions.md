@@ -417,47 +417,45 @@ src/
 
 ## Data Sources
 
-### Master Database (Fuente de Verdad - Actualizada 31 Dic 2025)
+### Master Database (Fuente de Verdad - Actualizada 10 Ene 2026)
 
-**Archivos CSV Maestros:**
+**Archivo Excel Maestro:**
 ```
-data/socios/2025.31.12_RELACION_SOCIOS_ARMAS_SEPARADO.csv  # 77 socios + armas
-data/socios/credenciales_socios.csv                        # Credenciales de acceso (77 líneas)
+data/socios/Copy of 2026.31.01_RELACION_SOCIOS_ARMAS_SEPARADO_verified.xlsx
 ```
 
-**IMPORTANTE**: Estos CSVs son la **única fuente de verdad** para:
-- Lista de socios activos (77 total)
+**IMPORTANTE**: Este Excel es la **única fuente de verdad** para:
+- Lista de socios activos (76 totales con armas)
 - Credenciales de acceso al portal
-- Datos de armas registradas
+- Datos de armas registradas (287 armas)
 - Emails válidos para envío de comunicaciones
+- Matrículas normalizadas (sin comas, sin espacios extras)
 
-**Archivo Excel original (referencia histórica):**
+**Cambios actualizados (10 Ene 2026):**
+- Email corregido: Roberto Madahuar → `rmadahuar@cotexsa.com.mx`
+- Agustín Moreno email corregido → `agus_tin1_@hotmail.com`
+- Todos los duplicados de armas eliminados de Firebase
+- Sincronización Excel-Firebase completada ✅
+
+**Estructura del Excel Maestro:**
+| Columna | Campo | Descripción |
+|---------|-------|-------------|
+| A | No. CREDENCIAL | Número de credencial del club (1-236) |
+| C | NOMBRE DEL SOCIO | Nombre completo en MAYÚSCULAS |
+| D | CURP | Clave Única de Registro de Población |
+| E | No. CONSEC. | Número secuencial interno |
+| H | EMAIL | Email de acceso al portal (único por socio) |
+| I | CLASE | Clase de arma (PISTOLA, ESCOPETA, RIFLE, etc) |
+| J | CALIBRE | Calibre del arma |
+| K | MARCA | Marca fabricante |
+| L | MODELO | Modelo de arma |
+| M | MATRÍCULA | Matrícula/Número de serie (normalizado) |
+| N | FOLIO | Folio de registro SEDENA |
+
+**Archivo Excel de referencia (histórico):**
 ```
 Base datos/CLUB 738-31-DE-DICIEMBRE-2025_RELACION_SOCIOS_ARMAS NORMALIZADA.xlsx
 ```
-
-**Estructura de credenciales_socios.csv:**
-| Columna | Campo | Descripción |
-|---------|-------|-------------|
-| No. | Número secuencial | 1-77 |
-| Credencial | Número de credencial del club | Ej: 1, 30, 236 |
-| Nombre | Nombre completo del socio | MAYÚSCULAS |
-| Email | Email de acceso al portal | Único por socio |
-| Password | Contraseña temporal | Formato: Club738-{CURP6} o personalizada |
-
-**Estructura de Excel (referencia):**
-|---------|-------|
-| A | No. REGISTRO DEL CLUB |
-| C | NOMBRE DEL SOCIO (No. CREDENCIAL) |
-| D | CURP |
-| E | No. CONSEC. DE SOCIO |
-| H | EMAIL |
-| I | CLASE (arma) |
-| J | CALIBRE |
-| K | MARCA |
-| L | MODELO |
-| M | MATRÍCULA |
-| N | FOLIO |
 
 ### Firebase Storage Structure
 ```
