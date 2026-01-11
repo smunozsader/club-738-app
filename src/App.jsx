@@ -19,6 +19,7 @@ import VerificadorPETA from './components/VerificadorPETA';
 import ExpedienteImpresor from './components/ExpedienteImpresor';
 import RegistroPagos from './components/RegistroPagos';
 import ReporteCaja from './components/ReporteCaja';
+import CobranzaUnificada from './components/CobranzaUnificada';
 import MiPerfil from './components/MiPerfil';
 import GestionArsenal from './components/GestionArsenal';
 import AdminBajasArsenal from './components/AdminBajasArsenal';
@@ -412,18 +413,11 @@ function App() {
                     <span className="dash-card-cta">Preparar impresión →</span>
                   </div>
                   
-                  <div className="dash-card admin pagos" onClick={() => setActiveSection('registro-pagos')}>
+                  <div className="dash-card admin cobranza" onClick={() => setActiveSection('cobranza')}>
                     <div className="dash-card-icon">💰</div>
-                    <h3>Registro de Pagos</h3>
-                    <p>Cobranza y activación de membresías</p>
-                    <span className="dash-card-cta">Registrar pagos →</span>
-                  </div>
-                  
-                  <div className="dash-card admin reporte" onClick={() => setActiveSection('reporte-caja')}>
-                    <div className="dash-card-icon">📊</div>
-                    <h3>Corte de Caja</h3>
-                    <p>Reporte de pagos recibidos</p>
-                    <span className="dash-card-cta">Ver reporte →</span>
+                    <h3>Panel de Cobranza</h3>
+                    <p>Pagos, registros y reportes unificados</p>
+                    <span className="dash-card-cta">Gestionar cobranza →</span>
                   </div>
                   
                   <div className="dash-card admin bajas-arsenal" onClick={() => setActiveSection('admin-bajas-arsenal')}>
@@ -532,15 +526,9 @@ function App() {
           </div>
         )}
 
-        {activeSection === 'renovaciones' && user.email === 'smunozam@gmail.com' && (
-          <div className="section-renovaciones">
-            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
-              ← Volver al Dashboard
-            </button>
-            <DashboardRenovaciones 
-              userEmail={user.email} 
-              onVerDocumentos={handleVerDocumentosSocio}
-            />
+        {activeSection === 'cobranza' && user.email === 'smunozam@gmail.com' && (
+          <div className="section-cobranza">
+            <CobranzaUnificada onBack={() => setActiveSection('dashboard')} />
           </div>
         )}
 
@@ -574,21 +562,6 @@ function App() {
         {activeSection === 'expediente-impresor' && user.email === 'smunozam@gmail.com' && (
           <div className="section-expediente-impresor">
             <ExpedienteImpresor userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
-          </div>
-        )}
-
-        {activeSection === 'registro-pagos' && user.email === 'smunozam@gmail.com' && (
-          <div className="section-registro-pagos">
-            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
-              ← Volver al Dashboard
-            </button>
-            <RegistroPagos userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
-          </div>
-        )}
-
-        {activeSection === 'reporte-caja' && user.email === 'smunozam@gmail.com' && (
-          <div className="section-reporte-caja">
-            <ReporteCaja userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
           </div>
         )}
 
