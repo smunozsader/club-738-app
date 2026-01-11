@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, doc, updateDoc, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, Timestamp, query, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import './CobranzaUnificada.css';
 
@@ -29,7 +29,7 @@ const METODOS_PAGO = [
 ];
 
 export default function CobranzaUnificada({ onBack }) {
-  const [vistaActual, setVistaActual] = useState('estado'); // estado, registrar, reportes
+  const [vistaActual, setVistaActual] = useState('estado'); // estado, registrar, reportes, detalles
   const [loading, setLoading] = useState(true);
   const [socios, setSocios] = useState([]);
   const [guardando, setGuardando] = useState(false);
@@ -66,19 +66,29 @@ export default function CobranzaUnificada({ onBack }) {
       snapshot.forEach(doc => {
         const data = doc.data();
         const renovacion = data.renovacion2026 || {};
+        const pagos = renovacion.pagos || [];
+        
+        // Calcular total pagado
+        const montoPagado = pagos.reduce((sum, pago) => sum + (pago.monto || 0), 0);
+        
+        // Determinar estado: pagado si tiene al menos inscripción + anualidad + FEMETI
+        const conceptosPagados = pagos.map(p => p.concepto);
+        const pagoCopleto = conceptosPagados.includes('inscripcion') && 
+                           conceptosPagados.includes('cuota_anual') && 
+                           (conceptosPagados.includes('femeti_socio') || conceptosPagados.includes('femeti_nuevo'));
+        
+        const estado = renovacion.exento ? 'exento' : (pagoCopleto ? 'pagado' : 'pendiente');
         
         sociosList.push({
           email: doc.id,
           nombre: data.nombre || doc.id,
           noSocio: data.noSocio || '-',
           telefono: data.telefono || '-',
-          estado: renovacion.estado || 'pendiente',
+          estado: estado,
           exento: renovacion.exento || false,
           motivoExencion: renovacion.motivoExencion || null,
-          fechaPago: renovacion.fechaPago?.toDate() || null,
-          montoPagado: renovacion.montoPagado || 0,
-          comprobante: renovacion.comprobante || '',
-          metodoPago: renovacion.metodoPago || '',
+          montoPagado: montoPagado,
+          pagos: pagos,
           fechaLimite: renovacion.fechaLimite?.toDate() || new Date('2026-02-28'),
           cuotaClub: CONCEPTO_PAGO.cuota_anual,
           cuotaFemeti: CONCEPTO_PAGO.femeti_socio
@@ -131,19 +141,33 @@ export default function CobranzaUnificada({ onBack }) {
 
     try {
       setGuardando(true);
-      const docRef = doc(db, 'socios', socioSeleccionado.email);
 
-      const montoPago = conceptosSeleccionados.reduce((sum, concepto) => {
-        return sum + (CONCEPTO_PAGO[concepto] || 0);
-      }, 0);
+      // Crear array de pagos individuales (uno por cada concepto)
+      const nuevosPagos = conceptosSeleccionados.map(concepto => ({
+        concepto: concepto,
+        monto: CONCEPTO_PAGO[concepto] || 0,
+        metodoPago: formPago.metodoPago,
+        fechaPago: Timestamp.fromDate(new Date(formPago.fechaPago)),
+        comprobante: formPago.comprobante,
+        notas: formPago.notas,
+        registradoPor: 'secretario', // TODO: obtener usuario actual
+        fechaRegistro: Timestamp.now()
+      }));
 
-      await updateDoc(docRef, {
-        'renovacion2026.estado': 'pagado',
-        'renovacion2026.fechaPago': Timestamp.fromDate(new Date(formPago.fechaPago)),
-        'renovacion2026.montoPagado': montoPago,
-        'renovacion2026.metodoPago': formPago.metodoPago,
-        'renovacion2026.comprobante': formPago.comprobante,
-        'renovacion2026.conceptosPagados': conceptosSeleccionados
+      // Obtener pagos existentes
+      const socioRef = doc(db, 'socios', socioSeleccionado.email);
+      const socioSnap = await getDoc(socioRef);
+      const pagosExistentes = socioSnap.data()?.renovacion2026?.pagos || [];
+
+      // Fusionar pagos (evitar duplicados por concepto)
+      const pagosFiltrados = pagosExistentes.filter(
+        p => !conceptosSeleccionados.includes(p.concepto)
+      );
+      const todosPagos = [...pagosFiltrados, ...nuevosPagos];
+
+      // Guardar array completo de pagos
+      await updateDoc(socioRef, {
+        'renovacion2026.pagos': todosPagos
       });
 
       alert('✅ Pago registrado correctamente');
@@ -322,18 +346,21 @@ export default function CobranzaUnificada({ onBack }) {
                     </td>
                     <td className="monto">${socio.montoPagado?.toLocaleString('es-MX') || '-'}</td>
                     <td className="fecha">
-                      {socio.fechaPago ? socio.fechaPago.toLocaleDateString('es-MX') : '-'}
+                      {socio.pagos?.length > 0 
+                        ? socio.pagos[0].fechaPago?.toDate?.().toLocaleDateString('es-MX') 
+                        : '-'
+                      }
                     </td>
-                    <td>{socio.metodoPago || '-'}</td>
+                    <td>{socio.pagos?.[0]?.metodoPago || '-'}</td>
                     <td>
                       <button
                         className="btn-detalles"
                         onClick={() => {
                           setSocioSeleccionado(socio);
-                          setVistaActual('registrar');
+                          setVistaActual('detalles');
                         }}
                       >
-                        ✏️ Editar
+                        📋 Ver pagos
                       </button>
                     </td>
                   </tr>
@@ -388,6 +415,33 @@ export default function CobranzaUnificada({ onBack }) {
                     Cambiar socio
                   </button>
                 </div>
+
+                {/* PAGOS YA REGISTRADOS */}
+                {socioSeleccionado.pagos && socioSeleccionado.pagos.length > 0 && (
+                  <div className="pagos-registrados">
+                    <h3>✅ Pagos ya registrados</h3>
+                    <div className="pagos-list">
+                      {socioSeleccionado.pagos.map((pago, idx) => (
+                        <div key={idx} className="pago-item">
+                          <span className="pago-concepto">
+                            {pago.concepto === 'cuota_anual' && '📅 Cuota Anual'}
+                            {pago.concepto === 'femeti_socio' && '🏆 FEMETI Socio'}
+                            {pago.concepto === 'femeti_nuevo' && '🆕 FEMETI Nuevo'}
+                            {pago.concepto === 'inscripcion' && '📝 Inscripción'}
+                            {pago.concepto === 'otros' && '📌 Otros'}
+                          </span>
+                          <span className="pago-monto">${pago.monto?.toLocaleString('es-MX')}</span>
+                          <span className="pago-fecha">
+                            {pago.fechaPago?.toDate?.().toLocaleDateString('es-MX') || '-'}
+                          </span>
+                        </div>
+                      ))}
+                      <div className="pago-total">
+                        <strong>Total pagado: ${socioSeleccionado.montoPagado?.toLocaleString('es-MX')}</strong>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="form-section">
                   <h3>Conceptos de Pago</h3>
@@ -484,6 +538,84 @@ export default function CobranzaUnificada({ onBack }) {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* VISTA: DETALLES DE PAGOS */}
+      {vistaActual === 'detalles' && socioSeleccionado && (
+        <div className="vista-detalles">
+          <div className="panel-detalles">
+            <div className="detalles-header">
+              <button className="btn-volver" onClick={() => {
+                setVistaActual('estado');
+                setSocioSeleccionado(null);
+              }}>← Volver</button>
+              <h2>{socioSeleccionado.nombre}</h2>
+              <p>{socioSeleccionado.email}</p>
+            </div>
+
+            <div className="detalles-content">
+              {socioSeleccionado.pagos && socioSeleccionado.pagos.length > 0 ? (
+                <div className="tabla-pagos">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Concepto</th>
+                        <th>Monto</th>
+                        <th>Fecha</th>
+                        <th>Método</th>
+                        <th>Comprobante</th>
+                        <th>Notas</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {socioSeleccionado.pagos.map((pago, idx) => (
+                        <tr key={idx}>
+                          <td className="concepto">
+                            {pago.concepto === 'cuota_anual' && '📅 Cuota Anual'}
+                            {pago.concepto === 'femeti_socio' && '🏆 FEMETI Socio'}
+                            {pago.concepto === 'femeti_nuevo' && '🆕 FEMETI Nuevo'}
+                            {pago.concepto === 'inscripcion' && '📝 Inscripción'}
+                            {pago.concepto === 'otros' && '📌 Otros'}
+                          </td>
+                          <td className="monto">${pago.monto?.toLocaleString('es-MX') || 0}</td>
+                          <td className="fecha">
+                            {pago.fechaPago?.toDate?.().toLocaleDateString('es-MX') || '-'}
+                          </td>
+                          <td>{pago.metodoPago || '-'}</td>
+                          <td>{pago.comprobante || '-'}</td>
+                          <td className="notas">{pago.notas || '-'}</td>
+                        </tr>
+                      ))}
+                      <tr className="fila-total">
+                        <td><strong>TOTAL PAGADO</strong></td>
+                        <td colSpan="5"><strong>${socioSeleccionado.montoPagado?.toLocaleString('es-MX') || 0}</strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="sin-pagos">
+                  <p>📭 Este socio no tiene pagos registrados</p>
+                  <button className="btn-registrar" onClick={() => setVistaActual('registrar')}>
+                    ➕ Registrar pago
+                  </button>
+                </div>
+              )}
+
+              <div className="detalles-acciones">
+                <button className="btn-registrar-mas" onClick={() => setVistaActual('registrar')}>
+                  ➕ Agregar otro pago
+                </button>
+                <button className="btn-volver-lista" onClick={() => {
+                  setVistaActual('estado');
+                  setSocioSeleccionado(null);
+                }}>
+                  ← Volver a lista
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

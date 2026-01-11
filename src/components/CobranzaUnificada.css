@@ -378,6 +378,77 @@
   background: #95a5a6;
   color: white;
   border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.btn-cambiar-socio:hover {
+  background: #7f8c8d;
+}
+
+/* PAGOS REGISTRADOS */
+.pagos-registrados {
+  background: #d5f4e6;
+  border: 1px solid #27ae60;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 25px;
+}
+
+.pagos-registrados h3 {
+  margin: 0 0 15px 0;
+  color: #27ae60;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pagos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pago-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  border-left: 3px solid #27ae60;
+}
+
+.pago-concepto {
+  flex: 1;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.pago-monto {
+  color: #27ae60;
+  font-weight: 600;
+  margin: 0 15px;
+}
+
+.pago-fecha {
+  color: #7f8c8d;
+  font-size: 12px;
+}
+
+.pago-total {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #27ae60;
+  color: #27ae60;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: right;
+}
+
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
@@ -690,3 +761,206 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* VISTA: DETALLES DE PAGOS */
+.vista-detalles {
+  animation: slideIn 0.3s ease;
+}
+
+.panel-detalles {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.detalles-header {
+  position: relative;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.detalles-header h2 {
+  font-size: 24px;
+  color: #2c3e50;
+  margin: 0;
+  padding-top: 30px;
+}
+
+.detalles-header p {
+  color: #7f8c8d;
+  margin: 5px 0 0 0;
+  font-size: 14px;
+}
+
+.btn-volver {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 8px 12px;
+  background: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+  background: #7f8c8d;
+  transform: translateX(-5px);
+}
+
+.detalles-content {
+  margin-bottom: 30px;
+}
+
+.tabla-pagos {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tabla-pagos table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tabla-pagos thead {
+  background: #f8f9fa;
+  border-bottom: 2px solid #ddd;
+}
+
+.tabla-pagos th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.tabla-pagos tbody tr {
+  border-bottom: 1px solid #ecf0f1;
+  transition: background 0.2s ease;
+}
+
+.tabla-pagos tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.tabla-pagos td {
+  padding: 12px;
+}
+
+.tabla-pagos .concepto {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.tabla-pagos .monto {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.tabla-pagos .fecha {
+  color: #7f8c8d;
+  font-size: 13px;
+}
+
+.tabla-pagos .notas {
+  color: #95a5a6;
+  font-size: 13px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tabla-pagos .fila-total {
+  background: #ecf0f1;
+  font-weight: 600;
+  border-top: 2px solid #ddd;
+}
+
+.tabla-pagos .fila-total td {
+  padding: 15px 12px;
+  color: #2c3e50;
+}
+
+.sin-pagos {
+  text-align: center;
+  padding: 40px 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  color: #7f8c8d;
+}
+
+.sin-pagos p {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+}
+
+.btn-registrar {
+  padding: 10px 20px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-registrar:hover {
+  background: #229954;
+  transform: scale(1.05);
+}
+
+.detalles-acciones {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-registrar-mas,
+.btn-volver-lista {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-registrar-mas {
+  background: #27ae60;
+  color: white;
+}
+
+.btn-registrar-mas:hover {
+  background: #229954;
+  transform: translateY(-2px);
+}
+
+.btn-volver-lista {
+  background: #95a5a6;
+  color: white;
+}
+
+.btn-volver-lista:hover {
+  background: #7f8c8d;
+  transform: translateY(-2px);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
