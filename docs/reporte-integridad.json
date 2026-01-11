@@ -1,0 +1,413 @@
+{
+  "fecha": "2026-01-11T01:34:31.147Z",
+  "totales": {
+    "csv": 287,
+    "firebase": 301,
+    "diferencia": -14
+  },
+  "sociosConDiferencias": [
+    {
+      "email": "centro",
+      "csv": 287,
+      "firebase": 0,
+      "diferencia": 287
+    },
+    {
+      "email": "agm@galletasdonde.com",
+      "csv": 0,
+      "firebase": 6,
+      "diferencia": -6
+    },
+    {
+      "email": "agus_tin1_@hotmail.com",
+      "csv": 0,
+      "firebase": 4,
+      "diferencia": -4
+    },
+    {
+      "email": "al3xrivas@gmail.com",
+      "csv": 0,
+      "firebase": 4,
+      "diferencia": -4
+    },
+    {
+      "email": "alejandrapintado@yahoo.com.mx",
+      "csv": 0,
+      "firebase": 1,
+      "diferencia": -1
+    },
+    {
+      "email": "armando.pard@gmail.com",
+      "csv": 0,
+      "firebase": 1,
+      "diferencia": -1
+    },
+    {
+      "email": "arobert01@protonmail.com",
+      "csv": 0,
+      "firebase": 3,
+      "diferencia": -3
+    },
+    {
+      "email": "atietzbabam@gmail.com",
+      "csv": 0,
+      "firebase": 8,
+      "diferencia": -8
+    },
+    {
+      "email": "brayerbyv@gmail.com",
+      "csv": 0,
+      "firebase": 5,
+      "diferencia": -5
+    },
+    {
+      "email": "carlosgranja@gmail.com",
+      "csv": 0,
+      "firebase": 10,
+      "diferencia": -10
+    },
+    {
+      "email": "cc@secure.mx",
+      "csv": 0,
+      "firebase": 8,
+      "diferencia": -8
+    },
+    {
+      "email": "chafi70@hotmail.com",
+      "csv": 0,
+      "firebase": 1,
+      "diferencia": -1
+    },
+    {
+      "email": "cudaosj@hotmail.com",
+      "csv": 0,
+      "firebase": 5,
+      "diferencia": -5
+    },
+    {
+      "email": "d@azarcorp.mx",
+      "csv": 0,
+      "firebase": 2,
+      "diferencia": -2
+    },
+    {
+      "email": "david_xolz@hotmail.com",
+      "csv": 0,
+      "firebase": 1,
+      "diferencia": -1
+    },
+    {
+      "email": "dr.ricardocastillo@me.com",
+      "csv": 0,
+      "firebase": 2,
+      "diferencia": -2
+    },
+    {
+      "email": "egpiccolo@gmail.com",
+      "csv": 0,
+      "firebase": 5,
+      "diferencia": -5
+    },
+    {
+      "email": "fabian.sievers3548@gmail.com",
+      "csv": 0,
+      "firebase": 3,
+      "diferencia": -3
+    },
+    {
+      "email": "fit.x66@hotmail.com",
+      "csv": 0,
+      "firebase": 9,
+      "diferencia": -9
+    },
+    {
+      "email": "galvani@hotmail.com",
+      "csv": 0,
+      "firebase": 5,
+      "diferencia": -5
+    },
+    {
+      "email": "gfernandez63@gmail.com",
+      "csv": 0,
+      "firebase": 1,
+      "diferencia": -1
+    },
+    {
+      "email": "guidorcuevasabraham@gmail.com",
+      "csv": 0,
+      "firebase": 2,
+      "diferencia": -2
+    },
+    {
+      "email": "hanstb@gmail.com",
+      "csv": 0,
+      "firebase": 7,
+      "diferencia": -7
+    },
+    {
+      "email": "humh4@hotmail.com",
+      "csv": 0,
+      "firebase": 5,
+      "diferencia": -5
+    },
+    {
+      "email": "ivancabo@gmail.com",
+      "csv": 0,
+      "firebase": 3,
+      "diferencia": -3
+    },
+    {
+      "email": "jacintolizarraga@hotmail.com",
+      "csv": 0,
+      "firebase": 7,
+      "diferencia": -7
+    },
+    {
+      "email": "javier_ruzperaza@hotmail.com",
+      "csv": 0,
+      "firebase": 10,
+      "diferencia": -10
+    },
+    {
+      "email": "jcb197624@hotmail.com",
+      "csv": 0,
+      "firebase": 4,
+      "diferencia": -4
+    },
+    {
+      "email": "jcmaneo@hotmail.com",
+      "csv": 0,
+      "firebase": 7,
+      "diferencia": -7
+    },
+    {
+      "email": "jgheredia@hotmail.com",
+      "csv": 0,
+      "firebase": 7,
+      "diferencia": -7
+    },
+    {
+      "email": "jordan910@hotmail.com",
+      "csv": 0,
+      "firebase": 4,
+      "diferencia": -4
+    },
+    {
+      "email": "jorgedawn@prodigy.net.mx",
+      "csv": 0,
+      "firebase": 6,
+      "diferencia": -6
+    },
+    {
+      "email": "josebadz@outlook.com",
+      "csv": 0,
+      "firebase": 7,
+      "diferencia": -7
+    },
+    {
+      "email": "josegilbertohernandezcarrillo@gmail.com",
+      "csv": 0,
+      "firebase": 1,
+      "diferencia": -1
+    },
+    {
+      "email": "jretana@live.com.mx",
+      "csv": 0,
+      "firebase": 5,
+      "diferencia": -5
+    },
+    {
+      "email": "jrgardoni@gmail.com",
+      "csv": 0,
+      "firebase": 8,
+      "diferencia": -8
+    },
+    {
+      "email": "jvtl@hotmail.com",
+      "csv": 0,
+      "firebase": 3,
+      "diferencia": -3
+    },
+    {
+      "email": "lalodenis23@hotmail.com",
+      "csv": 0,
+      "firebase": 9,
+      "diferencia": -9
+    },
+    {
+      "email": "lic.arielparedescetina@hotmail.com",
+      "csv": 0,
+      "firebase": 3,
+      "diferencia": -3
+    },
+    {
+      "email": "lolita@concepthaus.mx",
+      "csv": 0,
+      "firebase": 7,
+      "diferencia": -7
+    },
+    {
+      "email": "madahuar@cotexsa.com.mx",
+      "csv": 0,
+      "firebase": 2,
+      "diferencia": -2
+    },
+    {
+      "email": "manuel.chaidez@valledelsur.com.mx",
+      "csv": 0,
+      "firebase": 5,
+      "diferencia": -5
+    },
+    {
+      "email": "marcotonyjr@hotmail.com",
+      "csv": 0,
+      "firebase": 2,
+      "diferencia": -2
+    },
+    {
+      "email": "martinezasergio@hotmail.com",
+      "csv": 0,
+      "firebase": 3,
+      "diferencia": -3
+    },
+    {
+      "email": "mayayuc3006@gmail.com",
+      "csv": 0,
+      "firebase": 1,
+      "diferencia": -1
+    },
+    {
+      "email": "mjtzab@yahoo.com",
+      "csv": 0,
+      "firebase": 3,
+      "diferencia": -3
+    },
+    {
+      "email": "monfo87_@hotmail.com",
+      "csv": 0,
+      "firebase": 5,
+      "diferencia": -5
+    },
+    {
+      "email": "olga.garcia@mayaseguridad.mx",
+      "csv": 0,
+      "firebase": 1,
+      "diferencia": -1
+    },
+    {
+      "email": "padilla_079@hotmail.com",
+      "csv": 0,
+      "firebase": 6,
+      "diferencia": -6
+    },
+    {
+      "email": "quiquis77@hotmail.com",
+      "csv": 0,
+      "firebase": 1,
+      "diferencia": -1
+    },
+    {
+      "email": "rafael-rivas-p@hotmail.com",
+      "csv": 0,
+      "firebase": 4,
+      "diferencia": -4
+    },
+    {
+      "email": "rafle_30@hotmail.com",
+      "csv": 0,
+      "firebase": 5,
+      "diferencia": -5
+    },
+    {
+      "email": "recosadecv@prodigy.net.mx",
+      "csv": 0,
+      "firebase": 10,
+      "diferencia": -10
+    },
+    {
+      "email": "richfegas@icloud.com",
+      "csv": 0,
+      "firebase": 4,
+      "diferencia": -4
+    },
+    {
+      "email": "richfer1020@gmail.com",
+      "csv": 0,
+      "firebase": 1,
+      "diferencia": -1
+    },
+    {
+      "email": "ridesquens@yahoo.com.mx",
+      "csv": 0,
+      "firebase": 6,
+      "diferencia": -6
+    },
+    {
+      "email": "rodrigo.garcia.e@live.com.mx",
+      "csv": 0,
+      "firebase": 3,
+      "diferencia": -3
+    },
+    {
+      "email": "rsoberanis11@hotmail.com",
+      "csv": 0,
+      "firebase": 4,
+      "diferencia": -4
+    },
+    {
+      "email": "santiago100100@hotmail.com",
+      "csv": 0,
+      "firebase": 6,
+      "diferencia": -6
+    },
+    {
+      "email": "smunozam@gmail.com",
+      "csv": 0,
+      "firebase": 6,
+      "diferencia": -6
+    },
+    {
+      "email": "squintal158@gmail.com",
+      "csv": 0,
+      "firebase": 3,
+      "diferencia": -3
+    },
+    {
+      "email": "ssg@santinelli.com.mx",
+      "csv": 0,
+      "firebase": 8,
+      "diferencia": -8
+    },
+    {
+      "email": "sysaventas@hotmail.com",
+      "csv": 0,
+      "firebase": 10,
+      "diferencia": -10
+    },
+    {
+      "email": "talleresmonforte@hotmail.com",
+      "csv": 0,
+      "firebase": 7,
+      "diferencia": -7
+    },
+    {
+      "email": "tinosanchezf@yahoo.com.mx",
+      "csv": 0,
+      "firebase": 1,
+      "diferencia": -1
+    },
+    {
+      "email": "tonysantacruz@hotmail.com",
+      "csv": 0,
+      "firebase": 2,
+      "diferencia": -2
+    },
+    {
+      "email": "valenciarojasjjesus@gmail.com",
+      "csv": 0,
+      "firebase": 3,
+      "diferencia": -3
+    }
+  ],
+  "sociosCoinciden": 0
+}

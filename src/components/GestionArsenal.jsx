@@ -16,7 +16,7 @@ function GestionArsenal() {
   const [socioData, setSocioData] = useState(null);
   const [armas, setArmas] = useState([]);
   const [armaSeleccionada, setArmaSeleccionada] = useState(null);
-  const [vistaActual, setVistaActual] = useState('lista'); // 'lista', 'reportar-baja', 'transferencia'
+  const [vistaActual, setVistaActual] = useState('lista'); // 'lista', 'reportar-baja', 'solicitar-alta', 'solicitudes-baja', 'solicitudes-alta'
   
   // Formulario de baja
   const [formBaja, setFormBaja] = useState({
@@ -35,6 +35,24 @@ function GestionArsenal() {
   });
 
   const [solicitudesPendientes, setSolicitudesPendientes] = useState([]);
+  const [solicitudesAlta, setSolicitudesAlta] = useState([]);
+  
+  // Formulario de alta
+  const [formAlta, setFormAlta] = useState({
+    clase: '', // PISTOLA, RIFLE, ESCOPETA, REVOLVER
+    calibre: '',
+    marca: '',
+    modelo: '',
+    matricula: '',
+    folio: '',
+    modalidad: 'tiro', // tiro, caza, ambas
+    origenAdquisicion: '', // compra, herencia, donacion, transferencia
+    fechaAdquisicion: '',
+    vendedor: '',
+    curpVendedor: '',
+    folioRegistroTransferencia: '',
+    observaciones: ''
+  });
 
   useEffect(() => {
     cargarDatos();
@@ -74,6 +92,15 @@ function GestionArsenal() {
       });
       setSolicitudesPendientes(solicitudesData);
 
+      // Cargar solicitudes de alta pendientes
+      const solicitudesAltaRef = collection(db, 'socios', user.email, 'solicitudesAlta');
+      const solicitudesAltaSnap = await getDocs(solicitudesAltaRef);
+      const solicitudesAltaData = [];
+      solicitudesAltaSnap.forEach((doc) => {
+        solicitudesAltaData.push({ id: doc.id, ...doc.data() });
+      });
+      setSolicitudesAlta(solicitudesAltaData);
+
     } catch (error) {
       console.error('Error al cargar datos:', error);
       alert('Error al cargar información. Por favor recarga la página.');
@@ -96,6 +123,25 @@ function GestionArsenal() {
       folioTransferencia: '',
       zonaMillitarTransferencia: '32',
       fechaTransferencia: ''
+    });
+  };
+
+  const handleSolicitarAlta = () => {
+    setVistaActual('solicitar-alta');
+    setFormAlta({
+      clase: '',
+      calibre: '',
+      marca: '',
+      modelo: '',
+      matricula: '',
+      folio: '',
+      modalidad: 'tiro',
+      origenAdquisicion: '',
+      fechaAdquisicion: new Date().toISOString().split('T')[0],
+      vendedor: '',
+      curpVendedor: '',
+      folioRegistroTransferencia: '',
+      observaciones: ''
     });
   };
 
@@ -161,12 +207,70 @@ function GestionArsenal() {
       
       // Recargar datos
       await cargarDatos();
-      setVistaActual('lista');
+      setVistaActual('solicitudes-baja');
       setArmaSeleccionada(null);
 
     } catch (error) {
       console.error('Error al registrar baja:', error);
       alert('Error al registrar la baja. Intenta nuevamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmitAlta = async (e) => {
+    e.preventDefault();
+
+    // Validaciones
+    if (!formAlta.clase || !formAlta.calibre || !formAlta.marca || !formAlta.matricula) {
+      alert('Completa los campos obligatorios: clase, calibre, marca y matrícula');
+      return;
+    }
+
+    if (!formAlta.origenAdquisicion) {
+      alert('Indica cómo adquiriste el arma');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const user = auth.currentUser;
+
+      // Crear solicitud de alta
+      const solicitudRef = collection(db, 'socios', user.email, 'solicitudesAlta');
+      await addDoc(solicitudRef, {
+        armaDetalles: {
+          clase: formAlta.clase,
+          calibre: formAlta.calibre,
+          marca: formAlta.marca,
+          modelo: formAlta.modelo,
+          matricula: formAlta.matricula,
+          folio: formAlta.folio,
+          modalidad: formAlta.modalidad
+        },
+        origenAdquisicion: formAlta.origenAdquisicion,
+        fechaAdquisicion: formAlta.fechaAdquisicion,
+        vendedor: formAlta.origenAdquisicion === 'compra' || formAlta.origenAdquisicion === 'transferencia' ? {
+          nombre: formAlta.vendedor,
+          curp: formAlta.curpVendedor
+        } : null,
+        folioRegistroTransferencia: formAlta.folioRegistroTransferencia || null,
+        observaciones: formAlta.observaciones,
+        estado: 'pendiente', // pendiente, aprobada, procesada
+        fechaSolicitud: serverTimestamp(),
+        solicitadoPor: user.email,
+        nombreSolicitante: socioData?.nombre || ''
+      });
+
+      alert('✅ Solicitud de alta registrada.\n\nEl secretario revisará tu solicitud, verificará la documentación y registrará el arma en tu arsenal.\n\nEl club informará a 32 ZM mediante oficio.');
+      
+      // Recargar datos
+      await cargarDatos();
+      setVistaActual('solicitudes-alta');
+
+    } catch (error) {
+      console.error('Error al registrar alta:', error);
+      alert('Error al registrar la solicitud. Intenta nuevamente.');
     } finally {
       setLoading(false);
     }
@@ -218,19 +322,32 @@ function GestionArsenal() {
           🔫 Mi Arsenal ({armas.length})
         </button>
         <button
-          className={vistaActual === 'solicitudes' ? 'tab-active' : 'tab-inactive'}
-          onClick={() => setVistaActual('solicitudes')}
+          className={vistaActual === 'solicitudes-baja' ? 'tab-active' : 'tab-inactive'}
+          onClick={() => setVistaActual('solicitudes-baja')}
         >
-          📋 Solicitudes de Baja ({solicitudesPendientes.length})
+          📋 Bajas ({solicitudesPendientes.length})
+        </button>
+        <button
+          className={vistaActual === 'solicitudes-alta' ? 'tab-active' : 'tab-inactive'}
+          onClick={() => setVistaActual('solicitudes-alta')}
+        >
+          ➕ Altas ({solicitudesAlta.length})
         </button>
       </div>
 
       {/* VISTA: LISTA DE ARMAS */}
       {vistaActual === 'lista' && (
         <div className="vista-lista">
+          <div className="acciones-arsenal">
+            <button className="btn-solicitar-alta" onClick={handleSolicitarAlta}>
+              ➕ Solicitar Alta de Arma Nueva
+            </button>
+          </div>
+          
           {armas.length === 0 ? (
             <div className="empty-state">
               <p>No tienes armas registradas en tu arsenal.</p>
+              <p className="hint">¿Tienes un arma nueva? Solicita darla de alta.</p>
             </div>
           ) : (
             <div className="armas-grid">
@@ -453,8 +570,153 @@ function GestionArsenal() {
         </div>
       )}
 
-      {/* VISTA: SOLICITUDES PENDIENTES */}
-      {vistaActual === 'solicitudes' && (
+      {/* VISTA: SOLICITAR ALTA */}
+      {vistaActual === 'solicitar-alta' && (
+        <div className="vista-formulario">
+          <div className="form-header">
+            <button className="btn-back" onClick={() => setVistaActual('lista')}>
+              ← Volver al arsenal
+            </button>
+            <h2>Solicitar Alta de Arma Nueva</h2>
+          </div>
+
+          <form onSubmit={handleSubmitAlta} className="form-alta">
+            <div className="form-section">
+              <h3>1. Datos del Arma</h3>
+              
+              <div className="form-row">
+                <label>
+                  Clase: *
+                  <select value={formAlta.clase} onChange={(e) => setFormAlta({ ...formAlta, clase: e.target.value })} required>
+                    <option value="">-- Selecciona --</option>
+                    <option value="PISTOLA">PISTOLA</option>
+                    <option value="RIFLE">RIFLE</option>
+                    <option value="ESCOPETA">ESCOPETA</option>
+                    <option value="REVOLVER">REVOLVER</option>
+                  </select>
+                </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  Marca: *
+                  <input type="text" value={formAlta.marca} onChange={(e) => setFormAlta({ ...formAlta, marca: e.target.value })} placeholder="Ej: GLOCK, BROWNING" required />
+                </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  Modelo:
+                  <input type="text" value={formAlta.modelo} onChange={(e) => setFormAlta({ ...formAlta, modelo: e.target.value })} placeholder="Ej: G19, PHOENIX" />
+                </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  Calibre: *
+                  <input type="text" value={formAlta.calibre} onChange={(e) => setFormAlta({ ...formAlta, calibre: e.target.value })} placeholder="Ej: 9mm, .22 LR, .308 Win" required />
+                </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  Matrícula: *
+                  <input type="text" value={formAlta.matricula} onChange={(e) => setFormAlta({ ...formAlta, matricula: e.target.value })} placeholder="Matrícula grabada en el arma" required />
+                </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  Folio SEDENA:
+                  <input type="text" value={formAlta.folio} onChange={(e) => setFormAlta({ ...formAlta, folio: e.target.value })} placeholder="Si ya tienes registro federal" />
+                </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  Modalidad:
+                  <select value={formAlta.modalidad} onChange={(e) => setFormAlta({ ...formAlta, modalidad: e.target.value })}>
+                    <option value="tiro">Tiro deportivo</option>
+                    <option value="caza">Caza deportiva</option>
+                    <option value="ambas">Ambas</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div className="form-section">
+              <h3>2. Origen de la Adquisición</h3>
+              
+              <div className="form-row">
+                <label>
+                  ¿Cómo adquiriste el arma?: *
+                  <select value={formAlta.origenAdquisicion} onChange={(e) => setFormAlta({ ...formAlta, origenAdquisicion: e.target.value })} required>
+                    <option value="">-- Selecciona --</option>
+                    <option value="compra">💰 Compra a particular</option>
+                    <option value="transferencia">👥 Transferencia familiar</option>
+                    <option value="herencia">📜 Herencia</option>
+                    <option value="donacion">🎁 Donación</option>
+                  </select>
+                </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  Fecha de adquisición: *
+                  <input type="date" value={formAlta.fechaAdquisicion} onChange={(e) => setFormAlta({ ...formAlta, fechaAdquisicion: e.target.value })} required />
+                </label>
+              </div>
+
+              {(formAlta.origenAdquisicion === 'compra' || formAlta.origenAdquisicion === 'transferencia') && (
+                <>
+                  <div className="form-row">
+                    <label>
+                      Nombre del vendedor/cedente:
+                      <input type="text" value={formAlta.vendedor} onChange={(e) => setFormAlta({ ...formAlta, vendedor: e.target.value })} placeholder="Nombre completo" />
+                    </label>
+                  </div>
+                  <div className="form-row">
+                    <label>
+                      CURP del vendedor/cedente:
+                      <input type="text" value={formAlta.curpVendedor} onChange={(e) => setFormAlta({ ...formAlta, curpVendedor: e.target.value })} placeholder="18 caracteres" maxLength="18" />
+                    </label>
+                  </div>
+                  <div className="form-row">
+                    <label>
+                      Folio del registro de transferencia:
+                      <input type="text" value={formAlta.folioRegistroTransferencia} onChange={(e) => setFormAlta({ ...formAlta, folioRegistroTransferencia: e.target.value })} placeholder="Si ya tramitaron ante SEDENA" />
+                    </label>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="form-section">
+              <h3>3. Observaciones</h3>
+              <textarea value={formAlta.observaciones} onChange={(e) => setFormAlta({ ...formAlta, observaciones: e.target.value })} placeholder="Información adicional que consideres relevante..." rows="4" />
+            </div>
+
+            <div className="info-box">
+              <h4>📌 Documentos que deberás presentar al secretario:</h4>
+              <ul>
+                <li>Registro Federal de Armas (RFA) del arma</li>
+                <li>Recibo de compra o contrato de compraventa</li>
+                <li>Si aplica: Registro de transferencia de SEDENA</li>
+              </ul>
+            </div>
+
+            <div className="form-actions">
+              <button type="button" className="btn-cancel" onClick={() => setVistaActual('lista')}>Cancelar</button>
+              <button type="submit" className="btn-submit" disabled={loading}>
+                {loading ? 'Procesando...' : '📤 Enviar Solicitud de Alta'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* VISTA: SOLICITUDES DE BAJA */}
+      {vistaActual === 'solicitudes-baja' && (
         <div className="vista-solicitudes">
           {solicitudesPendientes.length === 0 ? (
             <div className="empty-state">
@@ -492,6 +754,67 @@ function GestionArsenal() {
                       <div className="detalle-row">
                         <span className="label">Folio transferencia:</span>
                         <span className="value">{solicitud.transferencia.folio}</span>
+                      </div>
+                    )}
+                    {solicitud.observaciones && (
+                      <div className="observaciones">
+                        <span className="label">Observaciones:</span>
+                        <p>{solicitud.observaciones}</p>
+                      </div>
+                    )}
+                    <div className="fecha-solicitud">
+                      Solicitado: {solicitud.fechaSolicitud?.toDate?.()?.toLocaleDateString('es-MX') || 'N/A'}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* VISTA: SOLICITUDES DE ALTA */}
+      {vistaActual === 'solicitudes-alta' && (
+        <div className="vista-solicitudes">
+          {solicitudesAlta.length === 0 ? (
+            <div className="empty-state">
+              <p>No tienes solicitudes de alta pendientes.</p>
+            </div>
+          ) : (
+            <div className="solicitudes-list">
+              {solicitudesAlta.map((solicitud) => (
+                <div key={solicitud.id} className="solicitud-card">
+                  <div className="solicitud-header">
+                    <h3>
+                      {solicitud.armaDetalles.marca} {solicitud.armaDetalles.modelo}
+                    </h3>
+                    {getEstadoBadge(solicitud.estado)}
+                  </div>
+                  <div className="solicitud-body">
+                    <div className="detalle-row">
+                      <span className="label">Clase:</span>
+                      <span className="value">{solicitud.armaDetalles.clase}</span>
+                    </div>
+                    <div className="detalle-row">
+                      <span className="label">Calibre:</span>
+                      <span className="value">{solicitud.armaDetalles.calibre}</span>
+                    </div>
+                    <div className="detalle-row">
+                      <span className="label">Matrícula:</span>
+                      <span className="value">{solicitud.armaDetalles.matricula}</span>
+                    </div>
+                    <div className="detalle-row">
+                      <span className="label">Origen:</span>
+                      <span className="value">{solicitud.origenAdquisicion}</span>
+                    </div>
+                    <div className="detalle-row">
+                      <span className="label">Fecha adquisición:</span>
+                      <span className="value">{solicitud.fechaAdquisicion}</span>
+                    </div>
+                    {solicitud.vendedor && (
+                      <div className="detalle-row">
+                        <span className="label">Vendedor:</span>
+                        <span className="value">{solicitud.vendedor.nombre}</span>
                       </div>
                     )}
                     {solicitud.observaciones && (

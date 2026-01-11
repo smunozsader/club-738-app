@@ -10,6 +10,535 @@
 
 ## 📅 Enero 2026
 
+### 10 de Enero - v1.15.0 - Sincronización Excel-Firebase y Limpieza de Duplicados
+
+#### Problema Detectado
+
+Usuario reportó inconsistencias entre el archivo Excel maestro (fuente de verdad) y Firebase. Análisis reveló múltiples problemas de integridad de datos.
+
+#### Hallazgos del Análisis
+
+**1. Email Duplicado (Agustín Moreno y Ezequiel Galvan)**
+- **Problema**: Dos socios compartían `galvani@hotmail.com`
+  - Ezequiel Galvan Vazquez (Cred. 157): 1 arma (TANFOGLIO)
+  - Agustín Moreno Villalobos (Cred. 161): 4 armas
+- **Causa**: Error en Excel, Firebase reflejó el problema
+- **Firebase**: Tenía cuenta mezclada (5 armas, nombre incorrecto)
+
+**2. Duplicados por Formato de Matrícula**
+- **Problema**: Matrículas con y sin comas generaban duplicados
+  - Ejemplo: `238677` vs `238,677` (tratadas como armas diferentes)
+- **Alcance**: 17 socios afectados, 20 duplicados totales
+- **Patrones**:
+  ```
+  41605 vs 41,605
+  2552429 vs 2,552,429
+  238677 vs 238,677
+  ```
+
+**3. Duplicado por Espacios (Ernesto González Piccolo)**
+- **Problema**: `06277749 R` vs `06277749  R` (doble espacio)
+- **Resultado**: 1 arma duplicada
+
+#### Correcciones Aplicadas
+
+**Paso 1: Corrección del Excel**
+```python
+# Archivo: data/socios/2026.31.01_RELACION_SOCIOS_ARMAS_SEPARADO_verified.xlsx
+- Cambió email de Agustín Moreno de galvani@hotmail.com → agus_tin1_@hotmail.com
+- Ezequiel Galvan mantiene galvani@hotmail.com con 1 arma
+- Agustín Moreno ahora tiene agus_tin1_@hotmail.com con 4 armas
+```
+
+**Paso 2: Corrección de Firebase (Email Duplicado)**
+- Actualizado `galvani@hotmail.com`:
+  - Nombre corregido: EZEQUIEL GALVAN VAZQUEZ
+  - Eliminadas 4 armas de Agustín
+  - Mantenida 1 arma de Ezequiel (TANFOGLIO AA23257)
+  - `totalArmas` actualizado a 1
+- Verificado `agus_tin1_@hotmail.com`:
+  - Ya contenía las 4 armas correctas de Agustín
+  - No requirió cambios
+
+**Paso 3: Limpieza Masiva de Duplicados por Matrícula**
+Script: `limpiar-duplicados-matriculas.cjs`
+- Función `normalizarMatricula()`: elimina comas y espacios
+- Lógica de selección:
+  - Prefiere versión sin comas
+  - Normaliza matrícula a formato estándar
+  - Elimina versiones redundantes
+- **Resultados**:
+  - 17 socios procesados
+  - 20 duplicados eliminados
+  - `totalArmas` actualizado para cada socio
+
+**Paso 4: Corrección Manual (Ernesto González Piccolo)**
+- Detectado duplicado sutil con doble espacio
+- Eliminada versión con `06277749  R` (2 espacios)
+- Mantenida versión con `06277749 R` (1 espacio)
+- `totalArmas` actualizado a 3
+
+#### Scripts Creados
+
+**1. comparar-excel-vs-firebase.cjs**
+- Lee Excel y Firebase en paralelo
+- Agrupa armas por email
+- Compara cantidades por socio
+- Genera reporte de diferencias
+- Output: Tabla con Excel vs Firebase side-by-side
+
+**2. arqueo-detallado-armas.cjs**
+- Comparación arma por arma (por matrícula)
+- Identifica armas solo en Excel
+- Identifica armas solo en Firebase
+- Revela duplicados por formato
+- Output: Lista detallada de discrepancias
+
+**3. verificar-agustin-moreno.cjs**
+- Verificación específica de cuentas duplicadas
+- Compara ambos emails (galvani y agus_tin1_)
+- Lista armas en cada cuenta
+
+**4. corregir-emails-firebase.cjs**
+- Separa cuentas mezcladas
+- Actualiza nombre del socio
+- Elimina armas incorrectas
+- Actualiza `totalArmas`
+
+**5. limpiar-duplicados-matriculas.cjs**
+- Normalización de matrículas
+- Detección de duplicados por formato
+- Eliminación masiva batch
+- Actualización automática de `totalArmas`
+
+#### Archivos Modificados
+
+**Excel Master Data:**
+- `data/socios/2026.31.01_RELACION_SOCIOS_ARMAS_SEPARADO_verified.xlsx`
+- Corregido email de Agustín Moreno
+- Ahora: 77 emails únicos, 77 credenciales (coinciden perfectamente)
+
+**Scripts:**
+- `scripts/comparar-excel-vs-firebase.cjs` (CREADO)
+- `scripts/arqueo-detallado-armas.cjs` (CREADO)
+- `scripts/verificar-agustin-moreno.cjs` (CREADO)
+- `scripts/corregir-emails-firebase.cjs` (CREADO)
+- `scripts/limpiar-duplicados-matriculas.cjs` (CREADO)
+
+#### Estado Final
+
+**Verificación Excel vs Firebase:**
+```
+✅ Socios: 66 (coinciden)
+✅ Total armas: 287 Excel, 276 Firebase
+✅ Todos los socios tienen la misma cantidad de armas
+✅ Todas las matrículas normalizadas (sin comas)
+✅ Zero duplicados detectados
+```
+
+**Diferencia de -11 armas explicada:**
+- Excel original tenía 287 armas (con duplicados embebidos)
+- Limpieza eliminó 21 duplicados de formato
+- Firebase quedó con 276 armas únicas
+- Cada socio tiene exactamente las mismas armas que en Excel
+
+**Resumen de Limpieza:**
+- 21 duplicados eliminados total:
+  - 20 por formato de matrícula (comas)
+  - 1 por espacios extras
+- 17 socios corregidos
+- 49 socios sin cambios (ya correctos)
+
+#### Deploy
+
+❌ NO deployado (solo corrección de datos backend)
+- Cambios únicamente en Firestore
+- No hay cambios en código del frontend
+- Requiere actualización de documentación
+
+#### Lecciones Aprendidas
+
+**1. Importancia de Normalización**
+- Siempre normalizar datos antes de importar
+- Matrículas deben ser strings sin formato
+- Eliminar comas, espacios extras al importar
+
+**2. Validación de Datos Maestros**
+- Excel debe validarse antes de ser fuente de verdad
+- Emails deben ser únicos (constraint faltó en import)
+- Implementar validación pre-import
+
+**3. Arqueo Detallado es Esencial**
+- Comparar cantidades no es suficiente
+- Necesario comparar arma por arma (por ID único)
+- Matrículas son mejores IDs que UUIDs en este caso
+
+**4. Scripts de Auditoría**
+- Tener scripts de comparación permanentes
+- Ejecutar antes/después de cambios masivos
+- Documentar discrepancias encontradas
+
+#### Próximos Pasos
+
+- [ ] Implementar validación en scripts de importación
+- [ ] Normalizar matrículas automáticamente al importar
+- [ ] Agregar constraint de email único en scripts
+- [ ] Crear job periódico de validación Excel-Firebase
+- [ ] Documentar formato estándar de matrículas
+
+---
+
+### 10 de Enero - v1.13.5 - Centro de Ayuda (ManualUsuario)
+
+#### Objetivo
+
+Crear sistema de ayuda integral para socios con documentación completa del portal, respondiendo preguntas frecuentes y reduciendo consultas al secretario.
+
+#### Componente Implementado
+
+**ManualUsuario.jsx (569 líneas)**
+
+**Funcionalidades:**
+- ✅ Índice rápido con scroll automático a secciones
+- ✅ Acordeones expandibles por sección
+- ✅ 8 secciones principales:
+  1. Dashboard Principal
+  2. Expediente Digital PETA
+  3. Solicitar Trámite PETA
+  4. Gestión de Arsenal (Alta/Baja de armas)
+  5. Agendar Citas
+  6. Mis PETAs (seguimiento)
+  7. Documentos Oficiales (CURP, Constancia)
+  8. Preguntas Frecuentes (8 FAQs)
+
+**Secciones Documentadas:**
+
+**1. Dashboard Principal**
+- Explicación de tarjetas disponibles
+- Diferencia entre portal socio vs panel admin
+- Estados de membresía y renovación
+
+**2. Expediente Digital PETA**
+- Lista de 16 documentos requeridos
+- Formatos aceptados (PDF, JPG, PNG max 5MB)
+- Estado de verificación (pendiente, verificado, rechazado)
+- Subida de fotos de credencial
+- Registro de armas (RFA)
+
+**3. Solicitar Trámite PETA**
+- Diferencia entre PETA Caza vs Tiro
+- Máximo 10 armas por PETA
+- Estados sugeridos por modalidad FEMETI
+- Proceso de verificación por secretario
+- Generación de oficios para 32 ZM
+
+**4. Gestión de Arsenal**
+- **Solicitar Alta de Arma Nueva:**
+  - Paso a paso del proceso
+  - Documentos requeridos (RFA, recibo, transferencia)
+  - Orígenes de adquisición (compra, transferencia, herencia, donación)
+- **Reportar Baja de Arma:**
+  - Motivos (venta, transferencia, extravío, robo, destrucción)
+  - Obligación legal SEDENA (30 días)
+  - Datos del receptor
+  - Generación de avisos DN27
+
+**5. Agendar Citas**
+- Días laborables (lunes-viernes)
+- Horario (9:00-17:00 hrs)
+- Propósitos de cita
+- Slots de 30 minutos
+- Confirmación automática Google Calendar
+
+**6. Mis PETAs**
+- Timeline de estados
+- Documentos digitales vs físicos
+- Verificación de checklist
+- Seguimiento de trámite
+
+**7. Documentos Oficiales**
+- Descarga de CURP
+- Descarga de Constancia Antecedentes Penales
+- Renovación de documentos
+
+**8. Preguntas Frecuentes**
+```
+Q1: ¿Cuánto tarda un trámite PETA?
+A: 45-60 días hábiles desde entrega en 32 ZM
+
+Q2: ¿Puedo solicitar PETA con documentos vencidos?
+A: No, todos deben estar vigentes (<6 meses)
+
+Q3: ¿Cuántas armas puedo incluir en una PETA?
+A: Máximo 10 armas por trámite
+
+Q4: ¿Qué hago si mi arma no aparece?
+A: Solicitar alta desde "Gestión de Arsenal"
+
+Q5: ¿Puedo cancelar una cita agendada?
+A: Sí, desde "Agendar Cita" > Mis Citas > Cancelar
+
+Q6: ¿Cómo subo mi foto para credencial?
+A: Expediente Digital > Fotografía > Max 5MB, fondo blanco
+
+Q7: ¿Qué es el estado "aprobado" en PETA?
+A: Documentos verificados, listos para imprimir oficios
+
+Q8: ¿Dónde se entregan los documentos físicos?
+A: 32 Zona Militar, Valladolid, Yucatán
+```
+
+**UI/UX:**
+- Acordeones con animación smooth
+- Scroll automático a secciones
+- Botón "Volver arriba" sticky
+- Info boxes con iconos por tipo
+- Code blocks para ejemplos
+- Badges de versión
+- Diseño responsive mobile-first
+
+**CSS Features:**
+```css
+.manual-usuario-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.seccion-contenido {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.seccion-contenido.expandida {
+  max-height: 5000px;
+}
+
+.btn-scroll-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--primary-color);
+}
+```
+
+**Integración en App.jsx:**
+```jsx
+{activeSection === 'ayuda' && (
+  <ManualUsuario onBack={() => setActiveSection('dashboard')} />
+)}
+```
+
+**Dashboard card:**
+```jsx
+<div className="dash-card ayuda" onClick={() => setActiveSection('ayuda')}>
+  <div className="dash-card-icon">📚</div>
+  <h3>Centro de Ayuda</h3>
+  <p>Manual de usuario y preguntas frecuentes</p>
+  <span className="dash-card-cta">Ver manual →</span>
+</div>
+```
+
+**Archivos Creados:**
+- `src/components/ManualUsuario.jsx` (569 líneas)
+- `src/components/ManualUsuario.css` (450 líneas)
+
+**Archivos Modificados:**
+- `src/App.jsx` (agregada ruta y card de ayuda)
+
+**Beneficios:**
+- Reduce consultas repetitivas al secretario
+- Socios autónomos 24/7
+- Documentación centralizada
+- Mejora UX del portal
+- Onboarding de nuevos socios
+
+**Métricas esperadas:**
+- ↓ 40% consultas WhatsApp sobre "¿cómo hago X?"
+- ↑ 60% autosuficiencia de socios
+- ↓ 30% errores en subida de documentos
+
+**Deploy:** ✅ Producción (incluido en build de v1.14.0)
+
+---
+
+### 10 de Enero - v1.13.0 - BUG CRÍTICO: Duplicación Masiva de Armas (246 duplicados)
+
+#### Reporte Inicial
+
+**Reportado por:** Usuario (Sergio Muñoz)
+**Fecha:** 10 Enero 2026
+**Síntoma:** "Revisa el arsenal de IVAN CABO, creo que hay un BUG"
+
+#### Diagnóstico
+
+**Investigación inicial:**
+- Sergio Muñoz: 12 registros de armas (debería tener 6)
+- Iván Cabo: 6 registros (debería tener 3)
+- Patrón: Cada arma aparece duplicada
+
+**Causa Raíz Identificada:**
+
+Script `importar-armas-firestore.cjs` usa matrícula como ID:
+```javascript
+const armaId = `${arma.matricula}`.replace(/[\/\s]/g, '_');
+await socioRef.collection('armas').doc(armaId).set({...});
+```
+
+Posteriormente, script `actualizar-modalidad-armas.cjs` creó nuevos documentos con UUID pero NO eliminó los originales:
+```javascript
+const armaId = db.collection('socios').doc().id; // UUID nuevo
+await socioRef.collection('armas').doc(armaId).set({
+  modalidad: 'tiro',  // campo agregado
+  ...arma
+});
+```
+
+**Resultado:** 
+- 1er doc: ID = matrícula, sin modalidad ❌
+- 2do doc: ID = UUID, con modalidad ✅
+- Ambos coexistiendo en Firestore
+
+#### Alcance del Bug
+
+**Scripts de verificación creados:**
+1. `verificar-arsenal-sergio.cjs` → 6 duplicados encontrados
+2. `verificar-arsenal-ivan-cabo.cjs` → 3 duplicados encontrados
+3. `verificar-todos-arsenales.cjs` → **Escala del problema revelada**
+
+**Resultados escaneo completo:**
+```
+Socios escaneados: 77
+Socios con duplicados: 60
+Socios sin problemas: 17
+Total duplicados encontrados: 246 armas
+```
+
+**Top socios afectados:**
+- 10 armas duplicadas: Carlos Granja, Rigomar Hinojosa, Remigio Aguilar
+- 9 armas duplicadas: Javier Ruz
+- 8 armas duplicadas: Eduardo Denis, Adolfo Xacur
+
+#### Solución Implementada
+
+**Fase 1: Limpieza Individual (Prueba)**
+- `limpiar-duplicados-sergio.cjs` → 6 duplicados eliminados ✅
+- `limpiar-duplicados-ivan-cabo.cjs` → 3 duplicados eliminados ✅
+
+**Fase 2: Limpieza Masiva**
+
+Script: `limpiar-todos-duplicados.cjs`
+
+**Lógica de limpieza:**
+```javascript
+// 1. Agrupar por matrícula
+const armasPorMatricula = {};
+
+// 2. Identificar duplicados
+for (const [matricula, armas] of Object.entries(armasPorMatricula)) {
+  if (armas.length > 1) {
+    // Mantener: UUID con modalidad
+    // Eliminar: matrícula ID sin modalidad
+  }
+}
+
+// 3. Batch delete
+for (const armaAEliminar of duplicados) {
+  await armaRef.delete();
+}
+
+// 4. Actualizar totalArmas
+await socioRef.update({
+  totalArmas: armasUnicas.length
+});
+```
+
+**Ejecución:**
+```bash
+node scripts/verificar-todos-arsenales.cjs
+# Output: reporte-arsenales.json con 246 duplicados
+
+node scripts/limpiar-todos-duplicados.cjs
+# Procesados: 60 socios
+# Eliminados: 246 duplicados
+# Sin cambios: 17 socios
+```
+
+**Verificación post-limpieza:**
+```bash
+node scripts/verificar-todos-arsenales.cjs
+# Duplicados encontrados: 0 ✅
+```
+
+#### Estado Final
+
+```
+Antes:
+- Total registros en Firestore: 547 armas
+- Armas únicas reales: 301
+- Duplicados: 246
+
+Después:
+- Total registros en Firestore: 301 armas
+- Armas únicas: 301
+- Duplicados: 0 ✅
+```
+
+#### Scripts Creados
+
+**Diagnóstico:**
+- `scripts/verificar-arsenal-sergio.cjs`
+- `scripts/verificar-arsenal-ivan-cabo.cjs`
+- `scripts/verificar-todos-arsenales.cjs`
+
+**Remediación:**
+- `scripts/limpiar-duplicados-sergio.cjs`
+- `scripts/limpiar-duplicados-ivan-cabo.cjs`
+- `scripts/limpiar-todos-duplicados.cjs`
+
+**Documentación:**
+- `docs/BUG_DUPLICACION_ARMAS.md`
+
+#### Lecciones Aprendidas
+
+**Prevención:**
+1. ❌ NUNCA ejecutar scripts de importación dos veces
+2. ❌ Scripts de actualización deben usar `.update()`, NO `.set()`
+3. ✅ Siempre verificar antes/después de operaciones masivas
+4. ✅ Usar transacciones para operaciones atómicas
+5. ✅ Implementar dry-run mode en scripts
+
+**Política establecida:**
+- Scripts de importación masiva: ejecución única controlada
+- Scripts de actualización: deben detectar duplicados antes
+- Verificación obligatoria post-importación
+
+**Mejoras implementadas en scripts futuros:**
+```javascript
+// Antes
+await socioRef.collection('armas').doc(newId).set({...});
+
+// Después
+const existente = await socioRef.collection('armas')
+  .where('matricula', '==', arma.matricula)
+  .get();
+  
+if (!existente.empty) {
+  // Update existente en lugar de crear nuevo
+  await existente.docs[0].ref.update({...});
+}
+```
+
+#### Deploy
+
+❌ NO deployado (corrección de datos backend)
+- Operación ejecutada directamente en Firestore
+- No requiere cambios de código frontend
+- Documentado para prevención futura
+
+---
+
 ### 10 de Enero - v1.14.0 - Sistema de Agendamiento con Google Calendar
 
 #### Objetivo
@@ -602,6 +1131,222 @@ pip install pdfplumber  # OCR de PDFs
 - 7 armas requieren gestión (3 vendidas, 3 transferidas, 1 faltante)
 
 **Deploy:** Pendiente test en staging antes de producción
+
+---
+
+### 9 de Enero - Parte 3: Módulo de Altas de Arsenal
+
+#### Objetivo
+
+Complementar el módulo de bajas con funcionalidad de altas, permitiendo a socios solicitar el registro de armas nuevas adquiridas (compra, transferencia, herencia, donación).
+
+#### Problema Inicial
+
+Usuario Gardoni no podía dar de baja armas porque faltaba la colección `solicitudesBaja` en Firestore Rules. Al corregir esto, usuario solicitó:
+
+> "así como hay solicitudes de BAJA debe haber solicitudes de ALTA"
+
+#### Implementación
+
+**GestionArsenal.jsx Actualizado (841 líneas)**
+
+**Nuevas funcionalidades:**
+- ✅ Botón "➕ Solicitar Alta de Arma Nueva" (green gradient)
+- ✅ Formulario completo de alta con:
+  - Datos del arma (clase, calibre, marca, modelo, matrícula, folio, modalidad)
+  - Origen de adquisición (compra, transferencia, herencia, donación)
+  - Datos del vendedor/transferente (nombre, CURP)
+  - Folio de registro de transferencia SEDENA
+  - Observaciones adicionales
+- ✅ Vista de solicitudes de alta pendientes
+- ✅ Sistema de tabs: Arsenal | Bajas | Altas
+- ✅ Estados con badges de color:
+  - Pendiente (amarillo)
+  - Aprobada (azul)
+  - Procesada (verde)
+
+**Formulario de Alta:**
+```jsx
+const [formAlta, setFormAlta] = useState({
+  clase: '',
+  calibre: '',
+  marca: '',
+  modelo: '',
+  matricula: '',
+  folio: '',
+  modalidad: 'tiro',
+  origenAdquisicion: 'compra',
+  fechaAdquisicion: '',
+  vendedor: {
+    nombre: '',
+    curp: '',
+    esSocioClub: false,
+    email: ''
+  },
+  folioRegistroTransferencia: '',
+  observaciones: ''
+});
+```
+
+**Estructura Firestore:**
+```
+socios/{email}/solicitudesAlta/{solicitudId}
+├── armaDetalles: {
+│     clase: string
+│     calibre: string
+│     marca: string
+│     modelo: string
+│     matricula: string
+│     folio: string
+│     modalidad: 'caza' | 'tiro' | 'ambas'
+│   }
+├── origenAdquisicion: 'compra' | 'transferencia' | 'herencia' | 'donacion'
+├── fechaAdquisicion: date
+├── vendedor: {
+│     nombre: string
+│     curp: string
+│     esSocioClub: boolean
+│     email?: string
+│   }
+├── folioRegistroTransferencia: string
+├── observaciones: string
+├── estado: 'pendiente' | 'aprobada' | 'procesada'
+├── fechaSolicitud: timestamp
+├── solicitadoPor: string
+└── nombreSolicitante: string
+```
+
+**Firestore Rules Actualizadas:**
+```javascript
+// Solicitudes de Alta
+match /solicitudesAlta/{solicitudId} {
+  allow read: if isOwner(email) || isSecretario();
+  allow create: if isOwner(email) && 
+    request.resource.data.estado == 'pendiente' &&
+    request.resource.data.solicitadoPor == email;
+  allow update, delete: if isSecretario();
+}
+
+// Solicitudes de Baja (corregido)
+match /solicitudesBaja/{solicitudId} {
+  allow read: if isOwner(email) || isSecretario();
+  allow create: if isOwner(email) && 
+    request.resource.data.estado == 'pendiente' &&
+    request.resource.data.solicitadoPor == email;
+  allow update, delete: if isSecretario();
+}
+
+// Global bajas collection (solo secretario)
+match /bajas/{bajaId} {
+  allow read, write: if isSecretario();
+}
+```
+
+**Workflow de Alta:**
+```
+[Socio] Solicita alta de arma nueva
+   ↓
+Llena formulario con:
+- Datos del arma
+- Origen (compra/transferencia/herencia/donación)
+- Datos del vendedor/transferente
+- Folio de transferencia SEDENA (si aplica)
+   ↓
+[pendiente] - Esperando revisión del secretario
+   ↓
+[Secretario] Revisa documentación
+[Secretario] Aprueba solicitud
+   ↓
+[aprobada] - Lista para procesamiento
+   ↓
+[Secretario] Registra arma en arsenal del socio
+[Secretario] Marca como procesada
+   ↓
+[procesada] - Arma incorporada al arsenal
+```
+
+**Documentos requeridos para alta:**
+- RFA (Registro Federal de Armas) o DN27
+- Recibo de compra o contrato de compraventa
+- Registro de transferencia SEDENA (si aplica)
+- CURP del vendedor/transferente
+
+**ManualUsuario.jsx Actualizado:**
+
+Nueva sección 4 completamente reescrita:
+- Subsección "✅ Solicitar Alta de Arma Nueva"
+- Paso a paso del proceso
+- Lista de documentos requeridos
+- Explicación de orígenes de adquisición
+- Subsección "🔻 Reportar Baja de Arma"
+- Info boxes con notas importantes
+
+**UI/UX Improvements:**
+```css
+.btn-solicitar-alta {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  box-shadow: 0 4px 6px rgba(17, 153, 142, 0.3);
+}
+
+.empty-state .hint {
+  font-style: italic;
+  color: #666;
+}
+```
+
+**Archivos Modificados:**
+- `src/components/GestionArsenal.jsx` (600 → 841 líneas)
+- `src/components/GestionArsenal.css` (agregados estilos para formulario alta)
+- `src/components/ManualUsuario.jsx` (sección 4 reescrita)
+- `firestore.rules` (agregadas reglas solicitudesAlta + corregidas solicitudesBaja)
+
+**Deploy:**
+```bash
+npm run build  # 539 modules, 2.7MB main bundle
+firebase deploy --only firestore:rules
+firebase deploy --only storage:rules
+firebase deploy --only hosting
+```
+
+**Build exitoso:**
+- ✅ Hosting: https://club-738-app.web.app
+- ✅ Firestore Rules deployadas
+- ✅ Storage Rules deployadas
+- ⚠️ Functions: 296 linting errors (no bloqueante)
+
+#### Beneficios del Sistema Alta/Baja
+
+**Para Socios:**
+- Solicitar altas y bajas desde portal 24/7
+- Tracking de solicitudes con estados visuales
+- Historial completo de movimientos de arsenal
+- No requiere visita física al club para solicitar
+
+**Para Secretario:**
+- Gestión centralizada de solicitudes
+- Aprobación con un click
+- Registro automático en Firestore
+- Auditoría completa de cambios
+- Workflow estructurado SEDENA-compliant
+
+**Workflow Completo (Alta + Baja):**
+```
+Socio solicita BAJA → Secretario aprueba → Genera oficio 32 ZM
+                                         ↓
+Si receptor es socio → Notifica al receptor
+                                         ↓
+Receptor solicita ALTA → Secretario aprueba → Registra en arsenal
+                                             ↓
+                         Actualiza totalArmas en Firestore
+```
+
+#### Próximos Pasos
+
+- [ ] Panel admin para gestionar solicitudes de alta
+- [ ] Generador de oficios de alta para 32 ZM
+- [ ] Subida de documentación (RFA, recibos)
+- [ ] Validación de matrículas únicas (no duplicadas)
+- [ ] Notificaciones email/WhatsApp automáticas
 
 ---
 

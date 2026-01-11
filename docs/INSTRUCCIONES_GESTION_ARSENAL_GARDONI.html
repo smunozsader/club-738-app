@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Instrucciones - Gestión de Arsenal</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Instrucciones - Gestión de Arsenal</h1>
+</header>
+<h1 id="instrucciones-actualización-de-arsenal">📦 Instrucciones:
+Actualización de Arsenal</h1>
+<p><strong>Destinatario:</strong> Joaquin Gardoni (Tesorero)<br />
+<strong>Fecha:</strong> 10 de Enero de 2026<br />
+<strong>Módulo:</strong> Gestión de Arsenal - Portal Club 738</p>
+<hr />
+<h2 id="objetivo">🎯 Objetivo</h2>
+<p>Actualizar tu arsenal en el sistema del club para reflejar las
+<strong>ventas y transferencias</strong> que has realizado, permitiendo
+que el secretario:</p>
+<ol type="1">
+<li>Valide la información</li>
+<li>Actualice los registros del club</li>
+<li>Genere avisos oficiales a 32 Zona Militar</li>
+<li>Informe a DN27 (Dirección General del Registro Federal de Armas de
+Fuego)</li>
+</ol>
+<hr />
+<h2 id="situación-actual-de-tu-arsenal">📋 Situación Actual de Tu
+Arsenal</h2>
+<p>Según tu reporte del <strong>listado de registros a enero
+2026</strong>, tienes las siguientes situaciones pendientes de
+actualizar:</p>
+<h3 id="armas-que-ya-aparecen-en-el-portal-mantener">✅ Armas que YA
+APARECEN en el portal (mantener)</h3>
+<table>
+<thead>
+<tr>
+<th>Arma</th>
+<th>Matrícula</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pistola K22 X Trim</td>
+<td>K078928</td>
+<td>✅ OK - Sigue a tu nombre</td>
+</tr>
+<tr>
+<td>Rifle 22 Kriss</td>
+<td>22C002369</td>
+<td>✅ OK - Sigue a tu nombre</td>
+</tr>
+<tr>
+<td>Rifle Ruger 10/22</td>
+<td>0008-32069</td>
+<td>✅ OK - Sigue a tu nombre</td>
+</tr>
+<tr>
+<td>Rifle Ruger 10/22</td>
+<td>0013-82505</td>
+<td>✅ OK - Sigue a tu nombre</td>
+</tr>
+<tr>
+<td>Shadow 2</td>
+<td>DP25246</td>
+<td>✅ OK - Sigue a tu nombre</td>
+</tr>
+<tr>
+<td>Shadow 2</td>
+<td>DP25086</td>
+<td>✅ OK - Sigue a tu nombre</td>
+</tr>
+</tbody>
+</table>
+<h3 id="arma-faltante-en-el-portal">❌ Arma FALTANTE en el portal</h3>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 31%" />
+<col style="width: 51%" />
+</colgroup>
+<thead>
+<tr>
+<th>Arma</th>
+<th>Matrícula</th>
+<th>Acción Requerida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shadow 2</td>
+<td>DP25087</td>
+<td>🔴 <strong>Reportar al secretario</strong> - No aparece en
+sistema</td>
+</tr>
+</tbody>
+</table>
+<h3 id="armas-vendidas-requieren-baja">💰 Armas VENDIDAS (requieren
+baja)</h3>
+<table>
+<thead>
+<tr>
+<th>Arma</th>
+<th>Matrícula</th>
+<th>Comprador</th>
+<th>Socio del Club</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Grand Power LP 380</td>
+<td>K084384</td>
+<td>Daniel Manrique</td>
+<td>✅ Sí</td>
+</tr>
+<tr>
+<td>Grand Power LP 380</td>
+<td>K084385</td>
+<td>Jose Alberto Manrique</td>
+<td>✅ Sí</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="armas-transferidas-a-esposa-requieren-baja-de-tu-arsenal-alta-en-arsenal-de-esposa">👥
+Armas TRANSFERIDAS a esposa (requieren baja de tu arsenal + alta en
+arsenal de esposa)</h3>
+<p><strong>Receptor:</strong> María Fernanda Guadalupe Arechiga
+Ramos</p>
+<table>
+<thead>
+<tr>
+<th>Arma</th>
+<th>Matrícula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pistola CZ P07</td>
+<td>C647155</td>
+</tr>
+<tr>
+<td>Grand Power LP380</td>
+<td>K078999</td>
+</tr>
+<tr>
+<td>Grand Power LP380</td>
+<td>K084328</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="proceso-paso-a-paso">🚀 Proceso Paso a Paso</h2>
+<h3 id="paso-1-ingresar-al-portal">PASO 1: Ingresar al Portal</h3>
+<ol type="1">
+<li>Ve a: <strong>https://club-738-app.web.app</strong></li>
+<li>Inicia sesión con tus credenciales:
+<ul>
+<li><strong>Usuario:</strong> joaquingardoni@gmail.com</li>
+<li><strong>Contraseña:</strong> (la que te compartimos por
+WhatsApp)</li>
+</ul></li>
+<li>En el Dashboard principal, busca la tarjeta:</li>
+</ol>
+<pre><code>┌──────────────────────────────────────┐
+│  📦 Gestión de Arsenal               │
+│                                      │
+│  Reporta bajas, ventas o             │
+│  transferencias de armas             │
+│                                      │
+│  Actualizar arsenal →                │
+└──────────────────────────────────────┘</code></pre>
+<ol start="4" type="1">
+<li><strong>Click</strong> en “Actualizar arsenal”</li>
+</ol>
+<hr />
+<h3 id="paso-2-reportar-ventas-2-armas">PASO 2: Reportar VENTAS (2
+armas)</h3>
+<h4 id="venta-1-grand-power-lp-380-k084384-daniel-manrique">🔹 Venta 1:
+Grand Power LP 380 K084384 → Daniel Manrique</h4>
+<ol type="1">
+<li><p>En la vista “Mi Arsenal”, localiza el arma:</p>
+<ul>
+<li><strong>Grand Power LP 380</strong></li>
+<li><strong>Matrícula:</strong> K084384</li>
+</ul></li>
+<li><p>Click en el botón <strong>“📤 Reportar Baja”</strong></p></li>
+<li><p>Completa el formulario:</p></li>
+</ol>
+<p><strong>1. Motivo de la Baja</strong></p>
+<pre><code>Seleccionar: 💰 Venta a otra persona</code></pre>
+<p><strong>2. Fecha de la Baja</strong></p>
+<pre><code>Fecha aproximada de la venta (ej: 15/12/2025)</code></pre>
+<p><strong>3. Datos del Comprador</strong></p>
+<pre><code>Nombre completo: DANIEL MANRIQUE [APELLIDOS COMPLETOS]
+CURP: [Si lo tienes disponible]
+☑️ El receptor es socio del club
+Email del socio: [email de Daniel si lo tienes]</code></pre>
+<p><strong>4. Registro de Transferencia SEDENA (Opcional)</strong></p>
+<pre><code>Si ya tramitaron la transferencia ante SEDENA:
+- Folio de Transferencia: [Ej: A1234567]
+- Zona Militar: 32
+- Fecha: [Fecha del trámite]
+
+Si NO han tramitado: Dejar en blanco</code></pre>
+<p><strong>5. Observaciones Adicionales</strong></p>
+<pre><code>Ejemplo:
+&quot;Venta realizada en diciembre 2025. El comprador es socio activo 
+del club (Daniel Manrique). Se acordó tramitar la transferencia 
+oficial en febrero 2026.&quot;</code></pre>
+<ol start="4" type="1">
+<li><p>Click en <strong>“📤 Enviar Solicitud de Baja”</strong></p></li>
+<li><p>Recibirás confirmación:</p>
+<pre><code>✅ Solicitud de baja registrada.
+
+El secretario revisará tu solicitud y tramitará 
+los avisos correspondientes a 32 ZM y DN27.</code></pre></li>
+</ol>
+<h4 id="venta-2-grand-power-lp-380-k084385-jose-alberto-manrique">🔹
+Venta 2: Grand Power LP 380 K084385 → Jose Alberto Manrique</h4>
+<p><strong>REPETIR EL MISMO PROCESO</strong> con los datos:</p>
+<pre><code>Arma: Grand Power LP 380
+Matrícula: K084385
+Comprador: JOSE ALBERTO MANRIQUE [APELLIDOS]
+☑️ Es socio del club
+Email: [email de Jose Alberto si lo tienes]</code></pre>
+<hr />
+<h3 id="paso-3-reportar-transferencias-a-esposa-3-armas">PASO 3:
+Reportar TRANSFERENCIAS a Esposa (3 armas)</h3>
+<h4 id="transferencia-1-pistola-cz-p07-c647155">🔹 Transferencia 1:
+Pistola CZ P07 C647155</h4>
+<ol type="1">
+<li><p>Localiza el arma en tu arsenal:</p>
+<ul>
+<li><strong>Pistola CZ P07</strong></li>
+<li><strong>Matrícula:</strong> C647155</li>
+</ul></li>
+<li><p>Click en <strong>“📤 Reportar Baja”</strong></p></li>
+<li><p>Completa el formulario:</p></li>
+</ol>
+<p><strong>1. Motivo de la Baja</strong></p>
+<pre><code>Seleccionar: 👥 Transferencia familiar (esposa, hijo, etc.)</code></pre>
+<p><strong>2. Fecha de la Baja</strong></p>
+<pre><code>Fecha aproximada de la transferencia (ej: 01/01/2026)</code></pre>
+<p><strong>3. Datos del Receptor</strong></p>
+<pre><code>Nombre completo: MARIA FERNANDA GUADALUPE ARECHIGA RAMOS
+CURP: [CURP de tu esposa]
+☐ El receptor es socio del club (dejar SIN marcar, a menos que ella tenga membresía propia)
+Email: [Email de tu esposa si quieres que reciba notificación]</code></pre>
+<p><strong>4. Registro de Transferencia SEDENA (Opcional)</strong></p>
+<pre><code>Si ya tramitaron ante SEDENA: Llenar datos
+Si NO: Dejar en blanco</code></pre>
+<p><strong>5. Observaciones</strong></p>
+<pre><code>Ejemplo:
+&quot;Transferencia familiar. El arma pasa a nombre de mi esposa 
+María Fernanda Guadalupe Arechiga Ramos. Pendiente tramitar 
+la modificación oficial ante SEDENA.&quot;</code></pre>
+<ol start="4" type="1">
+<li>Click en <strong>“📤 Enviar Solicitud de Baja”</strong></li>
+</ol>
+<h4 id="transferencia-2-y-3-repetir-para-las-otras-2-grand-power">🔹
+Transferencia 2 y 3: Repetir para las otras 2 Grand Power</h4>
+<p><strong>Arma 2:</strong></p>
+<pre><code>Grand Power LP380 K078999
+→ MARIA FERNANDA GUADALUPE ARECHIGA RAMOS</code></pre>
+<p><strong>Arma 3:</strong></p>
+<pre><code>Grand Power LP380 K084328
+→ MARIA FERNANDA GUADALUPE ARECHIGA RAMOS</code></pre>
+<hr />
+<h3 id="paso-4-verificar-tus-solicitudes">PASO 4: Verificar tus
+Solicitudes</h3>
+<ol type="1">
+<li><p>En el módulo “Gestión de Arsenal”, ve a la pestaña:</p>
+<pre><code>📋 Solicitudes de Baja (5)</code></pre></li>
+<li><p>Verás tus 5 solicitudes con estado:</p>
+<pre><code>⏳ Pendiente revisión</code></pre></li>
+<li><p>El secretario (Sergio) recibirá notificación de tus
+solicitudes</p></li>
+</ol>
+<hr />
+<h2 id="qué-pasa-después">🔍 ¿Qué pasa después?</h2>
+<h3 id="workflow-del-secretario">Workflow del Secretario</h3>
+<pre><code>TUS SOLICITUDES (5)
+   ↓
+[Sergio revisa información]
+   ↓
+✅ Aprueba solicitudes
+   ↓
+📄 Genera oficios para:
+   - 32 Zona Militar (Valladolid)
+   - DN27 (Ciudad de México)
+   ↓
+✔️ Marca como &quot;Procesada&quot;
+   ↓
+ACTUALIZACIÓN COMPLETADA</code></pre>
+<h3 id="timeline-esperado">Timeline Esperado</h3>
+<table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>Tiempo Estimado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tú envías solicitudes</td>
+<td>15-20 minutos (las 5 armas)</td>
+</tr>
+<tr>
+<td>Sergio revisa y aprueba</td>
+<td>24-48 horas</td>
+</tr>
+<tr>
+<td>Generación de oficios</td>
+<td>1-2 días</td>
+</tr>
+<tr>
+<td>Envío a autoridades</td>
+<td>Próximo informe bimestral*</td>
+</tr>
+</tbody>
+</table>
+<p><strong>*Nota:</strong> Si se requiere para trámite PETA urgente, el
+secretario puede enviar antes del informe bimestral regular.</p>
+<hr />
+<h2 id="checklist-antes-de-empezar">✅ Checklist Antes de Empezar</h2>
+<p>Asegúrate de tener a mano:</p>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Datos del
+comprador:</strong></label>
+<ul>
+<li>Nombre completo</li>
+<li>CURP (opcional pero recomendado)</li>
+<li>Email (si es socio del club)</li>
+</ul></li>
+<li><label><input type="checkbox" /><strong>Datos de tu
+esposa:</strong></label>
+<ul>
+<li>Nombre completo: MARIA FERNANDA GUADALUPE ARECHIGA RAMOS</li>
+<li>CURP</li>
+<li>Email (opcional)</li>
+</ul></li>
+<li><label><input type="checkbox" /><strong>Fechas
+aproximadas:</strong></label>
+<ul>
+<li>¿Cuándo vendiste cada arma?</li>
+<li>¿Cuándo transferiste a tu esposa?</li>
+</ul></li>
+<li><label><input type="checkbox" /><strong>Documentación (si
+aplica):</strong></label>
+<ul>
+<li>¿Ya tramitaron alguna transferencia ante SEDENA?</li>
+<li>¿Tienen folios de registro?</li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="preguntas-frecuentes">❓ Preguntas Frecuentes</h2>
+<h3 id="qué-pasa-si-no-tengo-el-curp-del-comprador">¿Qué pasa si NO
+tengo el CURP del comprador?</h3>
+<p><strong>R:</strong> No es obligatorio. Puedes dejarlo en blanco. Lo
+importante es el nombre completo.</p>
+<h3 id="qué-pasa-si-el-comprador-no-es-socio-del-club">¿Qué pasa si el
+comprador NO es socio del club?</h3>
+<p><strong>R:</strong> No hay problema. Desmarca la casilla “El receptor
+es socio del club”. El secretario generará el aviso a autoridades de
+todas formas.</p>
+<h3
+id="qué-pasa-si-aún-no-hemos-tramitado-la-transferencia-ante-sedena">¿Qué
+pasa si AÚN NO hemos tramitado la transferencia ante SEDENA?</h3>
+<p><strong>R:</strong> Está bien. Deja en blanco la sección “Registro de
+Transferencia SEDENA”. El club generará el aviso de cambio de
+propietario, y podrán tramitar la transferencia oficial después.</p>
+<h3 id="puedo-editar-una-solicitud-después-de-enviarla">¿Puedo editar
+una solicitud después de enviarla?</h3>
+<p><strong>R:</strong> No. Si cometiste un error, contacta al secretario
+por WhatsApp (+52 56 6582 4667) para que la corrija antes de
+aprobar.</p>
+<h3
+id="qué-pasa-con-el-shadow-2-dp25087-que-no-aparece-en-el-portal">¿Qué
+pasa con el Shadow 2 DP25087 que NO aparece en el portal?</h3>
+<p><strong>R:</strong> Ese caso requiere atención especial. Contacta al
+secretario por WhatsApp para agregarlo manualmente al sistema antes de
+hacer cualquier gestión.</p>
+<hr />
+<h2 id="soporte">📞 Soporte</h2>
+<p><strong>Secretario:</strong> Sergio Muñoz<br />
+<strong>WhatsApp:</strong> +52 56 6582 4667<br />
+<strong>Email:</strong> smunozam@gmail.com</p>
+<p>Si tienes dudas o problemas al llenar el formulario, no dudes en
+contactar.</p>
+<hr />
+<h2 id="notas-legales">🔒 Notas Legales</h2>
+<p><strong>Ley Federal de Armas de Fuego y Explosivos - Artículo
+7:</strong> &gt; El propietario de armas tiene obligación de dar aviso a
+la Secretaría de la Defensa Nacional dentro de un plazo de <strong>30
+días naturales</strong> de cualquier cambio de domicilio, extravío,
+robo, destrucción o <strong>enajenación de armas</strong>.</p>
+<p>Al reportar estas bajas/transferencias en el sistema del club,
+cumplimos con esta obligación legal. El secretario generará los avisos
+oficiales a: - <strong>32 Zona Militar</strong> (Valladolid, Yucatán) -
+<strong>DN27</strong> (Dirección General del Registro Federal de Armas
+de Fuego y Control de Explosivos)</p>
+<hr />
+<h2 id="resumen-de-acciones">📊 Resumen de Acciones</h2>
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 21%" />
+<col style="width: 15%" />
+<col style="width: 28%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Acción</th>
+<th>Arma</th>
+<th>Matrícula</th>
+<th>Receptor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>💰 Venta</td>
+<td>Grand Power LP 380</td>
+<td>K084384</td>
+<td>Daniel Manrique</td>
+</tr>
+<tr>
+<td>2</td>
+<td>💰 Venta</td>
+<td>Grand Power LP 380</td>
+<td>K084385</td>
+<td>Jose Alberto Manrique</td>
+</tr>
+<tr>
+<td>3</td>
+<td>👥 Transferencia</td>
+<td>Pistola CZ P07</td>
+<td>C647155</td>
+<td>María Fernanda Arechiga</td>
+</tr>
+<tr>
+<td>4</td>
+<td>👥 Transferencia</td>
+<td>Grand Power LP380</td>
+<td>K078999</td>
+<td>María Fernanda Arechiga</td>
+</tr>
+<tr>
+<td>5</td>
+<td>👥 Transferencia</td>
+<td>Grand Power LP380</td>
+<td>K084328</td>
+<td>María Fernanda Arechiga</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total:</strong> 5 solicitudes a registrar</p>
+<hr />
+<p><strong>¡Gracias por mantener actualizado el registro del
+club!</strong> 🎯</p>
+<p>Este proceso nos ayuda a cumplir con las obligaciones ante SEDENA y
+mantener un control preciso del arsenal de los socios.</p>
+<hr />
+<p><em>Generado por: Club de Caza, Tiro y Pesca de Yucatán,
+A.C.</em><br />
+<em>SEDENA 738 | FEMETI YUC 05/2020 |
+SEMARNAT-CLUB-CIN-005-YUC-05</em></p>
+</body>
+</html>

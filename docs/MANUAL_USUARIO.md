@@ -1,19 +1,22 @@
 # Manual de Usuario - Portal del Socio
 
 **Club de Caza, Tiro y Pesca de Yucatán, A.C.**  
-Versión 1.10.0 - Enero 2026
+Versión 1.14.0 - Enero 2026
 
 ---
 
 ## 📚 Índice
 
 1. [Acceso al Portal](#acceso-al-portal)
-2. [Completar tu Expediente Digital](#paso-1-completar-expediente-digital)
-3. [Solicitar PETA](#paso-2-solicitar-peta)
-4. [Entregar Documentos Físicos](#paso-3-entregar-documentos-físicos)
-5. [Realizar Pago y Activar Membresía](#paso-4-realizar-pago)
-6. [Recibir Credencial Firmada](#paso-5-recibir-credencial)
-7. [Preguntas Frecuentes](#preguntas-frecuentes)
+2. [Dashboard Principal](#dashboard-principal)
+3. [Completar tu Expediente Digital](#paso-1-completar-expediente-digital)
+4. [Solicitar PETA](#paso-2-solicitar-peta)
+5. [Gestión de Arsenal](#gestion-de-arsenal)
+6. [Agendar Citas con el Secretario](#agendar-citas)
+7. [Entregar Documentos Físicos](#paso-3-entregar-documentos-físicos)
+8. [Realizar Pago y Activar Membresía](#paso-4-realizar-pago)
+9. [Recibir Credencial Firmada](#paso-5-recibir-credencial)
+10. [Preguntas Frecuentes](#preguntas-frecuentes)
 
 ---
 
@@ -22,6 +25,26 @@ Versión 1.10.0 - Enero 2026
 1. Ingresa a: **https://club-738-app.web.app**
 2. Inicia sesión con tu email y contraseña
 3. Si es tu primera vez, verás un diálogo de bienvenida
+
+---
+
+## 🏠 Dashboard Principal
+
+Después de iniciar sesión, verás el Dashboard con varias tarjetas organizadas por secciones:
+
+### Mi Expediente
+- **📋 Mis Documentos PETA**: Sube y gestiona los 16 documentos necesarios
+- **📄 Documentos Oficiales**: Descarga tu CURP y Constancia de Antecedentes
+- **🔫 Mis Armas**: Consulta tus armas registradas en SEDENA
+- **📦 Gestión de Arsenal**: Reporta ventas, transferencias o bajas de armas
+- **🎯 Mis PETAs**: Solicita y da seguimiento a tus permisos de transporte
+- **⚙️ Mi Perfil**: Cambia tu contraseña y configuración
+- **📅 Agendar Cita**: Reserva tiempo con el secretario
+- **💳 Estado de Pagos**: Consulta tu membresía 2026
+
+### Herramientas
+- **🗓️ Calendario de Tiradas**: Competencias 2026 del club y región sureste
+- **🧮 Calculadora PCP**: Calcula energía cinética de rifles de aire
 
 ---
 
@@ -113,7 +136,133 @@ El sistema requiere **16 documentos** para tu trámite PETA:
 
 ---
 
-## 📦 PASO 3: Entregar Documentos Físicos
+## 📦 Gestión de Arsenal
+
+### ¿Para qué sirve?
+
+Si vendiste, regalaste, transferiste o perdiste un arma, debes reportarlo al club y a SEDENA (32 Zona Militar) **dentro de 30 días** según la Ley Federal de Armas de Fuego y Explosivos.
+
+Este módulo te permite:
+- Reportar bajas de armas de tu arsenal
+- Notificar al club de ventas/transferencias
+- Mantener actualizado tu inventario
+- Generar oficios automáticos para SEDENA
+
+### Cómo reportar una baja
+
+1. Desde el Dashboard, haz clic en **"📦 Gestión de Arsenal"**
+2. Verás tu arsenal completo (armas registradas)
+3. Haz clic en **"Reportar Baja de Arma"**
+4. Completa el formulario:
+
+#### a) Selecciona el Arma
+   - Marca el arma que quieres reportar
+   - Verás: clase, marca, modelo, calibre, matrícula
+
+#### b) Motivo de la Baja
+   - **Venta**: Vendiste el arma a otra persona
+   - **Transferencia**: Regalaste o traspasaste a familiar
+   - **Pérdida**: Extraviaste el arma
+   - **Robo**: Fue robada (debes tener denuncia)
+   - **Destrucción**: El arma fue destruida
+
+#### c) Datos del Receptor (solo Venta/Transferencia)
+   - **Nombre completo**
+   - **CURP**
+   - **Email**
+   - El sistema detecta automáticamente si es socio del club
+
+#### d) Registro SEDENA (opcional)
+   - Si YA hiciste el trámite ante 32 Zona Militar:
+     - Folio del registro
+     - Zona Militar donde lo hiciste
+     - Fecha del trámite
+
+5. Haz clic en **"Enviar Solicitud"**
+
+### Después de enviar
+
+- Tu solicitud aparece en estado: **⏳ Pendiente**
+- El secretario la revisará y aprobará
+- Si el receptor es socio del club, recibirá una notificación automática
+- El secretario generará los oficios para 32 ZM y DN27
+
+### Ver mis solicitudes
+
+En "Gestión de Arsenal" puedes ver:
+- **Solicitudes pendientes**: Esperando aprobación del secretario
+- **Solicitudes aprobadas**: Aprobadas por el secretario
+- **Solicitudes procesadas**: Oficios enviados a SEDENA
+
+**Importante**: Después de reportar una baja, el arma NO se elimina automáticamente de tu arsenal. El secretario la marcará como inactiva después de confirmar el trámite con SEDENA.
+
+---
+
+## 📅 Agendar Citas con el Secretario
+
+### ¿Para qué necesito una cita?
+
+Para entregar documentos físicos, realizar pagos, o resolver consultas con el secretario.
+
+### Cómo agendar
+
+1. Desde el Dashboard, haz clic en **"📅 Agendar Cita"**
+2. Completa el formulario:
+
+#### a) Selecciona Fecha
+   - Solo días laborables (lunes a viernes)
+   - Con al menos 24 horas de anticipación
+   - Hasta 3 meses adelante
+
+#### b) Selecciona Horario
+   - Slots disponibles de 30 minutos
+   - Horario de atención: **9:00 - 17:00 hrs**
+   - Los slots ocupados aparecen deshabilitados
+
+#### c) Propósito de la Cita
+   - **🎯 Trámite PETA**: Entregar documentos para PETA
+   - **💰 Pago de membresía**: Realizar pago de cuota anual
+   - **📄 Entrega de documentos**: Otros documentos del club
+   - **💬 Consulta general**: Resolver dudas o consultas
+   - **📌 Otro**: Especifica en notas
+
+#### d) Notas Adicionales (opcional)
+   - Agrega detalles importantes
+   - Ejemplo: "Llevaré documentos originales de PETA, necesito factura"
+
+3. Haz clic en **"📅 Agendar Cita"**
+
+### Después de agendar
+
+- Recibirás una **invitación de Google Calendar** en tu email
+- La cita aparece en estado: **⏳ Pendiente confirmación**
+- El secretario verá tu solicitud en su agenda
+- Recibirás recordatorios automáticos:
+  - 24 horas antes
+  - 1 hora antes
+  - 15 minutos antes
+
+### Estados de la cita
+
+| Estado | Significa |
+|--------|-----------|
+| ⏳ **Pendiente** | Esperando confirmación del secretario |
+| ✅ **Confirmada** | Cita confirmada, te esperamos |
+| ❌ **Cancelada** | Cita cancelada (tú o el secretario) |
+| ✔️ **Completada** | Cita realizada exitosamente |
+
+### Cancelar una cita
+
+Si necesitas cancelar:
+1. Contacta al secretario por WhatsApp (+52 56 6582 4667)
+2. Con al menos **2 horas de anticipación**
+3. El secretario cancelará la cita desde su panel
+
+**Nota**: Las citas se sincronizan con el Google Calendar del secretario en tiempo real.
+
+---
+
+## PASO 3: Entregar Documentos Físicos
 
 ### ¿Qué debo llevar al Secretario?
 
@@ -141,9 +290,7 @@ El sistema requiere **16 documentos** para tu trámite PETA:
 
 ### Proceso de verificación
 
-1. **Agenda cita** con el Secretario:
-   - WhatsApp: +52 56 6582 4667
-   - Email: tiropracticoyucatan@gmail.com
+1. **Agenda cita** usando el módulo **"📅 Agendar Cita"** del portal (ver sección anterior)
 
 2. **En la cita**, el Secretario:
    - Verificará documentos digitales vs físicos
@@ -287,15 +434,28 @@ Sí:
 
 Solicita renovación con 2 meses de anticipación.
 
+### ¿Cómo reporto que vendí un arma?
+
+Usa el módulo **"📦 Gestión de Arsenal"** del portal. Debes reportarlo dentro de 30 días según la Ley Federal. El sistema notificará al secretario y generará los oficios para SEDENA.
+
+### ¿Cómo agendo una cita con el secretario?
+
+Usa el módulo **"📅 Agendar Cita"** del portal. Selecciona fecha, horario y propósito. Recibirás una invitación de Google Calendar con recordatorios automáticos.
+
+### ¿Puedo cancelar o reagendar una cita?
+
+Sí, contacta al secretario por WhatsApp (+52 56 6582 4667) con al menos 2 horas de anticipación.
+
 ---
 
 ## 📞 Contacto y Soporte
 
 ### Secretario del Club
 
+- **Agendar cita**: Usa el módulo "📅 Agendar Cita" del portal
 - **WhatsApp**: +52 56 6582 4667
 - **Email**: tiropracticoyucatan@gmail.com
-- **Horario**: Lunes a Viernes, 9:00 - 18:00 hrs
+- **Horario**: Lunes a Viernes, 9:00 - 17:00 hrs
 
 ### Campo de Tiro
 
@@ -322,6 +482,7 @@ Solicita renovación con 2 meses de anticipación.
 
 | Versión | Fecha | Cambios |
 |---------|-------|---------|
+| v1.14.0 | 10 Ene 2026 | Módulos: Gestión de Arsenal, Agendamiento de Citas |
 | v1.10.0 | 5 Ene 2026 | Manual inicial del flujo PETA completo |
 | | | Módulos: SolicitarPETA, MisPETAs, VerificadorPETA, RegistroPagos |
 

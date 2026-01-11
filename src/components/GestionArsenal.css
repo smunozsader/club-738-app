@@ -74,6 +74,47 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.acciones-arsenal {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-solicitar-alta {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(17, 153, 142, 0.3);
+}
+
+.btn-solicitar-alta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(17, 153, 142, 0.5);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state .hint {
+  font-size: 0.95rem;
+  color: #adb5bd;
+  font-style: italic;
+}
+
 .armas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));

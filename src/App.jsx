@@ -24,6 +24,7 @@ import GestionArsenal from './components/GestionArsenal';
 import AdminBajasArsenal from './components/AdminBajasArsenal';
 import AgendarCita from './components/AgendarCita';
 import MiAgenda from './components/MiAgenda';
+import ManualUsuario from './components/ManualUsuario';
 import './App.css';
 
 // Detectar rutas públicas (sin necesidad de login)
@@ -357,6 +358,13 @@ function App() {
                   <p>Verifica si tu rifle de aire requiere registro</p>
                   <span className="dash-card-cta">Calcular →</span>
                 </div>
+                
+                <div className="dash-card ayuda" onClick={() => setActiveSection('manual-usuario')}>
+                  <div className="dash-card-icon">📚</div>
+                  <h3>Centro de Ayuda</h3>
+                  <p>Manual del usuario y preguntas frecuentes</p>
+                  <span className="dash-card-cta">Ver manual →</span>
+                </div>
               </div>
             </div>
             
@@ -595,6 +603,10 @@ function App() {
           <div className="section-mi-agenda">
             <MiAgenda onBack={() => setActiveSection('dashboard')} />
           </div>
+        )}
+        
+        {activeSection === 'manual-usuario' && (
+          <ManualUsuario onBack={() => setActiveSection('dashboard')} />
         )}
 
         {/* Sección para que el secretario vea documentos de otro socio */}

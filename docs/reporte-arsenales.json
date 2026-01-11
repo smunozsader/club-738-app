@@ -1,0 +1,338 @@
+{
+  "totalSocios": 77,
+  "sociosConDuplicados": [],
+  "sociosSinDuplicados": [
+    {
+      "email": "agm@galletasdonde.com",
+      "nombre": "ALEJANDRO GOMORY MARTINEZ",
+      "totalArmas": 6
+    },
+    {
+      "email": "agus_tin1_@hotmail.com",
+      "nombre": "161. AGUSTIN MORENO VILLALOBOS",
+      "totalArmas": 4
+    },
+    {
+      "email": "al3xrivas@gmail.com",
+      "nombre": "ALEJANDRO FRANCISCO RIVAS PINTADO",
+      "totalArmas": 4
+    },
+    {
+      "email": "alejandrapintado@yahoo.com.mx",
+      "nombre": "ALEJANDRA GEORGINA PINTADO VILLAFAÑA",
+      "totalArmas": 1
+    },
+    {
+      "email": "armando.pard@gmail.com",
+      "nombre": "ARMANDO PARDIÑAZ ALCANTARA",
+      "totalArmas": 1
+    },
+    {
+      "email": "arobert01@protonmail.com",
+      "nombre": "ALEJANDRO OLIVER ROBERT EASTMOND",
+      "totalArmas": 3
+    },
+    {
+      "email": "atietzbabam@gmail.com",
+      "nombre": "ARIEL BALTAZAR CÓRDOBA WILSON",
+      "totalArmas": 8
+    },
+    {
+      "email": "brayerbyv@gmail.com",
+      "nombre": "BRAYER KERMITH VERDE CHIN",
+      "totalArmas": 5
+    },
+    {
+      "email": "carlosgranja@gmail.com",
+      "nombre": "CARLOS ANTONIO GRANJA PEREZ",
+      "totalArmas": 10
+    },
+    {
+      "email": "cc@secure.mx",
+      "nombre": "CLAUDIO MAURICIO CANAVATI FARAH",
+      "totalArmas": 8
+    },
+    {
+      "email": "chafi70@hotmail.com",
+      "nombre": "CHAFI XACUR RIVERA",
+      "totalArmas": 1
+    },
+    {
+      "email": "cudaosj@hotmail.com",
+      "nombre": "ALEJANDRO JAVIER GARCÍA GAMBOA",
+      "totalArmas": 5
+    },
+    {
+      "email": "d@azarcorp.mx",
+      "nombre": "DAVID AZAR CÁMARA",
+      "totalArmas": 2
+    },
+    {
+      "email": "david_xolz@hotmail.com",
+      "nombre": "DAVID HOMERO SCHOLZ MORENO",
+      "totalArmas": 1
+    },
+    {
+      "email": "dr.ricardocastillo@me.com",
+      "nombre": "RICARDO ERNESTO CASTILLO MANCERA",
+      "totalArmas": 2
+    },
+    {
+      "email": "egpiccolo@gmail.com",
+      "nombre": "ERNESTO GONZALEZ PICCOLO",
+      "totalArmas": 5
+    },
+    {
+      "email": "fabian.sievers3548@gmail.com",
+      "nombre": "FABIAN MARQUEZ ORTEGA",
+      "totalArmas": 3
+    },
+    {
+      "email": "fit.x66@hotmail.com",
+      "nombre": "ADOLFO XACUR RIVERA",
+      "totalArmas": 9
+    },
+    {
+      "email": "galvani@hotmail.com",
+      "nombre": "EZEQUIEL GALVAN VAZQUEZ",
+      "totalArmas": 5
+    },
+    {
+      "email": "gfernandez63@gmail.com",
+      "nombre": "GERARDO ANTONIO FERNÁNDEZ QUIJANO",
+      "totalArmas": 1
+    },
+    {
+      "email": "guidorcuevasabraham@gmail.com",
+      "nombre": "GUIDO RENY CUEVAS ABRAHAM",
+      "totalArmas": 2
+    },
+    {
+      "email": "hanstb@gmail.com",
+      "nombre": "HANS JURGEN THIES BARBACHANO",
+      "totalArmas": 7
+    },
+    {
+      "email": "humh4@hotmail.com",
+      "nombre": "HUGO MARTINEZ HERNANDEZ",
+      "totalArmas": 5
+    },
+    {
+      "email": "ivancabo@gmail.com",
+      "nombre": "IVAN TSUIS CABO TORRES",
+      "totalArmas": 3
+    },
+    {
+      "email": "jacintolizarraga@hotmail.com",
+      "nombre": "JOSE JACINTO LIZARRAGA AVILA",
+      "totalArmas": 7
+    },
+    {
+      "email": "javier_ruzperaza@hotmail.com",
+      "nombre": "JAVIER RUZ PERAZA",
+      "totalArmas": 10
+    },
+    {
+      "email": "jcb197624@hotmail.com",
+      "nombre": "JUAN CARLOS BRICEÑO GONZALEZ",
+      "totalArmas": 4
+    },
+    {
+      "email": "jcmaneo@hotmail.com",
+      "nombre": "JUAN CARLOS MAÑE ORTIZ",
+      "totalArmas": 7
+    },
+    {
+      "email": "jgheredia@hotmail.com",
+      "nombre": "JOSE GIL HEREDIA HAGAR",
+      "totalArmas": 7
+    },
+    {
+      "email": "jordan910@hotmail.com",
+      "nombre": "JUAN CARLOS JORDAN LOPEZ",
+      "totalArmas": 4
+    },
+    {
+      "email": "jorgedawn@prodigy.net.mx",
+      "nombre": "JORGE ALFREDO DAWN MEDINA",
+      "totalArmas": 6
+    },
+    {
+      "email": "josebadz@outlook.com",
+      "nombre": "JOSE HIPOLITO BARRERA AKE",
+      "totalArmas": 7
+    },
+    {
+      "email": "josegilbertohernandezcarrillo@gmail.com",
+      "nombre": "JOSE GILBERTO HERNANDEZ CARRILLO",
+      "totalArmas": 1
+    },
+    {
+      "email": "jretana@live.com.mx",
+      "nombre": "JULIO RETANA VILLARREAL",
+      "totalArmas": 5
+    },
+    {
+      "email": "jrgardoni@gmail.com",
+      "nombre": "JOAQUIN RODOLFO GARDONI NUÑEZ",
+      "totalArmas": 8
+    },
+    {
+      "email": "jvtl@hotmail.com",
+      "nombre": "JOSE VICENTE TRUJILLO LUCIC",
+      "totalArmas": 3
+    },
+    {
+      "email": "lalodenis23@hotmail.com",
+      "nombre": "EDUARDO DENIS HERRERA",
+      "totalArmas": 9
+    },
+    {
+      "email": "lic.arielparedescetina@hotmail.com",
+      "nombre": "ARIEL ANTONIO PAREDES CETINA",
+      "totalArmas": 3
+    },
+    {
+      "email": "lolita@concepthaus.mx",
+      "nombre": "MARIA DOLORES DAVIS BETANZOS",
+      "totalArmas": 7
+    },
+    {
+      "email": "madahuar@cotexsa.com.mx",
+      "nombre": "ROBERTO JOSE MADAHUAR BOEHM",
+      "totalArmas": 2
+    },
+    {
+      "email": "manuel.chaidez@valledelsur.com.mx",
+      "nombre": "MANUEL JESÚS CHAIDEZ PALACIOS",
+      "totalArmas": 5
+    },
+    {
+      "email": "marcotonyjr@hotmail.com",
+      "nombre": "MARCO ANTONIO SANTA CRUZ POLANCO CORDOVA",
+      "totalArmas": 2
+    },
+    {
+      "email": "martinezasergio@hotmail.com",
+      "nombre": "SERGIO FERNANDO MARTINEZ AGUILAR",
+      "totalArmas": 3
+    },
+    {
+      "email": "mayayuc3006@gmail.com",
+      "nombre": "EDUARDO JOSE ARZAMENDI MONTEJO",
+      "totalArmas": 1
+    },
+    {
+      "email": "mjtzab@yahoo.com",
+      "nombre": "MANUEL JESÚS TZAB CHUC",
+      "totalArmas": 3
+    },
+    {
+      "email": "monfo87_@hotmail.com",
+      "nombre": "EDGAR EDILBERTO MONFORTE ESCOBEDO",
+      "totalArmas": 5
+    },
+    {
+      "email": "olga.garcia@mayaseguridad.mx",
+      "nombre": "JUAN CARLOS RAMIREZ GOMEZ",
+      "totalArmas": 1
+    },
+    {
+      "email": "padilla_079@hotmail.com",
+      "nombre": "DANIEL DE JESUS PADILLA ROBLES",
+      "totalArmas": 6
+    },
+    {
+      "email": "quiquis77@hotmail.com",
+      "nombre": "ENRIQUE GAONA CASTAÑEDA",
+      "totalArmas": 1
+    },
+    {
+      "email": "rafael-rivas-p@hotmail.com",
+      "nombre": "RAFAEL RIVAS POLANCO",
+      "totalArmas": 4
+    },
+    {
+      "email": "rafle_30@hotmail.com",
+      "nombre": "ROGER IRÁN MÉNDEZ CARRILLO",
+      "totalArmas": 5
+    },
+    {
+      "email": "recosadecv@prodigy.net.mx",
+      "nombre": "RIGOMAR HINOJOSA SHIELDS",
+      "totalArmas": 10
+    },
+    {
+      "email": "richfegas@icloud.com",
+      "nombre": "RICARDO JESÚS FERNÁNDEZ Y GASQUE",
+      "totalArmas": 4
+    },
+    {
+      "email": "richfer1020@gmail.com",
+      "nombre": "RICARDO MANUEL FERNÁNDEZ QUIJANO",
+      "totalArmas": 1
+    },
+    {
+      "email": "ridesquens@yahoo.com.mx",
+      "nombre": "RICARDO ALBERTO DESQUENS BONILLA",
+      "totalArmas": 6
+    },
+    {
+      "email": "rodrigo.garcia.e@live.com.mx",
+      "nombre": "RODRIGO GARCÍA ESCALANTE",
+      "totalArmas": 3
+    },
+    {
+      "email": "rsoberanis11@hotmail.com",
+      "nombre": "RICARDO ANTONIO SOBERANIS GAMBOA",
+      "totalArmas": 4
+    },
+    {
+      "email": "santiago100100@hotmail.com",
+      "nombre": "SANTIAGO LAMAS RINGENBACH",
+      "totalArmas": 6
+    },
+    {
+      "email": "smunozam@gmail.com",
+      "nombre": "SERGIO MUÑOZ DE ALBA MEDRANO",
+      "totalArmas": 6
+    },
+    {
+      "email": "squintal158@gmail.com",
+      "nombre": "SANTIAGO ALEJANDRO QUINTAL PAREDES",
+      "totalArmas": 3
+    },
+    {
+      "email": "ssg@santinelli.com.mx",
+      "nombre": "SERGIO SANTINELLI GRAJALES",
+      "totalArmas": 8
+    },
+    {
+      "email": "sysaventas@hotmail.com",
+      "nombre": "REMIGIO BEETHOVEN AGUILAR CANTO",
+      "totalArmas": 10
+    },
+    {
+      "email": "talleresmonforte@hotmail.com",
+      "nombre": "PAULINO EDILBERTO MONFORTE TRAVA",
+      "totalArmas": 7
+    },
+    {
+      "email": "tinosanchezf@yahoo.com.mx",
+      "nombre": "CELESTINO SÁNCHEZ FERNÁNDEZ",
+      "totalArmas": 1
+    },
+    {
+      "email": "tonysantacruz@hotmail.com",
+      "nombre": "ANTONIO RAMÓN SANTA CRUZ POLANCO CABRALES",
+      "totalArmas": 2
+    },
+    {
+      "email": "valenciarojasjjesus@gmail.com",
+      "nombre": "J. JESÚS VALENCIA ROJAS",
+      "totalArmas": 3
+    }
+  ],
+  "totalArmas": 301,
+  "totalDuplicados": 0
+}

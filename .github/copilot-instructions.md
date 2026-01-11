@@ -274,7 +274,32 @@ firebase deploy --only hosting
 
 # Deploy completo (hosting + rules)
 firebase deploy
+
+# Convertir Markdown a PDF (usa npx md-to-pdf)
+npx md-to-pdf ruta/al/archivo.md
+npx md-to-pdf archivo.md --pdf-options '{"format":"A4","margin":"20mm"}'
 ```
+
+### Markdown to PDF
+**Herramienta:** `md-to-pdf` via npx (NO usar extensión VS Code Markdown PDF)
+
+**Problema conocido:** La extensión Markdown PDF de VS Code falla con error "no active editor"
+
+**Solución:** Usar `npx md-to-pdf` desde terminal (siempre funciona)
+
+**Ejemplos:**
+```bash
+# Conversión básica
+npx md-to-pdf docs/INSTRUCCIONES_GESTION_ARSENAL_GARDONI.md
+
+# Con opciones personalizadas
+npx md-to-pdf docs/MANUAL_SECRETARIO_BAJAS_ARSENAL.md --pdf-options '{"format":"A4","margin":"20mm","printBackground":true}'
+
+# Múltiples archivos
+npx md-to-pdf docs/*.md
+```
+
+**Nota:** Soporta emojis y tablas, genera PDFs de alta calidad
 
 ### Adding Features
 1. Crear componente en src/components/ con .jsx y .css pareados

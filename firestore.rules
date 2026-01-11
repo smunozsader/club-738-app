@@ -81,17 +81,64 @@ service cloud.firestore {
       }
       
       // ======================================================================
-      // SUBCOLECCIÓN: petas
+      // SUBCOLECCIÓN: solicitudesAlta
       // ======================================================================
-      // Cada socio puede leer/crear sus propias solicitudes PETA
-      // El secretario puede leer y actualizar todas las PETAs
+      // Solicitudes de alta de armas nuevas (compra, herencia, etc.)
+      // El socio SOLICITA el alta, el Secretario la APRUEBA y REGISTRA
       
-      match /petas/{petaId} {
+      match /solicitudesAlta/{solicitudId} {
+        // Lectura: el socio puede ver sus propias solicitudes O el secretario puede ver todas
         allow read: if isOwner(email) || isSecretario();
-        allow create: if isOwner(email);
-        allow update: if isOwner(email) || isSecretario();
-        allow delete: if false; // No permitir eliminar solicitudes
+        
+        // Creación: el socio puede crear solicitudes con estado inicial 'pendiente'
+        allow create: if isOwner(email) && 
+          request.resource.data.estado == 'pendiente' &&
+          request.resource.data.solicitadoPor == email;
+        
+        // Actualización: SOLO el secretario puede cambiar el estado
+        // (aprobar, procesar, rechazar)
+        allow update: if isSecretario();
+        
+        // Eliminación: SOLO el secretario puede eliminar solicitudes
+        allow delete: if isSecretario();
       }
+      
+      // ======================================================================
+      // SUBCOLECCIÓN: solicitudesBaja
+      // ======================================================================
+      // Solicitudes de baja de armas (venta, transferencia, robo, etc.)
+      // El socio SOLICITA la baja, el Secretario la APRUEBA y PROCESA
+      
+      match /solicitudesBaja/{solicitudId} {
+        // Lectura: el socio puede ver sus propias solicitudes O el secretario puede ver todas
+        allow read: if isOwner(email) || isSecretario();
+        
+        // Creación: el socio puede crear solicitudes con estado inicial 'pendiente'
+        allow create: if isOwner(email) && 
+          request.resource.data.estado == 'pendiente' &&
+          request.resource.data.solicitadoPor == email;
+        
+        // Actualización: SOLO el secretario puede cambiar el estado
+        // (aprobar, procesar, rechazar)
+        allow update: if isSecretario();
+        
+        // Eliminación: SOLO el secretario puede eliminar solicitudes
+        allow delete: if isSecretario();
+      }
+    }
+    
+    // ========================================================================
+    // COLECCIÓN: bajas
+    // ========================================================================
+    // Registro global de bajas procesadas (historial administrativo)
+    // SOLO el secretario puede escribir aquí
+    
+    match /bajas/{bajaId} {
+      // Lectura: todos los socios pueden consultar el historial público de bajas
+      allow read: if isAuthenticated();
+      
+      // Escritura: SOLO el secretario puede crear/actualizar/eliminar bajas procesadas
+      allow create, update, delete: if isSecretario();
     }
     
     // ========================================================================
