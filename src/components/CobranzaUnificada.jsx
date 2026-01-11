@@ -80,13 +80,24 @@ export default function CobranzaUnificada({ onBack }) {
           pagos = renovacion.pagos;
           montoPagado = pagos.reduce((sum, pago) => sum + (pago.monto || 0), 0);
           
-          // Estado: pagado si tiene inscripción + anualidad + FEMETI
+          // Estado: pagado si cumple una de estas condiciones:
+          // 1. Está marcado explícitamente como pagado EN renovacion2026.estado
+          // 2. Es socio nuevo: tiene inscripción + anualidad + FEMETI
+          // 3. Es socio antiguo: tiene anualidad + FEMETI (sin necesidad de inscripción)
           const conceptosPagados = pagos.map(p => p.concepto);
-          const pagoCopleto = conceptosPagados.includes('inscripcion') && 
-                             conceptosPagados.includes('cuota_anual') && 
-                             (conceptosPagados.includes('femeti_socio') || conceptosPagados.includes('femeti_nuevo'));
+          const tieneCuota = conceptosPagados.includes('cuota_anual');
+          const tieneFemeti = conceptosPagados.includes('femeti_socio') || conceptosPagados.includes('femeti_nuevo');
+          const tieneInscripcion = conceptosPagados.includes('inscripcion');
           
-          estado = renovacion.exento ? 'exento' : (pagoCopleto ? 'pagado' : 'pendiente');
+          // Pagado si: (cuota + FEMETI) OR (cuota + FEMETI + inscripción)
+          const pagoCopleto = tieneCuota && tieneFemeti;
+          
+          // Si renovacion.estado está explícitamente set, respetarlo
+          if (renovacion.estado === 'pagado') {
+            estado = 'pagado';
+          } else {
+            estado = renovacion.exento ? 'exento' : (pagoCopleto ? 'pagado' : 'pendiente');
+          }
         } 
         // ESTRUCTURA VIEJA: campo montoPagado único (compatibilidad hacia atrás)
         else if (renovacion.estado === 'pagado' || renovacion.montoPagado) {
