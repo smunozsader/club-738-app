@@ -10,6 +10,409 @@
 
 ## 📅 Enero 2026
 
+### 10 de Enero - v1.14.0 - Sistema de Agendamiento con Google Calendar
+
+#### Objetivo
+
+Implementar módulo de agendamiento de citas para que los socios puedan agendar tiempo con el secretario para entrega de documentos físicos, pagos, o consultas. Integración completa con Google Calendar del secretario.
+
+#### Componentes Implementados
+
+**1. AgendarCita.jsx (Portal del Socio)**
+
+**Funcionalidades:**
+- Formulario de agendamiento con validaciones:
+  - Selección de fecha (días laborables, min +1 día, max +3 meses)
+  - Slots de 30 minutos (9:00 - 17:00 hrs)
+  - Propósito de cita: PETA, pago, documentos, consulta, otro
+  - Notas adicionales opcionales
+- Visualización de citas agendadas del socio
+- Estados: pendiente, confirmada, cancelada, completada
+- Validación de slots ocupados (query en Firestore)
+- Info box con reglas de agendamiento
+
+**UI/UX:**
+- Grid responsive (formulario + mis citas)
+- Slots como botones seleccionables (grid 4 columnas)
+- Cards de citas con fecha visual (día/mes destacado)
+- Badges de estado por color
+- Iconos por tipo de propósito
+
+**Validaciones:**
+- Solo días laborables (lunes-viernes)
+- Fecha mínima: mañana (+24 hrs)
+- Fecha máxima: 3 meses adelante
+- Horario: 9:00 - 17:00 hrs
+- Slot no ocupado por otra cita
+
+**Firestore writes:**
+```javascript
+citas/{citaId}
+├── socioEmail: string
+├── socioNombre: string
+├── fecha: string (YYYY-MM-DD)
+├── hora: string (HH:mm)
+├── proposito: 'peta' | 'pago' | 'documentos' | 'consulta' | 'otro'
+├── notas: string
+├── estado: 'pendiente' | 'confirmada' | 'cancelada' | 'completada'
+├── fechaCreacion: timestamp
+├── calendarEventId: string (llenado por Function)
+└── calendarEventLink: string (llenado por Function)
+```
+
+**Archivos creados:**
+- `/src/components/AgendarCita.jsx` (500 líneas)
+- `/src/components/AgendarCita.css` (450 líneas)
+
+---
+
+**2. MiAgenda.jsx (Panel del Secretario)**
+
+**Funcionalidades:**
+- Dashboard con 4 contadores:
+  - Pendientes confirmación
+  - Confirmadas
+  - Citas de hoy
+  - Total de citas
+- Filtros por estado: todas, pendiente, confirmada, completada
+- Filtros por período: hoy, próximas, pasadas
+- Tabla con todas las citas (fecha, hora, socio, propósito, estado)
+- Modal de detalle con información completa
+- Acciones:
+  - Confirmar cita (pendiente → confirmada)
+  - Cancelar cita (cualquier estado → cancelada, solicita motivo)
+  - Marcar completada (confirmada → completada)
+
+**UI/UX:**
+- Contadores con colores por tipo (pendiente: naranja, confirmada: verde, hoy: azul, total: morado)
+- Tabla responsiva con grid
+- Modal centrado con overlay
+- Botones de acción por estado (confirmar, cancelar, completar)
+- Link a Google Calendar Event (si existe)
+
+**Firestore operations:**
+- Query todas las citas (snapshot)
+- Update estado de citas
+- Update motivoCancelacion (si aplica)
+- Update fechaCompletada (si aplica)
+
+**Notificaciones:**
+Al confirmar/cancelar/completar, el sistema actualiza Firestore y la Firebase Function actualiza Google Calendar automáticamente.
+
+**Archivos creados:**
+- `/src/components/MiAgenda.jsx` (450 líneas)
+- `/src/components/MiAgenda.css` (550 líneas)
+
+---
+
+**3. Firebase Functions - Google Calendar Integration**
+
+**Archivo:** `/functions/calendar-integration.js` (400 líneas)
+
+**Funciones implementadas:**
+
+**a) crearEventoCalendar**
+- Trigger: onCreate en colección `citas`
+- Acción:
+  1. Lee datos de la cita (fecha, hora, socio, propósito, notas)
+  2. Crea evento en Google Calendar del secretario
+  3. Duración: 30 minutos
+  4. Invita al socio por email (attendee)
+  5. Recordatorios: 24 hrs (email), 1 hr (popup), 15 min (popup)
+  6. Actualiza Firestore con `calendarEventId` y `calendarEventLink`
+
+**Evento creado:**
+```javascript
+{
+  summary: "📅 Trámite PETA - Joaquin Gardoni",
+  description: `
+    🎯 Propósito: Trámite PETA
+    👤 Socio: Joaquin Gardoni
+    📧 Email: joaquin@example.com
+    📝 Notas: Llevaré documentos originales
+  `,
+  start: { dateTime: "2026-01-15T10:00:00", timeZone: "America/Merida" },
+  end: { dateTime: "2026-01-15T10:30:00", timeZone: "America/Merida" },
+  attendees: [
+    { email: "joaquin@example.com", displayName: "Joaquin Gardoni" },
+    { email: "smunozam@gmail.com", organizer: true }
+  ],
+  colorId: "9", // Azul
+  location: "Club de Caza, Tiro y Pesca de Yucatán..."
+}
+```
+
+**b) actualizarEventoCalendar**
+- Trigger: onUpdate en colección `citas`
+- Acción según cambio de estado:
+
+| Estado anterior → nuevo | Acción en Google Calendar |
+|-------------------------|---------------------------|
+| pendiente → confirmada  | Actualiza título: "✅ CONFIRMADA: ...", color verde |
+| confirmada → completada | Actualiza título: "✔️ COMPLETADA: ...", color gris |
+| cualquiera → cancelada  | Elimina evento, envía notificación de cancelación |
+
+**Logs:**
+- Console.log detallado para debugging
+- Errores guardados en Firestore (calendarError, calendarUpdateError)
+- Timestamps de operaciones (calendarEventCreated, calendarEventUpdated)
+
+**Dependencias:**
+- `googleapis@126` - Google Calendar API v3
+- `calendar_service_account.json` - Credenciales de service account
+
+**Archivos creados:**
+- `/functions/calendar-integration.js` (400 líneas)
+- `/functions/index.js` - Actualizado para exportar funciones de calendar
+
+---
+
+**4. Documentación Completa de Setup**
+
+**Archivo:** `/docs/GOOGLE_CALENDAR_SETUP.md`
+
+**Contenido (paso a paso):**
+
+1. **Configurar Google Cloud Project**
+   - Crear/seleccionar proyecto
+   - Habilitar Google Calendar API
+
+2. **Configurar Credenciales OAuth 2.0**
+   - OAuth consent screen
+   - Service Account creation
+   - Download JSON credentials
+
+3. **Compartir Calendario con Service Account**
+   - Instrucciones para compartir calendario del secretario
+   - Permisos: "Make changes to events"
+
+4. **Configurar Firebase Functions**
+   - Inicializar functions
+   - Instalar `googleapis`
+   - Copiar service account JSON
+
+5. **Deploy de Functions**
+   - Comandos de deploy
+   - Verificación en Firebase Console
+
+6. **Testing**
+   - Test manual desde portal
+   - Verificar logs
+   - Verificar Firestore
+
+7. **Troubleshooting**
+   - Errores comunes y soluciones
+   - Zona horaria
+   - Permisos
+   - Credenciales
+
+8. **Seguridad**
+   - Archivos que NUNCA commitear
+   - .gitignore entries
+
+**Checklist de implementación:** 14 pasos
+
+**Archivos creados:**
+- `/docs/GOOGLE_CALENDAR_SETUP.md` (350 líneas)
+
+---
+
+#### Integración en App.jsx
+
+**Dashboard del Socio:**
+```jsx
+<div className="dash-card citas" onClick={() => setActiveSection('agendar-cita')}>
+  <div className="dash-card-icon">📅</div>
+  <h3>Agendar Cita</h3>
+  <p>Agenda cita para entrega de documentos o consultas</p>
+  <span className="dash-card-cta">Agendar →</span>
+</div>
+```
+
+**Panel del Secretario:**
+```jsx
+<div className="dash-card admin agenda" onClick={() => setActiveSection('mi-agenda')}>
+  <div className="dash-card-icon">📅</div>
+  <h3>Mi Agenda</h3>
+  <p>Gestionar citas de socios</p>
+  <span className="dash-card-cta">Ver agenda →</span>
+</div>
+```
+
+**Rutas agregadas:**
+```jsx
+{activeSection === 'agendar-cita' && (
+  <AgendarCita onBack={() => setActiveSection('dashboard')} />
+)}
+
+{activeSection === 'mi-agenda' && user.email === 'smunozam@gmail.com' && (
+  <MiAgenda onBack={() => setActiveSection('dashboard')} />
+)}
+```
+
+---
+
+#### Flujo de Usuario Completo
+
+**1. Socio agenda cita:**
+- Login → Dashboard → Agendar Cita
+- Selecciona fecha (ej: 15 Enero 2026)
+- Selecciona hora (ej: 10:00)
+- Selecciona propósito (ej: Trámite PETA)
+- Agrega notas (opcional)
+- Submit
+
+**2. Sistema procesa:**
+- Crea documento en Firestore `citas/{citaId}`
+- Firebase Function detecta onCreate
+- Crea evento en Google Calendar del secretario
+- Envía invitación por email al socio
+- Actualiza Firestore con eventId y link
+
+**3. Socio recibe:**
+- Email de invitación de Google Calendar
+- Puede agregar a su propio calendario
+- Recibe recordatorios automáticos (24h, 1h, 15min)
+
+**4. Secretario gestiona:**
+- Login → Panel Admin → Mi Agenda
+- Ve cita en estado "Pendiente"
+- Abre modal de detalle
+- Click "Confirmar Cita"
+
+**5. Sistema actualiza:**
+- Firestore: estado → "confirmada"
+- Firebase Function detecta onUpdate
+- Actualiza evento en Google Calendar:
+  - Título: "✅ CONFIRMADA: Trámite PETA - Joaquin Gardoni"
+  - Color: Verde
+- Envía actualización por email al socio
+
+**6. Día de la cita:**
+- Ambos reciben recordatorios de Google Calendar
+- Secretario ve cita en contador "Hoy"
+- Después de reunión: Click "Marcar Completada"
+
+**7. Sistema cierra:**
+- Firestore: estado → "completada", fechaCompletada
+- Google Calendar: Título actualizado, color gris
+- Notificación al socio
+
+---
+
+#### Beneficios del Sistema
+
+**Para Socios:**
+- ✅ Agendamiento 24/7 desde portal
+- ✅ No necesitan llamar/WhatsApp
+- ✅ Invitación automática en Google Calendar
+- ✅ Recordatorios automáticos
+- ✅ Visibilidad de citas agendadas
+- ✅ Confirmación por email
+
+**Para Secretario:**
+- ✅ Calendario sincronizado con Google Calendar personal
+- ✅ Dashboard centralizado de citas
+- ✅ Filtros por estado y fecha
+- ✅ Un click para confirmar/cancelar/completar
+- ✅ Notificaciones automáticas a socios
+- ✅ Historial completo de citas
+- ✅ Integración con workflow diario (Google Calendar)
+
+**Técnicos:**
+- ✅ Integración nativa con Google Calendar API
+- ✅ Serverless con Firebase Functions
+- ✅ Tiempo real con Firestore snapshots
+- ✅ Manejo de zonas horarias correcto (America/Merida)
+- ✅ Logs detallados para debugging
+- ✅ Manejo de errores robusto
+
+---
+
+#### Archivos Modificados/Creados
+
+**Componentes Frontend:**
+- ✅ `/src/components/AgendarCita.jsx` (500 líneas)
+- ✅ `/src/components/AgendarCita.css` (450 líneas)
+- ✅ `/src/components/MiAgenda.jsx` (450 líneas)
+- ✅ `/src/components/MiAgenda.css` (550 líneas)
+- ✅ `/src/App.jsx` - Imports, dashboard cards, rutas
+
+**Backend:**
+- ✅ `/functions/calendar-integration.js` (400 líneas)
+- ✅ `/functions/index.js` - Exports agregados
+
+**Documentación:**
+- ✅ `/docs/GOOGLE_CALENDAR_SETUP.md` (350 líneas)
+
+**Total:** ~2,700 líneas de código + documentación
+
+---
+
+#### Próximos Pasos (No Implementado Aún)
+
+**Configuración de Google Cloud:**
+1. Crear service account en Google Cloud Console
+2. Habilitar Google Calendar API
+3. Download credenciales JSON
+4. Compartir calendario con service account
+5. Copiar JSON a `/functions/calendar_service_account.json`
+
+**Deploy:**
+```bash
+cd /Applications/club-738-web/functions
+npm install googleapis@126
+cd ..
+firebase deploy --only functions
+```
+
+**Testing:**
+1. Crear cita de prueba desde portal
+2. Verificar evento en Google Calendar
+3. Verificar email de invitación
+4. Confirmar cita desde MiAgenda
+5. Verificar actualización en Calendar
+
+---
+
+#### Notas Técnicas
+
+**Google Calendar API:**
+- Version: v3
+- Scopes: `https://www.googleapis.com/auth/calendar`
+- Auth: Service Account (googleapis library)
+- Zona horaria: `America/Merida` (Yucatán, México)
+
+**Firebase Functions:**
+- Runtime: Node.js 18
+- Triggers: Firestore onCreate/onUpdate
+- Region: us-central1
+
+**Firestore Security Rules (Pendiente):**
+```javascript
+match /citas/{citaId} {
+  // Socios pueden crear sus propias citas
+  allow create: if request.auth.uid != null &&
+                request.resource.data.socioEmail == request.auth.token.email;
+  
+  // Socios pueden leer sus propias citas
+  allow read: if request.auth.uid != null &&
+              resource.data.socioEmail == request.auth.token.email;
+  
+  // Solo secretario puede actualizar estado
+  allow update: if request.auth.token.email == 'smunozam@gmail.com';
+  
+  // Nadie puede eliminar citas (cancelar cambia estado)
+  allow delete: if false;
+}
+```
+
+---
+
+**Deploy pendiente**: Configuración de Google Cloud + Deploy de Functions
+
+---
+
 ### 10 de Enero - Módulo de Gestión de Arsenal
 
 #### Contexto: Necesidad Identificada

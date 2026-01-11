@@ -22,6 +22,8 @@ import ReporteCaja from './components/ReporteCaja';
 import MiPerfil from './components/MiPerfil';
 import GestionArsenal from './components/GestionArsenal';
 import AdminBajasArsenal from './components/AdminBajasArsenal';
+import AgendarCita from './components/AgendarCita';
+import MiAgenda from './components/MiAgenda';
 import './App.css';
 
 // Detectar rutas públicas (sin necesidad de login)
@@ -318,6 +320,13 @@ function App() {
                 <span className="dash-card-cta">Configurar →</span>
               </div>
               
+              <div className="dash-card citas" onClick={() => setActiveSection('agendar-cita')}>
+                <div className="dash-card-icon">📅</div>
+                <h3>Agendar Cita</h3>
+                <p>Agenda cita para entrega de documentos o consultas</p>
+                <span className="dash-card-cta">Agendar →</span>
+              </div>
+              
               <div className="dash-card pagos" onClick={() => setShowPagosModal(true)}>
                 <div className="dash-card-icon">💳</div>
                 <h3>Estado de Pagos</h3>
@@ -413,6 +422,13 @@ function App() {
                     <h3>Gestión de Bajas</h3>
                     <p>Administrar solicitudes de baja de armas</p>
                     <span className="dash-card-cta">Ver solicitudes →</span>
+                  </div>
+                  
+                  <div className="dash-card admin agenda" onClick={() => setActiveSection('mi-agenda')}>
+                    <div className="dash-card-icon">📅</div>
+                    <h3>Mi Agenda</h3>
+                    <p>Gestionar citas de socios</p>
+                    <span className="dash-card-cta">Ver agenda →</span>
                   </div>
                 </div>
               </div>
@@ -566,6 +582,18 @@ function App() {
               ← Volver al Dashboard
             </button>
             <AdminBajasArsenal />
+          </div>
+        )}
+        
+        {activeSection === 'agendar-cita' && (
+          <div className="section-agendar-cita">
+            <AgendarCita onBack={() => setActiveSection('dashboard')} />
+          </div>
+        )}
+        
+        {activeSection === 'mi-agenda' && user.email === 'smunozam@gmail.com' && (
+          <div className="section-mi-agenda">
+            <MiAgenda onBack={() => setActiveSection('dashboard')} />
           </div>
         )}
 

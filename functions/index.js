@@ -3,6 +3,8 @@
  *
  * Funciones:
  * - onPetaCreated: Envía email de notificación cuando un socio solicita PETA
+ * - crearEventoCalendar: Crea evento en Google Calendar al crear cita
+ * - actualizarEventoCalendar: Actualiza evento al cambiar estado de cita
  */
 
 const {onDocumentCreated} = require("firebase-functions/v2/firestore");
@@ -12,6 +14,9 @@ const nodemailer = require("nodemailer");
 
 // Inicializar Firebase Admin
 admin.initializeApp();
+
+// Importar funciones de Google Calendar
+const calendarFunctions = require('./calendar-integration');
 
 // Configuración global
 setGlobalOptions({
@@ -258,3 +263,7 @@ Fecha: ${fechaTest}
       }
     },
 );
+
+// Exportar funciones de Google Calendar
+exports.crearEventoCalendar = calendarFunctions.crearEventoCalendar;
+exports.actualizarEventoCalendar = calendarFunctions.actualizarEventoCalendar;
