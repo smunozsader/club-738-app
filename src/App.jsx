@@ -375,12 +375,6 @@ function App() {
               <div className="dashboard-section admin-section">
                 <h3 className="section-title">Panel de Secretario</h3>
                 <div className="dashboard-grid admin-grid">
-                  <div className="dash-card admin" onClick={() => setActiveSection('renovaciones')}>
-                    <div className="dash-card-icon">📊</div>
-                    <h3>Panel de Cobranza</h3>
-                    <p>Dashboard de renovaciones 2026</p>
-                    <span className="dash-card-cta">Abrir panel →</span>
-                  </div>
                   
                   <div className="dash-card admin cumples" onClick={() => setActiveSection('cumpleanos')}>
                     <div className="dash-card-icon">🎂</div>
