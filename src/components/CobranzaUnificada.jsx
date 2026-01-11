@@ -66,18 +66,52 @@ export default function CobranzaUnificada({ onBack }) {
       snapshot.forEach(doc => {
         const data = doc.data();
         const renovacion = data.renovacion2026 || {};
-        const pagos = renovacion.pagos || [];
+
+        // ========================================
+        // SOPORTAR 2 ESTRUCTURAS DE DATOS
+        // ========================================
         
-        // Calcular total pagado
-        const montoPagado = pagos.reduce((sum, pago) => sum + (pago.monto || 0), 0);
-        
-        // Determinar estado: pagado si tiene al menos inscripción + anualidad + FEMETI
-        const conceptosPagados = pagos.map(p => p.concepto);
-        const pagoCopleto = conceptosPagados.includes('inscripcion') && 
-                           conceptosPagados.includes('cuota_anual') && 
-                           (conceptosPagados.includes('femeti_socio') || conceptosPagados.includes('femeti_nuevo'));
-        
-        const estado = renovacion.exento ? 'exento' : (pagoCopleto ? 'pagado' : 'pendiente');
+        let pagos = [];
+        let montoPagado = 0;
+        let estado = 'pendiente';
+
+        // ESTRUCTURA NUEVA: array de pagos individuales
+        if (renovacion.pagos && Array.isArray(renovacion.pagos) && renovacion.pagos.length > 0) {
+          pagos = renovacion.pagos;
+          montoPagado = pagos.reduce((sum, pago) => sum + (pago.monto || 0), 0);
+          
+          // Estado: pagado si tiene inscripción + anualidad + FEMETI
+          const conceptosPagados = pagos.map(p => p.concepto);
+          const pagoCopleto = conceptosPagados.includes('inscripcion') && 
+                             conceptosPagados.includes('cuota_anual') && 
+                             (conceptosPagados.includes('femeti_socio') || conceptosPagados.includes('femeti_nuevo'));
+          
+          estado = renovacion.exento ? 'exento' : (pagoCopleto ? 'pagado' : 'pendiente');
+        } 
+        // ESTRUCTURA VIEJA: campo montoPagado único (compatibilidad hacia atrás)
+        else if (renovacion.estado === 'pagado' || renovacion.montoPagado) {
+          montoPagado = renovacion.montoPagado || 0;
+          estado = renovacion.estado || 'pagado';
+          
+          // Convertir estructura vieja a array de pagos para mostrar
+          if (montoPagado > 0) {
+            pagos = [{
+              concepto: 'desglose',
+              monto: montoPagado,
+              desglose: renovacion.desglose || null,
+              metodoPago: renovacion.metodoPago || null,
+              fechaPago: renovacion.fechaPago || null,
+              comprobante: renovacion.comprobante || null,
+              notas: renovacion.notas || null,
+              registradoPor: renovacion.registradoPor || 'sistema',
+              fechaRegistro: renovacion.fecha || null
+            }];
+          }
+        }
+        // Exento
+        else if (renovacion.exento) {
+          estado = 'exento';
+        }
         
         sociosList.push({
           email: doc.id,
@@ -578,10 +612,21 @@ export default function CobranzaUnificada({ onBack }) {
                             {pago.concepto === 'femeti_nuevo' && '🆕 FEMETI Nuevo'}
                             {pago.concepto === 'inscripcion' && '📝 Inscripción'}
                             {pago.concepto === 'otros' && '📌 Otros'}
+                            {pago.concepto === 'desglose' && '💰 Pago Completo'}
                           </td>
-                          <td className="monto">${pago.monto?.toLocaleString('es-MX') || 0}</td>
+                          <td className="monto">
+                            ${pago.monto?.toLocaleString('es-MX') || 0}
+                            {pago.desglose && (
+                              <div className="desglose-info">
+                                {pago.desglose.inscripcion && <span>Insc: ${pago.desglose.inscripcion}</span>}
+                                {pago.desglose.anualidad && <span>Anu: ${pago.desglose.anualidad}</span>}
+                                {pago.desglose.femeti && <span>FEMETI: ${pago.desglose.femeti}</span>}
+                              </div>
+                            )}
+                          </td>
                           <td className="fecha">
-                            {pago.fechaPago?.toDate?.().toLocaleDateString('es-MX') || '-'}
+                            {pago.fechaPago?.toDate?.().toLocaleDateString('es-MX') || 
+                             (pago.fecha?._seconds ? new Date(pago.fecha._seconds * 1000).toLocaleDateString('es-MX') : '-')}
                           </td>
                           <td>{pago.metodoPago || '-'}</td>
                           <td>{pago.comprobante || '-'}</td>
