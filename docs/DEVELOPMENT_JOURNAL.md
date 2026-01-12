@@ -1,3 +1,22 @@
+### 2026-01-11 - v1.13.1 Límites legales de cartuchos (PETA)
+
+#### Implementación de límites por calibre en GeneradorPETA
+
+**Objetivo**: Asegurar el cumplimiento de la LFAFE en la cantidad de cartuchos por calibre/clase y reflejarlo en la UI y en el PDF del oficio PETA.
+
+**Cambios realizados**:
+- Agregado helper `getCartuchoSpec()` para definir límites y defaults por calibre/clase (.22 LR → máx 1000, escopetas 12/20/GA → máx 500, resto → máx 200).
+- Agregado `clampCartuchos()` para redondeo al `step` y ajuste a `min/max`.
+- Reemplazados defaults heurísticos en `toggleArma()` por `spec.default` según calibre/clase.
+- Al cargar solicitudes PETA, se clampa `armasIncluidas[*].cartuchos` a los límites legales antes de guardar estado.
+- Inputs de “Cartuchos” ahora usan `min/max/step` por calibre y clamping en `onChange`.
+- Generación de PDF: el valor en la columna CARTUCHOS se clampa a los límites antes de renderizar.
+
+**Archivos modificados/creados**:
+- `src/components/GeneradorPETA.jsx` – Helpers de límites, clamping en carga/inputs/PDF.
+- `docs/DEVELOPMENT_JOURNAL.md` – Entrada de journal.
+
+**Deploy**: Hosting actualizado tras build exitoso. Se realizará `firebase deploy --only hosting`.
 # 📔 Development Journal - Club 738 Web
 
 ## Resumen del Proyecto

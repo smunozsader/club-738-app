@@ -125,6 +125,29 @@ service cloud.firestore {
         // Eliminación: SOLO el secretario puede eliminar solicitudes
         allow delete: if isSecretario();
       }
+      
+      // ======================================================================
+      // SUBCOLECCIÓN: petas
+      // ======================================================================
+      // Solicitudes de PETA (Permiso Extraordinario Transportación de Armas)
+      // El socio CREA la solicitud, el Secretario la VERIFICA y GENERA el PDF
+      
+      match /petas/{petaId} {
+        // Lectura: el socio puede ver sus propias PETAs O el secretario puede ver todas
+        allow read: if isOwner(email) || isSecretario();
+        
+        // Creación: el socio puede crear solicitudes PETA
+        allow create: if isOwner(email) && 
+          request.resource.data.creadoPor == email;
+        
+        // Actualización: el socio puede actualizar sus PETAs en estado 'documentacion_proceso'
+        // El secretario puede actualizar cualquier PETA (verificación, cambio de estado)
+        allow update: if (isOwner(email) && resource.data.estado == 'documentacion_proceso')
+          || isSecretario();
+        
+        // Eliminación: SOLO el secretario puede eliminar PETAs
+        allow delete: if isSecretario();
+      }
     }
     
     // ========================================================================

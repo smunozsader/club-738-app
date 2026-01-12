@@ -241,11 +241,30 @@ export default function CobranzaUnificada({ onBack }) {
     const pagados = socios.filter(s => s.estado === 'pagado').length;
     const pendientes = socios.filter(s => s.estado === 'pendiente').length;
     const exentos = socios.filter(s => s.exento).length;
-    const recaudado = socios
+    
+    let ingresoClub = 0;
+    let femetiTransferir = 0;
+    
+    // Calcular ingresos separando FEMETI
+    socios
       .filter(s => s.estado === 'pagado')
-      .reduce((sum, s) => sum + (s.montoPagado || 0), 0);
+      .forEach(s => {
+        if (s.pagos && Array.isArray(s.pagos)) {
+          s.pagos.forEach(pago => {
+            // FEMETI no es ingreso del club
+            if (pago.concepto === 'femeti_socio' || pago.concepto === 'femeti_nuevo') {
+              femetiTransferir += pago.monto || 0;
+            } else {
+              // Cuota anual, inscripción, etc. SÍ son ingreso del club
+              ingresoClub += pago.monto || 0;
+            }
+          });
+        }
+      });
+    
+    const recaudadoTotal = ingresoClub + femetiTransferir;
 
-    return { pagados, pendientes, exentos, recaudado };
+    return { pagados, pendientes, exentos, ingresoClub, femetiTransferir, recaudadoTotal };
   };
 
   const exportarExcel = () => {
@@ -323,9 +342,17 @@ export default function CobranzaUnificada({ onBack }) {
               <div className="contador-num">{resumen.exentos}</div>
               <div className="contador-label">Exentos</div>
             </div>
-            <div className="contador recaudado">
-              <div className="contador-num">${resumen.recaudado.toLocaleString('es-MX')}</div>
-              <div className="contador-label">Recaudado</div>
+            <div className="contador ingresoClub">
+              <div className="contador-num">${resumen.ingresoClub.toLocaleString('es-MX')}</div>
+              <div className="contador-label">💳 Ingreso del Club</div>
+            </div>
+            <div className="contador femeti">
+              <div className="contador-num">${resumen.femetiTransferir.toLocaleString('es-MX')}</div>
+              <div className="contador-label">🏆 FEMETI a Transferir</div>
+            </div>
+            <div className="contador total">
+              <div className="contador-num">${resumen.recaudadoTotal.toLocaleString('es-MX')}</div>
+              <div className="contador-label">📊 Recaudado Total</div>
             </div>
           </div>
 
@@ -714,10 +741,19 @@ export default function CobranzaUnificada({ onBack }) {
 
               <div className="reporte-card meta">
                 <h3>Meta 2026</h3>
-                <div className="reporte-valor">${(socios.length * CONCEPTO_PAGO.cuota_anual).toLocaleString('es-MX')}</div>
-                <div className="reporte-progress">
-                  <div className="progress-bar" style={{ width: `${(resumen.recaudado / (socios.length * CONCEPTO_PAGO.cuota_anual)) * 100}%` }}></div>
-                </div>
+                {(() => {
+                  const metaTotal = (socios.length - resumen.exentos) * CONCEPTO_PAGO.cuota_anual;
+                  const porcentajeLogro = (resumen.ingresoClub / metaTotal) * 100;
+                  return (
+                    <>
+                      <div className="reporte-valor">${metaTotal.toLocaleString('es-MX')}</div>
+                      <div className="reporte-progress">
+                        <div className="progress-bar" style={{ width: `${Math.min(porcentajeLogro, 100)}%` }}></div>
+                      </div>
+                      <div className="reporte-subtext">{porcentajeLogro.toFixed(1)}% de {socios.length - resumen.exentos} socios a cobrar</div>
+                    </>
+                  );
+                })()}
               </div>
             </div>
 

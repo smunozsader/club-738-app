@@ -34,6 +34,143 @@
   font-size: 0.95rem;
 }
 
+/* Modo de Trabajo */
+.modo-trabajo {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.modo-trabajo button {
+  padding: 12px 24px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  color: #666;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.modo-trabajo button:hover {
+  border-color: #2e7d32;
+  background: #f1f8f4;
+}
+
+.modo-trabajo button.activo {
+  border-color: #2e7d32;
+  background: #2e7d32;
+  color: white;
+  font-weight: 600;
+}
+
+/* Solicitudes PETA */
+.solicitudes-section .seccion-ayuda {
+  margin: 0 0 15px 0;
+  font-size: 0.9rem;
+  color: #666;
+  padding: 10px 15px;
+  background: #f5f5f5;
+  border-radius: 6px;
+}
+
+.no-solicitudes {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.no-solicitudes button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.solicitudes-lista {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 6px;
+}
+
+.solicitud-item {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.solicitud-item:last-child {
+  border-bottom: none;
+}
+
+.solicitud-item:hover {
+  background: #f9f9f9;
+}
+
+.solicitud-item.selected {
+  background: #e8f5e9;
+  border-left: 4px solid #2e7d32;
+}
+
+.solicitud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.solicitud-header strong {
+  color: #333;
+  font-size: 1.05rem;
+}
+
+.estado-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.estado-badge.documentacion_proceso {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.estado-badge.verificacion {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.estado-badge.aprobado {
+  background: #d4edda;
+  color: #155724;
+}
+
+.solicitud-detalles {
+  display: flex;
+  gap: 15px;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.solicitud-detalles strong {
+  color: #2e7d32;
+}
+
+.solicitud-estados {
+  font-size: 0.8rem;
+  color: #999;
+  font-style: italic;
+}
+
 /* Secciones del formulario */
 .peta-section {
   background: #fff;

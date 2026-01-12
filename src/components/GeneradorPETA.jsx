@@ -37,6 +37,31 @@ const ESTADOS_MEXICO = [
 const MESES = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 
                'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
 
+// Límites legales de cartuchos por calibre (LFAFE orientativo)
+// .22 LR: 1000; Escopetas (12/20/GA): 500; Resto: 200
+function getCartuchoSpec(calibre, clase) {
+  const c = (calibre || '').toString().toUpperCase();
+  const cl = (clase || '').toString().toUpperCase();
+  // Detectar .22 LR
+  if (c.includes('.22') || c.includes('22 L.R') || c.includes('22LR') || c.includes('LR')) {
+    return { min: 50, max: 1000, step: 50, default: 1000 };
+  }
+  // Detectar escopetas por calibre o clase
+  if (c.includes('12') || c.includes('20') || c.includes('GA') || cl.includes('ESCOPETA')) {
+    return { min: 50, max: 500, step: 50, default: 500 };
+  }
+  // Resto de calibres
+  return { min: 50, max: 200, step: 50, default: 200 };
+}
+
+function clampCartuchos(valor, spec) {
+  let v = Number(valor);
+  if (!Number.isFinite(v)) v = spec.default;
+  // Ajustar al múltiplo de step más cercano dentro de límites
+  const rounded = Math.round(v / spec.step) * spec.step;
+  return Math.min(spec.max, Math.max(spec.min, rounded));
+}
+
 export default function GeneradorPETA({ userEmail, onBack }) {
   // Estados del formulario
   const [socios, setSocios] = useState([]);
@@ -44,6 +69,11 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   const [armasSocio, setArmasSocio] = useState([]);
   const [loading, setLoading] = useState(true);
   const [generando, setGenerando] = useState(false);
+  
+  // Solicitudes PETA existentes
+  const [solicitudesPETA, setSolicitudesPETA] = useState([]);
+  const [solicitudSeleccionada, setSolicitudSeleccionada] = useState(null);
+  const [modoManual, setModoManual] = useState(false);
   
   // Datos del formulario PETA
   const [tipoPETA, setTipoPETA] = useState('tiro'); // tiro, competencia, caza
@@ -79,6 +109,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   useEffect(() => {
     if (esSecretario) {
       cargarSocios();
+      cargarSolicitudesPETA();
     }
   }, [esSecretario]);
 
@@ -153,25 +184,197 @@ export default function GeneradorPETA({ userEmail, onBack }) {
     }
   };
 
+  const cargarSolicitudesPETA = async () => {
+    try {
+      console.log('🔍 Iniciando carga de solicitudes PETA...');
+      const sociosRef = collection(db, 'socios');
+      const sociosSnap = await getDocs(sociosRef);
+      
+      console.log(`📊 Total socios encontrados: ${sociosSnap.size}`);
+      
+      const todasSolicitudes = [];
+      
+      for (const socioDoc of sociosSnap.docs) {
+        const socioData = socioDoc.data();
+        const petasRef = collection(db, 'socios', socioDoc.id, 'petas');
+        const petasSnap = await getDocs(petasRef);
+        
+        if (!petasSnap.empty) {
+          console.log(`✅ ${socioDoc.id} tiene ${petasSnap.size} PETA(s)`);
+        }
+        
+        petasSnap.forEach(petaDoc => {
+          const petaData = petaDoc.data();
+          console.log(`  └─ PETA ${petaDoc.id}:`, {
+            tipo: petaData.tipo,
+            estado: petaData.estado,
+            armas: petaData.armasIncluidas?.length
+          });
+          todasSolicitudes.push({
+            id: petaDoc.id,
+            socioEmail: socioDoc.id,
+            socioNombre: socioData.nombre || socioDoc.id,
+            ...petaData
+          });
+        });
+      }
+      
+      console.log(`📋 Total solicitudes PETA encontradas: ${todasSolicitudes.length}`);
+      
+      // Ordenar por fecha de solicitud (más recientes primero)
+      todasSolicitudes.sort((a, b) => {
+        const fechaA = a.fechaSolicitud?.toMillis() || 0;
+        const fechaB = b.fechaSolicitud?.toMillis() || 0;
+        return fechaB - fechaA;
+      });
+      
+      setSolicitudesPETA(todasSolicitudes);
+      console.log('✅ Solicitudes cargadas en estado:', todasSolicitudes);
+    } catch (error) {
+      console.error('❌ Error cargando solicitudes PETA:', error);
+    }
+  };
+
+  const cargarSolicitud = async (solicitud) => {
+    try {
+      console.log('📝 Cargando solicitud:', solicitud);
+      setSolicitudSeleccionada(solicitud);
+      
+      // Buscar y seleccionar el socio
+      const socio = socios.find(s => s.email === solicitud.socioEmail);
+      if (!socio) {
+        console.error('❌ Socio no encontrado:', solicitud.socioEmail);
+        alert('Error: No se encontró el socio en la base de datos');
+        return;
+      }
+      
+      console.log('✅ Socio encontrado:', socio.nombre);
+      setSocioSeleccionado(socio);
+      
+      // Cargar armas del socio y esperar a que termine
+      console.log('🔄 Cargando armas del socio...');
+      const armasList = await cargarArmasSocio(socio.email);
+      
+      // Pre-llenar formulario con datos de la solicitud
+      setTipoPETA(solicitud.tipo || 'tiro');
+      setEsRenovacion(solicitud.esRenovacion || false);
+      setPetaAnterior(solicitud.petaAnteriorNumero || '');
+      
+      // Domicilio
+      if (solicitud.domicilio) {
+        setCalle(solicitud.domicilio.calle || '');
+        setColonia(solicitud.domicilio.colonia || '');
+        setCiudad(solicitud.domicilio.ciudad || '');
+        setCp(solicitud.domicilio.cp || '');
+        setMunicipio(solicitud.domicilio.municipio || '');
+        setEstadoDomicilio(solicitud.domicilio.estado || '');
+      }
+      
+      // Fechas
+      if (solicitud.vigenciaInicio) {
+        const inicio = solicitud.vigenciaInicio.toDate();
+        setFechaInicio(inicio.toISOString().split('T')[0]);
+      }
+      if (solicitud.vigenciaFin) {
+        const fin = solicitud.vigenciaFin.toDate();
+        setFechaFin(fin.toISOString().split('T')[0]);
+      }
+      
+      // Armas incluidas
+      if (solicitud.armasIncluidas && Array.isArray(solicitud.armasIncluidas)) {
+        console.log('📋 Armas en solicitud:', solicitud.armasIncluidas);
+        
+        // Helper: normalizar matrícula para comparación (remover guiones, guiones bajos, espacios)
+        const normalizarMatricula = (mat) => {
+          return mat?.toString().toUpperCase().replace(/[-_\s]/g, '') || '';
+        };
+        
+        // IMPORTANTE: Las armas en solicitud pueden tener IDs diferentes a Firestore
+        // Hacer match por matrícula en lugar de por ID
+        const armasASeleccionar = [];
+        const cartuchos = {};
+        
+        solicitud.armasIncluidas.forEach(armaEnSolicitud => {
+          const matriculaNormalizada = normalizarMatricula(armaEnSolicitud.matricula);
+          
+          console.log(`🔍 Buscando match para: "${armaEnSolicitud.matricula}" (normalizada: "${matriculaNormalizada}")`);
+          
+          // Buscar en lista de armas cargada por matrícula normalizada
+          const armaEnFirestore = armasList.find(a => {
+            const matFirestoreNorm = normalizarMatricula(a.matricula);
+            console.log(`  Comparando con: "${a.matricula}" (normalizada: "${matFirestoreNorm}") → ${matFirestoreNorm === matriculaNormalizada ? '✓ MATCH' : '✗'}`);
+            return matFirestoreNorm === matriculaNormalizada;
+          });
+          
+          if (armaEnFirestore) {
+            // Encontrada en Firestore - usar el ID de Firestore
+            console.log(`✅ Match por matrícula: ${armaEnSolicitud.matricula} → ${armaEnFirestore.matricula} (ID: ${armaEnFirestore.id})`);
+            armasASeleccionar.push(armaEnFirestore.id);
+            {
+              const spec = getCartuchoSpec(armaEnFirestore.calibre, armaEnFirestore.clase);
+              const val = armaEnSolicitud.cartuchos ?? spec.default;
+              cartuchos[armaEnFirestore.id] = clampCartuchos(val, spec);
+            }
+          } else {
+            // No encontrada en Firestore - agregar con datos de la solicitud
+            console.log(`⚠️ Arma no encontrada en Firestore: ${armaEnSolicitud.matricula}, agregando desde solicitud`);
+            const armaConDatosSolicitud = { id: armaEnSolicitud.id, ...armaEnSolicitud };
+            setArmasSocio(prev => [...prev, armaConDatosSolicitud]);
+            armasASeleccionar.push(armaEnSolicitud.id);
+            {
+              const spec = getCartuchoSpec(armaEnSolicitud.calibre, armaEnSolicitud.clase);
+              const val = armaEnSolicitud.cartuchos ?? spec.default;
+              cartuchos[armaEnSolicitud.id] = clampCartuchos(val, spec);
+            }
+          }
+        });
+        
+        console.log('🔑 IDs finales a seleccionar:', armasASeleccionar);
+        setArmasSeleccionadas(armasASeleccionar);
+        setCartuchosPorArma(cartuchos);
+        
+        console.log('✅ Armas seleccionadas establecidas:', armasASeleccionar);
+        console.log('🔫 Cartuchos por arma:', cartuchos);
+      }
+      
+      // Estados autorizados
+      if (solicitud.estadosAutorizados && Array.isArray(solicitud.estadosAutorizados)) {
+        setEstadosSeleccionados(solicitud.estadosAutorizados);
+      }
+      
+      setModoManual(false);
+      
+    } catch (error) {
+      console.error('❌ Error cargando solicitud:', error);
+      alert('Error al cargar la solicitud. Por favor intenta de nuevo.');
+    }
+  };
+
   const cargarArmasSocio = async (email) => {
     try {
+      console.log('🔫 Cargando armas de:', email);
       const socioRef = doc(db, 'socios', email.toLowerCase());
       const armasRef = collection(socioRef, 'armas');
       const snapshot = await getDocs(armasRef);
       
       const armasData = [];
       snapshot.forEach(docSnap => {
-        armasData.push({
+        const arma = {
           id: docSnap.id,
           ...docSnap.data()
-        });
+        };
+        armasData.push(arma);
+        console.log(`  └─ ${arma.marca} ${arma.modelo} - Mat: ${arma.matricula} (ID: ${docSnap.id})`);
       });
       
+      console.log(`✅ Total armas cargadas: ${armasData.length}`);
       setArmasSocio(armasData);
       setArmasSeleccionadas([]);
       setCartuchosPorArma({});
+      return armasData;
     } catch (error) {
-      console.error('Error cargando armas:', error);
+      console.error('❌ Error cargando armas:', error);
+      return [];
     }
   };
 
@@ -180,16 +383,10 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       if (prev.includes(armaId)) {
         return prev.filter(id => id !== armaId);
       } else if (prev.length < 10) {
-        // Establecer cartuchos por defecto según tipo de arma
+        // Establecer cartuchos por defecto según límites legales
         const arma = armasSocio.find(a => a.id === armaId);
-        const calibre = arma?.calibre?.toUpperCase() || '';
-        let cartuchosDefault = 200;
-        if (calibre.includes('.22') || calibre.includes('22 L.R.')) {
-          cartuchosDefault = 1000;
-        } else if (calibre.includes('12') || calibre.includes('20') || calibre.includes('GA')) {
-          cartuchosDefault = 500;
-        }
-        setCartuchosPorArma(c => ({ ...c, [armaId]: cartuchosDefault }));
+        const spec = getCartuchoSpec(arma?.calibre, arma?.clase);
+        setCartuchosPorArma(c => ({ ...c, [armaId]: spec.default }));
         return [...prev, armaId];
       }
       return prev; // Ya tiene 10
@@ -363,11 +560,20 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       y += 4;
 
       // Filas de armas
+      console.log('📄 Generando PDF - Estado actual:');
+      console.log('  armasSeleccionadas:', armasSeleccionadas);
+      console.log('  armasSocio:', armasSocio);
+      console.log('  cartuchosPorArma:', cartuchosPorArma);
+      
       doc.setFont('helvetica', 'normal');
       for (let i = 0; i < 10; i++) {
         xPos = margin;
         const armaId = armasSeleccionadas[i];
         const arma = armaId ? armasSocio.find(a => a.id === armaId) : null;
+        
+        if (armaId && !arma) {
+          console.warn(`⚠️ Arma con ID ${armaId} no encontrada en armasSocio`);
+        }
         
         doc.text(`${i + 1}`, xPos, y);
         xPos += colWidths[0];
@@ -381,7 +587,12 @@ export default function GeneradorPETA({ userEmail, onBack }) {
           xPos += colWidths[3];
           doc.text((arma.matricula || '').toUpperCase(), xPos, y);
           xPos += colWidths[4];
-          doc.text(String(cartuchosPorArma[armaId] || 200), xPos, y);
+          {
+            const spec = getCartuchoSpec(arma.calibre, arma.clase);
+            const val = cartuchosPorArma[armaId] ?? spec.default;
+            const clamped = clampCartuchos(val, spec);
+            doc.text(String(clamped), xPos, y);
+          }
         }
         y += 5;
       }
@@ -401,8 +612,10 @@ export default function GeneradorPETA({ userEmail, onBack }) {
         doc.text('POR SER DE PETA DE COMPETENCIA NACIONAL SE SOLICITAN LOS SIGUIENTES ESTADOS (MÁXIMO 10)', margin, y);
         y += 6;
         doc.setFont('helvetica', 'normal');
-        estadosSeleccionados.forEach(estado => {
-          doc.text(estado, margin, y);
+        const estadosLinea = estadosSeleccionados.join(', ');
+        const lineasEstados = doc.splitTextToSize(estadosLinea, pageWidth - margin * 2);
+        lineasEstados.forEach(linea => {
+          doc.text(linea, margin, y);
           y += 4;
         });
       } else {
@@ -411,8 +624,10 @@ export default function GeneradorPETA({ userEmail, onBack }) {
         doc.text('SI LA ACTIVIDAD ES DE CACERÍA ESPECIFIQUE LOS ESTADOS DONDE LA PRACTICARÁ (MÁXIMO 10)', margin, y);
         y += 6;
         doc.setFont('helvetica', 'normal');
-        estadosSeleccionados.forEach(estado => {
-          doc.text(estado, margin, y);
+        const estadosLinea = estadosSeleccionados.join(', ');
+        const lineasEstados = doc.splitTextToSize(estadosLinea, pageWidth - margin * 2);
+        lineasEstados.forEach(linea => {
+          doc.text(linea, margin, y);
           y += 4;
         });
       }
@@ -477,6 +692,69 @@ export default function GeneradorPETA({ userEmail, onBack }) {
         <h2>Generador de Oficios PETA</h2>
         <p>Permiso Extraordinario para la Transportación de Armas</p>
       </div>
+
+      {/* Modo de Trabajo */}
+      <div className="modo-trabajo">
+        <button 
+          className={!modoManual ? 'activo' : ''}
+          onClick={() => setModoManual(false)}
+        >
+          📋 Desde Solicitud
+        </button>
+        <button 
+          className={modoManual ? 'activo' : ''}
+          onClick={() => setModoManual(true)}
+        >
+          ✍️ Manual
+        </button>
+      </div>
+
+      {/* Paso 0: Solicitudes PETA Existentes (si no es modo manual) */}
+      {!modoManual && (
+        <div className="peta-section solicitudes-section">
+          <h3>📋 Solicitudes PETA Pendientes</h3>
+          <p className="seccion-ayuda">
+            Selecciona una solicitud para pre-llenar el formulario automáticamente con los datos del socio.
+          </p>
+
+          {solicitudesPETA.length === 0 ? (
+            <div className="no-solicitudes">
+              <p>No hay solicitudes PETA pendientes</p>
+              <button onClick={() => setModoManual(true)}>Crear PETA Manual</button>
+            </div>
+          ) : (
+            <div className="solicitudes-lista">
+              {solicitudesPETA.map(solicitud => (
+                <div
+                  key={solicitud.id}
+                  className={`solicitud-item ${solicitudSeleccionada?.id === solicitud.id ? 'selected' : ''}`}
+                  onClick={() => cargarSolicitud(solicitud)}
+                >
+                  <div className="solicitud-header">
+                    <strong>{solicitud.socioNombre}</strong>
+                    <span className={`estado-badge ${solicitud.estado}`}>
+                      {solicitud.estado?.replace(/_/g, ' ')}
+                    </span>
+                  </div>
+                  <div className="solicitud-detalles">
+                    <span>Tipo: <strong>{solicitud.tipo?.toUpperCase()}</strong></span>
+                    <span>{solicitud.armasIncluidas?.length || 0} armas</span>
+                    <span>
+                      {solicitud.fechaSolicitud?.toDate().toLocaleDateString('es-MX')}
+                    </span>
+                  </div>
+                  {solicitud.estadosAutorizados && solicitud.estadosAutorizados.length > 0 && (
+                    <div className="solicitud-estados">
+                      Estados: {solicitud.estadosAutorizados.slice(0, 3).join(', ')}
+                      {solicitud.estadosAutorizados.length > 3 && ` +${solicitud.estadosAutorizados.length - 3}`}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="peta-form">
         {/* Paso 1: Seleccionar Socio */}
@@ -731,17 +1009,27 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                       <div className="arma-cartuchos" onClick={(e) => e.stopPropagation()}>
                         <label>
                           Cartuchos:
-                          <input
-                            type="number"
-                            value={cartuchosPorArma[arma.id] || 200}
-                            onChange={(e) => setCartuchosPorArma(c => ({
-                              ...c,
-                              [arma.id]: parseInt(e.target.value) || 200
-                            }))}
-                            min={50}
-                            max={2000}
-                            step={50}
-                          />
+                          {(() => {
+                            const spec = getCartuchoSpec(arma.calibre, arma.clase);
+                            const current = cartuchosPorArma[arma.id] ?? spec.default;
+                            const safeVal = clampCartuchos(current, spec);
+                            return (
+                              <input
+                                type="number"
+                                value={safeVal}
+                                onChange={(e) => {
+                                  const raw = parseInt(e.target.value, 10);
+                                  setCartuchosPorArma(c => ({
+                                    ...c,
+                                    [arma.id]: clampCartuchos(raw, spec)
+                                  }));
+                                }}
+                                min={spec.min}
+                                max={spec.max}
+                                step={spec.step}
+                              />
+                            );
+                          })()}
                         </label>
                       </div>
                     )}

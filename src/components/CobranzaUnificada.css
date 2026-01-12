@@ -98,6 +98,34 @@
   border-left: 4px solid #95a5a6;
 }
 
+.contador.ingresoClub {
+  border-left: 4px solid #27ae60;
+  background: #f0fdf4;
+}
+
+.contador.ingresoClub .label {
+  color: #27ae60;
+}
+
+.contador.femeti {
+  border-left: 4px solid #f39c12;
+  background: #fffbf0;
+}
+
+.contador.femeti .label {
+  color: #f39c12;
+}
+
+.contador.total {
+  border-left: 4px solid #2c3e50;
+  background: #f5f6f7;
+}
+
+.contador.total .label {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
 .contador.pagados {
   border-left-color: #27ae60;
 }
