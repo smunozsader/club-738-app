@@ -56,6 +56,23 @@
 
 **Deploy**: Hosting actualizado tras build y deploy.
 
+### 2026-01-12 - v1.13.4 Mejora de formato PDF: bordes decorativos y tablas
+
+#### Aplicación de bordes decorativos y mejora de tablas
+
+**Objetivo**: Mejorar la presentación visual del PDF PETA para que se asemeje más al formato oficial SEDENA con bordes decorativos y tablas bien definidas.
+
+**Cambios realizados**:
+- Agregado marco decorativo doble alrededor de la página (borde exterior grueso + borde interior fino) usando `doc.rect()` y `doc.setLineWidth()`.
+- Mejorada tabla de armas con líneas divisorias entre filas y encabezados claramente delimitados.
+- Validación de que todos los encabezados de secciones ya estaban en bold.
+- Ajuste de padding interno en celdas de tabla para mejor legibilidad.
+
+**Archivos modificados**:
+- `src/components/GeneradorPETA.jsx` – Agregados bordes decorativos y líneas de tabla.
+
+**Deploy**: Hosting actualizado tras build y deploy.
+
 # 📔 Development Journal - Club 738 Web
 
 ## Resumen del Proyecto

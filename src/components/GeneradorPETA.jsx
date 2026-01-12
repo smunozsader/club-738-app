@@ -447,8 +447,17 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       });
 
       const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
       const margin = 20;
       let y = 20;
+
+      // ========== DECORATIVE BORDER ==========
+      // Outer border (thick)
+      doc.setLineWidth(0.8);
+      doc.rect(8, 8, pageWidth - 16, pageHeight - 16);
+      // Inner border (thin)
+      doc.setLineWidth(0.3);
+      doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
 
       // Helper para centrar texto
       const centrarTexto = (texto, yPos, fontSize = 10) => {
@@ -547,17 +556,24 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       // Encabezados de tabla
       const colWidths = [10, 45, 25, 35, 30, 20];
       const headers = ['ORD', 'CLASE', 'CALIBRE', 'MARCA', 'MATRÍCULA', 'CARTUCHOS'];
+      const tableStartY = y;
       
       doc.setFontSize(8);
       doc.setFont('helvetica', 'bold');
+      doc.setLineWidth(0.4);
+      
+      // Dibujar línea superior de tabla
+      doc.line(margin, y - 1, pageWidth - margin, y - 1);
+      
       let xPos = margin;
       headers.forEach((header, i) => {
-        doc.text(header, xPos, y);
+        doc.text(header, xPos + 1, y);
         xPos += colWidths[i];
       });
-      y += 1;
-      doc.line(margin, y, pageWidth - margin, y);
       y += 4;
+      
+      // Línea debajo de encabezados
+      doc.line(margin, y - 1, pageWidth - margin, y - 1);
 
       // Filas de armas
       console.log('📄 Generando PDF - Estado actual:');
@@ -575,28 +591,31 @@ export default function GeneradorPETA({ userEmail, onBack }) {
           console.warn(`⚠️ Arma con ID ${armaId} no encontrada en armasSocio`);
         }
         
-        doc.text(`${i + 1}`, xPos, y);
+        doc.text(`${i + 1}`, xPos + 1, y);
         xPos += colWidths[0];
         
         if (arma) {
-          doc.text((arma.clase || '').substring(0, 25).toUpperCase(), xPos, y);
+          doc.text((arma.clase || '').substring(0, 25).toUpperCase(), xPos + 1, y);
           xPos += colWidths[1];
-          doc.text((arma.calibre || '').toUpperCase(), xPos, y);
+          doc.text((arma.calibre || '').toUpperCase(), xPos + 1, y);
           xPos += colWidths[2];
-          doc.text((arma.marca || '').substring(0, 18).toUpperCase(), xPos, y);
+          doc.text((arma.marca || '').substring(0, 18).toUpperCase(), xPos + 1, y);
           xPos += colWidths[3];
-          doc.text((arma.matricula || '').toUpperCase(), xPos, y);
+          doc.text((arma.matricula || '').toUpperCase(), xPos + 1, y);
           xPos += colWidths[4];
           {
             const spec = getCartuchoSpec(arma.calibre, arma.clase);
             const val = cartuchosPorArma[armaId] ?? spec.default;
             const clamped = clampCartuchos(val, spec);
-            doc.text(String(clamped), xPos, y);
+            doc.text(String(clamped), xPos + 1, y);
           }
         }
         y += 5;
+        // Línea divisoria entre filas
+        doc.line(margin, y - 1, pageWidth - margin, y - 1);
       }
-      y += 5;
+      
+      y += 3;
 
       // ========== DESTINO / ESTADOS ==========
       doc.setFontSize(9);
