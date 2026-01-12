@@ -64,8 +64,8 @@ function AgendarCita({ onBack }) {
   };
 
   const generarSlotsDisponibles = (fecha) => {
-    // Horario de atención: Lunes a Viernes, 9:00 - 17:00
-    // Slots de 30 minutos
+    // Horario de atención: Lunes a Viernes, 17:00 - 20:00 (5 PM - 8 PM)
+    // Citas de 45 minutos + 15 minutos de descanso = slots cada 60 minutos
     const slots = [];
     const dia = new Date(fecha + 'T00:00:00');
     const diaSemana = dia.getDay(); // 0=Domingo, 6=Sábado
@@ -75,10 +75,10 @@ function AgendarCita({ onBack }) {
       return [];
     }
 
-    // Generar slots de 9:00 a 17:00
-    for (let hora = 9; hora < 17; hora++) {
+    // Generar slots cada 60 minutos de 17:00 a 20:00
+    // 17:00, 18:00, 19:00
+    for (let hora = 17; hora < 20; hora++) {
       slots.push(`${hora.toString().padStart(2, '0')}:00`);
-      slots.push(`${hora.toString().padStart(2, '0')}:30`);
     }
 
     return slots;
@@ -269,7 +269,7 @@ function AgendarCita({ onBack }) {
                   </p>
                 )}
                 <small className="help-text">
-                  Horario de atención: 9:00 - 17:00 hrs
+                  Horario de atención: 17:00 - 20:00 hrs (5 PM - 8 PM)
                 </small>
               </div>
             )}
@@ -313,8 +313,8 @@ function AgendarCita({ onBack }) {
               <h4>📌 Importante:</h4>
               <ul>
                 <li>Las citas deben agendarse con al menos <strong>24 horas de anticipación</strong></li>
-                <li>Horario de atención: <strong>Lunes a Viernes, 9:00 - 17:00 hrs</strong></li>
-                <li>Duración aproximada: <strong>30 minutos</strong></li>
+                <li>Horario de atención: <strong>Lunes a Viernes, 17:00 - 20:00 hrs (5 PM - 8 PM)</strong></li>
+                <li>Duración de la cita: <strong>45 minutos</strong> (+ 15 min para descanso)</li>
                 <li>Recibirás una <strong>invitación de Google Calendar</strong> al confirmar</li>
                 <li>Si necesitas cancelar, hazlo con al menos <strong>2 horas de anticipación</strong></li>
               </ul>

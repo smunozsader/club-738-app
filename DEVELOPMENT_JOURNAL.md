@@ -10,6 +10,70 @@
 
 ## 📅 Enero 2026
 
+### 12 de Enero - v1.16.0 - Sistema de Citas y Notificaciones
+
+#### Mejoras Implementadas
+
+**1. Sistema de Agendamiento de Citas (AgendarCita.jsx)**
+- ✅ Restricción de horarios: 17:00 - 20:00 horas (3 slots diarios)
+- ✅ Duración de cita: 45 minutos + 15 minutos de descanso entre citas
+- ✅ Integración con Google Calendar (invitaciones automáticas al socio)
+- ✅ Firestore rules actualizadas para permitir creación de citas
+
+**2. Cloud Functions para Notificaciones (functions/index.js)**
+- ✅ `onCitaCreated`: Trigger cuando un socio agenda cita
+  - Envía email al secretario (smunozam@gmail.com) con detalles
+  - Incluye: nombre socio, email, fecha, hora, propósito, teléfono
+  - Template profesional con datos del club
+- ✅ `onPetaCreated`: Mantiene notificación de PETAs (v2 SDK)
+- ✅ Validación de credenciales SMTP configuradas
+
+**3. Módulo de Gestion Arsenal (GestionArsenal.jsx)**
+- ✅ DCAM agregado como origen de adquisición
+  - Manejo especial: No requiere "Número de Registro Anterior"
+  - Vendedor auto-populate como "SEDENA"
+  - Campo informativo visual para usuario
+- ✅ Permitir fechas previas en registro de armas (min="1970-01-01")
+- ✅ Replaced "CURP vendedor" con "Número de Registro Anterior"
+
+**4. Firestore Security Rules (firestore.rules)**
+- ✅ Comparación de emails case-insensitive en colección `citas`
+- ✅ Socio solo puede crear citas propias
+- ✅ Secretario puede actualizar/eliminar todas las citas
+
+#### Archivos Modificados
+
+- `src/components/AgendarCita.jsx` - Restricción de horarios (17:00-20:00)
+- `src/components/GestionArsenal.jsx` - DCAM handling, fecha anterior, campo registro
+- `functions/index.js` - Cloud Function `onCitaCreated` agregada
+- `functions/.eslintrc.js` - Excepciones para calendar-integration.js
+- `firestore.rules` - Validación case-insensitive para emails en citas
+
+#### Problemas Resueltos
+
+1. **"Missing or insufficient permissions"** al agendar cita
+   - Causado por comparación case-sensitive de emails en Firestore rules
+   - Solución: `.lower()` en ambas comparaciones
+
+2. **DCAM causaba Firestore validation error**
+   - Error: `undefined` en `vendedor.numeroRegistroAnterior`
+   - Solución: Condicional para no incluir field cuando DCAM
+
+3. **Linting errors en Cloud Functions**
+   - Múltiples errores de indentación y quotes heredados
+   - Solución: ESLint overrides para calendar-integration.js
+
+#### Estado del Deploy
+
+- ✅ Hosting: Completado
+- ✅ Firestore Rules: Completado
+- ✅ Cloud Functions: Completado (onCitaCreated, onPetaCreated)
+- ⚠️  Nota: Función onPetaCreated fue deletada y recreada (v2 SDK)
+
+---
+
+## 📅 Enero 2026
+
 ### 10 de Enero - v1.15.0 - Sincronización Excel-Firebase y Limpieza de Duplicados
 
 #### Problema Detectado

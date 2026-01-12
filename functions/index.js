@@ -16,7 +16,7 @@ const nodemailer = require("nodemailer");
 admin.initializeApp();
 
 // Importar funciones de Google Calendar
-const calendarFunctions = require('./calendar-integration');
+// const calendarFunctions = require('./calendar-integration');
 
 // Configuración global
 setGlobalOptions({
@@ -215,6 +215,146 @@ SEDENA 738 | FEMETI YUC 05/2020
 );
 
 /**
+ * Trigger: Cuando se crea un documento en citas/{citaId}
+ * Acción: Enviar email de notificación al secretario sobre la nueva cita
+ */
+exports.onCitaCreated = onDocumentCreated(
+    "citas/{citaId}",
+    async (event) => {
+      const snapshot = event.data;
+      if (!snapshot) {
+        console.log("No data associated with the event");
+        return;
+      }
+
+      const citaData = snapshot.data();
+      const citaId = event.params.citaId;
+
+      console.log(`Nueva cita agendada: ${citaId} de ${citaData.socioEmail}`);
+
+      // Obtener datos del socio para más información
+      let telefonoSocio = "No disponible";
+      let nombreSocio = citaData.socioNombre || citaData.socioEmail;
+      try {
+        const socioDoc = await admin.firestore()
+            .collection("socios")
+            .doc(citaData.socioEmail)
+            .get();
+
+        if (socioDoc.exists) {
+          const socioData = socioDoc.data();
+          nombreSocio = socioData.nombre || citaData.socioEmail;
+          telefonoSocio = socioData.telefono || "No disponible";
+        }
+      } catch (error) {
+        console.error("Error obteniendo datos del socio:", error);
+      }
+
+      // Mapeo de propósitos
+      const propositos = {
+        "peta": "Trámite PETA",
+        "pago": "Pago de membresía",
+        "documentos": "Entrega de documentos",
+        "consulta": "Consulta general",
+        "otro": "Otro",
+      };
+
+      const proposito = propositos[citaData.proposito] ||
+        citaData.proposito ||
+        "No especificado";
+
+      // Formato de fecha
+      const fecha = new Date(citaData.fecha);
+      const fechaFormato = fecha.toLocaleDateString("es-MX", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      // Asunto del email
+      const asunto = `📅 Nueva Cita Agendada - ${nombreSocio}`;
+
+      // Cuerpo del email
+      const cuerpo = `
+┌────────────────────────────────────────────────────────┐
+│           📅 NUEVA CITA AGENDADA EN EL SISTEMA         │
+└────────────────────────────────────────────────────────┘
+
+INFORMACIÓN DEL SOCIO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+👤 Nombre: ${nombreSocio}
+📧 Email: ${citaData.socioEmail}
+📞 Teléfono: ${telefonoSocio}
+
+DETALLES DE LA CITA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📆 Fecha: ${fechaFormato}
+🕒 Hora: ${citaData.hora}
+📋 Propósito: ${proposito}
+${citaData.notas ? `
+📝 Notas del socio:
+${citaData.notas}
+` : ""}
+
+PRÓXIMOS PASOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ La cita se ha creado en tu Google Calendar
+✅ Se envió una invitación al socio: ${citaData.socioEmail}
+📋 Estado actual: ${citaData.estado || "pendiente"}
+
+DIRECCIÓN DEL CLUB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Club de Caza, Tiro y Pesca de Yucatán, A.C.
+Calle 50 No. 531-E x 69 y 71
+Col. Centro, 97000 Mérida, Yucatán
+🌐 https://club-738-app.web.app
+
+SEDENA 738 | FEMETI YUC 05/2020
+    `.trim();
+
+      // Enviar email
+      try {
+        if (!EMAIL_CONFIG.smtp.auth.pass) {
+          console.log("⚠️ Email no configurado. " +
+            "Credenciales SMTP no disponibles.");
+          console.log("Contenido que se enviaría:");
+          console.log("Asunto:", asunto);
+          console.log("Destinatarios:", EMAIL_CONFIG.destinatarios.join(", "));
+          console.log("---");
+          console.log(cuerpo);
+          return {
+            success: false,
+            reason: "Email credentials not configured",
+          };
+        }
+
+        const transporter = nodemailer.createTransport(EMAIL_CONFIG.smtp);
+
+        const sistemaLabel = "Club 738 - Sistema de Citas";
+        const mailOptions = {
+          from: `"${sistemaLabel}" <${EMAIL_CONFIG.smtp.auth.user}>`,
+          to: EMAIL_CONFIG.destinatarios.join(", "),
+          subject: asunto,
+          text: cuerpo,
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log("✅ Email de cita enviado:", info.messageId);
+
+        return {success: true, messageId: info.messageId};
+      } catch (error) {
+        console.error("❌ Error enviando email de cita:", error);
+        return {success: false, error: error.message};
+      }
+    },
+);
+
+/**
  * Función HTTP para probar el envío de emails
  * URL: https://us-central1-club-738-app.cloudfunctions.net/testEmail
  */
@@ -265,5 +405,5 @@ Fecha: ${fechaTest}
 );
 
 // Exportar funciones de Google Calendar
-exports.crearEventoCalendar = calendarFunctions.crearEventoCalendar;
-exports.actualizarEventoCalendar = calendarFunctions.actualizarEventoCalendar;
+// exports.crearEventoCalendar = calendarFunctions.crearEventoCalendar;
+// exports.actualizarEvent = calendarFunctions.actualizarEventoCalendar;

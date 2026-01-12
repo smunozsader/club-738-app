@@ -151,6 +151,30 @@ service cloud.firestore {
     }
     
     // ========================================================================
+    // COLECCIÓN: citas
+    // ========================================================================
+    // Agendamiento de citas con el secretario
+    // Los socios pueden crear/leer/actualizar sus propias citas
+    // El secretario puede leer/actualizar todas las citas
+    
+    match /citas/{citaId} {
+      // Lectura: el socio que creó la cita O el secretario pueden leer
+      allow read: if isAuthenticated() && 
+        (request.auth.token.email.lower() == resource.data.socioEmail.lower() || isSecretario());
+      
+      // Creación: cualquier socio autenticado puede crear citas
+      allow create: if isAuthenticated() && 
+        request.resource.data.socioEmail.lower() == request.auth.token.email.lower();
+      
+      // Actualización: el secretario puede actualizar todas las citas
+      // Los socios NO pueden actualizar sus citas (están bloqueadas)
+      allow update: if isSecretario();
+      
+      // Eliminación: SOLO el secretario puede eliminar citas
+      allow delete: if isSecretario();
+    }
+    
+    // ========================================================================
     // COLECCIÓN: bajas
     // ========================================================================
     // Registro global de bajas procesadas (historial administrativo)

@@ -215,8 +215,8 @@ Para entregar documentos físicos, realizar pagos, o resolver consultas con el s
    - Hasta 3 meses adelante
 
 #### b) Selecciona Horario
-   - Slots disponibles de 30 minutos
-   - Horario de atención: **9:00 - 17:00 hrs**
+   - Slots disponibles cada 60 minutos (45 min cita + 15 min descanso)
+   - Horario de atención: **17:00 - 20:00 hrs (5 PM - 8 PM)**
    - Los slots ocupados aparecen deshabilitados
 
 #### c) Propósito de la Cita

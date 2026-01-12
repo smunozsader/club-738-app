@@ -49,7 +49,7 @@ function GestionArsenal() {
     origenAdquisicion: '', // compra, herencia, donacion, transferencia
     fechaAdquisicion: '',
     vendedor: '',
-    curpVendedor: '',
+    numeroRegistroAnterior: '', // Número de registro anterior del arma
     folioRegistroTransferencia: '',
     observaciones: ''
   });
@@ -250,9 +250,9 @@ function GestionArsenal() {
         },
         origenAdquisicion: formAlta.origenAdquisicion,
         fechaAdquisicion: formAlta.fechaAdquisicion,
-        vendedor: formAlta.origenAdquisicion === 'compra' || formAlta.origenAdquisicion === 'transferencia' ? {
-          nombre: formAlta.vendedor,
-          curp: formAlta.curpVendedor
+        vendedor: (formAlta.origenAdquisicion === 'compra' || formAlta.origenAdquisicion === 'dcam' || formAlta.origenAdquisicion === 'transferencia') ? {
+          nombre: formAlta.origenAdquisicion === 'dcam' ? 'SEDENA' : formAlta.vendedor,
+          numeroRegistroAnterior: formAlta.origenAdquisicion === 'dcam' ? null : (formAlta.numeroRegistroAnterior || null)
         } : null,
         folioRegistroTransferencia: formAlta.folioRegistroTransferencia || null,
         observaciones: formAlta.observaciones,
@@ -653,6 +653,7 @@ function GestionArsenal() {
                   <select value={formAlta.origenAdquisicion} onChange={(e) => setFormAlta({ ...formAlta, origenAdquisicion: e.target.value })} required>
                     <option value="">-- Selecciona --</option>
                     <option value="compra">💰 Compra a particular</option>
+                    <option value="dcam">🏛️ Compra en DCAM</option>
                     <option value="transferencia">👥 Transferencia familiar</option>
                     <option value="herencia">📜 Herencia</option>
                     <option value="donacion">🎁 Donación</option>
@@ -663,30 +664,51 @@ function GestionArsenal() {
               <div className="form-row">
                 <label>
                   Fecha de adquisición: *
-                  <input type="date" value={formAlta.fechaAdquisicion} onChange={(e) => setFormAlta({ ...formAlta, fechaAdquisicion: e.target.value })} required />
+                  <input 
+                    type="date" 
+                    value={formAlta.fechaAdquisicion} 
+                    onChange={(e) => setFormAlta({ ...formAlta, fechaAdquisicion: e.target.value })}
+                    min="1970-01-01"
+                    max={new Date().toISOString().split('T')[0]}
+                    required 
+                  />
+                  <small className="help-text">Permite fechas hasta hoy (no futuras)</small>
                 </label>
               </div>
 
-              {(formAlta.origenAdquisicion === 'compra' || formAlta.origenAdquisicion === 'transferencia') && (
+              {(formAlta.origenAdquisicion === 'compra' || formAlta.origenAdquisicion === 'dcam' || formAlta.origenAdquisicion === 'transferencia') && (
                 <>
-                  <div className="form-row">
-                    <label>
-                      Nombre del vendedor/cedente:
-                      <input type="text" value={formAlta.vendedor} onChange={(e) => setFormAlta({ ...formAlta, vendedor: e.target.value })} placeholder="Nombre completo" />
-                    </label>
-                  </div>
-                  <div className="form-row">
-                    <label>
-                      CURP del vendedor/cedente:
-                      <input type="text" value={formAlta.curpVendedor} onChange={(e) => setFormAlta({ ...formAlta, curpVendedor: e.target.value })} placeholder="18 caracteres" maxLength="18" />
-                    </label>
-                  </div>
-                  <div className="form-row">
-                    <label>
-                      Folio del registro de transferencia:
-                      <input type="text" value={formAlta.folioRegistroTransferencia} onChange={(e) => setFormAlta({ ...formAlta, folioRegistroTransferencia: e.target.value })} placeholder="Si ya tramitaron ante SEDENA" />
-                    </label>
-                  </div>
+                  {formAlta.origenAdquisicion === 'dcam' ? (
+                    <div className="form-row" style={{ backgroundColor: '#f0f8ff', padding: '10px', borderRadius: '4px' }}>
+                      <strong>Vendedor: SEDENA</strong>
+                      <p style={{ fontSize: '0.9em', color: '#666', marginTop: '5px' }}>Se registra automáticamente como SEDENA (manifestación inicial)</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="form-row">
+                        <label>
+                          Nombre del vendedor/cedente:
+                          <input type="text" value={formAlta.vendedor} onChange={(e) => setFormAlta({ ...formAlta, vendedor: e.target.value })} placeholder="Nombre completo o entidad" required={formAlta.origenAdquisicion !== 'herencia' && formAlta.origenAdquisicion !== 'donacion'} />
+                        </label>
+                      </div>
+                      {(formAlta.origenAdquisicion === 'compra' || formAlta.origenAdquisicion === 'transferencia') && (
+                        <div className="form-row">
+                          <label>
+                            Número de Registro Anterior:
+                            <input type="text" value={formAlta.numeroRegistroAnterior} onChange={(e) => setFormAlta({ ...formAlta, numeroRegistroAnterior: e.target.value })} placeholder="Número del registro anterior (si existe)" />
+                          </label>
+                        </div>
+                      )}
+                    </>
+                  )}
+                  {(formAlta.origenAdquisicion === 'transferencia') && (
+                    <div className="form-row">
+                      <label>
+                        Folio del registro de transferencia:
+                        <input type="text" value={formAlta.folioRegistroTransferencia} onChange={(e) => setFormAlta({ ...formAlta, folioRegistroTransferencia: e.target.value })} placeholder="Si ya tramitaron ante SEDENA" />
+                      </label>
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -815,6 +837,12 @@ function GestionArsenal() {
                       <div className="detalle-row">
                         <span className="label">Vendedor:</span>
                         <span className="value">{solicitud.vendedor.nombre}</span>
+                      </div>
+                    )}
+                    {solicitud.vendedor?.numeroRegistroAnterior && (
+                      <div className="detalle-row">
+                        <span className="label">Número Registro Anterior:</span>
+                        <span className="value">{solicitud.vendedor.numeroRegistroAnterior}</span>
                       </div>
                     )}
                     {solicitud.observaciones && (

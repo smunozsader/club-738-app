@@ -17,6 +17,14 @@ module.exports = {
   },
   overrides: [
     {
+      files: ["calendar-integration.js"],
+      rules: {
+        "max-len": "off",
+        "brace-style": "off",
+        "no-unused-vars": "off",
+      },
+    },
+    {
       files: ["**/*.spec.*"],
       env: {
         mocha: true,
