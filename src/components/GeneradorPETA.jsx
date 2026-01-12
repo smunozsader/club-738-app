@@ -106,6 +106,9 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   // Solo el secretario puede usar este módulo
   const esSecretario = userEmail === 'smunozam@gmail.com';
 
+  // En revisión desde solicitud (no manual): bloquear edición de armas/cartuchos
+  const revisionBloqueada = esSecretario && solicitudSeleccionada && !modoManual;
+
   useEffect(() => {
     if (esSecretario) {
       cargarSocios();
@@ -369,8 +372,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       
       console.log(`✅ Total armas cargadas: ${armasData.length}`);
       setArmasSocio(armasData);
-      setArmasSeleccionadas([]);
-      setCartuchosPorArma({});
       return armasData;
     } catch (error) {
       console.error('❌ Error cargando armas:', error);
@@ -379,6 +380,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   };
 
   const toggleArma = (armaId) => {
+    if (revisionBloqueada) return; // No permitir cambios en modo revisión desde solicitud
     setArmasSeleccionadas(prev => {
       if (prev.includes(armaId)) {
         return prev.filter(id => id !== armaId);
@@ -994,8 +996,10 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                 {armasSocio.map(arma => (
                   <div
                     key={arma.id}
-                    className={`arma-item ${armasSeleccionadas.includes(arma.id) ? 'selected' : ''}`}
-                    onClick={() => toggleArma(arma.id)}
+                    className={`arma-item ${armasSeleccionadas.includes(arma.id) ? 'selected' : ''} ${revisionBloqueada ? 'locked' : ''}`}
+                    onClick={() => {
+                      if (!revisionBloqueada) toggleArma(arma.id);
+                    }}
                   >
                     <div className="arma-check">
                       {armasSeleccionadas.includes(arma.id) ? '✓' : '○'}
@@ -1027,6 +1031,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                                 min={spec.min}
                                 max={spec.max}
                                 step={spec.step}
+                                disabled={revisionBloqueada}
                               />
                             );
                           })()}

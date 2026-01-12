@@ -17,6 +17,24 @@
 - `docs/DEVELOPMENT_JOURNAL.md` – Entrada de journal.
 
 **Deploy**: Hosting actualizado tras build exitoso. Se realizará `firebase deploy --only hosting`.
+
+### 2026-01-11 - v1.13.2 Revisión secretaria: armas fijas
+
+#### Bloqueo de edición de armas/cartuchos en revisión desde solicitud
+
+**Objetivo**: Mantener las armas seleccionadas por el socio inmutables durante la revisión del secretario (modo Desde Solicitud) y evitar cambios accidentales.
+
+**Cambios realizados**:
+- Añadido flag `revisionBloqueada` (secretario + solicitud cargada + modo manual OFF).
+- Deshabilitado `onClick` en tarjetas de armas cuando `revisionBloqueada` está activo.
+- Inputs de “Cartuchos” ahora se muestran deshabilitados en revisión.
+- Se eliminó el reseteo de selección/cartuchos al cargar armas del socio (`cargarArmasSocio`).
+
+**Archivos modificados/creados**:
+- `src/components/GeneradorPETA.jsx` – Bloqueo de edición y no reset de selección.
+- `docs/DEVELOPMENT_JOURNAL.md` – Entrada de journal.
+
+**Deploy**: Hosting actualizado tras build y deploy.
 # 📔 Development Journal - Club 738 Web
 
 ## Resumen del Proyecto
