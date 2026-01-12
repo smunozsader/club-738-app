@@ -35,6 +35,27 @@
 - `docs/DEVELOPMENT_JOURNAL.md` – Entrada de journal.
 
 **Deploy**: Hosting actualizado tras build y deploy.
+
+### 2026-01-12 - v1.13.3 Ajustes de formato PDF PETA
+
+#### Eliminación de etiquetas de fecha y centrado de firma
+
+**Objetivo**: Mejorar la presentación del PDF PETA eliminando las etiquetas de formato de fecha mal colocadas y centrando la sección de firma.
+
+**Cambios realizados**:
+- En la sección "PERÍODO": Eliminadas las etiquetas "DIA MES AÑO" que aparecían misalieadas bajo los campos de fechas.
+- En la sección "FIRMA": Centradas todas las líneas usando `doc.text(..., pageWidth / 2, y, { align: 'center' })`:
+  - LUGAR Y FECHA DE LA SOLICITUD
+  - ATENTAMENTE.
+  - SUFRAGIO EFECTIVO, NO REELECCIÓN
+  - LIC. RICARDO J. FERNÁNDEZ Y GASQUE
+  - PRESIDENTE DEL CLUB.
+
+**Archivos modificados**:
+- `src/components/GeneradorPETA.jsx` – PDF generation updates.
+
+**Deploy**: Hosting actualizado tras build y deploy.
+
 # 📔 Development Journal - Club 738 Web
 
 ## Resumen del Proyecto

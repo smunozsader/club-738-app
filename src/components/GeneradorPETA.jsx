@@ -536,8 +536,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       const fechaInicioFmt = formatearFechaPETA(fechaInicio);
       const fechaFinFmt = formatearFechaPETA(fechaFin);
       doc.text(`${fechaInicioFmt}  AL  ${fechaFinFmt}`, margin, y);
-      doc.setFontSize(7);
-      doc.text('DIA  MES  AÑO        DIA  MES  AÑO', margin + 50, y);
       y += 10;
 
       // ========== ARMAS ==========
@@ -638,19 +636,20 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       y = Math.max(y + 15, 220); // Asegurar espacio para firma
       
       const hoy = new Date();
-      doc.text(`LUGAR Y FECHA DE LA SOLICITUD      Mérida, Yucatán a ${formatearFechaLarga(hoy)}`, margin, y);
+      const firmaLinea1 = `LUGAR Y FECHA DE LA SOLICITUD      Mérida, Yucatán a ${formatearFechaLarga(hoy)}`;
+      doc.text(firmaLinea1, pageWidth / 2, y, { align: 'center' });
       y += 15;
 
-      doc.text('ATENTAMENTE.', margin, y);
+      doc.text('ATENTAMENTE.', pageWidth / 2, y, { align: 'center' });
       y += 5;
-      doc.text('SUFRAGIO EFECTIVO, NO REELECCIÓN', margin, y);
+      doc.text('SUFRAGIO EFECTIVO, NO REELECCIÓN', pageWidth / 2, y, { align: 'center' });
       y += 20;
 
       doc.setFont('helvetica', 'bold');
-      doc.text(DATOS_CLUB.presidente, margin, y);
+      doc.text(DATOS_CLUB.presidente, pageWidth / 2, y, { align: 'center' });
       y += 5;
       doc.setFont('helvetica', 'normal');
-      doc.text('PRESIDENTE DEL CLUB.', margin, y);
+      doc.text('PRESIDENTE DEL CLUB.', pageWidth / 2, y, { align: 'center' });
 
       // Guardar PDF
       const tipoLabel = tipoPETA === 'tiro' ? 'TIRO' : tipoPETA === 'competencia' ? 'COMPETENCIA' : 'CAZA';
