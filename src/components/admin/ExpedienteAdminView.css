@@ -335,6 +335,70 @@
   color: #92400e;
 }
 
+/* Botones de Acciones en Tabla de Armas */
+.armas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.armas-header h2 {
+  margin: 0;
+}
+
+.btn-agregar-arma {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.btn-agregar-arma:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+}
+
+.acciones-arma {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.btn-editar-arma,
+.btn-eliminar-arma {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.btn-editar-arma:hover {
+  background: #e6f7ff;
+  transform: scale(1.1);
+}
+
+.btn-eliminar-arma:hover {
+  background: #ffe6e6;
+  transform: scale(1.1);
+}
+
 /* PETAs */
 .petas-lista {
   display: grid;

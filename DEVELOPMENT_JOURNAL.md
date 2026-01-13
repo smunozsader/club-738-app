@@ -14,6 +14,423 @@
 
 ---
 
+#### 🎯 FASE 4: Gestión Avanzada de Arsenal - COMPLETADA
+
+**Objetivo**: Permitir al administrador gestionar completamente el arsenal de cualquier socio: crear nuevas armas, editar datos existentes, y eliminar armas con auditoría completa.
+
+**Problema Resuelto**:
+- Admin necesita corregir datos de armas con errores
+- Faltan armas por importar en la migración inicial
+- Socios reportan armas faltantes que deben agregarse manualmente
+- Necesidad de eliminar armas duplicadas o incorrectas
+- Sin trazabilidad de quién modifica el arsenal
+
+---
+
+##### 1. Componente ArmaEditor (Modal Form)
+
+**Archivo**: `src/components/admin/ArmaEditor.jsx`
+
+**Características Principales**:
+
+**A. Modo Dual (Crear/Editar)**:
+- Si recibe `armaData` → Modo edición, pre-llena formulario
+- Si `armaData` es null → Modo creación, formulario vacío
+- Detecta automáticamente el modo con `const modoEdicion = armaData !== null`
+
+**B. Formulario Completo** (7 campos obligatorios):
+1. **Clase de Arma** (select):
+   - PISTOLA, REVOLVER, ESCOPETA, RIFLE, CARABINA
+   - RIFLE PCP, PISTOLA PCP (armas de aire)
+2. **Calibre** (text): .22, 9mm, .380, etc.
+3. **Marca** (text): GLOCK, BERETTA, REMINGTON
+4. **Modelo** (text): 19, 92FS, 870
+5. **Matrícula** (text): Número de serie del arma
+6. **Folio** (text): Folio de registro SEDENA
+7. **Modalidad** (radio buttons):
+   - Caza
+   - Tiro
+   - Ambas
+
+**C. Validación Estricta**:
+```javascript
+const validarFormulario = () => {
+  if (!formData.clase.trim()) {
+    setError('La clase de arma es obligatoria');
+    return false;
+  }
+  // ... validación de todos los campos
+  return true;
+};
+```
+
+**D. Operaciones CRUD**:
+
+**Crear Nueva Arma**:
+```javascript
+const nuevoArmaDoc = await addDoc(armasRef, {
+  ...formData,
+  fechaCreacion: serverTimestamp(),
+  creadoPorAdmin: auth.currentUser?.email
+});
+```
+
+**Actualizar Arma Existente**:
+```javascript
+await updateDoc(armaDocRef, {
+  ...formData,
+  fechaActualizacion: serverTimestamp()
+});
+```
+
+**E. Auditoría Automática**:
+- Cada creación/edición registra en `auditoria` collection
+- Incluye email del admin que realizó la acción
+- Guarda estado "antes" y "después" en ediciones
+- Timestamp automático con `serverTimestamp()`
+
+```javascript
+await addDoc(collection(db, 'auditoria'), {
+  tipo: 'arma',
+  accion: 'crear' | 'editar',
+  socioEmail,
+  armaId,
+  detalles: { antes, despues },
+  adminEmail: auth.currentUser?.email,
+  timestamp: serverTimestamp()
+});
+```
+
+**Archivo CSS**: `src/components/admin/ArmaEditor.css`
+
+**Diseño del Modal**:
+- **Overlay**: rgba(0,0,0,0.7) con z-index 1000
+- **Modal**: fondo blanco, border-radius 12px, max-width 700px
+- **Header**: gradiente purple (#667eea → #764ba2)
+- **Botón cerrar**: X con rotación 90° en hover
+- **Animación**: slideDown desde arriba (0.3s ease-out)
+- **Formulario**: 2 columnas en desktop, 1 columna en mobile
+- **Radio buttons**: accent-color purple
+- **Botones**:
+  - Cancelar: gris (#e2e8f0)
+  - Guardar: gradiente purple con hover shadow
+
+---
+
+##### 2. Integración en ExpedienteAdminView
+
+**Archivo**: `src/components/admin/ExpedienteAdminView.jsx`
+
+**Cambios Implementados**:
+
+**A. Imports Agregados**:
+```javascript
+import { deleteDoc } from 'firebase/firestore';
+import { addDoc, serverTimestamp } from 'firebase/firestore';
+import { auth } from '../../firebaseConfig';
+import ArmaEditor from './ArmaEditor';
+```
+
+**B. Estados para Control del Editor**:
+```javascript
+const [mostrarEditor, setMostrarEditor] = useState(false);
+const [armaSeleccionada, setArmaSeleccionada] = useState(null);
+const [armaIdSeleccionada, setArmaIdSeleccionada] = useState(null);
+```
+
+**C. Header de Tab Armas con Botón Agregar**:
+```jsx
+<div className="armas-header">
+  <h2>Arsenal Registrado</h2>
+  <button 
+    className="btn-agregar-arma"
+    onClick={() => {
+      setArmaSeleccionada(null);
+      setArmaIdSeleccionada(null);
+      setMostrarEditor(true);
+    }}
+  >
+    ➕ Agregar Arma
+  </button>
+</div>
+```
+
+**D. Tabla de Armas Actualizada**:
+- Nueva columna "Acciones" en header
+- Cada fila tiene 2 botones:
+
+**Botón Editar** (✏️):
+```jsx
+<button
+  className="btn-editar-arma"
+  onClick={() => {
+    setArmaSeleccionada(arma);
+    setArmaIdSeleccionada(arma.id);
+    setMostrarEditor(true);
+  }}
+>
+  ✏️
+</button>
+```
+
+**Botón Eliminar** (🗑️):
+```jsx
+<button
+  className="btn-eliminar-arma"
+  onClick={() => confirmarEliminarArma(arma)}
+>
+  🗑️
+</button>
+```
+
+**E. Función de Confirmación y Eliminación**:
+```javascript
+async function confirmarEliminarArma(arma) {
+  // 1. Confirmación detallada con alert
+  const confirmacion = window.confirm(
+    `¿Estás seguro de eliminar esta arma?\n\n` +
+    `Clase: ${arma.clase}\n` +
+    `Marca: ${arma.marca}\n` +
+    `Modelo: ${arma.modelo}\n` +
+    `Matrícula: ${arma.matricula}\n\n` +
+    `Esta acción NO se puede deshacer.`
+  );
+
+  if (!confirmacion) return;
+
+  // 2. Crear log de auditoría ANTES de eliminar
+  await addDoc(collection(db, 'auditoria'), {
+    tipo: 'arma',
+    accion: 'eliminar',
+    socioEmail,
+    armaId: arma.id,
+    detalles: {
+      arma: arma,
+      eliminadoPor: adminEmail
+    },
+    adminEmail,
+    timestamp: serverTimestamp()
+  });
+
+  // 3. Eliminar arma de Firestore
+  const armaDocRef = doc(db, 'socios', socioEmail, 'armas', arma.id);
+  await deleteDoc(armaDocRef);
+
+  // 4. Recargar expediente
+  cargarExpediente();
+}
+```
+
+**F. Renderizado del Modal**:
+```jsx
+{mostrarEditor && (
+  <ArmaEditor
+    socioEmail={socioEmail}
+    armaData={armaSeleccionada}
+    armaId={armaIdSeleccionada}
+    onClose={() => {
+      setMostrarEditor(false);
+      setArmaSeleccionada(null);
+      setArmaIdSeleccionada(null);
+    }}
+    onSave={() => {
+      cargarExpediente(); // Recargar para ver cambios
+    }}
+  />
+)}
+```
+
+**Archivo CSS**: `src/components/admin/ExpedienteAdminView.css`
+
+**Estilos Agregados**:
+
+```css
+/* Header con botón Agregar */
+.armas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-agregar-arma {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-agregar-arma:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+}
+
+/* Botones de acción en tabla */
+.acciones-arma {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.btn-editar-arma,
+.btn-eliminar-arma {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.btn-editar-arma:hover {
+  background: #e6f7ff;  /* Azul claro */
+  transform: scale(1.1);
+}
+
+.btn-eliminar-arma:hover {
+  background: #ffe6e6;  /* Rojo claro */
+  transform: scale(1.1);
+}
+```
+
+---
+
+##### 3. Flujo de Usuario Admin
+
+**Agregar Nueva Arma**:
+1. Admin entra a ExpedienteAdminView de un socio
+2. Va a tab "Armas"
+3. Click en "➕ Agregar Arma"
+4. Se abre modal ArmaEditor vacío
+5. Llena los 7 campos obligatorios
+6. Click en "Agregar Arma"
+7. Arma se crea en Firestore con `fechaCreacion` y `creadoPorAdmin`
+8. Log de auditoría se registra automáticamente
+9. Modal se cierra y expediente se recarga
+10. Nueva arma aparece en la tabla
+
+**Editar Arma Existente**:
+1. Admin ve lista de armas en tabla
+2. Click en botón ✏️ de un arma
+3. Modal se abre con datos pre-llenados
+4. Admin modifica los campos necesarios
+5. Click en "Actualizar Arma"
+6. Arma se actualiza con `fechaActualizacion`
+7. Log de auditoría guarda estado "antes" y "después"
+8. Modal se cierra y expediente se recarga
+9. Cambios se reflejan en la tabla
+
+**Eliminar Arma**:
+1. Admin ve arma a eliminar en tabla
+2. Click en botón 🗑️
+3. Alert de confirmación con detalles del arma
+4. Admin confirma la eliminación
+5. Log de auditoría se crea ANTES de eliminar
+6. Arma se elimina de Firestore con `deleteDoc()`
+7. Expediente se recarga
+8. Arma desaparece de la tabla
+
+---
+
+##### 4. Auditoría Completa
+
+**Estructura en `auditoria` Collection**:
+
+```javascript
+{
+  tipo: 'arma',
+  accion: 'crear' | 'editar' | 'eliminar',
+  socioEmail: 'socio@example.com',
+  armaId: 'abc123',
+  detalles: {
+    // Para crear:
+    arma: { clase, calibre, marca, ... },
+    armaId: 'nuevoId'
+    
+    // Para editar:
+    antes: { clase: 'PISTOLA', ... },
+    despues: { clase: 'REVOLVER', ... }
+    
+    // Para eliminar:
+    arma: { clase, calibre, marca, ... },
+    eliminadoPor: 'admin@club738.com'
+  },
+  adminEmail: 'admin@club738.com',
+  timestamp: serverTimestamp()
+}
+```
+
+**Beneficios de la Auditoría**:
+- ✅ Trazabilidad completa de cambios
+- ✅ Identificación del admin responsable
+- ✅ Timestamp automático preciso
+- ✅ Historial para recuperación de datos
+- ✅ Base para futura vista de historial
+
+---
+
+##### 5. Resumen de Archivos Creados/Modificados
+
+**Archivos NUEVOS**:
+1. `src/components/admin/ArmaEditor.jsx` - Modal form CRUD (330 líneas)
+2. `src/components/admin/ArmaEditor.css` - Estilos del modal (200 líneas)
+
+**Archivos MODIFICADOS**:
+1. `src/components/admin/ExpedienteAdminView.jsx`:
+   - Imports: ArmaEditor, deleteDoc, addDoc
+   - Estados: mostrarEditor, armaSeleccionada, armaIdSeleccionada
+   - Header armas con botón Agregar
+   - Botones Editar/Eliminar en tabla
+   - Función confirmarEliminarArma
+   - Renderizado del modal
+2. `src/components/admin/ExpedienteAdminView.css`:
+   - Estilos .armas-header
+   - Estilos .btn-agregar-arma
+   - Estilos .acciones-arma
+   - Estilos botones editar/eliminar
+
+**Total de Código Agregado**: ~600 líneas
+
+---
+
+##### 6. Funcionalidades Implementadas
+
+✅ **Formulario modal completo** con 7 campos validados  
+✅ **Modo dual** (crear/editar) con detección automática  
+✅ **Botón "Agregar Arma"** en header de tab Armas  
+✅ **Botón "Editar"** (✏️) por cada arma en tabla  
+✅ **Botón "Eliminar"** (🗑️) con confirmación detallada  
+✅ **Auditoría automática** en todas las operaciones  
+✅ **Log de auditoría** ANTES de eliminar (prevención de pérdida de datos)  
+✅ **Recarga automática** después de cada operación  
+✅ **Animaciones suaves** en modal y botones  
+✅ **Responsive design** para desktop y móvil  
+✅ **Estados de hover** visuales en botones  
+✅ **Validación estricta** de campos obligatorios  
+✅ **Mensajes de error** específicos y claros  
+
+---
+
+##### 7. Próximos Pasos
+
+**FASE 5**: Sistema de Notificaciones Multi-Canal
+- Banner flotante en dashboard de socio
+- Email notifications via Cloud Functions
+- WhatsApp Business API integration
+- Notificaciones collection en Firestore
+
+**Testing Requerido**:
+- Crear arma nueva → verificar en Firestore
+- Editar arma existente → verificar actualización
+- Eliminar arma → verificar desaparece
+- Revisar logs en `auditoria` collection
+- Probar responsive en móvil
+
+---
+
 #### 🎯 FASE 3: Dashboard Administrativo Separado - COMPLETADA
 
 **Objetivo**: Crear un panel de administración completo que permita al admin ver y gestionar todos los expedientes de los socios desde una interfaz unificada y profesional.

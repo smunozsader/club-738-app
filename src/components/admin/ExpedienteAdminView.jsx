@@ -9,8 +9,10 @@
  * - Editar datos (próximamente)
  */
 import React, { useState, useEffect } from 'react';
-import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
+import { doc, getDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
+import { db, auth } from '../../firebaseConfig';
+import { addDoc, serverTimestamp } from 'firebase/firestore';
+import ArmaEditor from './ArmaEditor';
 import './ExpedienteAdminView.css';
 
 export default function ExpedienteAdminView({ socioEmail, onBack }) {
@@ -20,6 +22,9 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('datos'); // datos, documentos, armas, petas
+  const [mostrarEditor, setMostrarEditor] = useState(false);
+  const [armaSeleccionada, setArmaSeleccionada] = useState(null);
+  const [armaIdSeleccionada, setArmaIdSeleccionada] = useState(null);
 
   useEffect(() => {
     cargarExpediente();
@@ -315,7 +320,19 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
         {/* TAB: Armas */}
         {activeTab === 'armas' && (
           <div className="tab-content armas">
-            <h2>Arsenal Registrado</h2>
+            <div className="armas-header">
+              <h2>Arsenal Registrado</h2>
+              <button 
+                className="btn-agregar-arma"
+                onClick={() => {
+                  setArmaSeleccionada(null);
+                  setArmaIdSeleccionada(null);
+                  setMostrarEditor(true);
+                }}
+              >
+                ➕ Agregar Arma
+              </button>
+            </div>
 
             {armas.length === 0 ? (
               <div className="empty-state">
@@ -333,6 +350,7 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
                       <th>Matrícula</th>
                       <th>Folio SEDENA</th>
                       <th>Modalidad</th>
+                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -348,6 +366,26 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
                           <span className={`badge-modalidad ${arma.modalidad}`}>
                             {arma.modalidad || 'N/A'}
                           </span>
+                        </td>
+                        <td className="acciones-arma">
+                          <button
+                            className="btn-editar-arma"
+                            onClick={() => {
+                              setArmaSeleccionada(arma);
+                              setArmaIdSeleccionada(arma.id);
+                              setMostrarEditor(true);
+                            }}
+                            title="Editar arma"
+                          >
+                            ✏️
+                          </button>
+                          <button
+                            className="btn-eliminar-arma"
+                            onClick={() => confirmarEliminarArma(arma)}
+                            title="Eliminar arma"
+                          >
+                            🗑️
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -398,6 +436,66 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
           </div>
         )}
       </div>
+
+      {/* Modal de Editor de Arma */}
+      {mostrarEditor && (
+        <ArmaEditor
+          socioEmail={socioEmail}
+          armaData={armaSeleccionada}
+          armaId={armaIdSeleccionada}
+          onClose={() => {
+            setMostrarEditor(false);
+            setArmaSeleccionada(null);
+            setArmaIdSeleccionada(null);
+          }}
+          onSave={() => {
+            cargarExpediente(); // Recargar para ver cambios
+          }}
+        />
+      )}
     </div>
   );
+
+  // Función para confirmar eliminación de arma
+  async function confirmarEliminarArma(arma) {
+    const confirmacion = window.confirm(
+      `¿Estás seguro de eliminar esta arma?\n\n` +
+      `Clase: ${arma.clase}\n` +
+      `Marca: ${arma.marca}\n` +
+      `Modelo: ${arma.modelo}\n` +
+      `Matrícula: ${arma.matricula}\n\n` +
+      `Esta acción NO se puede deshacer.`
+    );
+
+    if (!confirmacion) return;
+
+    try {
+      // Crear log de auditoría ANTES de eliminar
+      const adminEmail = auth.currentUser?.email || 'sistema';
+      await addDoc(collection(db, 'auditoria'), {
+        tipo: 'arma',
+        accion: 'eliminar',
+        socioEmail: socioEmail,
+        armaId: arma.id,
+        detalles: {
+          arma: arma,
+          eliminadoPor: adminEmail
+        },
+        adminEmail,
+        timestamp: serverTimestamp()
+      });
+
+      // Eliminar arma de Firestore
+      const armaDocRef = doc(db, 'socios', socioEmail, 'armas', arma.id);
+      await deleteDoc(armaDocRef);
+
+      alert('Arma eliminada correctamente');
+      
+      // Recargar expediente
+      cargarExpediente();
+    } catch (err) {
+      console.error('Error al eliminar arma:', err);
+      alert('Error al eliminar el arma. Intenta nuevamente.');
+    }
+  }
 }
