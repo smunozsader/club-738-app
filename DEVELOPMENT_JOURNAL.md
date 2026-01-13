@@ -10,6 +10,134 @@
 
 ## 📅 Enero 2026
 
+### 13 de Enero - v2.0.0 - Testing Integral del Sistema
+
+---
+
+#### 🧪 Plan de Testing - FASES 1-5
+
+**Objetivo**: Validar funcionamiento completo del sistema rediseñado antes de continuar con FASE 6.
+
+**Alcance del Testing**:
+- ✅ FASE 1: Sistema de Roles (4 tareas)
+- ✅ FASE 2: Validación Estricta (5 tareas)
+- ✅ FASE 3: Dashboard Admin (5 tareas)
+- ✅ FASE 4: Gestión Arsenal (5 tareas)
+- ✅ FASE 5: Notificaciones (4 tareas completadas de 6 totales)
+
+**Total Implementado**: 23/50 tareas (46%)
+
+---
+
+##### Plan de Pruebas
+
+**1. Testing de Roles y Autenticación**:
+- [ ] Login con admin@club738.com (password: Club738Admin2026!)
+- [ ] Verificar que se muestre dashboard de administrador
+- [ ] Login con socio regular (smunozam@gmail.com)
+- [ ] Verificar que se muestre dashboard de socio sin opciones admin
+- [ ] Logout y verificar redirección a login
+
+**2. Testing de Validación Estricta (FASE 2)**:
+- [ ] Intentar acceder a /admin sin credenciales → debe redirigir a login
+- [ ] Intentar acceder a /admin con socio regular → debe mostrar "Acceso denegado"
+- [ ] Verificar que socio no vea botones de administrador en UI
+
+**3. Testing de Dashboard Admin (FASE 3)**:
+- [ ] Ver lista de todos los socios (76 esperados)
+- [ ] Buscar socio por nombre
+- [ ] Filtrar socios por estado de renovación 2026
+- [ ] Abrir expediente de un socio
+- [ ] Verificar que se muestren documentos y armas del socio
+
+**4. Testing de Gestión Arsenal (FASE 4)**:
+- [ ] En ExpedienteAdminView, click en "➕ Agregar Arma"
+- [ ] Llenar formulario con datos válidos (clase, calibre, marca, modelo, matrícula, folio, modalidad)
+- [ ] Guardar y verificar que aparece en tabla de armas
+- [ ] Click en "✏️ Editar" de un arma
+- [ ] Modificar calibre o marca
+- [ ] Guardar y verificar cambios
+- [ ] Click en "🗑️ Eliminar" de un arma
+- [ ] Confirmar eliminación
+- [ ] Verificar que desaparece de la tabla
+- [ ] Verificar que se crearon logs en colección auditoria (via Firebase Console)
+
+**5. Testing de Notificaciones (FASE 5)**:
+- [ ] Ejecutar script de prueba: `node scripts/crear-notificacion-prueba.cjs`
+- [ ] Login con smunozam@gmail.com
+- [ ] Verificar que aparecen 2 banners flotantes:
+  - Banner azul (info): "¡Bienvenido al nuevo sistema!"
+  - Banner naranja (warning): "Documentos pendientes"
+- [ ] Click en "X" de un banner → debe desaparecer
+- [ ] Verificar en Firestore que leido = true
+- [ ] Click en botón "Ver Dashboard" → debe navegar y marcar como leído
+- [ ] Ejecutar script masivo (opcional): `node scripts/enviar-notificacion-masiva.cjs`
+
+**6. Testing de Seguridad (Firestore Rules)**:
+- [ ] Verificar que las reglas estén desplegadas: `firebase deploy --only firestore:rules`
+- [ ] Intentar leer notificación de otro socio → debe fallar
+- [ ] Intentar crear notificación como socio regular → debe fallar
+- [ ] Intentar eliminar arma como socio regular → debe fallar
+
+**7. Testing de UI/UX**:
+- [ ] Responsive: Probar en móvil (DevTools, ancho < 768px)
+- [ ] Verificar que modal ArmaEditor se adapta a pantalla pequeña
+- [ ] Verificar que banners de notificación no bloquean header
+- [ ] Verificar loading states en formularios
+
+---
+
+##### Criterios de Éxito
+
+**Debe Funcionar**:
+- ✅ Admin puede ver todos los socios
+- ✅ Admin puede agregar/editar/eliminar armas
+- ✅ Socio recibe notificaciones en tiempo real
+- ✅ Socio NO puede acceder a funciones admin
+- ✅ Audit logs se crean correctamente
+
+**Bugs a Reportar**:
+- ❌ Cualquier error de consola de JavaScript
+- ❌ Funcionalidad no accesible
+- ❌ Security rules permitiendo acceso no autorizado
+- ❌ UI rota en móvil
+
+---
+
+##### Entorno de Testing
+
+**Firebase Project**: club-738-app
+**URL**: https://club-738-app.web.app
+**Git Commit**: 034c6cb (FASE 5 completada)
+
+**Credenciales de Prueba**:
+```
+Administrador:
+  Email: admin@club738.com
+  Password: Club738Admin2026!
+
+Socio Regular (para comparación):
+  Email: smunozam@gmail.com
+  Password: [usar reset password si es necesario]
+```
+
+**Herramientas**:
+- Firebase Console: https://console.firebase.google.com/project/club-738-app
+- Chrome DevTools (Console, Network, Application tabs)
+- Firestore Emulator (opcional): `firebase emulators:start`
+
+---
+
+##### Notas de Testing
+
+**Durante las pruebas se documentarán aquí**:
+- Bugs encontrados
+- Comportamientos inesperados
+- Sugerencias de mejora
+- Performance issues
+
+---
+
 ### 13 de Enero - v2.0.0 - Rediseño: Sistema de Roles y Arquitectura Admin
 
 ---
