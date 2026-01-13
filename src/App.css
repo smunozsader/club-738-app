@@ -1152,3 +1152,100 @@ main {
   color: #fbbf24;
   border: 1px solid rgba(234, 179, 8, 0.3);
 }
+
+/* ===================================
+   MODO ADMINISTRADOR
+   Estilos específicos para el panel admin
+   =================================== */
+
+/* Container admin mode */
+.app-container.admin-mode {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Header Admin */
+.app-header.admin-header {
+  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+  border-bottom: 3px solid #667eea;
+}
+
+.app-header.admin-header .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+}
+
+.app-header.admin-header .logo-home-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  color: white;
+  transition: opacity 0.2s;
+}
+
+.app-header.admin-header .logo-home-link:hover {
+  opacity: 0.8;
+}
+
+.app-header.admin-header .logo-small {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+}
+
+.app-header.admin-header .site-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.app-header.admin-header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+}
+
+/* Main Admin */
+.app-main.admin-main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Footer Admin */
+.app-footer.admin-footer {
+  background: #1a202c;
+  border-top: 2px solid #667eea;
+  color: #cbd5e1;
+}
+
+/* Responsive admin */
+@media (max-width: 768px) {
+  .app-header.admin-header .header-content {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .app-header.admin-header .site-title {
+    font-size: 1.2rem;
+  }
+
+  .app-main.admin-main {
+    padding: 1rem;
+  }
+}

@@ -14,6 +14,459 @@
 
 ---
 
+#### 🎯 FASE 3: Dashboard Administrativo Separado - COMPLETADA
+
+**Objetivo**: Crear un panel de administración completo que permita al admin ver y gestionar todos los expedientes de los socios desde una interfaz unificada y profesional.
+
+**Problema Resuelto**:
+- Admin necesita vista consolidada de todos los socios
+- Falta visibilidad del progreso de documentación de cada socio
+- Navegación ineficiente entre expedientes individuales
+- No hay interfaz dedicada para funciones administrativas
+
+---
+
+##### 1. Hook de Detección de Rol
+
+**Archivo**: `src/hooks/useRole.jsx`
+
+**Funcionalidad**:
+- Detecta el rol del usuario actual desde Firestore `usuarios/{email}`
+- Devuelve `{role, loading, error}` para uso en componentes
+- Fallback a `'socio'` si el usuario no existe en `usuarios` (retrocompatibilidad)
+- Listener en tiempo real via `onAuthStateChanged`
+
+**Implementación**:
+```javascript
+export default function useRole() {
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        const userDoc = await getDoc(doc(db, 'usuarios', currentUser.email));
+        const userRole = userDoc.exists() 
+          ? userDoc.data().role 
+          : 'socio';  // Fallback para socios existentes
+        setRole(userRole);
+      } else {
+        setRole(null);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+  
+  return { role, loading, error: null };
+}
+```
+
+**Uso**:
+```javascript
+const { role, loading } = useRole();
+if (role === 'administrator') {
+  // Mostrar dashboard admin
+}
+```
+
+---
+
+##### 2. Dashboard Administrativo Principal
+
+**Archivo**: `src/components/admin/AdminDashboard.jsx`
+
+**Características Principales**:
+
+**A. Carga de Datos**:
+- `getDocs(query(collection(db, 'socios'), orderBy('nombre')))` - Todos los socios ordenados
+- Cálculo automático de progreso de documentos (X/16)
+- Cuenta de armas por socio
+
+**B. Estadísticas Globales** (4 tarjetas):
+1. **Total Socios**: Cantidad total en base de datos
+2. **Expedientes Completos**: Socios con 16/16 documentos
+3. **Expedientes Pendientes**: Socios con < 16 documentos
+4. **Progreso Promedio**: % global de documentación
+
+**C. Sistema de Búsqueda**:
+- Filtro por nombre, email o CURP
+- Case-insensitive con `.toLowerCase().includes()`
+- Búsqueda en tiempo real
+
+**D. Filtros por Estado**:
+- **Todos**: Muestra todos los socios
+- **✅ Completos**: Solo socios con 16/16 documentos
+- **⏳ Pendientes**: Socios con documentos faltantes
+
+**E. Tabla de Socios**:
+```
+| Socio | Email | CURP | Armas | Progreso | Acciones |
+|-------|-------|------|-------|----------|----------|
+| Nombre | email@domain.com | CURP123... | 5 | ████░░░░ 12/16 | [Ver Expediente] |
+```
+
+**F. Navegación**:
+- Click en "Ver Expediente" → Callback `onVerExpediente(email)`
+- Navegación SPA sin recargas de página
+
+**Código del Cálculo de Progreso**:
+```javascript
+const calcularProgreso = (documentos) => {
+  const tiposRequeridos = [
+    'curp', 'constanciaAntecedentes', 'ine', 'comprobanteDomicilio',
+    'certificadoMedico', 'certificadoPsicologico', 'certificadoToxicologico',
+    'modoHonesto', 'licenciaCaza', 'fotoCredencial', 'cartillaMilitar',
+    'reciboE5cinco', 'permisoAnterior', 'solicitudPETA', 
+    'registroArma', 'credencialClub'
+  ];
+  
+  const docsSubidos = tiposRequeridos.filter(tipo => 
+    documentos && documentos[tipo] && documentos[tipo].url
+  ).length;
+  
+  return {
+    subidos: docsSubidos,
+    total: 16,
+    porcentaje: (docsSubidos / 16) * 100
+  };
+};
+```
+
+**Archivo CSS**: `src/components/admin/AdminDashboard.css`
+- Tarjetas de estadísticas con gradientes (purple, green, orange, blue)
+- Tabla responsive con `overflow-x: auto`
+- Barras de progreso visuales con colores
+- Estados hover en filas y botones
+
+---
+
+##### 3. Vista de Expediente Completo
+
+**Archivo**: `src/components/admin/ExpedienteAdminView.jsx`
+
+**Características**:
+
+**A. Estructura de Datos Cargados**:
+```javascript
+// Datos del socio
+const socioDoc = await getDoc(doc(db, 'socios', socioEmail));
+const socioData = socioDoc.data();
+
+// Armas del socio
+const armasSnapshot = await getDocs(
+  collection(db, 'socios', socioEmail, 'armas')
+);
+
+// Solicitudes PETA
+const petasSnapshot = await getDocs(
+  collection(db, 'socios', socioEmail, 'petas')
+);
+```
+
+**B. Header del Expediente**:
+- Botón "← Volver" → Callback `onBack()`
+- Nombre del socio en grande
+- Email del socio
+
+**C. Tarjetas de Resumen** (4 cards):
+1. **CURP**: Muestra el CURP del socio
+2. **Armas Registradas**: Cantidad de armas en arsenal
+3. **Documentos**: Progreso X/16
+4. **Solicitudes PETA**: Cantidad de PETAs solicitadas
+
+**D. Sistema de Pestañas** (4 tabs):
+
+**Tab 1: Datos Personales**
+- Nombre completo
+- Email
+- CURP
+- Fecha de alta
+- Domicilio estructurado (calle, colonia, municipio, estado, CP)
+- Estado de renovación 2026 (pagado/pendiente)
+
+**Tab 2: Documentos** (16 documentos)
+- Checklist visual con iconos ✅/⏳
+- Nombre del documento
+- Estado (Completo/Pendiente)
+- Botón "👁️ Ver" para abrir documento en nueva pestaña
+- Barra de progreso general (X/16 documentos)
+- Lista de documentos:
+  1. CURP
+  2. Constancia de Antecedentes
+  3. INE
+  4. Comprobante de Domicilio
+  5. Certificado Médico
+  6. Certificado Psicológico
+  7. Certificado Toxicológico
+  8. Modo Honesto de Vivir
+  9. Licencia de Caza
+  10. Foto Credencial
+  11. Cartilla Militar
+  12. Recibo e5cinco
+  13. Permiso Anterior
+  14. Solicitud PETA
+  15. Registro de Arma
+  16. Credencial del Club
+
+**Tab 3: Armas**
+- Tabla con columnas: Clase, Marca, Modelo, Calibre, Matrícula, Folio, Modalidad
+- Badge de modalidad con colores:
+  - 🟢 Caza (verde)
+  - 🔵 Tiro (azul)
+  - 🟡 Ambas (amarillo)
+- Mensaje si no tiene armas registradas
+
+**Tab 4: Solicitudes PETA**
+- Cards de cada PETA con:
+  - Tipo (Caza/Tiro)
+  - Estado badge (borrador, pendiente, en_revision, aprobado, enviado_zm, completado)
+  - Armas incluidas (lista con clase, calibre, marca)
+  - Estados seleccionados (vigencia)
+  - Fecha de solicitud
+- Estados con colores:
+  - 🟦 Borrador (gray)
+  - 🟨 Pendiente (yellow)
+  - 🟧 En Revisión (orange)
+  - 🟩 Aprobado (green)
+  - 🟦 Enviado ZM (blue)
+  - 🟩 Completado (green)
+
+**Archivo CSS**: `src/components/admin/ExpedienteAdminView.css`
+- Interfaz de pestañas con estado activo (purple)
+- Cards de resumen con sombra
+- Grid responsive de datos personales
+- Lista de documentos con iconos y estados
+- Tabla de armas con badges de modalidad
+- Cards de PETA con badges de estado
+- Estados vacíos personalizados
+
+---
+
+##### 4. Integración en App.jsx
+
+**Archivo**: `src/App.jsx`
+
+**Cambios Implementados**:
+
+**A. Imports Agregados**:
+```javascript
+import useRole from './hooks/useRole';
+import AdminDashboard from './components/admin/AdminDashboard';
+import ExpedienteAdminView from './components/admin/ExpedienteAdminView';
+```
+
+**B. Estado Agregado**:
+```javascript
+const { role, loading: roleLoading } = useRole();
+const [socioSeleccionado, setSocioSeleccionado] = useState(null);
+```
+
+**C. Loading Actualizado**:
+```javascript
+if (loading || roleLoading) {
+  return <div className="loading">Cargando...</div>;
+}
+```
+
+**D. Router Condicional por Rol**:
+```javascript
+// Si es administrador, mostrar dashboard admin
+if (role === 'administrator') {
+  return (
+    <div className="app-container admin-mode">
+      <header className="admin-header">
+        <h1>🔐 Panel de Administración</h1>
+        <span className="admin-badge">Administrator</span>
+      </header>
+      
+      <main className="admin-main">
+        {activeSection === 'admin-dashboard' && (
+          <AdminDashboard 
+            onVerExpediente={(email) => {
+              setSocioSeleccionado(email);
+              setActiveSection('expediente');
+            }}
+          />
+        )}
+        
+        {activeSection === 'expediente' && socioSeleccionado && (
+          <ExpedienteAdminView 
+            socioEmail={socioSeleccionado}
+            onBack={() => {
+              setSocioSeleccionado(null);
+              setActiveSection('admin-dashboard');
+            }}
+          />
+        )}
+      </main>
+      
+      <footer className="admin-footer">
+        <p>Panel exclusivo para administrador del sistema</p>
+      </footer>
+    </div>
+  );
+}
+
+// Si es socio, mostrar dashboard normal
+return (
+  <div className="app-container">
+    {/* Dashboard de socio normal */}
+  </div>
+);
+```
+
+**E. Flujo de Navegación**:
+1. Usuario login → `useRole()` detecta rol
+2. Si `role === 'administrator'`:
+   - Render AdminDashboard
+   - Click "Ver Expediente" → `setSocioSeleccionado(email)`, `setActiveSection('expediente')`
+   - Render ExpedienteAdminView con datos del socio
+   - Click "← Volver" → `setSocioSeleccionado(null)`, `setActiveSection('admin-dashboard')`
+3. Si `role === 'socio'`:
+   - Render dashboard normal de socio
+
+---
+
+##### 5. Estilos del Modo Admin
+
+**Archivo**: `src/App.css`
+
+**Estilos Agregados**:
+
+```css
+/* Admin Mode Container */
+.app-container.admin-mode {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Admin Header */
+.admin-header {
+  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #667eea;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.admin-header h1 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+/* Admin Badge */
+.admin-badge {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Admin Main Content */
+.admin-main {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Admin Footer */
+.admin-footer {
+  background: #1a202c;
+  color: #a0aec0;
+  text-align: center;
+  padding: 1.5rem;
+  border-top: 2px solid #667eea;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .admin-main {
+    padding: 1rem;
+  }
+}
+```
+
+**Características del Diseño**:
+- Fondo con gradiente purple (#667eea a #764ba2)
+- Header oscuro con contraste alto
+- Badge de "Administrator" destacado
+- Footer con borde superior purple
+- Responsive para móviles
+
+---
+
+##### 6. Resumen de Archivos Creados/Modificados
+
+**Archivos NUEVOS**:
+1. `src/hooks/useRole.jsx` - Hook de detección de rol (80 líneas)
+2. `src/components/admin/AdminDashboard.jsx` - Dashboard principal admin (250 líneas)
+3. `src/components/admin/AdminDashboard.css` - Estilos del dashboard (300 líneas)
+4. `src/components/admin/ExpedienteAdminView.jsx` - Vista de expediente completo (450 líneas)
+5. `src/components/admin/ExpedienteAdminView.css` - Estilos de expediente (400 líneas)
+
+**Archivos MODIFICADOS**:
+1. `src/App.jsx` - Router condicional por rol, imports, estado
+2. `src/App.css` - Estilos de modo admin (~100 líneas agregadas)
+
+**Total de Código Agregado**: ~1,580 líneas
+
+---
+
+##### 7. Funcionalidades Implementadas
+
+✅ **Detección automática de rol** via Firestore  
+✅ **Dashboard admin con estadísticas** (total, completos, pendientes, promedio)  
+✅ **Búsqueda global** por nombre/email/CURP  
+✅ **Filtros por estado** (todos/completos/pendientes)  
+✅ **Tabla de socios** con progreso visual  
+✅ **Vista de expediente completo** con 4 pestañas  
+✅ **Navegación SPA** sin recargas (callbacks en lugar de hrefs)  
+✅ **Datos personales** estructurados y editables  
+✅ **Checklist de 16 documentos** con estado visual  
+✅ **Arsenal completo** con modalidades (caza/tiro/ambas)  
+✅ **Historial de PETAs** con estados y armas incluidas  
+✅ **Diseño profesional** con gradientes purple y cards con sombra  
+✅ **Responsive** para desktop y móvil  
+
+---
+
+##### 8. Próximos Pasos
+
+**FASE 4**: Gestión Avanzada de Arsenal
+- Botón "Crear Arma" en ExpedienteAdminView
+- Form ArmaEditor.jsx (clase, calibre, marca, modelo, matrícula, folio, modalidad)
+- Edición inline en tabla de armas
+- Eliminación con confirmación y log de auditoría
+
+**FASE 5**: Sistema de Notificaciones Multi-Canal
+- Banner flotante en dashboard
+- Email notifications via Cloud Functions
+- WhatsApp Business API integration
+
+**Testing Requerido**:
+- Login como admin@club738.com
+- Verificar dashboard carga todos los socios
+- Probar búsqueda y filtros
+- Navegar entre expedientes
+- Verificar carga de armas y PETAs
+- Revisar responsive en móvil
+
+---
+
 #### 🎯 FASE 2: Validación Estricta de Documentos - COMPLETADA
 
 **Objetivo**: Implementar validación estricta de formatos de documentos para garantizar que los socios suban los archivos correctos (INE→JPG, RFA→PDF) y evitar rechazos en SEDENA.

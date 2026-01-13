@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { auth, db } from './firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { doc, getDoc, onSnapshot, collection, getDocs, query, where, collectionGroup } from 'firebase/firestore';
+import useRole from './hooks/useRole';
 import LandingPage from './components/LandingPage';
+import AdminDashboard from './components/admin/AdminDashboard';
+import ExpedienteAdminView from './components/admin/ExpedienteAdminView';
 import DocumentList from './components/documents/DocumentList';
 import MisArmas from './components/MisArmas';
 import MisDocumentosOficiales from './components/MisDocumentosOficiales';
@@ -49,6 +52,12 @@ function App() {
   const [documentosData, setDocumentosData] = useState({});
   const [showWelcome, setShowWelcome] = useState(false);
   const [socioData, setSocioData] = useState(null);
+  
+  // Detección de role (administrator, socio)
+  const { role, loading: roleLoading } = useRole();
+  
+  // Para modo admin: ver expediente de un socio específico
+  const [socioSeleccionado, setSocioSeleccionado] = useState(null);
   
   // Para el secretario: ver documentos de otro socio
   const [socioViendoDocumentos, setSocioViendoDocumentos] = useState(null);
@@ -143,7 +152,7 @@ function App() {
     setActiveSection('documentos-socio');
   };
 
-  if (loading) {
+  if (loading || roleLoading) {
     return <div className="loading">Cargando...</div>;
   }
 
@@ -161,6 +170,55 @@ function App() {
     return <LandingPage />;
   }
 
+  // Router basado en role: Admin → AdminDashboard
+  if (role === 'administrator') {
+    return (
+      <div className="app-container admin-mode">
+        {/* Header Admin */}
+        <header className="app-header admin-header">
+          <div className="header-content">
+            <a href="/" onClick={(e) => { e.preventDefault(); setActiveSection('admin-dashboard'); }} className="logo-home-link">
+              <img src="/assets/logo-club-738.jpg" alt="Club 738" className="logo-small" />
+              <span className="site-title">Panel de Administración</span>
+            </a>
+            <div className="header-actions">
+              <span className="user-email admin-badge">🔧 {user.email}</span>
+              <button onClick={handleLogout} className="btn-logout">🚪 Salir</button>
+            </div>
+          </div>
+        </header>
+
+        {/* Content Admin */}
+        <main className="app-main admin-main">
+          {activeSection === 'admin-dashboard' && (
+            <AdminDashboard 
+              onVerExpediente={(email) => {
+                setSocioSeleccionado(email);
+                setActiveSection('expediente');
+              }}
+            />
+          )}
+          
+          {activeSection === 'expediente' && socioSeleccionado && (
+            <ExpedienteAdminView 
+              socioEmail={socioSeleccionado}
+              onBack={() => {
+                setSocioSeleccionado(null);
+                setActiveSection('admin-dashboard');
+              }}
+            />
+          )}
+        </main>
+
+        {/* Footer Admin */}
+        <footer className="app-footer admin-footer">
+          <p>© 2026 Club de Caza, Tiro y Pesca de Yucatán, A.C. | Panel Administrativo</p>
+        </footer>
+      </div>
+    );
+  }
+
+  // Dashboard normal de socio
   return (
     <div className="app-container">
       {/* Dialog de bienvenida */}

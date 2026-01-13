@@ -1,0 +1,468 @@
+/* ExpedienteAdminView.css - Vista de expediente de socio para admin */
+
+.expediente-admin-view {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header */
+.expediente-header {
+  margin-bottom: 2rem;
+}
+
+.expediente-header h1 {
+  font-size: 2rem;
+  color: #1a202c;
+  margin: 0.5rem 0;
+}
+
+.expediente-email {
+  color: #718096;
+  font-size: 1rem;
+  font-family: 'Courier New', monospace;
+}
+
+.btn-back {
+  padding: 0.5rem 1rem;
+  background: #e2e8f0;
+  color: #4a5568;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.btn-back:hover {
+  background: #cbd5e1;
+}
+
+/* Resumen */
+.expediente-resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.resumen-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.resumen-label {
+  font-size: 0.85rem;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.resumen-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1a202c;
+}
+
+/* Tabs */
+.expediente-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.tab {
+  flex: 1;
+  min-width: 150px;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  color: #4a5568;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  background: #f7fafc;
+}
+
+.tab.active {
+  background: #667eea;
+  color: white;
+}
+
+/* Content */
+.expediente-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  min-height: 400px;
+}
+
+.tab-content h2 {
+  color: #1a202c;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+/* Datos Personales */
+.datos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dato-item {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.75rem;
+}
+
+.dato-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.dato-item label {
+  display: block;
+  font-size: 0.85rem;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.dato-value {
+  font-size: 1rem;
+  color: #1a202c;
+  font-weight: 500;
+}
+
+.badge-pagado {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+.badge-pendiente {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+.datos-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.btn-edit {
+  padding: 0.75rem 1.5rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-edit:hover:not(:disabled) {
+  background: #5568d3;
+}
+
+.btn-edit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Documentos */
+.documentos-progreso {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.progress-bar-large {
+  width: 100%;
+  height: 20px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill-large {
+  height: 100%;
+  background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+  transition: width 0.3s ease;
+}
+
+.documentos-lista {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.documento-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.documento-item.completo {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.documento-item.pendiente {
+  background: #fef3c7;
+  border-color: #fde68a;
+}
+
+.documento-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.documento-icon {
+  font-size: 1.25rem;
+}
+
+.documento-label {
+  font-weight: 500;
+  color: #1a202c;
+}
+
+.btn-ver-documento {
+  padding: 0.5rem 1rem;
+  background: #667eea;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.btn-ver-documento:hover {
+  background: #5568d3;
+}
+
+.documento-pendiente-text {
+  color: #92400e;
+  font-size: 0.9rem;
+}
+
+/* Armas */
+.armas-tabla {
+  overflow-x: auto;
+}
+
+.armas-tabla table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.armas-tabla th {
+  background: #f7fafc;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.armas-tabla td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #1a202c;
+}
+
+.armas-tabla tbody tr:hover {
+  background: #f7fafc;
+}
+
+.matricula {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+}
+
+.badge-modalidad {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.badge-modalidad.caza {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge-modalidad.tiro {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-modalidad.ambas {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* PETAs */
+.petas-lista {
+  display: grid;
+  gap: 1rem;
+}
+
+.peta-card {
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.peta-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.peta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f7fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.peta-tipo {
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.peta-estado {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.peta-estado.estado-borrador {
+  background: #e2e8f0;
+  color: #4a5568;
+}
+
+.peta-estado.estado-pendiente,
+.peta-estado.estado-documentacion_proceso {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.peta-estado.estado-documentacion_completa,
+.peta-estado.estado-aprobado {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.peta-estado.estado-enviado_zm,
+.peta-estado.estado-completado {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.peta-body {
+  padding: 1rem;
+}
+
+.peta-info {
+  margin-bottom: 0.5rem;
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+.peta-info strong {
+  color: #1a202c;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #718096;
+}
+
+/* Loading y Error */
+.expediente-loading,
+.expediente-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1rem;
+}
+
+.spinner {
+  font-size: 3rem;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .expediente-content {
+    padding: 1rem;
+  }
+
+  .datos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .expediente-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .tab {
+    flex: 0 0 auto;
+  }
+
+  .armas-tabla {
+    font-size: 0.85rem;
+  }
+
+  .armas-tabla th,
+  .armas-tabla td {
+    padding: 0.5rem;
+  }
+}
