@@ -4,6 +4,7 @@ import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { storage, db } from '../../firebaseConfig';
 import { jsPDF } from 'jspdf';
 import heic2any from 'heic2any';
+import { validarDocumento } from '../../utils/documentValidation';
 import './MultiImageUploader.css';
 
 export default function MultiImageUploader({ 
@@ -21,10 +22,6 @@ export default function MultiImageUploader({
   const [error, setError] = useState('');
   const [converting, setConverting] = useState(false);
   const [uploadMode, setUploadMode] = useState(null); // 'pdf' o 'photo'
-
-  const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/heic', 'image/heif'];
-  const maxSizePdf = 5 * 1024 * 1024; // 5MB para PDFs
-  const maxSizeImage = 10 * 1024 * 1024; // 10MB para imágenes
   const maxImages = allowMultiple ? 4 : 1;
 
   // Convertir HEIC (iOS) a JPEG
@@ -118,30 +115,34 @@ export default function MultiImageUploader({
   };
 
   const validateFile = (file, isPdfMode = false) => {
-    if (isPdfMode) {
-      // Modo PDF: solo PDFs de máximo 5MB
-      if (file.type !== 'application/pdf') {
-        setError('Solo se permiten archivos PDF');
-        return false;
-      }
-      if (file.size > maxSizePdf) {
-        const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
-        setError(`El PDF pesa ${sizeMB}MB. Máximo: 5MB. Usa iLovePDF.com para comprimir.`);
-        return false;
-      }
-    } else {
-      // Modo foto: imágenes de máximo 10MB
-      const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
-      const isImage = file.type.startsWith('image/') || isHeic;
-      if (!isImage) {
-        setError('Solo se permiten imágenes (JPG, PNG, HEIC)');
-        return false;
-      }
-      if (file.size > maxSizeImage) {
-        setError('La imagen no debe superar 10MB');
-        return false;
-      }
+    // Determinar el tipo de documento según el modo
+    // imageOnly=true → fotoCredencial (solo JPG/JPEG)
+    // isPdfMode=true → documento PDF (ine, etc.)
+    // allowMultiple=true → generalmente INE (fotos que se convierten a PDF)
+    
+    let tipoDoc = documentType;
+    
+    // Para validar el archivo original antes de procesarlo
+    if (imageOnly) {
+      // fotoCredencial: solo JPG/JPEG
+      tipoDoc = 'fotoCredencial';
+    } else if (isPdfMode) {
+      // Documentos PDF (cuando suben PDF directo de INE)
+      tipoDoc = 'ine'; // Usamos reglas de INE como base
     }
+    
+    const resultado = validarDocumento(tipoDoc, file);
+    
+    if (!resultado.valido) {
+      alert(resultado.error);
+      setError(resultado.error.split('\n\n')[0]);
+      return false;
+    }
+    
+    if (resultado.advertencia) {
+      console.log(resultado.advertencia);
+    }
+    
     return true;
   };
 
@@ -171,24 +172,24 @@ export default function MultiImageUploader({
     
     setError('');
     
-    // Validar que sea imagen
-    const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
-    const isImage = file.type.startsWith('image/') || isHeic;
-    if (!isImage) {
-      setError('Solo se permiten imágenes (JPG, PNG, HEIC)');
-      return;
-    }
-    if (file.size > maxSizeImage) {
-      setError('La imagen no debe superar 10MB');
+    // Validación estricta: solo JPG/JPEG (rechaza PNG/HEIC/PDF)
+    const resultado = validarDocumento('fotoCredencial', file);
+    
+    if (!resultado.valido) {
+      alert(resultado.error);
+      setError(resultado.error.split('\n\n')[0]);
+      // Resetear input
+      e.target.value = '';
       return;
     }
     
+    if (resultado.advertencia) {
+      console.log(resultado.advertencia);
+    }
+    
     try {
-      // Procesar (convertir HEIC si es necesario)
-      const processedFile = await processFile(file);
-      
-      // Subir como imagen (no PDF)
-      await uploadFile(processedFile, true);
+      // Subir como imagen (JPG/JPEG puro, no PDF)
+      await uploadFile(file, true);
     } catch (err) {
       setError(err.message);
     }
@@ -426,14 +427,14 @@ export default function MultiImageUploader({
           <div className="image-only-upload">
             <div className="image-only-info">
               <p className="image-only-title">📸 Sube tu foto</p>
-              <p className="image-only-desc">Formato JPG o PNG, fondo blanco, tamaño infantil</p>
+              <p className="image-only-desc">Solo JPG o JPEG, fondo blanco, tamaño infantil</p>
             </div>
             
             <label className="file-select-btn image-btn">
-              📷 Seleccionar imagen
+              📷 Seleccionar imagen JPG
               <input
                 type="file"
-                accept="image/jpeg,image/jpg,image/png,image/heic,image/heif"
+                accept="image/jpeg,image/jpg"
                 capture="environment"
                 onChange={handleImageOnlyUpload}
                 hidden
@@ -441,7 +442,7 @@ export default function MultiImageUploader({
             </label>
             
             <p className="image-only-hint">
-              💡 Puedes tomar la foto con tu celular o seleccionar una imagen guardada
+              💡 Toma la foto con tu celular o selecciona un JPG guardado. Máximo 2MB.
             </p>
           </div>
         ) : (

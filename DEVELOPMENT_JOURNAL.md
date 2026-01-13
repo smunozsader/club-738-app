@@ -12,6 +12,171 @@
 
 ### 13 de Enero - v2.0.0 - Rediseño: Sistema de Roles y Arquitectura Admin
 
+---
+
+#### 🎯 FASE 2: Validación Estricta de Documentos - COMPLETADA
+
+**Objetivo**: Implementar validación estricta de formatos de documentos para garantizar que los socios suban los archivos correctos (INE→JPG, RFA→PDF) y evitar rechazos en SEDENA.
+
+**Problema Resuelto**:
+- Socios subían INE en PDF cuando se requiere JPG ampliado 200%
+- Registros de armas (RFA) se subían en JPG cuando debe ser PDF
+- Sin validación de tamaños (archivos muy pesados)
+- Mensajes de error genéricos que no ayudaban al usuario
+
+---
+
+##### 1. Utilidad de Validación Centralizada
+
+**Archivo**: `src/utils/documentValidation.js`
+
+**Contenido**:
+- Constante `REGLAS_DOCUMENTOS` con 16 tipos de documentos
+- Validación de formato (PDF vs JPG/JPEG)
+- Validación de tamaño (5MB, 10MB, 2MB según documento)
+- Mensajes de error específicos y descriptivos
+- Advertencias contextuales (ej: "Recuerda subir ambas caras de INE")
+
+**Reglas Clave**:
+```javascript
+ine: { formatos: ['jpg', 'jpeg'], tamañoMax: 5MB }
+rfa: { formatos: ['pdf'], tamañoMax: 10MB }
+fotoCredencial: { formatos: ['jpg', 'jpeg'], tamañoMax: 2MB }
+curp: { formatos: ['pdf'], tamañoMax: 5MB }
+// ... 12 documentos más
+```
+
+**Funciones Exportadas**:
+- `validarDocumento(tipo, archivo)` → `{valido, error?, advertencia?}`
+- `validarMultiplesArchivos(tipo, archivos)` → validación batch
+- `obtenerInstrucciones(tipo)` → texto de ayuda
+- `formatoPermitido(tipo, formato)` → verificación rápida
+
+**Listas de Referencia**:
+- `DOCUMENTOS_SOLO_PDF`: 14 tipos (RFA, CURP, certificados, etc.)
+- `DOCUMENTOS_SOLO_JPG`: 2 tipos (INE, foto credencial)
+
+---
+
+##### 2. DocumentUploader.jsx - Validación Integrada
+
+**Archivo**: `src/components/documents/DocumentUploader.jsx`
+
+**Cambios**:
+- ✅ Importado `validarDocumento` y `REGLAS_DOCUMENTOS`
+- ✅ Eliminada validación manual (`allowedTypes`, `maxSize`)
+- ✅ Reemplazada función `validateFile()` con llamada a `validarDocumento()`
+- ✅ Alertas específicas con mensajes descriptivos
+- ✅ Reset automático del input file si validación falla (mediante `useRef`)
+- ✅ Formatos permitidos (`accept`) dinámicos según tipo de documento
+- ✅ Texto de tamaño máximo generado automáticamente
+
+**Ejemplo de Validación**:
+```javascript
+const resultado = validarDocumento(documentType, file);
+if (!resultado.valido) {
+  alert(resultado.error);  // Muestra mensaje completo
+  setError(resultado.error.split('\n\n')[0]);  // Título en UI
+  fileInputRef.current.value = '';  // Reset input
+  return false;
+}
+```
+
+**Mensajes de Usuario**:
+- ❌ "INE.pdf" → "INE debe ser JPG o JPEG, máximo 5MB. Se requieren ambas caras ampliadas al 200%"
+- ❌ "Certificado.docx" → "Formato incorrecto. Certificado Médico debe ser PDF, máximo 5MB"
+
+---
+
+##### 3. ArmasRegistroUploader.jsx - PDF Obligatorio
+
+**Archivo**: `src/components/documents/ArmasRegistroUploader.jsx`
+
+**Cambios**:
+- ✅ Importado `validarDocumento` de documentValidation.js
+- ✅ Eliminada constante `MAX_FILE_SIZE` (ahora usa `REGLAS_DOCUMENTOS.rfa.tamañoMax`)
+- ✅ Reemplazada validación manual por validación estricta
+- ✅ Límite actualizado de **5MB a 10MB** para RFAs (archivos escaneados son más pesados)
+- ✅ Alertas específicas cuando formato incorrecto
+- ✅ Texto de ayuda actualizado con "Solo PDF, máximo 10MB"
+
+**Validación en Acción**:
+```javascript
+const resultado = validarDocumento('registroArma', file);
+// Si sube RFA.jpg → ❌ Bloqueado: "Registro de Armas debe ser PDF, máximo 10MB"
+// Si sube RFA.pdf de 12MB → ❌ Bloqueado: "Archivo muy grande"
+// Si sube RFA.pdf válido → ✅ Procede con OCR y subida
+```
+
+**Nota Importante**: El OCR de matrícula sigue funcionando DESPUÉS de la validación de formato.
+
+---
+
+##### 4. MultiImageUploader.jsx - Solo JPG/JPEG
+
+**Archivo**: `src/components/documents/MultiImageUploader.jsx`
+
+**Cambios**:
+- ✅ Importado `validarDocumento` de documentValidation.js
+- ✅ Eliminadas constantes `allowedTypes`, `maxSizePdf`, `maxSizeImage`
+- ✅ Reemplazada validación manual por validación estricta
+- ✅ **Solo JPG/JPEG permitido** - rechaza PNG, HEIC, PDF
+- ✅ Atributo `accept` actualizado a `"image/jpeg,image/jpg"` (elimina png, heic, heif)
+- ✅ Texto actualizado: "Solo JPG o JPEG, fondo blanco, tamaño infantil"
+- ✅ Tamaño máximo: 2MB para fotos de credencial
+
+**Validación en handleImageOnlyUpload()**:
+```javascript
+const resultado = validarDocumento('fotoCredencial', file);
+if (!resultado.valido) {
+  alert(resultado.error);
+  setError(resultado.error.split('\n\n')[0]);
+  e.target.value = '';  // Reset input
+  return;
+}
+```
+
+**Formatos Bloqueados**:
+- ❌ `foto.png` → "Fotografía debe ser JPG o JPEG, máximo 2MB, fondo blanco"
+- ❌ `INE_frente.heic` → "INE debe ser JPG o JPEG, máximo 5MB"
+- ❌ `INE.pdf` → "Formato incorrecto. INE debe ser imagen JPG"
+- ✅ `foto.jpg` válido → Procede con subida
+
+**Nota**: Eliminado soporte para HEIC (iOS) y PNG para forzar estándar JPG universal.
+
+---
+
+##### 5. Resumen de Validaciones Implementadas
+
+| Componente | Documentos | Formato Forzado | Tamaño Máx | Archivos Modificados |
+|------------|------------|-----------------|------------|---------------------|
+| **DocumentUploader.jsx** | CURP, Constancia, Certificados, Licencia Caza, etc. | **PDF** | 5MB | ✅ |
+| **ArmasRegistroUploader.jsx** | Registros de Armas (RFA) | **PDF** | **10MB** | ✅ |
+| **MultiImageUploader.jsx** | INE (frente/vuelta), Fotos Credencial | **JPG/JPEG** | 2-5MB | ✅ |
+
+**Archivos Creados**:
+- `src/utils/documentValidation.js` (nuevo, 400+ líneas)
+
+**Archivos Modificados**:
+- `src/components/documents/DocumentUploader.jsx`
+- `src/components/documents/ArmasRegistroUploader.jsx`
+- `src/components/documents/MultiImageUploader.jsx`
+
+**Beneficios**:
+- ✅ Evita rechazos de trámites PETA por documentos incorrectos
+- ✅ Ahorra tiempo al socio (no tiene que volver a subir)
+- ✅ Mensajes claros y específicos sobre qué está mal
+- ✅ Validación centralizada (fácil de mantener)
+- ✅ Cumplimiento de requisitos SEDENA (INE ampliado 200% en JPG, RFA en PDF)
+
+**Próximos Pasos**:
+- FASE 3: Dashboard Administrativo Separado (AdminDashboard, useRole hook, router)
+- Testing de validaciones (intentar subir archivos incorrectos)
+
+---
+
+### 13 de Enero - v2.0.0 - Rediseño: Sistema de Roles y Arquitectura Admin
+
 #### 🎯 FASE 1: Sistema de Roles y Autenticación - COMPLETADA
 
 **Objetivo**: Implementar arquitectura diferenciada de roles para separar funciones administrativas del portal de socios.

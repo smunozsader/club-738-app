@@ -8,9 +8,8 @@ import { collection, getDocs, doc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebaseConfig';
 import { validateArmaRegistro } from '../../utils/ocrValidation';
+import { validarDocumento } from '../../utils/documentValidation';
 import './ArmasRegistroUploader.css';
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
   const [armas, setArmas] = useState([]);
@@ -75,17 +74,19 @@ export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
       setPendingUpload(null);
     }
 
-    // Validar tipo
-    if (file.type !== 'application/pdf') {
-      setError('⚠️ Solo se aceptan archivos PDF');
+    // Validación estricta usando documentValidation.js
+    const resultado = validarDocumento('registroArma', file);
+    
+    if (!resultado.valido) {
+      // Mostrar error específico al usuario
+      alert(resultado.error);
+      setError(resultado.error.split('\n\n')[0]); // Mostrar solo el título del error
       return;
     }
-
-    // Validar tamaño
-    if (file.size > MAX_FILE_SIZE) {
-      const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
-      setError(`⚠️ El PDF pesa ${sizeMB}MB. Máximo permitido: 5MB\n\n💡 Comprime en iLovePDF.com`);
-      return;
+    
+    // Mostrar advertencia si existe
+    if (resultado.advertencia) {
+      console.log(resultado.advertencia);
     }
 
     // Paso 1: Validar con OCR (a menos que sea forzado)
@@ -305,6 +306,9 @@ export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
         <p>
           El sistema usa <strong>OCR (Reconocimiento Óptico)</strong> para verificar 
           que el PDF que subes corresponde al arma correcta.
+        </p>
+        <p>
+          <strong>Formato requerido:</strong> Solo PDF, máximo 10MB
         </p>
       </div>
     </div>

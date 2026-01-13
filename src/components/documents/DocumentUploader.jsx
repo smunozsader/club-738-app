@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { storage, db } from '../../firebaseConfig';
+import { validarDocumento, REGLAS_DOCUMENTOS } from '../../utils/documentValidation';
 import './DocumentUploader.css';
 
 export default function DocumentUploader({ userId, documentType, documentLabel, onUploadComplete }) {
@@ -9,9 +10,7 @@ export default function DocumentUploader({ userId, documentType, documentLabel, 
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState('');
-
-  const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-  const maxSize = 5 * 1024 * 1024; // 5MB
+  const fileInputRef = useRef(null);
 
   const handleDragOver = useCallback((e) => {
     e.preventDefault();
@@ -24,14 +23,27 @@ export default function DocumentUploader({ userId, documentType, documentLabel, 
   }, []);
 
   const validateFile = (file) => {
-    if (!allowedTypes.includes(file.type)) {
-      setError('Solo se permiten archivos PDF, JPG o PNG');
+    // Validación estricta usando reglas de documentValidation.js
+    const resultado = validarDocumento(documentType, file);
+    
+    if (!resultado.valido) {
+      // Mostrar error específico al usuario
+      alert(resultado.error);
+      setError(resultado.error.split('\n\n')[0]); // Mostrar solo el título del error
+      
+      // Resetear input file para permitir seleccionar de nuevo
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      
       return false;
     }
-    if (file.size > maxSize) {
-      setError('El archivo no debe superar 5MB');
-      return false;
+    
+    // Mostrar advertencia si existe (no bloquea subida)
+    if (resultado.advertencia) {
+      console.log(resultado.advertencia);
     }
+    
     return true;
   };
 
@@ -92,7 +104,24 @@ export default function DocumentUploader({ userId, documentType, documentLabel, 
 
   const handleDrop = useCallback((e) => {
     e.preventDefault();
-    setIsDragging(false);
+    
+  
+  // Determinar formatos permitidos según el tipo de documento
+  const getAcceptedFormats = () => {
+    const regla = REGLAS_DOCUMENTOS[documentType];
+    if (!regla) return '.pdf,.jpg,.jpeg,.png';
+    
+    return regla.formatos.map(f => `.${f}`).join(',');
+  };
+  
+  const getFormatsText = () => {
+    const regla = REGLAS_DOCUMENTOS[documentType];
+    if (!regla) return 'PDF, JPG o PNG (máx. 5MB)';
+    
+    const formatosTexto = regla.formatos.map(f => f.toUpperCase()).join(' o ');
+    const tamañoMB = (regla.tamañoMax / (1024 * 1024)).toFixed(0);
+    return `${formatosTexto} (máx. ${tamañoMB}MB)`;
+  };setIsDragging(false);
     
     const files = e.dataTransfer.files;
     if (files.length > 0) {
@@ -115,13 +144,14 @@ export default function DocumentUploader({ userId, documentType, documentLabel, 
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        {uploading ? (
-          <div className="upload-progress">
-            <div className="progress-bar">
-              <div className="progress-fill" style={{ width: `${progress}%` }}></div>
-            </div>
-            <span>{progress}% subiendo...</span>
-          </div>
+        {uploadiref={fileInputRef}
+                type="file"
+                accept={getAcceptedFormats()}
+                onChange={handleFileSelect}
+                hidden
+              />
+            </label>
+            <p className="upload-formats">{getFormatsText()}
         ) : (
           <>
             <div className="upload-icon">📄</div>
