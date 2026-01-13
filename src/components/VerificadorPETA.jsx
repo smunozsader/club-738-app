@@ -62,6 +62,10 @@ export default function VerificadorPETA({ userEmail, onBack }) {
   const [docsDigitalesVerif, setDocsDigitalesVerif] = useState({});
   const [docsFisicosVerif, setDocsFisicosVerif] = useState({});
   const [notas, setNotas] = useState('');
+  
+  // Estado para visor de PDF de registros de armas
+  const [registrosArmas, setRegistrosArmas] = useState({});
+  const [pdfVisor, setPdfVisor] = useState(null); // { armaId, clase, marca, matricula, url }
 
   // Función para buscar documentos precargados en Storage
   const checkPreloadedDocs = async (userEmail) => {
@@ -105,6 +109,72 @@ export default function VerificadorPETA({ userEmail, onBack }) {
     
     return found;
   };
+
+  // Cargar registros de armas (PDFs) desde Storage
+  const cargarRegistrosArmas = async (socioEmail, armas) => {
+    const registros = {};
+    
+    try {
+      // Primero, cargar todas las armas del socio para obtener los IDs correctos
+      const socioRef = doc(db, 'socios', socioEmail);
+      const armasSnapshot = await getDocs(collection(socioRef, 'armas'));
+      
+      const armasFirestore = {};
+      armasSnapshot.forEach(doc => {
+        const armaData = doc.data();
+        armasFirestore[armaData.matricula] = {
+          id: doc.id,
+          ...armaData
+        };
+      });
+      
+      // Para cada arma en la PETA, buscar en Firestore y cargar PDF
+      for (const armaPETA of armas) {
+        // Buscar por matrícula en Firestore
+        const armaEnFS = armasFirestore[armaPETA.matricula];
+        
+        if (armaEnFS) {
+          try {
+            const armaRef = ref(storage, `documentos/${socioEmail}/armas/${armaEnFS.id}/registro.pdf`);
+            const url = await getDownloadURL(armaRef);
+            registros[armaPETA.matricula] = {
+              url,
+              clase: armaPETA.clase,
+              marca: armaPETA.marca,
+              calibre: armaPETA.calibre,
+              matricula: armaPETA.matricula
+            };
+            console.log(`✅ Registro cargado: ${armaPETA.matricula} (ID: ${armaEnFS.id})`);
+          } catch (error) {
+            console.log(`⚠️ Registro no encontrado para ${armaPETA.matricula}:`, error.message);
+            registros[armaPETA.matricula] = {
+              url: null,
+              clase: armaPETA.clase,
+              marca: armaPETA.marca,
+              calibre: armaPETA.calibre,
+              matricula: armaPETA.matricula,
+              error: 'No encontrado'
+            };
+          }
+        } else {
+          console.log(`❌ Arma no encontrada en Firestore: ${armaPETA.matricula}`);
+          registros[armaPETA.matricula] = {
+            url: null,
+            clase: armaPETA.clase,
+            marca: armaPETA.marca,
+            calibre: armaPETA.calibre,
+            matricula: armaPETA.matricula,
+            error: 'No sincronizada'
+          };
+        }
+      }
+    } catch (error) {
+      console.error('Error cargando registros:', error);
+    }
+    
+    setRegistrosArmas(registros);
+  };
+
   useEffect(() => {
     cargarSocios();
   }, []);
@@ -151,10 +221,14 @@ export default function VerificadorPETA({ userEmail, onBack }) {
   const seleccionarPETA = async (socio, peta) => {
     setSocioSeleccionado(socio);
     setPetaSeleccionado(peta);
+    setPdfVisor(null); // Cerrar visor anterior
     
     // Buscar documentos precargados en Storage
     const preloaded = await checkPreloadedDocs(socio.email);
     setPreloadedDocs(preloaded);
+    
+    // Cargar registros de armas (PDFs) incluidas en la PETA
+    await cargarRegistrosArmas(socio.email, peta.armasIncluidas || []);
     
     // Auto-marcar como verificados los documentos que EXISTEN
     // Combina: verificación manual guardada + documentos encontrados (Firestore o Storage)
@@ -482,13 +556,69 @@ export default function VerificadorPETA({ userEmail, onBack }) {
                 <div className="docs-section">
                   <h4>🔫 Armas incluidas ({petaSeleccionado.armasIncluidas?.length || 0})</h4>
                   <div className="armas-verificacion-list">
-                    {petaSeleccionado.armasIncluidas?.map((arma, idx) => (
-                      <div key={idx} className="arma-verif-item">
-                        {idx + 1}. {arma.clase} {arma.marca} {arma.calibre} - Mat: {arma.matricula}
-                      </div>
-                    ))}
+                    {petaSeleccionado.armasIncluidas?.map((arma, idx) => {
+                      const registro = registrosArmas[arma.matricula];
+                      const tieneRegistro = registro?.url;
+                      
+                      return (
+                        <div key={idx} className={`arma-verif-item ${tieneRegistro ? 'con-pdf' : 'sin-pdf'}`}>
+                          <div className="arma-info">
+                            {idx + 1}. {arma.clase} {arma.marca} {arma.calibre} - Mat: {arma.matricula}
+                          </div>
+                          {tieneRegistro ? (
+                            <button 
+                              className="btn-ver-pdf"
+                              onClick={() => setPdfVisor({
+                                armaId: arma.matricula,
+                                clase: arma.clase,
+                                marca: arma.marca,
+                                matricula: arma.matricula,
+                                url: registro.url
+                              })}
+                              title="Ver y imprimir registro"
+                            >
+                              📄 Ver PDF
+                            </button>
+                          ) : (
+                            <span className="registro-faltante">⚠️ Sin registro</span>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
+
+                {/* Visor de PDF Modal */}
+                {pdfVisor && (
+                  <div className="pdf-visor-modal">
+                    <div className="pdf-visor-contenido">
+                      <div className="pdf-visor-header">
+                        <h3>📄 Registro: {pdfVisor.clase} {pdfVisor.marca} - {pdfVisor.matricula}</h3>
+                        <div className="pdf-visor-acciones">
+                          <button 
+                            className="btn-imprimir"
+                            onClick={() => window.open(pdfVisor.url, '_blank')}
+                            title="Abrir en nueva pestaña para imprimir"
+                          >
+                            🖨️ Imprimir
+                          </button>
+                          <button 
+                            className="btn-cerrar-pdf"
+                            onClick={() => setPdfVisor(null)}
+                            title="Cerrar visor"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                      <iframe 
+                        src={pdfVisor.url}
+                        className="pdf-iframe"
+                        title={`PDF ${pdfVisor.matricula}`}
+                      />
+                    </div>
+                  </div>
+                )}
 
                 {/* Notas */}
                 <div className="docs-section">

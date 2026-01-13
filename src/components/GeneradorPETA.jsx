@@ -551,7 +551,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
       doc.text('DATOS DE LAS ARMAS QUE EMPLEARÁ', margin, y);
-      y += 6;
+      y += 8;  // Aumentado de 6 a 8 para espacio después del título
 
       // Encabezados de tabla
       const colWidths = [10, 45, 25, 35, 30, 20];
@@ -563,14 +563,14 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       doc.setLineWidth(0.4);
       
       // Dibujar línea superior de tabla
-      doc.line(margin, y - 1, pageWidth - margin, y - 1);
+      doc.line(margin, y, pageWidth - margin, y);
       
       let xPos = margin;
       headers.forEach((header, i) => {
-        doc.text(header, xPos + 1, y);
+        doc.text(header, xPos + 1, y + 2);
         xPos += colWidths[i];
       });
-      y += 4;
+      y += 5;
       
       // Línea debajo de encabezados
       doc.line(margin, y - 1, pageWidth - margin, y - 1);
@@ -591,28 +591,28 @@ export default function GeneradorPETA({ userEmail, onBack }) {
           console.warn(`⚠️ Arma con ID ${armaId} no encontrada en armasSocio`);
         }
         
-        doc.text(`${i + 1}`, xPos + 1, y);
+        doc.text(`${i + 1}`, xPos + 1, y + 2);
         xPos += colWidths[0];
         
         if (arma) {
-          doc.text((arma.clase || '').substring(0, 25).toUpperCase(), xPos + 1, y);
+          doc.text((arma.clase || '').substring(0, 25).toUpperCase(), xPos + 1, y + 2);
           xPos += colWidths[1];
-          doc.text((arma.calibre || '').toUpperCase(), xPos + 1, y);
+          doc.text((arma.calibre || '').toUpperCase(), xPos + 1, y + 2);
           xPos += colWidths[2];
-          doc.text((arma.marca || '').substring(0, 18).toUpperCase(), xPos + 1, y);
+          doc.text((arma.marca || '').substring(0, 18).toUpperCase(), xPos + 1, y + 2);
           xPos += colWidths[3];
-          doc.text((arma.matricula || '').toUpperCase(), xPos + 1, y);
+          doc.text((arma.matricula || '').toUpperCase(), xPos + 1, y + 2);
           xPos += colWidths[4];
           {
             const spec = getCartuchoSpec(arma.calibre, arma.clase);
             const val = cartuchosPorArma[armaId] ?? spec.default;
             const clamped = clampCartuchos(val, spec);
-            doc.text(String(clamped), xPos + 1, y);
+            doc.text(String(clamped), xPos + 1, y + 2);
           }
         }
         y += 5;
         // Línea divisoria entre filas
-        doc.line(margin, y - 1, pageWidth - margin, y - 1);
+        doc.line(margin, y - 2, pageWidth - margin, y - 2);
       }
       
       y += 3;

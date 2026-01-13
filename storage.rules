@@ -67,6 +67,7 @@ service firebase.storage {
     // CARPETA: documentos/{email}/armas/{armaId}/
     // ========================================================================
     // Para documentos específicos de armas (registros, etc.)
+    // El secretario puede listar armas de cualquier socio para impresión
     
     match /documentos/{email}/armas/{armaId}/{fileName} {
       allow read: if isOwner(email) || isSecretario();
@@ -74,6 +75,15 @@ service firebase.storage {
                    && isAllowedFileType() 
                    && isUnderSizeLimit();
       allow delete: if isOwner(email);
+    }
+    
+    // ========================================================================
+    // CARPETA: documentos/{email}/armas/ (listar archivos)
+    // ========================================================================
+    // El secretario necesita poder listar la carpeta de armas para impresión
+    
+    match /documentos/{email}/armas/{fileName=**} {
+      allow read, list: if isOwner(email) || isSecretario();
     }
     
     // ========================================================================

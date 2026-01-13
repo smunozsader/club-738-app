@@ -16,7 +16,7 @@ const nodemailer = require("nodemailer");
 admin.initializeApp();
 
 // Importar funciones de Google Calendar
-// const calendarFunctions = require('./calendar-integration');
+// const calendarFunctions = require("./calendar-integration");
 
 // Configuración global
 setGlobalOptions({
@@ -30,18 +30,16 @@ const EMAIL_CONFIG = {
   // Emails de notificación
   destinatarios: [
     "smunozam@gmail.com", // Secretario
-    "tiropracticoyucatan@gmail.com", // Club
   ],
 
   // Configuración SMTP (Gmail)
-  // NOTA: Necesitas habilitar "Apps menos seguras" o usar App Password
+  // NOTA: Usa App Password de smunozam@gmail.com
   smtp: {
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
     auth: {
-      user: process.env.EMAIL_USER ||
-          "tiropracticoyucatan@gmail.com",
+      user: "smunozam@gmail.com",
       pass: process.env.EMAIL_PASS || "",
       // Configurar con: firebase functions:secrets:set EMAIL_PASS
     },

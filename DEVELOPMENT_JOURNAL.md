@@ -10,6 +10,199 @@
 
 ## 📅 Enero 2026
 
+### 13 de Enero - v2.0.0 - Rediseño: Sistema de Roles y Arquitectura Admin
+
+#### 🎯 FASE 1: Sistema de Roles y Autenticación - COMPLETADA
+
+**Objetivo**: Implementar arquitectura diferenciada de roles para separar funciones administrativas del portal de socios.
+
+**Motivación del Rediseño**:
+- Portal actual mezclaba funciones de socio y secretario en un solo dashboard
+- Necesidad de permisos granulares (admin puede editar datos, eliminar docs, gestionar armas)
+- Sistema de notificaciones y auditoría para gestión profesional
+- Validaciones estrictas de formatos de documentos
+
+---
+
+#### 1. Creación de Cuenta de Administrador
+
+**Script**: `scripts/crear-usuario-admin.cjs`
+
+**Usuario creado**:
+- Email: `admin@club738.com`
+- Password: `Club738*Admin#2026!Seguro` (temporal, cambiar en primer login)
+- UID: `Qm9E2J69WATUaWA6EMgOH47TqY93`
+- Display Name: "Administrador del Sistema"
+- Email Verified: true
+
+**Características**:
+- Contraseña generada automáticamente con alta seguridad
+- Verificación de existencia antes de crear (evita duplicados)
+- Logging detallado con instrucciones post-creación
+
+---
+
+#### 2. Colección `usuarios` en Firestore
+
+**Script**: `scripts/crear-coleccion-usuarios.cjs`
+
+**Estructura de Documento**:
+```javascript
+usuarios/{email} {
+  role: 'administrator' | 'socio',
+  nombre: string,
+  emailNotificaciones: string,  // Para redirigir notificaciones
+  permisos: {
+    // Permisos específicos por rol
+  },
+  fechaCreacion: timestamp,
+  fechaActualizacion: timestamp  // Solo en updates
+}
+```
+
+**Usuarios Iniciales**:
+1. **admin@club738.com** (administrator)
+   - Permisos completos: ver todos los socios, editar datos, eliminar documentos, gestionar armas, cobranza, PETAs, citas
+   - Notificaciones de agenda → `smunozam@gmail.com`
+
+2. **smunozam@gmail.com** (socio)
+   - Permisos de socio: ver propios datos, subir documentos, solicitar PETAs, ver arsenal, agendar citas
+   - Notificaciones → `smunozam@gmail.com`
+
+**Razón de emailNotificaciones**:
+- Permite separar cuenta admin del email personal del secretario
+- Emails de agenda siguen llegando a `smunozam@gmail.com`
+- WhatsApp Business del club también vinculado a ese número
+
+---
+
+#### 3. Firestore Security Rules - Actualización Completa
+
+**Archivo**: `firestore.rules`
+
+**Nuevas Funciones Helper**:
+```javascript
+function isAdmin() {
+  return request.auth.token.email == 'admin@club738.com';
+}
+
+function isAdminOrSecretary() {
+  return isAdmin() || isSecretario();
+}
+```
+
+**Cambios Principales**:
+
+**A. Colección `socios`**:
+- ✅ Admin puede actualizar CUALQUIER campo (nombre, CURP, domicilio, etc.)
+- ✅ Secretario mantiene permisos de renovación/pagos
+- ✅ Socio solo puede actualizar campos específicos
+
+**B. Subcolección `armas`**:
+- ✅ Admin puede **CREAR** armas manualmente (`allow create: if isAdmin()`)
+- ✅ Admin puede **ELIMINAR** armas (`allow delete: if isAdmin()`)
+- ✅ Admin puede **ACTUALIZAR** cualquier campo
+- ✅ Secretario solo puede actualizar modalidad (caza/tiro)
+
+**C. Nuevas Colecciones**:
+
+1. **`usuarios`**: Solo lectura para verificar rol, escritura por backend
+2. **`auditoria`**: Admin/Secretario crean logs, nadie puede modificar (inmutables)
+3. **`notificaciones`** (subcol de socios): Admin crea, socio marca como leída
+
+**D. Colecciones Existentes Actualizadas**:
+- `solicitudesAlta`: Admin/Secretario pueden gestionar (antes solo secretario)
+- `solicitudesBaja`: Admin/Secretario pueden gestionar
+- `petas`: Admin/Secretario pueden gestionar
+- `citas`: Admin/Secretario pueden gestionar
+- `bajas`: Admin/Secretario pueden gestionar
+
+---
+
+#### Archivos Creados
+
+1. **scripts/crear-usuario-admin.cjs**
+   - Creación automatizada de cuenta admin en Firebase Auth
+   - Validación de usuario existente
+   - Generación de contraseña segura
+   - Logging detallado
+
+2. **scripts/crear-coleccion-usuarios.cjs**
+   - Población de colección usuarios con roles iniciales
+   - Definición de permisos diferenciados
+   - Resumen de capacidades por rol
+
+#### Archivos Modificados
+
+1. **firestore.rules** (203 líneas → ~270 líneas)
+   - Funciones: `isAdmin()`, `isAdminOrSecretary()`
+   - Permisos granulares para admin en socios y armas
+   - Reglas para nuevas colecciones (usuarios, auditoria, notificaciones)
+   - Actualización de todas las reglas existentes para soportar admin
+
+---
+
+#### Próximos Pasos (FASE 2-9)
+
+**FASE 2**: Validación Estricta de Documentos
+- Crear `src/utils/documentValidation.js` con reglas (INE→JPG, RFA→PDF)
+- Actualizar uploaders con validación estricta y mensajes claros
+
+**FASE 3**: Dashboard de Administrador
+- Crear `AdminDashboard.jsx` con vista de tareas urgentes
+- Router inteligente en App.jsx según rol
+- Componente TareasUrgentes.jsx
+
+**FASE 4**: Administrador de Expedientes Unificado
+- BuscadorSocios.jsx
+- AdminExpedientes.jsx con tabs (Documentos, Armas, Datos Personales)
+- Funciones de eliminación con log de auditoría
+
+**FASE 5**: Sistema de Notificaciones
+- NotificacionesBanner.jsx
+- Firebase Functions para emails automáticos
+- WhatsApp manual (botón wa.me)
+
+**FASE 6**: Gestión de Arsenal (Admin)
+- Agregar armas manualmente
+- Eliminar armas con log
+- Editar todos los campos
+
+**FASE 7**: Edición de Datos Personales
+- FormularioDatos.jsx
+- Validación de CURP, CP
+- Log de cambios en auditoría
+
+**FASE 8**: Actualizar Documentación
+- copilot-instructions.md con nueva arquitectura
+
+**FASE 9**: Testing y Deploy
+
+---
+
+#### Notas de Desarrollo
+
+**Seguridad**:
+- Contraseña admin NO está en repo (en script temporal)
+- Service account key sigue en .gitignore
+- Firestore rules siguen principio de mínimo privilegio
+
+**Separación de Roles**:
+- Admin: cuenta dedicada para administración (admin@club738.com)
+- Secretario: cuenta personal de Sergio (smunozam@gmail.com) - sigue siendo socio
+- Notificaciones: ambas cuentas redirigen a smunozam@gmail.com
+
+**Estado del Sistema**:
+- ✅ Firebase Auth: admin@club738.com creado
+- ✅ Firestore: colección usuarios poblada
+- ✅ Rules: actualizadas y desplegadas (pendiente)
+- ⏳ Frontend: pendiente implementar router de roles
+- ⏳ Componentes admin: pendientes de crear
+
+---
+
+## 📅 Enero 2026
+
 ### 12 de Enero - v1.16.0 - Sistema de Citas y Notificaciones
 
 #### Mejoras Implementadas

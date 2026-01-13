@@ -412,6 +412,155 @@
   }
 }
 
+/* Estilos para Armas y Visor de PDF */
+.armas-verificacion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.arma-verif-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.arma-verif-item.sin-pdf {
+  border-color: #f5c6cb;
+  background: #f8d7da;
+}
+
+.arma-verif-item.con-pdf {
+  border-color: #d4edda;
+  background: #d4edda;
+}
+
+.arma-info {
+  flex: 1;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.btn-ver-pdf {
+  padding: 6px 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-left: 10px;
+  transition: background 0.2s;
+}
+
+.btn-ver-pdf:hover {
+  background: #0056b3;
+}
+
+.registro-faltante {
+  color: #dc3545;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+/* Modal Visor de PDF */
+.pdf-visor-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.pdf-visor-contenido {
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 900px;
+  height: 90vh;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.pdf-visor-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 8px 8px 0 0;
+}
+
+.pdf-visor-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.pdf-visor-acciones {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-imprimir {
+  padding: 8px 16px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.btn-imprimir:hover {
+  background: #218838;
+}
+
+.btn-cerrar-pdf {
+  padding: 8px 12px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.btn-cerrar-pdf:hover {
+  background: #5a6268;
+}
+
+.pdf-iframe {
+  flex: 1;
+  border: none;
+  border-radius: 0 0 8px 8px;
+  margin: 0;
+  padding: 0;
+}
+
 @media (max-width: 768px) {
   .verificador-peta-container {
     padding: 10px;

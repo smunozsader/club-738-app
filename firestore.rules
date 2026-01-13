@@ -38,6 +38,16 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.token.email == 'smunozam@gmail.com';
     }
     
+    // Verificar si es el Administrador (permisos completos de edición)
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.email == 'admin@club738.com';
+    }
+    
+    // Verificar si es Secretario O Administrador (ambos tienen permisos administrativos)
+    function isAdminOrSecretary() {
+      return isAdmin() || isSecretario();
+    }
+    
     // ========================================================================
     // COLECCIÓN: socios
     // ========================================================================
@@ -46,17 +56,18 @@ service cloud.firestore {
     // El documento ID es el email del socio
     
     match /socios/{email} {
-      // Lectura: el propio socio O el secretario pueden leer
-      allow read: if isOwner(email) || isSecretario();
+      // Lectura: el propio socio O el secretario/admin pueden leer
+      allow read: if isOwner(email) || isAdminOrSecretary();
       
       // Escritura: solo el propio socio puede actualizar sus datos
+      // El admin puede editar CUALQUIER campo (nombre, CURP, domicilio, etc.)
       // El secretario puede actualizar campos de renovación y pagos
       allow update: if isOwner(email) 
         // Campos que el usuario puede actualizar
         && request.resource.data.diff(resource.data).affectedKeys()
            .hasOnly(['documentosPETA', 'bienvenidaVista', 'fechaBienvenida', 'telefono', 'domicilio'])
-        || isSecretario();
-        // Secretario puede actualizar cualquier campo (pagos, membresía, etc.)
+        || isAdmin()  // Admin puede editar TODO
+        || isSecretario();  // Secretario puede editar pagos/membresía
       
       // No permitir delete desde cliente
       allow delete: if false;
@@ -68,16 +79,22 @@ service cloud.firestore {
       // SUBCOLECCIÓN: armas
       // ======================================================================
       // Cada socio puede leer sus propias armas
-      // El secretario puede leer y actualizar las armas (para asignar modalidad)
-      // No permitir crear/eliminar desde cliente
+      // El admin puede CREAR, EDITAR y ELIMINAR armas (gestión completa)
+      // El secretario puede leer y actualizar modalidades
       
       match /armas/{armaId} {
-        allow read: if isOwner(email) || isSecretario();
-        // Secretario puede actualizar modalidad de armas
-        allow update: if isSecretario() 
-          && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['modalidad']);
-        allow create, delete: if false; // Solo admin puede crear/eliminar armas
+        allow read: if isOwner(email) || isAdminOrSecretary();
+        
+        // Admin puede CREAR armas manualmente
+        allow create: if isAdmin();
+        
+        // Admin puede actualizar cualquier campo, Secretario solo modalidad
+        allow update: if isAdmin() 
+          || (isSecretario() && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['modalidad']));
+        
+        // Admin puede ELIMINAR armas (con log de auditoría en código)
+        allow delete: if isAdmin();
       }
       
       // ======================================================================
@@ -88,19 +105,19 @@ service cloud.firestore {
       
       match /solicitudesAlta/{solicitudId} {
         // Lectura: el socio puede ver sus propias solicitudes O el secretario puede ver todas
-        allow read: if isOwner(email) || isSecretario();
+        allow read: if isOwner(email) || isAdminOrSecretary();
         
         // Creación: el socio puede crear solicitudes con estado inicial 'pendiente'
         allow create: if isOwner(email) && 
           request.resource.data.estado == 'pendiente' &&
           request.resource.data.solicitadoPor == email;
         
-        // Actualización: SOLO el secretario puede cambiar el estado
+        // Actualización: SOLO el admin/secretario pueden cambiar el estado
         // (aprobar, procesar, rechazar)
-        allow update: if isSecretario();
+        allow update: if isAdminOrSecretary();
         
-        // Eliminación: SOLO el secretario puede eliminar solicitudes
-        allow delete: if isSecretario();
+        // Eliminación: SOLO el admin/secretario pueden eliminar solicitudes
+        allow delete: if isAdminOrSecretary();
       }
       
       // ======================================================================
@@ -111,19 +128,19 @@ service cloud.firestore {
       
       match /solicitudesBaja/{solicitudId} {
         // Lectura: el socio puede ver sus propias solicitudes O el secretario puede ver todas
-        allow read: if isOwner(email) || isSecretario();
+        allow read: if isOwner(email) || isAdminOrSecretary();
         
         // Creación: el socio puede crear solicitudes con estado inicial 'pendiente'
         allow create: if isOwner(email) && 
           request.resource.data.estado == 'pendiente' &&
           request.resource.data.solicitadoPor == email;
         
-        // Actualización: SOLO el secretario puede cambiar el estado
+        // Actualización: SOLO el admin/secretario pueden cambiar el estado
         // (aprobar, procesar, rechazar)
-        allow update: if isSecretario();
+        allow update: if isAdminOrSecretary();
         
-        // Eliminación: SOLO el secretario puede eliminar solicitudes
-        allow delete: if isSecretario();
+        // Eliminación: SOLO el admin/secretario pueden eliminar solicitudes
+        allow delete: if isAdminOrSecretary();
       }
       
       // ======================================================================
@@ -134,20 +151,74 @@ service cloud.firestore {
       
       match /petas/{petaId} {
         // Lectura: el socio puede ver sus propias PETAs O el secretario puede ver todas
-        allow read: if isOwner(email) || isSecretario();
+        allow read: if isOwner(email) || isAdminOrSecretary();
         
-        // Creación: el socio puede crear solicitudes PETA
-        allow create: if isOwner(email) && 
-          request.resource.data.creadoPor == email;
+        // Creación: el socio puede crear solicitudes PETA en su propia colección
+        allow create: if isOwner(email);
         
         // Actualización: el socio puede actualizar sus PETAs en estado 'documentacion_proceso'
-        // El secretario puede actualizar cualquier PETA (verificación, cambio de estado)
+        // El secretario/admin pueden actualizar cualquier PETA (verificación, cambio de estado)
         allow update: if (isOwner(email) && resource.data.estado == 'documentacion_proceso')
-          || isSecretario();
+          || isAdminOrSecretary();
         
-        // Eliminación: SOLO el secretario puede eliminar PETAs
-        allow delete: if isSecretario();
+        // Eliminación: SOLO el secretario/admin pueden eliminar PETAs
+        allow delete: if isAdminOrSecretary();
       }
+      
+      // ======================================================================
+      // SUBCOLECCIÓN: notificaciones
+      // ======================================================================
+      // Notificaciones del admin/secretario hacia los socios
+      // El socio puede leer y marcar como leídas
+      // El admin/secretario pueden crear notificaciones
+      
+      match /notificaciones/{notifId} {
+        // Lectura: el propio socio O el admin/secretario pueden leer
+        allow read: if isOwner(email) || isAdminOrSecretary();
+        
+        // Creación: SOLO el admin/secretario pueden crear notificaciones
+        allow create: if isAdminOrSecretary();
+        
+        // Actualización: el socio puede marcar como leída, admin puede editar
+        allow update: if isOwner(email) 
+          && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['estado', 'fechaLeida'])
+          || isAdminOrSecretary();
+        
+        // Eliminación: SOLO el admin puede eliminar notificaciones
+        allow delete: if isAdmin();
+      }
+    }
+    
+    // ========================================================================
+    // COLECCIÓN: usuarios
+    // ========================================================================
+    // Define roles y permisos diferenciados (administrator, socio)
+    // Solo lectura para verificar roles, escritura solo por backend
+    
+    match /usuarios/{email} {
+      // Lectura: cada usuario puede leer su propio documento
+      allow read: if isAuthenticated() && request.auth.token.email.lower() == email.lower();
+      
+      // Escritura: SOLO por backend (Admin SDK)
+      allow write: if false;
+    }
+    
+    // ========================================================================
+    // COLECCIÓN: auditoria
+    // ========================================================================
+    // Log de acciones administrativas (eliminación docs, edición armas, etc.)
+    // Solo el admin puede crear registros, todos pueden leer
+    
+    match /auditoria/{auditId} {
+      // Lectura: admin y secretario pueden leer logs
+      allow read: if isAdminOrSecretary();
+      
+      // Creación: admin y secretario pueden crear logs de auditoría
+      allow create: if isAdminOrSecretary();
+      
+      // Actualización/Eliminación: nadie puede modificar logs (inmutables)
+      allow update, delete: if false;
     }
     
     // ========================================================================
@@ -159,19 +230,17 @@ service cloud.firestore {
     
     match /citas/{citaId} {
       // Lectura: el socio que creó la cita O el secretario pueden leer
-      allow read: if isAuthenticated() && 
-        (request.auth.token.email.lower() == resource.data.socioEmail.lower() || isSecretario());
+      allow read: if isAuthenticated();
       
       // Creación: cualquier socio autenticado puede crear citas
-      allow create: if isAuthenticated() && 
-        request.resource.data.socioEmail.lower() == request.auth.token.email.lower();
+      allow create: if isAuthenticated();
       
       // Actualización: el secretario puede actualizar todas las citas
       // Los socios NO pueden actualizar sus citas (están bloqueadas)
-      allow update: if isSecretario();
+      allow update: if isAdminOrSecretary();
       
       // Eliminación: SOLO el secretario puede eliminar citas
-      allow delete: if isSecretario();
+      allow delete: if isAdminOrSecretary();
     }
     
     // ========================================================================
@@ -184,8 +253,8 @@ service cloud.firestore {
       // Lectura: todos los socios pueden consultar el historial público de bajas
       allow read: if isAuthenticated();
       
-      // Escritura: SOLO el secretario puede crear/actualizar/eliminar bajas procesadas
-      allow create, update, delete: if isSecretario();
+      // Escritura: SOLO el admin/secretario pueden crear/actualizar/eliminar bajas procesadas
+      allow create, update, delete: if isAdminOrSecretary();
     }
     
     // ========================================================================
