@@ -110,6 +110,16 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   min-height: 400px;
+  width: 100%;
+}
+
+.tab-content {
+  width: 100%;
+}
+
+.tab-content.armas {
+  width: 100%;
+  overflow-x: auto;
 }
 
 .tab-content h2 {
@@ -276,13 +286,24 @@
 }
 
 /* Armas */
+.armas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
 .armas-tabla {
+  width: 100%;
   overflow-x: auto;
 }
 
 .armas-tabla table {
   width: 100%;
+  min-width: 1000px;
   border-collapse: collapse;
+  table-layout: auto;
 }
 
 .armas-tabla th {
@@ -310,6 +331,37 @@
 .matricula {
   font-family: 'Courier New', monospace;
   font-weight: 600;
+}
+
+/* Columna Registro Federal */
+.registro-federal {
+  text-align: center;
+}
+
+.btn-ver-registro {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-ver-registro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.sin-registro {
+  color: #a0aec0;
+  font-size: 0.85rem;
+  font-style: italic;
 }
 
 .badge-modalidad {

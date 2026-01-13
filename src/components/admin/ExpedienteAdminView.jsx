@@ -350,6 +350,7 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
                       <th>Matrícula</th>
                       <th>Folio SEDENA</th>
                       <th>Modalidad</th>
+                      <th>Registro Federal</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
@@ -366,6 +367,19 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
                           <span className={`badge-modalidad ${arma.modalidad}`}>
                             {arma.modalidad || 'N/A'}
                           </span>
+                        </td>
+                        <td className="registro-federal">
+                          {arma.documentoRegistro ? (
+                            <button
+                              className="btn-ver-registro"
+                              onClick={() => window.open(arma.documentoRegistro, '_blank')}
+                              title="Ver Registro Federal de Armas"
+                            >
+                              📄 Ver PDF
+                            </button>
+                          ) : (
+                            <span className="sin-registro">Sin registro</span>
+                          )}
                         </td>
                         <td className="acciones-arma">
                           <button

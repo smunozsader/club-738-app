@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { db, auth } from '../../firebaseConfig';
+import { db, auth, storage } from '../../firebaseConfig';
 import { doc, addDoc, updateDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import './ArmaEditor.css';
 
 export default function ArmaEditor({ 
@@ -19,6 +20,9 @@ export default function ArmaEditor({
     folio: '',
     modalidad: 'tiro'
   });
+  const [pdfFile, setPdfFile] = useState(null);
+  const [pdfUrl, setPdfUrl] = useState('');
+  const [uploadingPdf, setUploadingPdf] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -35,6 +39,7 @@ export default function ArmaEditor({
         folio: armaData.folio || '',
         modalidad: armaData.modalidad || 'tiro'
       });
+      setPdfUrl(armaData.documentoRegistro || '');
     }
   }, [armaData]);
 
@@ -91,6 +96,43 @@ export default function ArmaEditor({
     }
   };
 
+  const handlePdfChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validar tipo
+    if (file.type !== 'application/pdf') {
+      setError('Solo se permiten archivos PDF');
+      return;
+    }
+
+    // Validar tamaño (máx 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('El archivo PDF no debe superar 5MB');
+      return;
+    }
+
+    setPdfFile(file);
+    setError('');
+  };
+
+  const subirPDF = async () => {
+    if (!pdfFile || !armaId) return null;
+
+    try {
+      setUploadingPdf(true);
+      const storageRef = ref(storage, `documentos/${socioEmail}/armas/${armaId}/registro.pdf`);
+      await uploadBytes(storageRef, pdfFile);
+      const url = await getDownloadURL(storageRef);
+      return url;
+    } catch (err) {
+      console.error('Error al subir PDF:', err);
+      throw new Error('Error al subir el PDF del registro');
+    } finally {
+      setUploadingPdf(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -102,30 +144,58 @@ export default function ArmaEditor({
     setLoading(true);
 
     try {
+      let urlPdf = pdfUrl; // URL existente
+
+      // Si hay un nuevo PDF para subir
+      if (pdfFile && armaId) {
+        urlPdf = await subirPDF();
+      }
+
       const armasRef = collection(db, 'socios', socioEmail, 'armas');
       
       if (modoEdicion && armaId) {
         // Actualizar arma existente
         const armaDocRef = doc(db, 'socios', socioEmail, 'armas', armaId);
-        await updateDoc(armaDocRef, {
+        const dataToUpdate = {
           ...formData,
           fechaActualizacion: serverTimestamp()
-        });
+        };
+        
+        // Agregar URL del PDF si existe
+        if (urlPdf) {
+          dataToUpdate.documentoRegistro = urlPdf;
+        }
+
+        await updateDoc(armaDocRef, dataToUpdate);
 
         // Log de auditoría
         await crearLogAuditoria('editar', {
           antes: armaData,
-          despues: formData
+          despues: { ...formData, documentoRegistro: urlPdf }
         });
 
         alert('Arma actualizada correctamente');
       } else {
         // Crear nueva arma
-        const nuevoArmaDoc = await addDoc(armasRef, {
+        const dataToCreate = {
           ...formData,
           fechaCreacion: serverTimestamp(),
           creadoPorAdmin: auth.currentUser?.email || 'sistema'
-        });
+        };
+
+        const nuevoArmaDoc = await addDoc(armasRef, dataToCreate);
+
+        // Si hay PDF, subirlo ahora y actualizar
+        if (pdfFile) {
+          const newArmaId = nuevoArmaDoc.id;
+          const storageRef = ref(storage, `documentos/${socioEmail}/armas/${newArmaId}/registro.pdf`);
+          await uploadBytes(storageRef, pdfFile);
+          const nuevoPdfUrl = await getDownloadURL(storageRef);
+          
+          await updateDoc(nuevoArmaDoc, {
+            documentoRegistro: nuevoPdfUrl
+          });
+        }
 
         // Log de auditoría
         await crearLogAuditoria('crear', {
@@ -305,21 +375,48 @@ export default function ArmaEditor({
             </div>
           </div>
 
+          {/* Subida de Registro Federal de Armas */}
+          <div className="form-group full-width">
+            <label htmlFor="pdfRegistro">
+              Registro Federal de Armas (PDF)
+            </label>
+            
+            {pdfUrl && (
+              <div className="pdf-actual">
+                <span>📄 Archivo actual: </span>
+                <a href={pdfUrl} target="_blank" rel="noopener noreferrer" className="link-pdf">
+                  Ver documento
+                </a>
+              </div>
+            )}
+
+            <input
+              type="file"
+              id="pdfRegistro"
+              accept="application/pdf"
+              onChange={handlePdfChange}
+              className="input-file"
+            />
+            <p className="help-text">
+              {pdfFile ? `✅ ${pdfFile.name}` : 'Selecciona un archivo PDF (máx 5MB)'}
+            </p>
+          </div>
+
           <div className="form-actions">
             <button 
               type="button" 
               className="btn-cancelar"
               onClick={onClose}
-              disabled={loading}
+              disabled={loading || uploadingPdf}
             >
               Cancelar
             </button>
             <button 
               type="submit" 
               className="btn-guardar"
-              disabled={loading}
+              disabled={loading || uploadingPdf}
             >
-              {loading ? 'Guardando...' : (modoEdicion ? 'Actualizar Arma' : 'Agregar Arma')}
+              {loading || uploadingPdf ? 'Guardando...' : (modoEdicion ? 'Actualizar Arma' : 'Agregar Arma')}
             </button>
           </div>
         </form>

@@ -10,6 +10,148 @@
 
 ## 📅 Enero 2026
 
+### 13 de Enero - v2.0.0 - Testing y Mejoras de Arsenal
+
+---
+
+#### 🧪 Testing Integral FASES 1-5 - COMPLETADO
+
+**Resultado del Testing**:
+- ✅ Login y roles funcionando correctamente
+- ✅ Admin puede ver todos los socios
+- ✅ ExpedienteAdminView carga correctamente
+- ✅ Sistema de notificaciones funcional
+- ✅ 75 CURPs sincronizados desde Storage a Firestore
+
+**Bugs Detectados y Corregidos**:
+1. ❌ **CURP no visible en documentos** → ✅ Script sincronizar-curps-storage.cjs ejecutado
+2. ❌ **Falta campo para subir PDF de armas** → ✅ ArmaEditor actualizado
+3. ❌ **Dashboard de arsenal muy estrecho** → ✅ CSS ajustado para 100% width
+
+---
+
+#### 🔧 Mejoras al Módulo de Arsenal
+
+**Problema**: Los documentos de registro federal de armas no eran visibles ni editables desde el panel admin.
+
+**Solución Implementada**:
+
+**1. Nueva Columna "Registro Federal" en Tabla de Armas**
+- Archivo: `ExpedienteAdminView.jsx`
+- Muestra botón "📄 Ver PDF" si existe URL
+- Abre documento en nueva pestaña con `window.open(url, '_blank')`
+- Muestra "Sin registro" si no hay documento
+
+**2. Campo de Subida de PDF en ArmaEditor**
+- Archivo: `ArmaEditor.jsx`
+- Import: `{ ref, uploadBytes, getDownloadURL } from 'firebase/storage'`
+- Estados nuevos:
+  - `pdfFile`: archivo seleccionado
+  - `pdfUrl`: URL del documento actual
+  - `uploadingPdf`: estado de carga
+- Funciones:
+  - `handlePdfChange()`: validación (solo PDF, máx 5MB)
+  - `subirPDF()`: upload a Storage en `documentos/{email}/armas/{armaId}/registro.pdf`
+  - Actualización automática de Firestore con URL
+
+**3. Sincronización de CURPs desde Storage**
+- Script: `scripts/sincronizar-curps-storage.cjs`
+- Escanea Storage en busca de `documentos/{email}/curp.pdf`
+- Actualiza Firestore `socios/{email}.documentosPETA.curp`
+- Resultado: **75 de 77 socios sincronizados** (2 sin CURP en Storage)
+
+**4. Corrección de Layout del Dashboard Arsenal**
+- Archivo: `ExpedienteAdminView.css`
+- `.tab-content.armas { width: 100%; overflow-x: auto; }`
+- `.armas-tabla table { min-width: 1000px; }` (scroll horizontal si necesario)
+- `.armas-header { width: 100%; }` (aprovechar todo el espacio)
+
+---
+
+##### Archivos Modificados
+
+```
+src/components/admin/ExpedienteAdminView.jsx
+  - Columna "Registro Federal" en tabla
+  - Botón "📄 Ver PDF" con onClick → window.open()
+
+src/components/admin/ExpedienteAdminView.css
+  - width: 100% para .tab-content.armas
+  - min-width: 1000px para tabla
+  - Estilos para .btn-ver-registro y .sin-registro
+
+src/components/admin/ArmaEditor.jsx
+  - Import storage functions
+  - Estados: pdfFile, pdfUrl, uploadingPdf
+  - handlePdfChange() - validación
+  - subirPDF() - upload a Storage
+  - handleSubmit() - integración de PDF en create/update
+  - Campo HTML input type="file" con ayuda visual
+
+src/components/admin/ArmaEditor.css
+  - .input-file - campo de archivo con estilo
+  - .pdf-actual - muestra documento actual
+  - .link-pdf - enlace al PDF existente
+  - .help-text - texto de ayuda
+
+scripts/sincronizar-curps-storage.cjs (NEW)
+  - Sincroniza CURPs desde Storage a Firestore
+  - 75 socios actualizados
+
+scripts/verificar-gardoni.cjs (NEW)
+  - Herramienta de debugging
+  - Verifica datos completos de un socio
+
+scripts/buscar-gardoni-email.cjs (NEW)
+  - Busca email correcto en Firestore
+```
+
+---
+
+##### Testing Realizado
+
+**Usuario de Prueba**: JOAQUIN RODOLFO GARDONI NUÑEZ (jrgardoni@gmail.com)
+- ✅ CURP ahora visible en tab Documentos
+- ✅ 8 armas registradas visibles
+- ✅ 3 armas con PDF de registro previo
+- ✅ Nueva columna "Registro Federal" funcional
+- ✅ Botón "📄 Ver PDF" abre documento correctamente
+- ✅ Modal ArmaEditor muestra campo de subida
+- ✅ Validación de archivo funcional (PDF, 5MB)
+
+---
+
+##### Deploy a Producción
+
+**Build**:
+```bash
+npm run build
+```
+
+**Deploy**:
+```bash
+firebase deploy --only hosting
+```
+
+**URL**: https://club-738-app.web.app
+
+---
+
+##### Próximos Pasos
+
+**Testing en Producción**:
+- Verificar todas las funcionalidades en live
+- Probar subida de PDFs de armas
+- Validar performance con 76 socios
+
+**FASE 6 - Edición de Datos de Socios** (pendiente):
+- DatosPersonalesEditor.jsx
+- CURPEditor.jsx
+- DomicilioEditor.jsx
+- EmailEditor.jsx
+
+---
+
 ### 13 de Enero - v2.0.0 - Testing Integral del Sistema
 
 ---

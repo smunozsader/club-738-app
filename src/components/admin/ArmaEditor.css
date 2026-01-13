@@ -176,6 +176,52 @@
   user-select: none;
 }
 
+/* Campo de archivo PDF */
+.input-file {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px dashed #cbd5e0;
+  border-radius: 8px;
+  background: #f7fafc;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.input-file:hover {
+  border-color: #667eea;
+  background: #edf2f7;
+}
+
+.pdf-actual {
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  background: #e6f7ff;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.link-pdf {
+  color: #667eea;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.link-pdf:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+.help-text {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #718096;
+  font-style: italic;
+}
+
 /* Botones de Acción */
 .form-actions {
   display: flex;
