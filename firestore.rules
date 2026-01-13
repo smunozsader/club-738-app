@@ -258,6 +258,34 @@ service cloud.firestore {
     }
     
     // ========================================================================
+    // COLECCIÓN: notificaciones
+    // ========================================================================
+    // Sistema de notificaciones para socios
+    // Admin/Secretario pueden crear notificaciones para cualquier socio
+    // Cada socio puede leer solo sus notificaciones y marcarlas como leídas
+    
+    match /notificaciones/{notifId} {
+      // Lectura: solo el socio destinatario puede leer sus notificaciones
+      allow read: if isAuthenticated() 
+        && request.auth.token.email.lower() == resource.data.socioEmail.lower();
+      
+      // Creación: solo admin/secretario pueden crear notificaciones
+      allow create: if isAdminOrSecretary()
+        && request.resource.data.keys().hasAll(['socioEmail', 'tipo', 'titulo', 'mensaje', 'leido', 'fechaCreacion'])
+        && request.resource.data.tipo in ['info', 'warning', 'success', 'error'];
+      
+      // Actualización: el socio puede marcar sus notificaciones como leídas
+      // Admin/Secretario pueden actualizar cualquier notificación
+      allow update: if (isAuthenticated() 
+          && request.auth.token.email.lower() == resource.data.socioEmail.lower()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['leido', 'fechaLeido']))
+        || isAdminOrSecretary();
+      
+      // Eliminación: solo admin/secretario pueden eliminar notificaciones
+      allow delete: if isAdminOrSecretary();
+    }
+    
+    // ========================================================================
     // COLECCIÓN: admin (para futuros roles de administrador)
     // ========================================================================
     match /admin/{document=**} {

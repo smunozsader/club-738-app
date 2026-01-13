@@ -6,6 +6,7 @@ import useRole from './hooks/useRole';
 import LandingPage from './components/LandingPage';
 import AdminDashboard from './components/admin/AdminDashboard';
 import ExpedienteAdminView from './components/admin/ExpedienteAdminView';
+import Notificaciones from './components/Notificaciones';
 import DocumentList from './components/documents/DocumentList';
 import MisArmas from './components/MisArmas';
 import MisDocumentosOficiales from './components/MisDocumentosOficiales';
@@ -306,6 +307,9 @@ function App() {
       )}
 
       <header className="dashboard-header">
+        {/* Banner de Notificaciones */}
+        <Notificaciones />
+        
         <div className="header-brand">
           <a href="/" onClick={(e) => { e.preventDefault(); setActiveSection('principal'); }} className="logo-home-link">
             <img src="/assets/logo-club-738.jpg" alt="Club 738" className="header-logo" />

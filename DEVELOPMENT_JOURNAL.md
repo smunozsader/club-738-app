@@ -14,6 +14,503 @@
 
 ---
 
+#### 🎯 FASE 5: Sistema de Notificaciones Multi-Canal - COMPLETADA (Fase 1: Banner)
+
+**Objetivo**: Implementar sistema de notificaciones en tiempo real para comunicar información importante a los socios directamente en el dashboard.
+
+**Problema Resuelto**:
+- Sin canal directo de comunicación con socios dentro del portal
+- Necesidad de informar sobre actualizaciones del sistema
+- Recordatorios de documentos pendientes
+- Avisos de cambios en el club o requisitos
+- Comunicaciones urgentes sin depender de email/WhatsApp externo
+
+---
+
+##### 1. Componente Notificaciones (Banner Flotante)
+
+**Archivo**: `src/components/Notificaciones.jsx`
+
+**Características Principales**:
+
+**A. Listener en Tiempo Real**:
+```javascript
+useEffect(() => {
+  const socioEmail = auth.currentUser.email;
+  
+  // Query de notificaciones no leídas
+  const q = query(
+    collection(db, 'notificaciones'),
+    where('socioEmail', '==', socioEmail),
+    where('leido', '==', false)
+  );
+  
+  // Listener con onSnapshot
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    const notifs = [];
+    snapshot.forEach((doc) => {
+      notifs.push({ id: doc.id, ...doc.data() });
+    });
+    
+    // Ordenar por fecha (más recientes primero)
+    notifs.sort((a, b) => 
+      (b.fechaCreacion?.toMillis() || 0) - (a.fechaCreacion?.toMillis() || 0)
+    );
+    
+    setNotificaciones(notifs);
+  });
+  
+  return () => unsubscribe();
+}, []);
+```
+
+**B. Tipos de Notificación** (4 variantes):
+1. **info** (azul): Información general, novedades
+2. **success** (verde): Confirmaciones, aprobaciones
+3. **warning** (naranja): Advertencias, recordatorios
+4. **error** (rojo): Errores, acciones requeridas urgentes
+
+**C. Estructura del Banner**:
+```jsx
+<div className={`notificacion-banner ${notif.tipo}`}>
+  {/* Icono según tipo */}
+  <div className="notificacion-icono">
+    {getIcono(notif.tipo)}  {/* ℹ️ ✅ ⚠️ ❌ */}
+  </div>
+  
+  {/* Contenido */}
+  <div className="notificacion-contenido">
+    <h3>{notif.titulo}</h3>
+    <p>{notif.mensaje}</p>
+  </div>
+  
+  {/* Acciones */}
+  <div className="notificacion-acciones">
+    {/* Botón de acción opcional */}
+    {notif.accionTexto && (
+      <button onClick={() => ejecutarAccion(notif)}>
+        {notif.accionTexto}
+      </button>
+    )}
+    
+    {/* Botón cerrar (marcar como leído) */}
+    <button onClick={() => marcarComoLeido(notif.id)}>
+      ✕
+    </button>
+  </div>
+</div>
+```
+
+**D. Funciones de Interacción**:
+
+**Marcar como Leído**:
+```javascript
+const marcarComoLeido = async (notificacionId) => {
+  const notifRef = doc(db, 'notificaciones', notificacionId);
+  await updateDoc(notifRef, {
+    leido: true,
+    fechaLeido: serverTimestamp()
+  });
+  // El listener automáticamente remueve del array
+};
+```
+
+**Ejecutar Acción**:
+```javascript
+const ejecutarAccion = (notificacion) => {
+  if (notificacion.accionUrl) {
+    window.location.href = notificacion.accionUrl;
+  }
+  marcarComoLeido(notificacion.id);
+};
+```
+
+**Archivo CSS**: `src/components/Notificaciones.css`
+
+**Diseño del Banner**:
+- **Posición**: fixed, top 80px (debajo del header)
+- **Centrado**: left 50%, transform translateX(-50%)
+- **z-index**: 999 (sobre contenido, bajo modales)
+- **Width**: 90%, max-width 800px
+- **Animación**: slideIn desde arriba (0.3s ease-out)
+- **Sombra**: 0 8px 24px rgba(0,0,0,0.15)
+- **Borde izquierdo**: 5px de color según tipo
+
+**Colores por Tipo**:
+```css
+.notificacion-banner.info {
+  border-left-color: #3b82f6;  /* Azul */
+}
+
+.notificacion-banner.success {
+  border-left-color: #10b981;  /* Verde */
+}
+
+.notificacion-banner.warning {
+  border-left-color: #f59e0b;  /* Naranja */
+}
+
+.notificacion-banner.error {
+  border-left-color: #ef4444;  /* Rojo */
+}
+```
+
+**Botones**:
+- **Acción**: Gradiente purple, hover con translateY(-2px) y shadow
+- **Cerrar**: Círculo gris, hover con rotación 90°
+
+**Responsive**:
+- Mobile: top 70px, width 95%, padding reducido
+- Iconos más pequeños
+- Botones compactos
+
+---
+
+##### 2. Estructura de Datos en Firestore
+
+**Colección**: `notificaciones`
+
+**Esquema de Documento**:
+```javascript
+{
+  socioEmail: string,              // Email del destinatario
+  tipo: 'info' | 'warning' | 'success' | 'error',
+  titulo: string,                  // Título corto (max 50 chars)
+  mensaje: string,                 // Mensaje descriptivo (max 200 chars)
+  leido: boolean,                  // Estado de lectura
+  fechaCreacion: timestamp,        // Cuándo se creó
+  fechaLeido: timestamp | null,   // Cuándo se leyó (null si no leído)
+  accionTexto: string | null,     // Texto del botón de acción (opcional)
+  accionUrl: string | null,       // URL del botón (opcional, ej: "#mi-expediente")
+  creadoPor: string               // Email del admin que creó (opcional)
+}
+```
+
+**Índices Necesarios** (creados automáticamente):
+- `socioEmail` + `leido` (para query de no leídas)
+- `socioEmail` + `fechaCreacion` (para ordenamiento)
+
+---
+
+##### 3. Firestore Security Rules
+
+**Archivo**: `firestore.rules`
+
+**Reglas Agregadas**:
+```javascript
+match /notificaciones/{notifId} {
+  // Lectura: solo el socio destinatario
+  allow read: if isAuthenticated() 
+    && request.auth.token.email.lower() == resource.data.socioEmail.lower();
+  
+  // Creación: solo admin/secretario
+  allow create: if isAdminOrSecretary()
+    && request.resource.data.keys().hasAll([
+      'socioEmail', 'tipo', 'titulo', 'mensaje', 'leido', 'fechaCreacion'
+    ])
+    && request.resource.data.tipo in ['info', 'warning', 'success', 'error'];
+  
+  // Actualización: socio puede marcar como leído, admin puede todo
+  allow update: if (isAuthenticated() 
+      && request.auth.token.email.lower() == resource.data.socioEmail.lower()
+      && request.resource.data.diff(resource.data).affectedKeys()
+         .hasOnly(['leido', 'fechaLeido']))
+    || isAdminOrSecretary();
+  
+  // Eliminación: solo admin/secretario
+  allow delete: if isAdminOrSecretary();
+}
+```
+
+**Validaciones**:
+- ✅ Tipo debe ser uno de los 4 valores permitidos
+- ✅ Campos obligatorios: socioEmail, tipo, titulo, mensaje, leido, fechaCreacion
+- ✅ Socio solo puede actualizar campos de lectura (leido, fechaLeido)
+- ✅ Admin/Secretario tienen control total
+
+---
+
+##### 4. Scripts de Administración
+
+**A. Script de Prueba Individual**
+
+**Archivo**: `scripts/crear-notificacion-prueba.cjs`
+
+**Funcionalidad**:
+- Crea 2 notificaciones de prueba para testing
+- Una de tipo "info" con mensaje de bienvenida
+- Una de tipo "warning" con recordatorio de documentos
+- Destinatario: smunozam@gmail.com (para testing)
+
+**Uso**:
+```bash
+node scripts/crear-notificacion-prueba.cjs
+```
+
+**Código**:
+```javascript
+const notificacion = {
+  socioEmail: 'smunozam@gmail.com',
+  tipo: 'info',
+  titulo: '¡Bienvenido al nuevo sistema!',
+  mensaje: 'El portal ha sido actualizado...',
+  leido: false,
+  fechaCreacion: admin.firestore.FieldValue.serverTimestamp(),
+  accionTexto: 'Ver novedades',
+  accionUrl: '#dashboard'
+};
+
+await db.collection('notificaciones').add(notificacion);
+```
+
+---
+
+**B. Script de Envío Masivo**
+
+**Archivo**: `scripts/enviar-notificacion-masiva.cjs`
+
+**Funcionalidad**:
+- Envía notificación a TODOS los socios en Firestore
+- Usa batch writes (500 operaciones por batch)
+- Confirmación antes de ejecutar (s/n)
+- Plantilla personalizable en el código
+
+**Uso**:
+```bash
+node scripts/enviar-notificacion-masiva.cjs
+```
+
+**Características**:
+- ✅ Obtiene todos los socios de Firestore
+- ✅ Crea batch de 500 documentos máximo (límite Firebase)
+- ✅ Confirmación de seguridad antes de enviar
+- ✅ Logging detallado del progreso
+- ✅ Cuenta total de notificaciones enviadas
+
+**Código de Batch**:
+```javascript
+let batch = db.batch();
+let operaciones = 0;
+
+for (const socioDoc of sociosSnapshot.docs) {
+  const notifRef = db.collection('notificaciones').doc();
+  batch.set(notifRef, {
+    ...plantillaNotificacion,
+    socioEmail: socioDoc.id
+  });
+  
+  operaciones++;
+  
+  // Commit batch cada 500 operaciones
+  if (operaciones === 500) {
+    await batch.commit();
+    batch = db.batch();
+    operaciones = 0;
+  }
+}
+
+// Commit final
+if (operaciones > 0) {
+  await batch.commit();
+}
+```
+
+**Ejemplo de Plantilla**:
+```javascript
+const plantillaNotificacion = {
+  tipo: 'info',
+  titulo: 'Sistema actualizado - Nuevas funcionalidades',
+  mensaje: 'El portal web del club ha sido actualizado. Ahora puedes gestionar tu arsenal, solicitar PETAs y agendar citas en línea.',
+  leido: false,
+  fechaCreacion: admin.firestore.FieldValue.serverTimestamp(),
+  accionTexto: 'Explorar',
+  accionUrl: '#dashboard'
+};
+```
+
+---
+
+##### 5. Integración en App.jsx
+
+**Archivo**: `src/App.jsx`
+
+**Cambios Implementados**:
+
+**A. Import del Componente**:
+```javascript
+import Notificaciones from './components/Notificaciones';
+```
+
+**B. Renderizado en Dashboard**:
+```jsx
+<header className="dashboard-header">
+  {/* Banner de Notificaciones */}
+  <Notificaciones />
+  
+  <div className="header-brand">
+    {/* ... resto del header */}
+  </div>
+</header>
+```
+
+**Posicionamiento**:
+- Renderizado dentro del header pero visualmente flotante
+- Se muestra en TODAS las secciones del dashboard del socio
+- No se muestra si el usuario no está autenticado
+- No se muestra si no hay notificaciones no leídas
+
+---
+
+##### 6. Casos de Uso
+
+**Caso 1: Notificación de Bienvenida a Nuevo Sistema**
+```javascript
+{
+  socioEmail: 'socio@example.com',
+  tipo: 'success',
+  titulo: '¡Bienvenido al nuevo portal!',
+  mensaje: 'Hemos actualizado el sistema con nuevas funcionalidades. Explora el dashboard renovado.',
+  accionTexto: 'Ver novedades',
+  accionUrl: '#dashboard'
+}
+```
+
+**Caso 2: Recordatorio de Documentos Pendientes**
+```javascript
+{
+  socioEmail: 'socio@example.com',
+  tipo: 'warning',
+  titulo: 'Documentos pendientes',
+  mensaje: 'Tienes 3 documentos pendientes para tu trámite PETA. Completa tu expediente digital.',
+  accionTexto: 'Ver expediente',
+  accionUrl: '#mi-expediente'
+}
+```
+
+**Caso 3: PETA Aprobado**
+```javascript
+{
+  socioEmail: 'socio@example.com',
+  tipo: 'success',
+  titulo: 'PETA aprobado',
+  mensaje: 'Tu solicitud PETA #12345 ha sido aprobada. Ya puedes recoger tu permiso.',
+  accionTexto: 'Ver detalles',
+  accionUrl: '#mis-petas'
+}
+```
+
+**Caso 4: Cuota Vencida**
+```javascript
+{
+  socioEmail: 'socio@example.com',
+  tipo: 'error',
+  titulo: 'Cuota anual vencida',
+  mensaje: 'Tu membresía 2026 está vencida. Agenda una cita para renovar y evitar suspensión de servicios.',
+  accionTexto: 'Renovar ahora',
+  accionUrl: '#estado-pagos'
+}
+```
+
+---
+
+##### 7. Flujo de Usuario
+
+**Socio Recibe Notificación**:
+1. Admin/Secretario crea notificación via script o (futuro) panel admin
+2. Notificación se guarda en Firestore
+3. Socio inicia sesión en el portal
+4. Listener en tiempo real detecta notificación no leída
+5. Banner aparece automáticamente en top del dashboard
+6. Socio lee el mensaje
+7. Opciones:
+   - Click en botón de acción → Va a URL + marca como leído
+   - Click en "✕" → Solo marca como leído
+8. Banner desaparece automáticamente
+
+**Admin Envía Notificación Masiva**:
+1. Ejecuta `node scripts/enviar-notificacion-masiva.cjs`
+2. Confirma con "s" en prompt
+3. Script carga todos los socios
+4. Crea notificación para cada socio (batch)
+5. Todos los socios ven el banner al entrar al portal
+
+---
+
+##### 8. Resumen de Archivos Creados/Modificados
+
+**Archivos NUEVOS**:
+1. `src/components/Notificaciones.jsx` - Componente de banner (150 líneas)
+2. `src/components/Notificaciones.css` - Estilos del banner (180 líneas)
+3. `scripts/crear-notificacion-prueba.cjs` - Script de prueba (60 líneas)
+4. `scripts/enviar-notificacion-masiva.cjs` - Script masivo (100 líneas)
+
+**Archivos MODIFICADOS**:
+1. `firestore.rules` - Reglas de notificaciones collection (~35 líneas agregadas)
+2. `src/App.jsx` - Import y render de Notificaciones (2 líneas)
+
+**Total de Código Agregado**: ~525 líneas
+
+---
+
+##### 9. Funcionalidades Implementadas
+
+✅ **Banner flotante** en tiempo real  
+✅ **4 tipos de notificación** con colores e iconos  
+✅ **Listener onSnapshot** para actualizaciones instantáneas  
+✅ **Marcar como leído** con un click  
+✅ **Botón de acción** opcional con navegación  
+✅ **Ordenamiento** por fecha (más recientes primero)  
+✅ **Firestore rules** con permisos granulares  
+✅ **Validación de campos** en creación  
+✅ **Script de prueba** individual  
+✅ **Script de envío masivo** con batch writes  
+✅ **Confirmación** antes de envío masivo  
+✅ **Animaciones suaves** (slideIn/slideOut)  
+✅ **Responsive design** para móvil  
+✅ **Auto-desaparición** cuando no hay notificaciones  
+
+---
+
+##### 10. Pendientes (FASE 5 - Fase 2)
+
+**Tareas #24-25 (no implementadas aún)**:
+
+⏳ **Cloud Function para Email** (task #24):
+- Trigger en onCreate de notificaciones
+- Envío automático de email via SendGrid o Nodemailer
+- Template HTML personalizado
+- Requiere Firebase Functions deployment
+
+⏳ **WhatsApp Business API** (task #25):
+- Fase 1: Enlaces wa.me manuales (ya existe en sistema)
+- Fase 2: Meta Cloud API para envío automático
+- Requiere cuenta Business verificada
+- Webhooks para estados de entrega
+
+**Decisión**: Implementar en futuras iteraciones según prioridad del secretario.
+
+---
+
+##### 11. Próximos Pasos
+
+**FASE 6**: Edición de Datos de Socios
+- DatosPersonalesEditor.jsx (nombre)
+- CURPEditor.jsx (validación 18 caracteres)
+- DomicilioEditor.jsx (estructura completa)
+- EmailEditor.jsx (verificación no duplicado)
+- Log de auditoría de cambios
+
+**Testing Requerido FASE 5**:
+- Crear notificación con script de prueba
+- Verificar aparece en dashboard del socio
+- Probar marcar como leído
+- Probar botón de acción con URL
+- Verificar responsive en móvil
+- Probar envío masivo (con 2-3 socios primero)
+- Verificar permisos en Firestore rules
+
+---
+
 #### 🎯 FASE 4: Gestión Avanzada de Arsenal - COMPLETADA
 
 **Objetivo**: Permitir al administrador gestionar completamente el arsenal de cualquier socio: crear nuevas armas, editar datos existentes, y eliminar armas con auditoría completa.
