@@ -39,7 +39,7 @@
   padding: 1.5rem;
   border-radius: 12px;
   text-align: center;
-  color: white;
+  color: white !important;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -134,6 +134,7 @@
 .admin-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: auto;
 }
 
 .admin-table thead {
@@ -149,6 +150,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
 }
 
 .admin-table tbody tr {

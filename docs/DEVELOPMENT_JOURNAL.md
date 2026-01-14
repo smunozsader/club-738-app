@@ -48,6 +48,144 @@
   - LUGAR Y FECHA DE LA SOLICITUD
   - ATENTAMENTE.
   - SUFRAGIO EFECTIVO, NO REELECCIÓN
+
+---
+
+### 2026-01-13 - v1.14.0 Separación Admin + Arsenal PDF + Notificaciones
+
+#### Fase 4: Gestión de Arsenal - COMPLETADO
+
+**Objetivo**: Permitir al secretario gestionar el arsenal de los socios con CRUD completo y subida de PDFs.
+
+**Cambios realizados**:
+- **ArmaEditor.jsx/css** - Modal de creación/edición de armas
+  - Formulario con validación (clase, marca, modelo, calibre, matrícula, folio)
+  - Subida de PDF de registro federal (max 5MB)
+  - Estados: pdfFile, pdfUrl, uploadingPdf
+  - Storage path: `documentos/{email}/armas/{armaId}/registro.pdf`
+  - Integración con getDownloadURL para URLs públicas
+
+- **ExpedienteAdminView.jsx** - Tabla de armas mejorada
+  - Agregada columna "Registro Federal" con botón "📄 Ver PDF"
+  - window.open() para visualizar PDFs en nueva pestaña
+  - Botón "Eliminar arma" con confirmación
+  - Integración con ArmaEditor modal
+
+- **Resultados**: ✅ CRUD funcional, ✅ PDFs suben correctamente, ✅ Auditoría implementada
+
+**Archivos modificados/creados**:
+- `src/components/admin/ArmaEditor.jsx` - Modal completo con PDF upload
+- `src/components/admin/ArmaEditor.css` - Estilos para input-file, pdf-actual
+- `src/components/admin/ExpedienteAdminView.jsx` - Columna registro federal
+- `src/components/admin/ExpedienteAdminView.css` - Estilos para tabla armas
+
+#### Fase 5: Notificaciones In-App - PARCIALMENTE COMPLETADO
+
+**Objetivo**: Sistema de notificaciones en tiempo real para socios y secretario.
+
+**Cambios realizados**:
+- **Notificaciones.jsx/css** - Banner flotante de notificaciones
+  - onSnapshot listener en tiempo real
+  - Ordenamiento por fecha descendente
+  - Marca como leído al hacer clic
+  - Badge contador de no leídas
+  - Menú desplegable con scroll
+
+- **Scripts admin** - Herramientas de envío masivo
+  - `crear-notificacion-individual.cjs` - Envío a 1 socio
+  - `crear-notificacion-masiva.cjs` - Broadcast a todos
+  - Integración con Firebase Admin SDK
+
+- **firestore.rules** - Reglas de seguridad
+  - Socios leen solo sus notificaciones
+  - Socios actualizan solo campos leido/fechaLeido
+  - Admin/secretario pueden crear/editar todas
+
+**Resultados**: ✅ In-app funcional, ❌ Email pendiente, ❌ WhatsApp pendiente
+
+**Archivos modificados/creados**:
+- `src/components/Notificaciones.jsx` - Componente de banner
+- `src/components/Notificaciones.css` - Estilos flotantes
+- `scripts/crear-notificacion-individual.cjs` - Script envío individual
+- `scripts/crear-notificacion-masiva.cjs` - Script broadcast
+- `firestore.rules` - Reglas para colección notificaciones
+
+#### CRÍTICO: Separación de Roles Admin
+
+**Problema detectado**: Usuario smunozam@gmail.com (socio regular) veía paneles de administrador al iniciar sesión.
+
+**Solución implementada**:
+- Creado constante `ADMIN_EMAIL = 'admin@club738.com'` en App.jsx
+- Reemplazadas 11 referencias hardcoded de 'smunozam@gmail.com'
+- Actualizado firestore.rules: isSecretario() y isAdmin() → admin@club738.com
+- Actualizado 4 componentes: DashboardRenovaciones, GeneradorPETA, MisArmas, DashboardCumpleanos
+- Creada cuenta Firebase Auth: admin@club738.com / Club738*Admin#2026!Seguro
+
+**Resultados**: ✅ Separación funcional, ✅ Seguridad corregida, ✅ Testing exitoso
+
+**Archivos modificados**:
+- `src/App.jsx` - ADMIN_EMAIL constant + 11 replacements
+- `firestore.rules` - isSecretario/isAdmin functions
+- `src/components/admin/DashboardRenovaciones.jsx`
+- `src/components/admin/GeneradorPETA.jsx`
+- `src/components/MisArmas.jsx`
+- `src/components/admin/DashboardCumpleanos.jsx`
+
+#### Scripts de Sincronización Storage
+
+**Objetivo**: Sincronizar documentos CURP desde Storage a Firestore.
+
+**Script ejecutado**:
+- **sincronizar-curps-storage.cjs** - Sincronización masiva
+  - Escaneó Storage en `documentos/{email}/curp.pdf`
+  - Actualizó 75 de 77 socios con URLs públicas
+  - Guardó en Firestore: `socios/{email}.documentosPETA.curp.url`
+  - 2 socios sin CURP en Storage (no encontrados)
+
+**Resultados**: ✅ 75 CURPs sincronizados
+
+**Archivos creados**:
+- `scripts/sincronizar-curps-storage.cjs`
+
+#### ❌ BUGS NO RESUELTOS - CSS Layout Issues
+
+**Problemas reportados por usuario**:
+1. **Stats blanco sobre blanco** - Números "Total Socios" invisibles
+2. **Tabla admin desalineada** - Headers no coinciden con columnas de datos
+3. **Dashboard muy angosto** - A pesar de remover max-width: 1400px
+4. **Tabla armas angosta** - No usa ancho completo disponible
+
+**Intentos de corrección (6 iteraciones)**:
+- AdminDashboard.css: width 100%, max-width 100%, color white !important
+- ExpedienteAdminView.css: table-layout auto/fixed múltiples veces
+- Stats grid: repeat(auto-fit) → repeat(4, 1fr)
+- Table headers: white-space nowrap
+
+**Resultado**: ❌ Bugs persisten en producción
+**Causa probable**: Problemas de cascada CSS, especificidad, o estilos heredados
+**Acción requerida**: Refactor CSS completo o inspección con DevTools
+
+**Archivos modificados (sin éxito)**:
+- `src/components/admin/AdminDashboard.css` - 3 ediciones
+- `src/components/admin/ExpedienteAdminView.css` - 5 ediciones
+
+#### ❌ PROBLEMA PENDIENTE - Documentos no visibles en Expedientes
+
+**Reporte de usuario**: CURPs y Constancias de Antecedentes subidos a Storage no aparecen en expedientes de usuarios.
+
+**Datos conocidos**:
+- 75 CURPs sincronizados con script (confirmado)
+- Constancias subidas con scripts anteriores
+- URLs guardadas en Firestore bajo `documentosPETA.{tipo}.url`
+
+**Causa probable**: 
+- DocumentList.jsx no lee URLs de Firestore correctamente
+- Mapeo incorrecto entre nombres de campos
+- Filtrado de documentos con URL vacía/undefined
+
+**Acción requerida**: Debug de DocumentList.jsx y verificación de estructura Firestore
+
+**Deploy**: Múltiples deploys realizados (6+ durante sesión), cambios en producción en https://club-738-app.web.app
   - LIC. RICARDO J. FERNÁNDEZ Y GASQUE
   - PRESIDENTE DEL CLUB.
 

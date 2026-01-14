@@ -307,7 +307,7 @@
   width: 100%;
   min-width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto;
 }
 
 .armas-tabla th {
@@ -320,6 +320,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
 }
 
 .armas-tabla td {
