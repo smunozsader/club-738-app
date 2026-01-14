@@ -33,6 +33,9 @@ import MiAgenda from './components/MiAgenda';
 import ManualUsuario from './components/ManualUsuario';
 import './App.css';
 
+// Email del administrador/secretario
+const ADMIN_EMAIL = 'admin@club738.com';
+
 // Detectar rutas públicas (sin necesidad de login)
 const isCalculadoraRoute = () => {
   return window.location.pathname === '/calculadora' || 
@@ -102,7 +105,7 @@ function App() {
 
   // Cargar contador de PETAs pendientes (solo secretario)
   useEffect(() => {
-    if (!user || user.email !== 'smunozam@gmail.com') return;
+    if (!user || user.email !== ADMIN_EMAIL) return;
     
     const cargarPetasPendientes = async () => {
       try {
@@ -433,7 +436,7 @@ function App() {
             </div>
             
             {/* Panel Secretario */}
-            {user.email === 'smunozam@gmail.com' && (
+            {user.email === ADMIN_EMAIL && (
               <div className="dashboard-section admin-section">
                 <h3 className="section-title">Panel de Secretario</h3>
                 <div className="dashboard-grid admin-grid">
@@ -582,13 +585,13 @@ function App() {
           </div>
         )}
 
-        {activeSection === 'cobranza' && user.email === 'smunozam@gmail.com' && (
+        {activeSection === 'cobranza' && user.email === ADMIN_EMAIL && (
           <div className="section-cobranza">
             <CobranzaUnificada onBack={() => setActiveSection('dashboard')} />
           </div>
         )}
 
-        {activeSection === 'cumpleanos' && user.email === 'smunozam@gmail.com' && (
+        {activeSection === 'cumpleanos' && user.email === ADMIN_EMAIL && (
           <div className="section-cumpleanos">
             <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
               ← Volver al Dashboard
@@ -597,7 +600,7 @@ function App() {
           </div>
         )}
 
-        {activeSection === 'generador-peta' && user.email === 'smunozam@gmail.com' && (
+        {activeSection === 'generador-peta' && user.email === ADMIN_EMAIL && (
           <div className="section-generador-peta">
             <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
               ← Volver al Dashboard
@@ -606,7 +609,7 @@ function App() {
           </div>
         )}
 
-        {activeSection === 'verificador-peta' && user.email === 'smunozam@gmail.com' && (
+        {activeSection === 'verificador-peta' && user.email === ADMIN_EMAIL && (
           <div className="section-verificador-peta">
             <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
               ← Volver al Dashboard
@@ -615,13 +618,13 @@ function App() {
           </div>
         )}
 
-        {activeSection === 'expediente-impresor' && user.email === 'smunozam@gmail.com' && (
+        {activeSection === 'expediente-impresor' && user.email === ADMIN_EMAIL && (
           <div className="section-expediente-impresor">
             <ExpedienteImpresor userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
           </div>
         )}
 
-        {activeSection === 'admin-bajas-arsenal' && user.email === 'smunozam@gmail.com' && (
+        {activeSection === 'admin-bajas-arsenal' && user.email === ADMIN_EMAIL && (
           <div className="section-admin-bajas-arsenal">
             <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
               ← Volver al Dashboard
@@ -630,7 +633,7 @@ function App() {
           </div>
         )}
 
-        {activeSection === 'admin-altas-arsenal' && user.email === 'smunozam@gmail.com' && (
+        {activeSection === 'admin-altas-arsenal' && user.email === ADMIN_EMAIL && (
           <div className="section-admin-altas-arsenal">
             <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
               ← Volver al Dashboard
@@ -645,7 +648,7 @@ function App() {
           </div>
         )}
         
-        {activeSection === 'mi-agenda' && user.email === 'smunozam@gmail.com' && (
+        {activeSection === 'mi-agenda' && user.email === ADMIN_EMAIL && (
           <div className="section-mi-agenda">
             <MiAgenda onBack={() => setActiveSection('dashboard')} />
           </div>
@@ -656,7 +659,7 @@ function App() {
         )}
 
         {/* Sección para que el secretario vea documentos de otro socio */}
-        {activeSection === 'documentos-socio' && user.email === 'smunozam@gmail.com' && socioViendoDocumentos && (
+        {activeSection === 'documentos-socio' && user.email === ADMIN_EMAIL && socioViendoDocumentos && (
           <div className="section-documentos-socio">
             <button className="btn-back" onClick={() => {
               setSocioViendoDocumentos(null);

@@ -14,7 +14,7 @@ export default function MisArmas({ user }) {
   const [actualizando, setActualizando] = useState(null);
 
   // Verificar si es secretario
-  const isSecretario = user.email.toLowerCase() === 'smunozam@gmail.com';
+  const isSecretario = user.email.toLowerCase() === 'admin@club738.com';
 
   useEffect(() => {
     cargarArmas();

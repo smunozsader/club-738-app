@@ -104,7 +104,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   const [busqueda, setBusqueda] = useState('');
 
   // Solo el secretario puede usar este módulo
-  const esSecretario = userEmail === 'smunozam@gmail.com';
+  const esSecretario = userEmail === 'admin@club738.com';
 
   // En revisión desde solicitud (no manual): bloquear edición de armas/cartuchos
   const revisionBloqueada = esSecretario && solicitudSeleccionada && !modoManual;

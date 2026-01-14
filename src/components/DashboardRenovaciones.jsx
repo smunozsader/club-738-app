@@ -31,7 +31,7 @@ export default function DashboardRenovaciones({ userEmail, onVerDocumentos }) {
   const [registrandoPago, setRegistrandoPago] = useState(false);
 
   // Solo el secretario puede ver este dashboard
-  const esSecretario = userEmail === 'smunozam@gmail.com';
+  const esSecretario = userEmail === 'admin@club738.com';
 
   useEffect(() => {
     if (esSecretario) {

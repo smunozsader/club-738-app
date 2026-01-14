@@ -21,7 +21,7 @@ export default function DashboardCumpleanos({ userEmail }) {
   const [vista, setVista] = useState('proximos'); // proximos, calendario, estadisticas
   const [mesSeleccionado, setMesSeleccionado] = useState(new Date().getMonth() + 1);
 
-  const esSecretario = userEmail === 'smunozam@gmail.com';
+  const esSecretario = userEmail === 'admin@club738.com';
 
   useEffect(() => {
     if (esSecretario) {

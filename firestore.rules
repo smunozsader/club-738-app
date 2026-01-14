@@ -35,7 +35,7 @@ service cloud.firestore {
     
     // Verificar si es el Secretario (tiene permisos de lectura de todos los socios)
     function isSecretario() {
-      return isAuthenticated() && request.auth.token.email == 'smunozam@gmail.com';
+      return isAuthenticated() && request.auth.token.email == 'admin@club738.com';
     }
     
     // Verificar si es el Administrador (permisos completos de edición)
