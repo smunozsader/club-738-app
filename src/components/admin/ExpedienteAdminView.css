@@ -300,14 +300,14 @@
 
 .armas-tabla {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: visible;
 }
 
 .armas-tabla table {
   width: 100%;
-  min-width: 1000px;
+  min-width: 100%;
   border-collapse: collapse;
-  table-layout: auto;
+  table-layout: fixed;
 }
 
 .armas-tabla th {

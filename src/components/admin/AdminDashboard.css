@@ -1,9 +1,11 @@
 /* AdminDashboard.css - Estilos del panel de administración */
 
 .admin-dashboard {
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 /* Header */
@@ -26,9 +28,10 @@
 /* Estadísticas */
 .admin-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
+  width: 100%;
 }
 
 .stat-card {
