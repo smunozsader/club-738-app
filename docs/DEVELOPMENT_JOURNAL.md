@@ -1,3 +1,44 @@
+### 2026-01-14 - v1.14.1 Fix crítico: Vinculación de PDFs de armas
+
+#### Corrección de mapeo Storage-Firestore para registros de armas
+
+**Problema detectado**: 18 armas de 6 socios tenían PDFs de registro subidos a Storage pero el campo `documentoRegistro` estaba NULL en Firestore, causando que no aparecieran en ExpedienteAdminView.
+
+**Causa raíz**: El componente ArmaEditor.jsx subía correctamente los PDFs a Storage pero la actualización del campo `documentoRegistro` en Firestore fallaba silenciosamente o no se ejecutaba.
+
+**Socios afectados**:
+- Ivan Tsuis Cabo Torres (3 armas)
+- Fabian Márquez Ortega (3 armas)
+- Joaquín Rodolfo Gardoni Núñez (3 armas)
+- Sergio Fernando Martínez Aguilar (3 armas)
+- Daniel de Jesús Padilla Robles (5 armas)
+- Celestino Sánchez Fernández (1 arma)
+
+**Solución implementada**:
+1. **verificar-storage-ivan.cjs** - Script de diagnóstico
+   - Lista todos los archivos en Storage por socio
+   - Compara con armas en Firestore
+   - Identifica PDFs huérfanos (en Storage pero no vinculados)
+
+2. **vincular-pdfs-armas.cjs** - Script de corrección automática
+   - Escanea todas las armas de todos los socios
+   - Verifica si existe PDF en Storage con path esperado
+   - Genera URL pública y actualiza campo `documentoRegistro`
+   - Marca `ultimaModificacion` con timestamp actual
+
+**Resultados**:
+- ✅ 18 armas vinculadas exitosamente
+- ✅ 6 socios con expedientes completos
+- ✅ PDFs ahora visibles en ExpedienteAdminView con botón "📄 Ver PDF"
+
+**Archivos creados**:
+- `scripts/verificar-storage-ivan.cjs` - Diagnóstico completo de Storage vs Firestore
+- `scripts/vincular-pdfs-armas.cjs` - Vinculación automática masiva
+
+**Acción preventiva recomendada**: Revisar flujo de upload en ArmaEditor.jsx para asegurar que siempre actualice Firestore después de subir a Storage.
+
+---
+
 ### 2026-01-11 - v1.13.1 Límites legales de cartuchos (PETA)
 
 #### Implementación de límites por calibre en GeneradorPETA
