@@ -1,3 +1,84 @@
+### 2026-01-15 - v1.20.3 CRISIS CRÍTICA - Error de Mapeo UUID vs MATRICULA
+
+#### Database Mapping Disaster - Todos los RFAs mostraban 404
+
+**Contexto**: Usuario reportó "yo tengo TODOS los RFA subidos pero aparecen 404" - Investigación reveló error arquitectónico masivo.
+
+**Descubrimiento del problema**:
+1. Storage usa carpetas con nombre de **MATRICULA**: `documentos/{email}/armas/{MATRICULA}/registro.pdf`
+2. Código usaba **UUID** en 4 ubicaciones críticas: `documentos/{email}/armas/{armaId}/registro.pdf`
+3. Firestore tenía `documentoRegistro: 'NO TIENE'` para TODAS las armas (276 totales)
+
+**Archivos corregidos**:
+
+1. **ArmasRegistroUploader.jsx** (línea 124):
+   ```javascript
+   // ANTES (ROTO)
+   const filePath = `documentos/${userId}/armas/${armaId}/registro.pdf`;
+   
+   // DESPUÉS (CORRECTO)
+   const matriculaNormalizada = arma.matricula.replace(/\s+/g, '_');
+   const filePath = `documentos/${userId}/armas/${matriculaNormalizada}/registro.pdf`;
+   ```
+
+2. **MisArmas.jsx** (3 ubicaciones - líneas 61, 189):
+   - Carga inicial de RFAs: Cambiado a `matricula.replace(/\s+/g, '_')`
+   - Botón "Ver registro": Cambiado a `matricula.replace(/\s+/g, '_')`
+   - Supresión de errores 404 normales (armas sin RFA subido):
+     ```javascript
+     catch (err) {
+       if (err.code !== 'storage/object-not-found') {
+         console.warn('Error cargando RFA:', err);
+       }
+     }
+     ```
+
+**Scripts de auditoría y corrección creados**:
+
+1. `verificar-armas-storage.cjs` - Detectó mapeo incorrecto
+2. `corregir-mapeo-armas.cjs` - Corrección individual (smunozam@gmail.com)
+3. `corregir-mapeo-global.cjs` - Actualización masiva (77 socios, 276 armas)
+4. `auditoria-completa-storage.cjs` - Auditoría integral de Storage (260 archivos)
+5. `regenerar-urls-global.cjs` - Regeneración de URLs firmadas expiradas
+
+**Resultados de auditoría completa**:
+- **260 archivos totales** en Storage
+- **37 archivos de armas**: 14 con MATRICULA (correcto) ✅, 23 con UUID (huérfanos) ⚠️
+- **183 documentos PETA**: 142 ya mapeados ✅, 41 sin mapear ⚠️
+- **156 archivos mapeados exitosamente** a Firestore
+- **26 archivos huérfanos** (timestamps no reconocidos)
+
+**URLs firmadas regeneradas**:
+- Problema adicional: URLs con token expirado (403 Forbidden)
+- Script `regenerar-urls-global.cjs` procesó todos los socios
+- Nueva expiración: 03-01-2500
+- smunozam@gmail.com: ✅ CURP, ✅ Constancia
+
+**Fix UI adicionales**:
+
+1. **DocumentCard.jsx** - Mensaje gobierno solo para CURP/Constancia:
+   ```javascript
+   const GOVT_DOCS = ['curp', 'constanciaAntecedentes'];
+   const isGovtDoc = GOVT_DOCS.includes(documentType);
+   ```
+
+2. **Service Worker** - Cache v1.20.3 para forzar actualización
+
+3. **firebase.json** - CSP actualizado:
+   ```
+   frame-src 'self' https://storage.googleapis.com
+   ```
+
+**Estado final**:
+- ✅ 6/6 armas de smunozam@gmail.com con URLs mapeadas
+- ✅ Código usa MATRICULA en todas las ubicaciones
+- ✅ Errores 404 silenciados (normales cuando arma no tiene RFA)
+- ⚠️ Caché de navegador requiere limpieza manual (Service Worker)
+
+**Deploy**: `firebase deploy --only hosting` - Bundle `index-DLUzN5ay.js`
+
+---
+
 ### 2026-01-15 - v1.20.2 BUGFIX CRÍTICO - Storage Rules límite RFA
 
 #### Fix: Socios no podían subir Registros de Armas (RFA)

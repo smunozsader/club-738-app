@@ -1,5 +1,5 @@
 // Service Worker para PWA - Club 738
-const CACHE_NAME = 'club-738-v1.19.0';
+const CACHE_NAME = 'club-738-v1.20.3';
 const RUNTIME_CACHE = 'club-738-runtime';
 
 // Assets críticos para funcionamiento offline

@@ -13,7 +13,8 @@ export default function MultiImageUploader({
   documentLabel,
   allowMultiple = false, // true para INE (frente/vuelta)
   imageOnly = false, // true para fotoCredencial (sube JPG, no PDF)
-  allowPdf = false, // true para CURP y Constancia (acepta PDF oficial)
+  allowPdf = false, // true para CURP, Constancia y otros docs que aceptan PDF
+  isGovtDoc = false, // true SOLO para documentos del gobierno federal
   onUploadComplete 
 }) {
   const [images, setImages] = useState([]);
@@ -184,7 +185,7 @@ export default function MultiImageUploader({
   const validateFile = (file, isPdfMode = false) => {
     // Determinar el tipo de documento según el modo
     // imageOnly=true → fotoCredencial (solo JPG/JPEG)
-    // isPdfMode=true → documento PDF (ine, etc.)
+    // isPdfMode=true → documentType original (certificadoMedico, etc.)
     // allowMultiple=true → generalmente INE (fotos que se convierten a PDF)
     
     let tipoDoc = documentType;
@@ -193,10 +194,9 @@ export default function MultiImageUploader({
     if (imageOnly) {
       // fotoCredencial: solo JPG/JPEG
       tipoDoc = 'fotoCredencial';
-    } else if (isPdfMode) {
-      // Documentos PDF (cuando suben PDF directo de INE)
-      tipoDoc = 'ine'; // Usamos reglas de INE como base
     }
+    // Si isPdfMode=true, usar documentType original (certificadoMedico, curp, etc.)
+    // NO hardcodear a 'ine'
     
     const resultado = validarDocumento(tipoDoc, file);
     
@@ -482,18 +482,17 @@ export default function MultiImageUploader({
             </div>
             
             <label className="file-select-btn image-btn">
-              📷 Seleccionar imagen JPG
+              � Seleccionar imagen JPG
               <input
                 type="file"
                 accept="image/jpeg,image/jpg"
-                capture="environment"
                 onChange={handleImageOnlyUpload}
                 hidden
               />
             </label>
             
             <p className="image-only-hint">
-              💡 Toma la foto con tu celular o selecciona un JPG guardado. Máximo 2MB.
+              💡 Selecciona un archivo JPG desde tu dispositivo. Máximo 2MB.
             </p>
           </div>
         ) : (
@@ -519,8 +518,8 @@ export default function MultiImageUploader({
   return (
     <div className={`multi-image-uploader ${isDragging ? 'dragging' : ''}`}>
       
-      {/* Caso especial: Documentos oficiales PDF (CURP, Constancia) */}
-      {allowPdf && !uploading && (
+      {/* Caso especial: Documentos oficiales PDF del GOBIERNO FEDERAL (solo CURP y Constancia) */}
+      {isGovtDoc && allowPdf && !uploading && (
         <div className="pdf-oficial-section">
           <div className="pdf-oficial-info">
             <span className="icono-oficial">🏛️</span>
@@ -565,9 +564,9 @@ export default function MultiImageUploader({
             className="mode-btn mode-photo"
             onClick={() => setUploadMode('photo')}
           >
-            <span className="mode-icon">📷</span>
-            <span className="mode-label">Tomar foto</span>
-            <span className="mode-desc">Se convertirá a PDF automáticamente</span>
+            <span className="mode-icon">�</span>
+            <span className="mode-label">Subir archivo</span>
+            <span className="mode-desc">Foto o imagen que se convertirá a PDF</span>
           </button>
         </div>
       )}
@@ -604,7 +603,7 @@ export default function MultiImageUploader({
         </div>
       )}
 
-      {/* Modo Foto: Tomar fotos (solo si NO es allowPdf) */}
+      {/* Modo Foto: Subir archivos de imagen (solo si NO es allowPdf) */}
       {!allowPdf && uploadMode === 'photo' && !uploading && (
         <>
           {/* Preview de imágenes agregadas */}
@@ -634,7 +633,7 @@ export default function MultiImageUploader({
               <>
                 <p className="upload-text">
                   {images.length === 0 ? (
-                    <>Toma foto del <strong>FRENTE</strong></>
+                    <>Selecciona imagen del <strong>FRENTE</strong></>
                   ) : images.length === 1 ? (
                     <>Ahora el <strong>REVERSO</strong></>
                   ) : (
@@ -644,15 +643,14 @@ export default function MultiImageUploader({
                 <p className="upload-hint">{images.length} de {maxImages} imágenes</p>
               </>
             ) : (
-              <p className="upload-text">Toma foto de tu documento</p>
+              <p className="upload-text">Selecciona imagen de tu documento</p>
             )}
             
             <label className="file-select-btn">
-              📷 {images.length > 0 ? 'Agregar foto' : 'Tomar foto'}
+              � {images.length > 0 ? 'Agregar archivo' : 'Seleccionar archivo'}
               <input
                 type="file"
                 accept="image/*"
-                capture="environment"
                 onChange={handlePhotoUpload}
                 multiple={allowMultiple}
                 hidden

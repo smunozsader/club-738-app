@@ -11,8 +11,22 @@ const MULTI_IMAGE_DOCS = ['ine', 'cartillaMilitar'];
 // Documentos que se suben como imagen (JPG) no como PDF
 const IMAGE_ONLY_DOCS = ['fotoCredencial'];
 
-// Documentos oficiales que DEBEN aceptar PDF (gobierno federal)
-const PDF_ALLOWED_DOCS = ['curp', 'constanciaAntecedentes'];
+// Documentos oficiales DEL GOBIERNO FEDERAL (mensaje especial)
+const GOVT_DOCS = ['curp', 'constanciaAntecedentes'];
+
+// Documentos que aceptan PDF (incluye gobierno + certificados + otros)
+const PDF_ALLOWED_DOCS = [
+  'curp', 
+  'constanciaAntecedentes',
+  'certificadoMedico',
+  'certificadoPsicologico',
+  'certificadoToxicologico',
+  'comprobanteDomicilio',
+  'cartaModoHonesto',
+  'licenciaCaza',
+  'reciboE5cinco',
+  'permisoAnterior'
+];
 
 // Documentos que están precargados masivamente
 const PRELOADED_DOCS = ['curp', 'constanciaAntecedentes'];
@@ -42,6 +56,9 @@ export default function DocumentCard({
   
   // Determinar si este documento acepta PDF
   const allowPdf = PDF_ALLOWED_DOCS.includes(documentType);
+  
+  // Determinar si es documento oficial del gobierno (para mensaje especial)
+  const isGovtDoc = GOVT_DOCS.includes(documentType);
   
   // Determinar si este documento está precargado
   const isDocumentoPrecargado = PRELOADED_DOCS.includes(documentType);
@@ -204,6 +221,7 @@ export default function DocumentCard({
             allowMultiple={allowMultiple}
             imageOnly={imageOnly}
             allowPdf={allowPdf}
+            isGovtDoc={isGovtDoc}
             onUploadComplete={handleUploadComplete}
           />
           {showUploader && (

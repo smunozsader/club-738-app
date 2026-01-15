@@ -21,11 +21,19 @@
   font-weight: 700;
 }
 
+:root.dark-mode .document-list-header h3 {
+  color: #93c5fd;
+}
+
 .document-list-header p {
   color: var(--color-text-secondary, #334155);
   font-size: 14px;
   margin: 0 auto;
   max-width: 600px;
+}
+
+:root.dark-mode .document-list-header p {
+  color: #cbd5e1;
 }
 
 /* ===================================
@@ -46,11 +54,21 @@
   font-weight: 600;
 }
 
+:root.dark-mode .documents-info-box h4 {
+  color: #fbbf24;
+}
+
 .documents-info-box p {
   color: var(--color-text-primary, #1e293b);
   margin: 0;
   font-size: 14px;
   line-height: 1.6;
+}
+
+:root.dark-mode .documents-info-box p,
+:root.dark-mode .documents-info-box li,
+:root.dark-mode .documents-info-box li strong {
+  color: #e2e8f0;
 }
 
 .documents-info-box ul,
@@ -190,6 +208,11 @@
   margin: 0 0 15px;
   padding-bottom: 8px;
   border-bottom: 2px solid var(--color-warning, #b45309);
+}
+
+:root.dark-mode .category-title {
+  color: #fbbf24;
+  border-bottom-color: #d97706;
 }
 
 /* Grid de Documentos */

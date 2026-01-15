@@ -307,3 +307,56 @@
   color: #664d03;
 }
 
+/* ===================================
+   DARK MODE
+   =================================== */
+:root.dark-mode .document-card {
+  background: #1e293b;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+:root.dark-mode .document-card.precargado {
+  background: linear-gradient(135deg, #2d1b4e 0%, #3d2667 100%);
+}
+
+:root.dark-mode .card-title-section h4 {
+  color: #93c5fd;
+}
+
+:root.dark-mode .card-description {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .card-file-info {
+  background: #0f172a;
+}
+
+:root.dark-mode .file-name {
+  color: #e2e8f0;
+}
+
+:root.dark-mode .file-date {
+  color: #94a3b8;
+}
+
+:root.dark-mode .mensaje-precargado-ok {
+  background: #1e3a2e;
+  border-left-color: #4ade80;
+}
+
+:root.dark-mode .mensaje-precargado-ok p {
+  color: #86efac;
+}
+
+:root.dark-mode .mensaje-precargado-pendiente {
+  background: #422006;
+  border-left-color: #fbbf24;
+}
+
+:root.dark-mode .mensaje-precargado-pendiente p {
+  color: #fde68a;
+}
+
+:root.dark-mode .mensaje-precargado-pendiente strong {
+  color: #fef3c7;
+}

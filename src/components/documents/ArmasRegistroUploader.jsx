@@ -120,7 +120,9 @@ export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
     setProgress('Subiendo documento...');
 
     try {
-      const filePath = `documentos/${userId}/armas/${armaId}/registro.pdf`;
+      // Normalizar matrícula para la ruta (espacios → guion bajo)
+      const matriculaNormalizada = arma.matricula.replace(/\s+/g, '_');
+      const filePath = `documentos/${userId}/armas/${matriculaNormalizada}/registro.pdf`;
       const storageRef = ref(storage, filePath);
       
       await uploadBytes(storageRef, file);

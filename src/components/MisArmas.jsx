@@ -56,14 +56,19 @@ export default function MisArmas({ user }) {
         // Verificar si existe documento en Storage
         if (!armaData.documentoRegistro) {
           try {
+            // Normalizar matrícula para la ruta (espacios → guion bajo)
+            const matriculaNormalizada = armaData.matricula.replace(/\s+/g, '_');
             const storageRef = ref(
               storage, 
-              `documentos/${user.email.toLowerCase()}/armas/${docSnap.id}/registro.pdf`
+              `documentos/${user.email.toLowerCase()}/armas/${matriculaNormalizada}/registro.pdf`
             );
             const url = await getDownloadURL(storageRef);
             armaData.documentoRegistro = url;
-          } catch {
-            // No existe el documento
+          } catch (err) {
+            // Silenciar error 404 - es normal que algunas armas no tengan RFA
+            if (err.code !== 'storage/object-not-found') {
+              console.warn('Error cargando RFA:', err);
+            }
           }
         }
         
@@ -182,9 +187,11 @@ export default function MisArmas({ user }) {
                       onClick={async () => {
                         try {
                           // Obtener URL fresca con token de autenticación
+                          // Normalizar matrícula para la ruta (espacios → guion bajo)
+                          const matriculaNormalizada = arma.matricula.replace(/\s+/g, '_');
                           const storageRef = ref(
                             storage, 
-                            `documentos/${user.email.toLowerCase()}/armas/${arma.id}/registro.pdf`
+                            `documentos/${user.email.toLowerCase()}/armas/${matriculaNormalizada}/registro.pdf`
                           );
                           const url = await getDownloadURL(storageRef);
                           window.open(url, '_blank');
