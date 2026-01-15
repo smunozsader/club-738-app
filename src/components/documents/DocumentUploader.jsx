@@ -102,10 +102,6 @@ export default function DocumentUploader({ userId, documentType, documentLabel, 
     );
   };
 
-  const handleDrop = useCallback((e) => {
-    e.preventDefault();
-    
-  
   // Determinar formatos permitidos según el tipo de documento
   const getAcceptedFormats = () => {
     const regla = REGLAS_DOCUMENTOS[documentType];
@@ -121,7 +117,11 @@ export default function DocumentUploader({ userId, documentType, documentLabel, 
     const formatosTexto = regla.formatos.map(f => f.toUpperCase()).join(' o ');
     const tamañoMB = (regla.tamañoMax / (1024 * 1024)).toFixed(0);
     return `${formatosTexto} (máx. ${tamañoMB}MB)`;
-  };setIsDragging(false);
+  };
+
+  const handleDrop = useCallback((e) => {
+    e.preventDefault();
+    setIsDragging(false);
     
     const files = e.dataTransfer.files;
     if (files.length > 0) {
@@ -144,14 +144,15 @@ export default function DocumentUploader({ userId, documentType, documentLabel, 
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        {uploadiref={fileInputRef}
-                type="file"
-                accept={getAcceptedFormats()}
-                onChange={handleFileSelect}
-                hidden
-              />
-            </label>
-            <p className="upload-formats">{getFormatsText()}
+        {uploading ? (
+          <>
+            <div className="upload-progress">
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+              </div>
+              <p className="progress-text">Subiendo: {progress}%</p>
+            </div>
+          </>
         ) : (
           <>
             <div className="upload-icon">📄</div>
@@ -162,13 +163,14 @@ export default function DocumentUploader({ userId, documentType, documentLabel, 
             <label className="file-select-btn">
               Seleccionar archivo
               <input
+                ref={fileInputRef}
                 type="file"
-                accept=".pdf,.jpg,.jpeg,.png"
+                accept={getAcceptedFormats()}
                 onChange={handleFileSelect}
                 hidden
               />
             </label>
-            <p className="upload-formats">PDF, JPG o PNG (máx. 5MB)</p>
+            <p className="upload-formats">{getFormatsText()}</p>
           </>
         )}
       </div>
