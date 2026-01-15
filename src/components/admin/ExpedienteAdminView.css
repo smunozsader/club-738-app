@@ -559,6 +559,56 @@
   to { transform: rotate(360deg); }
 }
 
+/* Datos Editables - Botones inline */
+.dato-item.editable {
+  position: relative;
+}
+
+.dato-value-editable {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.dato-value-editable .valor {
+  flex: 1;
+  font-size: 1rem;
+  color: #1a202c;
+  font-weight: 500;
+}
+
+.btn-edit-inline {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-edit-inline:hover {
+  border-color: #1a472a;
+  background: #f0fdf4;
+  transform: scale(1.05);
+}
+
+.btn-edit-inline.critical {
+  border-color: #ff9800;
+  color: #e65100;
+}
+
+.btn-edit-inline.critical:hover {
+  border-color: #f44336;
+  background: #ffebee;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .expediente-content {
@@ -585,5 +635,14 @@
   .armas-tabla th,
   .armas-tabla td {
     padding: 0.5rem;
+  }
+  
+  .dato-value-editable {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .btn-edit-inline {
+    align-self: flex-end;
   }
 }

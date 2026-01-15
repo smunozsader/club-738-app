@@ -1,12 +1,12 @@
 # Club 738 Web - TO-DO / Roadmap
 
-**Última actualización**: 14 de enero 2026 (v1.14.4)
+**Última actualización**: 14 de enero 2026 (v1.15.0)
 
-**Progreso general**: 27/50 tareas completadas (54%)
+**Progreso general**: 33/50 tareas completadas (66%)
 
 ---
 
-## 🎯 FASE 1-5: SISTEMA ADMINISTRATIVO CORE (27/27 - 100% ✅)
+## 🎯 FASE 1-6: SISTEMA ADMINISTRATIVO CORE (33/33 - 100% ✅)
 
 ### ✅ FASE 1: Sistema de Roles y Permisos (4/4)
 - [x] #1 - Constante ADMIN_EMAIL en App.jsx
@@ -48,18 +48,18 @@
 - [x] #25 - Integración WhatsApp Business API (whatsappIntegration.js)
 **Status**: ✅ COMPLETADO - Sistema multi-canal: in-app + email + WhatsApp funcionando
 
+### ✅ FASE 6: Edición de Datos de Socios (6/6 - 100% ✅)
+- [x] #26 - DatosPersonalesEditor.jsx (nombre con validación)
+- [x] #27 - CURPEditor.jsx (18 chars + verificación duplicados)
+- [x] #28 - DomicilioEditor.jsx (campos estructurados)
+- [x] #29 - EmailEditor.jsx (migración completa de datos)
+- [x] #30 - Audit trail (subcollección auditoria con before/after)
+- [x] #31 - Integración en ExpedienteAdminView (botones inline)
+**Status**: ✅ COMPLETADO - Admin puede editar datos con confirmación y audit logging
+
 ---
 
-## 🚧 FASE 6-9: GESTIÓN AVANZADA (0/23 - 0%)
-
-### ⏳ FASE 6: Edición de Datos de Socios (0/6)
-- [ ] #26 - DatosPersonalesEditor.jsx (nombre)
-- [ ] #27 - CURPEditor.jsx (validación 18 chars)
-- [ ] #28 - DomicilioEditor.jsx (campos estructurados)
-- [ ] #29 - EmailEditor.jsx (duplicados + notificación)
-- [ ] #30 - Audit trail (before/after logging)
-- [ ] #31 - Integración en ExpedienteAdminView
-**Status**: ❌ NO INICIADO
+## 🚧 FASE 7-9: GESTIÓN AVANZADA (0/17 - 0%)
 
 ### ⏳ FASE 7: Eliminación Segura de Documentos (0/5)
 - [ ] #32 - Confirmación de eliminación (modal)

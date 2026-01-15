@@ -13,6 +13,10 @@ import { doc, getDoc, collection, getDocs, deleteDoc } from 'firebase/firestore'
 import { db, auth } from '../../firebaseConfig';
 import { addDoc, serverTimestamp } from 'firebase/firestore';
 import ArmaEditor from './ArmaEditor';
+import DatosPersonalesEditor from './editors/DatosPersonalesEditor';
+import CURPEditor from './editors/CURPEditor';
+import DomicilioEditor from './editors/DomicilioEditor';
+import EmailEditor from './editors/EmailEditor';
 import './ExpedienteAdminView.css';
 
 export default function ExpedienteAdminView({ socioEmail, onBack }) {
@@ -25,6 +29,12 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
   const [mostrarEditor, setMostrarEditor] = useState(false);
   const [armaSeleccionada, setArmaSeleccionada] = useState(null);
   const [armaIdSeleccionada, setArmaIdSeleccionada] = useState(null);
+  
+  // Estados para editores de datos
+  const [mostrarNombreEditor, setMostrarNombreEditor] = useState(false);
+  const [mostrarCURPEditor, setMostrarCURPEditor] = useState(false);
+  const [mostrarDomicilioEditor, setMostrarDomicilioEditor] = useState(false);
+  const [mostrarEmailEditor, setMostrarEmailEditor] = useState(false);
 
   useEffect(() => {
     cargarExpediente();
@@ -192,19 +202,46 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
             <h2>Datos Personales</h2>
             
             <div className="datos-grid">
-              <div className="dato-item">
+              <div className="dato-item editable">
                 <label>Nombre Completo</label>
-                <div className="dato-value">{socio.nombre}</div>
+                <div className="dato-value-editable">
+                  <span className="valor">{socio.nombre}</span>
+                  <button 
+                    className="btn-edit-inline"
+                    onClick={() => setMostrarNombreEditor(true)}
+                    title="Editar nombre"
+                  >
+                    ✏️
+                  </button>
+                </div>
               </div>
 
-              <div className="dato-item">
+              <div className="dato-item editable">
                 <label>Email</label>
-                <div className="dato-value">{socio.email}</div>
+                <div className="dato-value-editable">
+                  <span className="valor">{socio.email}</span>
+                  <button 
+                    className="btn-edit-inline critical"
+                    onClick={() => setMostrarEmailEditor(true)}
+                    title="Cambiar email (proceso crítico)"
+                  >
+                    ⚠️
+                  </button>
+                </div>
               </div>
 
-              <div className="dato-item">
+              <div className="dato-item editable">
                 <label>CURP</label>
-                <div className="dato-value">{socio.curp || 'No registrado'}</div>
+                <div className="dato-value-editable">
+                  <span className="valor">{socio.curp || 'No registrado'}</span>
+                  <button 
+                    className="btn-edit-inline"
+                    onClick={() => setMostrarCURPEditor(true)}
+                    title="Editar CURP"
+                  >
+                    ✏️
+                  </button>
+                </div>
               </div>
 
               <div className="dato-item">
@@ -214,18 +251,27 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
                 </div>
               </div>
 
-              <div className="dato-item full-width">
+              <div className="dato-item full-width editable">
                 <label>Domicilio</label>
-                <div className="dato-value">
-                  {socio.domicilio ? (
-                    <>
-                      {socio.domicilio.calle}<br />
-                      {socio.domicilio.colonia}, {socio.domicilio.municipio}<br />
-                      {socio.domicilio.estado}, C.P. {socio.domicilio.cp}
-                    </>
-                  ) : (
-                    'No registrado'
-                  )}
+                <div className="dato-value-editable">
+                  <span className="valor">
+                    {socio.domicilio ? (
+                      <>
+                        {socio.domicilio.calle}<br />
+                        {socio.domicilio.colonia}, {socio.domicilio.municipio}<br />
+                        {socio.domicilio.estado}, C.P. {socio.domicilio.cp}
+                      </>
+                    ) : (
+                      'No registrado'
+                    )}
+                  </span>
+                  <button 
+                    className="btn-edit-inline"
+                    onClick={() => setMostrarDomicilioEditor(true)}
+                    title="Editar domicilio"
+                  >
+                    ✏️
+                  </button>
                 </div>
               </div>
 
@@ -262,12 +308,6 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
                   </div>
                 </>
               )}
-            </div>
-
-            <div className="datos-actions">
-              <button className="btn-edit" disabled>
-                ✏️ Editar Datos (Próximamente)
-              </button>
             </div>
           </div>
         )}
@@ -464,6 +504,56 @@ export default function ExpedienteAdminView({ socioEmail, onBack }) {
           }}
           onSave={() => {
             cargarExpediente(); // Recargar para ver cambios
+          }}
+        />
+      )}
+      
+      {/* Editores de Datos Personales */}
+      {mostrarNombreEditor && (
+        <DatosPersonalesEditor
+          socioEmail={socioEmail}
+          nombreActual={socio.nombre}
+          onClose={() => setMostrarNombreEditor(false)}
+          onSave={() => {
+            setMostrarNombreEditor(false);
+            cargarExpediente(); // Recargar para ver cambios
+          }}
+        />
+      )}
+
+      {mostrarCURPEditor && (
+        <CURPEditor
+          socioEmail={socioEmail}
+          curpActual={socio.curp}
+          onClose={() => setMostrarCURPEditor(false)}
+          onSave={() => {
+            setMostrarCURPEditor(false);
+            cargarExpediente(); // Recargar para ver cambios
+          }}
+        />
+      )}
+
+      {mostrarDomicilioEditor && (
+        <DomicilioEditor
+          socioEmail={socioEmail}
+          domicilioActual={socio.domicilio}
+          onClose={() => setMostrarDomicilioEditor(false)}
+          onSave={() => {
+            setMostrarDomicilioEditor(false);
+            cargarExpediente(); // Recargar para ver cambios
+          }}
+        />
+      )}
+
+      {mostrarEmailEditor && (
+        <EmailEditor
+          socioEmail={socioEmail}
+          onClose={() => setMostrarEmailEditor(false)}
+          onSave={() => {
+            setMostrarEmailEditor(false);
+            // Nota: Después de cambiar email, el usuario necesita recargar manualmente
+            alert('Email actualizado. El expediente se ha migrado al nuevo email.');
+            onBack(); // Volver al dashboard
           }}
         />
       )}

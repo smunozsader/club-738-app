@@ -1,3 +1,269 @@
+### 2026-01-14 - v1.15.0 FASE 6 COMPLETADA - Sistema de edición de datos de socios
+
+#### Editores modales con validación y audit trail
+
+**Objetivo**: Permitir al administrador editar datos de socios desde ExpedienteAdminView con validaciones estrictas, confirmación de cambios, y registro completo de auditoría.
+
+**FASE 6 completada**: 6/6 tareas (100%)
+- ✅ Task #26: DatosPersonalesEditor.jsx
+- ✅ Task #27: CURPEditor.jsx
+- ✅ Task #28: DomicilioEditor.jsx
+- ✅ Task #29: EmailEditor.jsx
+- ✅ Task #30: Audit trail implementation
+- ✅ Task #31: Integración en ExpedienteAdminView
+
+**Componentes creados**:
+
+1. **DatosPersonalesEditor.jsx** (220 líneas)
+   ```jsx
+   <DatosPersonalesEditor
+     socioEmail={email}
+     nombreActual={nombre}
+     onClose={handleClose}
+     onSave={handleSave}
+   />
+   ```
+   
+   **Features**:
+   - Validación: no vacío, mínimo 3 caracteres, solo letras y espacios
+   - Comparación before/after visual
+   - Modal de confirmación con advertencia
+   - Actualización directa en Firestore
+   - Registro en `socios/{email}/auditoria`
+   
+   **Flujo**:
+   1. Usuario edita nombre
+   2. Sistema valida formato
+   3. Muestra modal de confirmación
+   4. Actualiza Firestore si confirma
+   5. Crea registro de auditoría
+
+2. **CURPEditor.jsx** (265 líneas)
+   ```jsx
+   <CURPEditor
+     socioEmail={email}
+     curpActual={curp}
+     onClose={handleClose}
+     onSave={handleSave}
+   />
+   ```
+   
+   **Features**:
+   - Validación estricta: 18 caracteres exactos
+   - Formato regex: `^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$`
+   - Validación de fecha embebida (mes 01-12, día 01-31)
+   - Verificación de duplicados en toda la base de datos
+   - Input normalizado (uppercase, solo alfanuméricos)
+   - Contador de caracteres con indicador visual ✓
+   
+   **Validaciones**:
+   - 4 letras iniciales
+   - 6 dígitos (fecha: AAMMDD)
+   - 1 letra (H/M para sexo)
+   - 5 letras (estado + consonantes nombre)
+   - 1 alfanumérico
+   - 1 dígito verificador
+
+3. **DomicilioEditor.jsx** (245 líneas)
+   ```jsx
+   <DomicilioEditor
+     socioEmail={email}
+     domicilioActual={domicilio}
+     onClose={handleClose}
+     onSave={handleSave}
+   />
+   ```
+   
+   **Features**:
+   - Campos estructurados: calle, colonia, municipio, estado, CP
+   - Selector de 31 estados de México
+   - Validación de CP (5 dígitos numéricos)
+   - Vista previa formateada
+   - Comparación before/after completa
+   
+   **Estructura guardada**:
+   ```javascript
+   {
+     calle: "Calle 50 No. 531-E x 69 y 71",
+     colonia: "Centro",
+     municipio: "Mérida",
+     estado: "Yucatán",
+     cp: "97000"
+   }
+   ```
+
+4. **EmailEditor.jsx** (320 líneas) ⚠️ COMPONENTE CRÍTICO
+   ```jsx
+   <EmailEditor
+     socioEmail={emailActual}
+     onClose={handleClose}
+     onSave={handleSaveAndBack}
+   />
+   ```
+   
+   **Features**:
+   - Validación de formato email
+   - Verificación de duplicados
+   - **Migración completa** de datos:
+     - Crear nuevo documento con nuevo email como ID
+     - Copiar todos los datos del socio
+     - Copiar subcolección `armas`
+     - Copiar subcolección `petas`
+     - Copiar subcolección `auditoria`
+     - Crear registro de cambio en auditoría del nuevo documento
+   - Notificación automática al socio (opcional)
+   - Warning: requiere creación manual en Firebase Auth
+   
+   **Proceso de migración**:
+   1. Verificar formato y duplicados
+   2. Crear documento `socios/{nuevoEmail}`
+   3. Copiar datos personales
+   4. Copiar todas las subcolecciones
+   5. Crear notificación (si habilitado)
+   6. Registrar en auditoría
+   
+   **Nota crítica**: Este editor NO actualiza Firebase Auth automáticamente. El admin debe:
+   - Crear nueva cuenta en Firebase Auth con el nuevo email
+   - Configurar misma contraseña o enviar reset password
+   - El socio usará el nuevo email para login
+
+5. **Audit Trail System** (Implementado en todos los editores)
+   ```javascript
+   // Estructura de registro
+   const auditoriaRef = collection(db, 'socios', email, 'auditoria');
+   await addDoc(auditoriaRef, {
+     campo: 'nombre|curp|domicilio|email',
+     valorAnterior: 'valor anterior',
+     valorNuevo: 'valor nuevo',
+     modificadoPor: 'admin@club738.com',
+     fecha: serverTimestamp(),
+     tipo: 'edicion_datos_personales|edicion_curp|edicion_domicilio|cambio_email',
+     nota: 'Información adicional (opcional)'
+   });
+   ```
+   
+   **Features del audit trail**:
+   - Subcolección `auditoria` por socio
+   - Timestamp automático (server-side)
+   - Registro del admin que hizo el cambio
+   - Valores before/after para comparación
+   - Tipo de cambio categorizado
+   - Notas opcionales para contexto
+
+6. **ExpedienteAdminView.jsx** - Integración
+   
+   **Cambios en UI**:
+   ```jsx
+   <div className="dato-item editable">
+     <label>Nombre Completo</label>
+     <div className="dato-value-editable">
+       <span className="valor">{socio.nombre}</span>
+       <button className="btn-edit-inline" onClick={...}>
+         ✏️
+       </button>
+     </div>
+   </div>
+   ```
+   
+   **Campos editables**:
+   - ✏️ Nombre (DatosPersonalesEditor)
+   - ✏️ CURP (CURPEditor)
+   - ✏️ Domicilio (DomicilioEditor)
+   - ⚠️ Email (EmailEditor) - Marcado como crítico
+   
+   **Campos NO editables**:
+   - Fecha de Alta (histórico)
+   - Estado Membresía 2026 (se edita vía RegistroPagos)
+   - Fechas/montos de pago (se editan vía ReporteCaja)
+
+**Estilos CSS**:
+
+1. **Modales compartidos** (DatosPersonalesEditor.css base):
+   - `.modal-overlay`: Backdrop blur
+   - `.modal-content`: White card con sombra
+   - `.modal-header`: Título + botón cerrar
+   - `.editor-form`: Formulario con padding
+   - `.form-group`: Campo de input con label
+   - `.comparacion-valores`: Grid 2 columnas before/after
+   - `.confirmacion-cambio`: Modal de confirmación
+   - `.btn-cancel`, `.btn-save`, `.btn-confirm`: Botones de acción
+
+2. **Estilos específicos**:
+   - **CURPEditor**: `.curp-input` con monospace, `.char-counter`
+   - **DomicilioEditor**: `.form-row` para grid 2x2, `.domicilio-preview`
+   - **EmailEditor**: `.email-warning-box`, `.btn-confirm-critical` (rojo)
+
+3. **Botones inline** (ExpedienteAdminView.css):
+   ```css
+   .btn-edit-inline {
+     width: 36px;
+     height: 36px;
+     border: 2px solid #e0e0e0;
+     border-radius: 8px;
+     transition: all 0.2s;
+   }
+   
+   .btn-edit-inline:hover {
+     border-color: #1a472a;
+     background: #f0fdf4;
+     transform: scale(1.05);
+   }
+   
+   .btn-edit-inline.critical {
+     border-color: #ff9800;
+     color: #e65100;
+   }
+   ```
+
+**Archivos creados/modificados**:
+- `src/components/admin/editors/DatosPersonalesEditor.jsx` (NUEVO - 220 líneas)
+- `src/components/admin/editors/DatosPersonalesEditor.css` (NUEVO - 280 líneas)
+- `src/components/admin/editors/CURPEditor.jsx` (NUEVO - 265 líneas)
+- `src/components/admin/editors/CURPEditor.css` (NUEVO - 120 líneas)
+- `src/components/admin/editors/DomicilioEditor.jsx` (NUEVO - 245 líneas)
+- `src/components/admin/editors/DomicilioEditor.css` (NUEVO - 140 líneas)
+- `src/components/admin/editors/EmailEditor.jsx` (NUEVO - 320 líneas)
+- `src/components/admin/editors/EmailEditor.css` (NUEVO - 150 líneas)
+- `src/components/admin/ExpedienteAdminView.jsx` (MODIFICADO - integración)
+- `src/components/admin/ExpedienteAdminView.css` (MODIFICADO - botones inline)
+- `docs/TODO.md` (FASE 6: 100%, progreso 33/50)
+
+**Testing recomendado**:
+```
+1. Editar nombre de un socio
+   - Verificar validación (vacío, <3 chars, caracteres especiales)
+   - Confirmar cambio
+   - Verificar actualización en Firestore
+   - Verificar registro en auditoría
+
+2. Editar CURP
+   - Intentar CURP inválido (formato)
+   - Intentar CURP duplicado
+   - Editar con CURP válido
+   - Verificar normalización (uppercase)
+
+3. Editar domicilio
+   - Llenar todos los campos
+   - Verificar vista previa
+   - Confirmar cambio
+   - Verificar estructura en Firestore
+
+4. Cambiar email (⚠️ PROCESO CRÍTICO)
+   - Verificar formato
+   - Verificar duplicados
+   - Confirmar migración
+   - MANUAL: Crear cuenta en Firebase Auth
+   - Verificar que socio puede acceder con nuevo email
+```
+
+**🎯 PROGRESO GENERAL**: 33/50 tareas (66%)
+- FASE 1-6: 100% ✅
+- FASE 7-9: 0% ⏳
+
+**Próximos pasos**: FASE 7 - Eliminación Segura de Documentos (modal confirmación, Storage.delete(), historial)
+
+---
+
 ### 2026-01-14 - v1.14.4 FASE 5 COMPLETADA - Sistema de notificaciones multi-canal
 
 #### Implementación completa de notificaciones: In-app + Email + WhatsApp
