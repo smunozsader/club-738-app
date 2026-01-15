@@ -39,9 +39,15 @@ service firebase.storage {
           || request.resource.contentType.matches('image/.*');
     }
     
-    // Verificar tamaño máximo (5MB)
+    // Verificar tamaño máximo para documentos generales (5MB)
     function isUnderSizeLimit() {
       return request.resource.size < 5 * 1024 * 1024;
+    }
+    
+    // Verificar tamaño máximo para registros de armas (10MB)
+    // Los RFA pueden ser escaneos de alta calidad
+    function isUnderArmasSizeLimit() {
+      return request.resource.size < 10 * 1024 * 1024;
     }
     
     // ========================================================================
@@ -68,12 +74,13 @@ service firebase.storage {
     // ========================================================================
     // Para documentos específicos de armas (registros, etc.)
     // El secretario puede listar armas de cualquier socio para impresión
+    // LÍMITE AUMENTADO A 10MB para RFA (Registros Federales de Armas)
     
     match /documentos/{email}/armas/{armaId}/{fileName} {
       allow read: if isOwner(email) || isSecretario();
       allow write: if (isOwner(email) || isSecretario())
                    && isAllowedFileType() 
-                   && isUnderSizeLimit();
+                   && isUnderArmasSizeLimit();  // 10MB para registros de armas
       allow delete: if isOwner(email);
     }
     

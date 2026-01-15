@@ -1,3 +1,74 @@
+### 2026-01-15 - v1.20.2 BUGFIX CRÍTICO - Storage Rules límite RFA
+
+#### Fix: Socios no podían subir Registros de Armas (RFA)
+
+**Problema reportado**: Múltiples socios no podían subir sus PDFs de Registros Federales de Armas.
+
+**Causa raíz identificada**:
+- `storage.rules` tenía límite de **5MB** para TODOS los documentos
+- `documentValidation.js` permitía RFA hasta **10MB** (correcto para escaneos)
+- Validación del cliente pasaba ✅ pero Firebase Storage rechazaba ❌
+
+**Conflicto de validaciones**:
+```javascript
+// documentValidation.js (Cliente)
+registroArma: {
+  formatos: ['pdf'],
+  tamañoMax: 10 * 1024 * 1024  // 10MB ✅
+}
+
+// storage.rules (Servidor) - ANTES
+function isUnderSizeLimit() {
+  return request.resource.size < 5 * 1024 * 1024;  // 5MB ❌
+}
+```
+
+**Solución aplicada**:
+
+1. **Nueva función en storage.rules**:
+   ```javascript
+   function isUnderArmasSizeLimit() {
+     return request.resource.size < 10 * 1024 * 1024;  // 10MB
+   }
+   ```
+
+2. **Regla específica para armas**:
+   ```javascript
+   match /documentos/{email}/armas/{armaId}/{fileName} {
+     allow write: if (isOwner(email) || isSecretario())
+                  && isAllowedFileType() 
+                  && isUnderArmasSizeLimit();  // 10MB ✅
+   }
+   ```
+
+3. **Documentos generales mantienen 5MB**:
+   ```javascript
+   match /documentos/{email}/{fileName} {
+     allow write: if (isOwner(email) || isSecretario())
+                  && isAllowedFileType() 
+                  && isUnderSizeLimit();  // 5MB
+   }
+   ```
+
+**Archivos modificados**:
+- `storage.rules` - Límites diferenciados por tipo de documento
+
+**Deploy requerido**:
+```bash
+firebase deploy --only storage
+```
+
+**Impacto**:
+- ✅ Socios ahora pueden subir RFA de hasta 10MB
+- ✅ Documentos generales mantienen límite de 5MB (CURP, INE, etc.)
+- ✅ Sin cambios en el código del cliente (ya estaba correcto)
+
+**Testing sugerido**:
+- Subir RFA de 6-9MB (debe funcionar ahora)
+- Verificar que documentos generales >5MB sigan rechazándose
+
+---
+
 ### 2026-01-15 - v1.20.1 ACTUALIZACIÓN DOMINIO - Migración a yucatanctp.org
 
 #### Cambio de dominio de club-738-app.web.app a yucatanctp.org
