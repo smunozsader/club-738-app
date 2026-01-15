@@ -178,9 +178,25 @@ export default function MisArmas({ user }) {
                 {arma.documentoRegistro ? (
                   <div className="documento-ok">
                     <span className="check">✅</span>
-                    <a href={arma.documentoRegistro} target="_blank" rel="noopener noreferrer">
+                    <button 
+                      onClick={async () => {
+                        try {
+                          // Obtener URL fresca con token de autenticación
+                          const storageRef = ref(
+                            storage, 
+                            `documentos/${user.email.toLowerCase()}/armas/${arma.id}/registro.pdf`
+                          );
+                          const url = await getDownloadURL(storageRef);
+                          window.open(url, '_blank');
+                        } catch (error) {
+                          console.error('Error abriendo registro:', error);
+                          alert('Error al abrir el documento. Verifica que el archivo exista.');
+                        }
+                      }}
+                      className="ver-registro-btn"
+                    >
                       Ver registro
-                    </a>
+                    </button>
                   </div>
                 ) : (
                   <div className="documento-pendiente-info">
