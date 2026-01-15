@@ -119,8 +119,8 @@ firebase deploy --only hosting
 ```
 
 **URLs resultantes:**
-- `https://club-738-app.web.app/legal/aviso-privacidad-integral.html`
-- `https://club-738-app.web.app/legal/aviso-privacidad-integral.pdf`
+- `https://yucatanctp.org/legal/aviso-privacidad-integral.html`
+- `https://yucatanctp.org/legal/aviso-privacidad-integral.pdf`
 
 ### PASO 3: Integrar componente React
 
@@ -194,7 +194,7 @@ export default function RegistroSocio() {
     ipAddress: "192.168.1.1",
     navegador: "Chrome 120.0",
     versionAvisoPrivacidad: "1.0",
-    avisoAceptado: "https://club-738-app.web.app/legal/aviso-privacidad-integral.pdf"
+    avisoAceptado: "https://yucatanctp.org/legal/aviso-privacidad-integral.pdf"
   }
 }
 ```

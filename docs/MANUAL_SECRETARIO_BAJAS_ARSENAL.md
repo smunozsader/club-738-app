@@ -49,7 +49,7 @@ Gestionar las solicitudes de baja de armas de los socios, validar la informació
 
 ### Paso 1: Ingresar al Portal
 
-1. Ve a: **https://club-738-app.web.app**
+1. Ve a: **https://yucatanctp.org**
 2. Inicia sesión: smunozam@gmail.com
 3. En el Dashboard, sección **"Panel de Secretario"**, busca:
 

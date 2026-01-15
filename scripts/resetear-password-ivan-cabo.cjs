@@ -32,12 +32,12 @@ async function resetearPasswordIvanCabo() {
     console.log('═══════════════════════════════════════════════════════════');
     console.log('🔑 NUEVAS CREDENCIALES PARA IVAN TSUIS CABO TORRES');
     console.log('═══════════════════════════════════════════════════════════');
-    console.log(`   Portal: https://club-738-app.web.app`);
+    console.log(`   Portal: https://yucatanctp.org`);
     console.log(`   Email: ${email}`);
     console.log(`   Contraseña temporal: ${nuevaPasswordTemporal}`);
     console.log('═══════════════════════════════════════════════════════════');
     console.log('\n📱 INSTRUCCIONES PARA EL SOCIO:');
-    console.log('   1. Ir a: https://club-738-app.web.app');
+    console.log('   1. Ir a: https://yucatanctp.org');
     console.log('   2. Iniciar sesión con estas credenciales');
     console.log('   3. Click en "⚙️ Mi Perfil" (arriba derecha)');
     console.log('   4. Cambiar a una contraseña personal');

@@ -155,7 +155,7 @@ Ver [src/firebaseConfig.js](src/firebaseConfig.js) para la inicialización.
 
 ### URL de Producción
 ```
-https://club-738-app.web.app
+https://yucatanctp.org
 ```
 
 ## Component Architecture

@@ -295,7 +295,7 @@ function AvisoIntegral() {
           Las modificaciones serán notificadas mediante:
         </p>
         <ul>
-          <li>Publicación en el sitio web: https://club-738-app.web.app</li>
+          <li>Publicación en el sitio web: https://yucatanctp.org</li>
           <li>Correo electrónico a los socios registrados</li>
           <li>Anuncios en las instalaciones del Club</li>
         </ul>

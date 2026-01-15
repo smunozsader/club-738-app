@@ -61,7 +61,7 @@ Según tu reporte del **listado de registros a enero 2026**, tienes las siguient
 
 ### PASO 1: Ingresar al Portal
 
-1. Ve a: **https://club-738-app.web.app**
+1. Ve a: **https://yucatanctp.org**
 2. Inicia sesión con tus credenciales:
    - **Usuario:** joaquingardoni@gmail.com
    - **Contraseña:** (la que te compartimos por WhatsApp)

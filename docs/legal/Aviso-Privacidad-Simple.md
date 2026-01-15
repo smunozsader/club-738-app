@@ -99,7 +99,7 @@ El Club implementa medidas de seguridad administrativas, técnicas y físicas pa
 
 El presente aviso puede sufrir modificaciones. Cualquier cambio será notificado mediante:
 
-1. Publicación en el sitio web: https://club-738-app.web.app
+1. Publicación en el sitio web: https://yucatanctp.org
 2. Correo electrónico
 3. Anuncios en las instalaciones del Club
 
@@ -109,7 +109,7 @@ El presente aviso puede sufrir modificaciones. Cualquier cambio será notificado
 
 Puede consultar el **Aviso de Privacidad Integral** completo en:
 
-- **Sitio web:** https://club-738-app.web.app/aviso-privacidad
+- **Sitio web:** https://yucatanctp.org/aviso-privacidad
 - **Correo electrónico:** tiropracticoyucatan@gmail.com
 - **Instalaciones del Club:** Calle 50 No. 531-E x 69 y 71, Centro, Mérida, Yucatán
 

@@ -1,3 +1,63 @@
+### 2026-01-15 - v1.20.1 ACTUALIZACIÓN DOMINIO - Migración a yucatanctp.org
+
+#### Cambio de dominio de club-738-app.web.app a yucatanctp.org
+
+**Objetivo**: Actualizar todas las referencias de URL en el código, funciones y documentación para reflejar el nuevo dominio personalizado del club con SEO.
+
+**Dominio nuevo**: https://yucatanctp.org (activo desde 15 enero 2026)
+
+**Archivos actualizados** (24 archivos):
+
+1. **Componentes React** (2 archivos):
+   - `src/components/privacidad/ConsentimientoPriv.jsx` - Link a aviso de privacidad
+   - `src/components/privacidad/AvisoPrivacidad.jsx` - URL en texto de modificaciones
+
+2. **Cloud Functions** (1 archivo):
+   - `functions/index.js` - 3 referencias en emails y notificaciones PETA
+
+3. **Scripts de Administración** (3 archivos):
+   - `scripts/enviar-notificacion-masiva.cjs` - Enlace WhatsApp
+   - `scripts/resetear-password-ivan-cabo.cjs` - Credenciales portal
+   - `scripts/crear-usuario-ivan-cabo.cjs` - Credenciales portal
+
+4. **Configuración** (2 archivos):
+   - `cors.json` - CORS origin para Firebase Storage
+   - `.github/copilot-instructions.md` - URL de producción
+
+5. **Documentación** (16 archivos):
+   - `MENSAJE_IVAN_CABO.txt`
+   - `docs/TODO.md` - Nueva sección v1.20.1
+   - `docs/MANUAL_SECRETARIO_BAJAS_ARSENAL.md`
+   - `docs/MANUAL_USUARIO.md`
+   - `docs/DEPLOYMENT_SUMMARY.md`
+   - `docs/GOOGLE_CALENDAR_SETUP.md`
+   - `docs/INSTRUCCIONES_GESTION_ARSENAL_GARDONI.md`
+   - `docs/MENSAJES_VIP_WEB_LAUNCH.md`
+   - `docs/TODO_TESTING_15_ENERO.md`
+   - `docs/prompt_firebase_studio.md`
+   - `docs/prompt_firebase_studio_EN.md`
+   - `docs/legal/Aviso-Privacidad-Integral.md` - 2 referencias
+   - `docs/legal/Aviso-Privacidad-Simple.md` - 2 referencias
+   - `docs/legal/Guia-Implementacion.md` - 3 referencias
+   - `docs/legal/Implementacion-Privacidad.md` - 3 referencias
+   - `docs/DEVELOPMENT_JOURNAL.md` - Este archivo
+
+**Cambio realizado**: Buscar y reemplazar `club-738-app.web.app` → `yucatanctp.org`
+
+**Método**: 
+- Ediciones manuales para archivos críticos (componentes, funciones, scripts)
+- Comando `sed -i` en masa para archivos de documentación
+
+**Verificación**:
+- ✅ Página carga correctamente en https://yucatanctp.org
+- ✅ CORS actualizado para Storage
+- ✅ Emails y notificaciones tendrán URL correcta
+- ✅ Documentación sincronizada
+
+**Deploy**: PENDIENTE - Requiere `npm run build` + `firebase deploy`
+
+---
+
 ### 2026-01-14 - v1.15.0 FASE 6 COMPLETADA - Sistema de edición de datos de socios
 
 #### Editores modales con validación y audit trail
@@ -368,7 +428,7 @@
      
      {Mensaje}
      
-     🔗 Accede al portal: https://club-738-app.web.app
+     🔗 Accede al portal: https://yucatanctp.org
      ```
    - Secretario copia enlace y envía por WhatsApp Business
 
@@ -570,7 +630,7 @@ node scripts/crear-notificacion-prueba.cjs
 **Archivos modificados**:
 - `src/components/admin/ArmaEditor.jsx` - Refactor completo de handleSubmit()
 
-**Deploy**: Hosting actualizado en producción (https://club-738-app.web.app)
+**Deploy**: Hosting actualizado en producción (https://yucatanctp.org)
 
 ---
 
@@ -802,7 +862,7 @@ node scripts/crear-notificacion-prueba.cjs
 
 **Acción requerida**: Debug de DocumentList.jsx y verificación de estructura Firestore
 
-**Deploy**: Múltiples deploys realizados (6+ durante sesión), cambios en producción en https://club-738-app.web.app
+**Deploy**: Múltiples deploys realizados (6+ durante sesión), cambios en producción en https://yucatanctp.org
   - LIC. RICARDO J. FERNÁNDEZ Y GASQUE
   - PRESIDENTE DEL CLUB.
 
@@ -834,7 +894,7 @@ node scripts/crear-notificacion-prueba.cjs
 
 **Club 738 Web** es el portal de socios del Club de Caza, Tiro y Pesca de Yucatán, A.C. (SEDENA #738). Permite a los socios gestionar su documentación para trámites PETA ante la 32 Zona Militar de Valladolid.
 
-**URL de Producción**: https://club-738-app.web.app  
+**URL de Producción**: https://yucatanctp.org  
 **Dominio Principal**: https://yucatanctp.org
 
 ---
@@ -1713,7 +1773,7 @@ match /armas/{armaId} {
 - `docs/PETA_SCHEMA.md` - Esquema completo del módulo
 - `docs/TODO.md` - Roadmap actualizado
 
-**Deploy a producción**: https://club-738-app.web.app
+**Deploy a producción**: https://yucatanctp.org
 
 ---
 
@@ -1811,7 +1871,7 @@ match /armas/{armaId} {
 **CORS configurado** (`cors.json`):
 ```json
 {
-  "origin": ["https://club-738-app.web.app", "http://localhost:5173"],
+  "origin": ["https://yucatanctp.org", "http://localhost:5173"],
   "method": ["GET", "HEAD", "PUT", "POST", "DELETE"],
   "maxAgeSeconds": 3600
 }

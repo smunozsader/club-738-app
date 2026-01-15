@@ -282,7 +282,7 @@ exports.recordatorioDocumentosPendientes =
               html: `
                 <p>Estimado ${socio.datosPersonales.nombre},</p>
                 <p>Aún no hemos recibido tu <strong>${tipo}</strong>.</p>
-                <p>Por favor cárgalo en: https://club-738-app.web.app/mis-documentos</p>
+                <p>Por favor cárgalo en: https://yucatanctp.org/mis-documentos</p>
                 <p>¿Dudas? Escribe a: tiropracticoyucatan@gmail.com</p>
               `
             });
@@ -493,7 +493,7 @@ FIREBASE_EMAIL_USER=tiropracticoyucatan@gmail.com
 FIREBASE_EMAIL_PASSWORD=tu_password_aqui
 
 # URLs
-VITE_APP_URL=https://club-738-app.web.app
+VITE_APP_URL=https://yucatanctp.org
 VITE_AVISO_PRIVACIDAD_URL=/legal/aviso-privacidad-integral.pdf
 ```
 
@@ -605,7 +605,7 @@ Antes de "npm run build" y deploy:
 - [ ] Storage Rules permiten upload solo del socio dueño
 - [ ] `npm run build` sin errores
 - [ ] `firebase deploy` sin errores
-- [ ] Web en vivo: https://club-738-app.web.app funciona
+- [ ] Web en vivo: https://yucatanctp.org funciona
 
 ---
 

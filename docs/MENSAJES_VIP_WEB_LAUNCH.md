@@ -87,7 +87,7 @@ Crear su *Expediente Digital* para trámites de Transportación (PETA).
 • *Fotografía tamaño infantil* (física); una para cada PETA
 • Formato de PAGO e5 por los derechos de cada PETA
 
-🌐 *Portal:* https://club-738-app.web.app
+🌐 *Portal:* https://yucatanctp.org
 📧 *Usuario:* richfegas@icloud.com
 🔐 *Contraseña:* mFq323zbN#
 
@@ -130,7 +130,7 @@ Crear tu *Expediente Digital* para trámites PETA.
 • *Foto tamaño infantil* (física); una para cada PETA
 • Formato de PAGO e5 por los derechos de cada PETA
 
-🌐 https://club-738-app.web.app
+🌐 https://yucatanctp.org
 📧 jrgardoni@gmail.com
 🔐 Mvf688rpw!
 
@@ -169,7 +169,7 @@ Crear tu *Expediente Digital* para trámites PETA.
 • *Foto tamaño infantil* (física); una para cada PETA
 • Formato de PAGO e5 por los derechos de cada PETA
 
-🌐 https://club-738-app.web.app
+🌐 https://yucatanctp.org
 📧 ivancabo@gmail.com
 🔐 iVI979gie#
 
@@ -208,7 +208,7 @@ Crear tu *Expediente Digital* para trámites PETA.
 • *Foto tamaño infantil* (física); una para cada PETA
 • Formato de PAGO e5 por los derechos de cada PETA
 
-🌐 https://club-738-app.web.app
+🌐 https://yucatanctp.org
 📧 squintal158@gmail.com
 🔐 DfP531eBM@
 
@@ -247,7 +247,7 @@ Crear tu *Expediente Digital* para trámites PETA.
 • *Foto tamaño infantil* (física); una para cada PETA
 • Formato de PAGO e5 por los derechos de cada PETA
 
-🌐 https://club-738-app.web.app
+🌐 https://yucatanctp.org
 📧 agm@galletasdonde.com
 🔐 qXb662ZRE$
 
@@ -286,7 +286,7 @@ Crear tu *Expediente Digital* para trámites PETA.
 • *Foto tamaño infantil* (física); una para cada PETA
 • Formato de PAGO e5 por los derechos de cada PETA
 
-🌐 https://club-738-app.web.app
+🌐 https://yucatanctp.org
 📧 lic.arielparedescetina@hotmail.com
 🔐 Mtx135jVx@
 
@@ -324,9 +324,9 @@ Sergio
 
 ## 🔗 URLs del Portal
 
-- **Portal Principal:** https://club-738-app.web.app
-- **Calculadora PCP:** https://club-738-app.web.app/calculadora (público, sin login)
-- **Calendario de Tiradas:** https://club-738-app.web.app/calendario (público, sin login)
+- **Portal Principal:** https://yucatanctp.org
+- **Calculadora PCP:** https://yucatanctp.org/calculadora (público, sin login)
+- **Calendario de Tiradas:** https://yucatanctp.org/calendario (público, sin login)
 
 ---
 

@@ -25,7 +25,7 @@ Reducción total: ~70% con brotli compression
 ```
 
 ### URLs de Producción
-- **Hosting**: https://club-738-app.web.app
+- **Hosting**: https://yucatanctp.org
 - **Console**: https://console.firebase.google.com/project/club-738-app/overview
 - **Functions**: 8 Cloud Functions desplegadas en us-central1
 

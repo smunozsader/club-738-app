@@ -2,7 +2,7 @@
 
 **Objetivo**: Validar todas las nuevas features de FASE 8 y FASE 9 en producción
 
-**URL de Testing**: https://club-738-app.web.app
+**URL de Testing**: https://yucatanctp.org
 
 ---
 
@@ -11,7 +11,7 @@
 ### 1️⃣ PWA Features (FASE 9 - Tarea #47)
 
 **1.1 Instalación como App**
-- [ ] Abrir https://club-738-app.web.app en Chrome/Safari
+- [ ] Abrir https://yucatanctp.org en Chrome/Safari
 - [ ] Verificar que aparezca prompt "Instalar Club 738"
 - [ ] Instalar la PWA
 - [ ] Abrir desde escritorio/home screen
@@ -53,7 +53,7 @@
 **2.2 Persistencia**
 - [ ] Activar dark mode
 - [ ] Cerrar pestaña
-- [ ] Abrir https://club-738-app.web.app de nuevo
+- [ ] Abrir https://yucatanctp.org de nuevo
 - [ ] Verificar que dark mode siga activo (localStorage)
 
 **2.3 Componentes a Verificar**
@@ -237,7 +237,7 @@
 ### 9️⃣ Asset Compression (FASE 9 - Tarea #46)
 
 **9.1 Verificar Headers en Producción**
-- [ ] Abrir https://club-738-app.web.app
+- [ ] Abrir https://yucatanctp.org
 - [ ] Abrir DevTools → Network
 - [ ] Recargar página (Cmd+Shift+R)
 - [ ] Click en archivo index.js
@@ -296,7 +296,7 @@
 ### 1️⃣2️⃣ Security Headers (FASE 9 - Tarea #45)
 
 **12.1 Verificar CSP**
-- [ ] Abrir https://club-738-app.web.app
+- [ ] Abrir https://yucatanctp.org
 - [ ] DevTools → Network → index.html
 - [ ] Verificar header `Content-Security-Policy`
 - [ ] Verificar que incluya:

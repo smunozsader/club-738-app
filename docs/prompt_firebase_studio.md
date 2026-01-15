@@ -5,7 +5,7 @@ Tengo una aplicación web React + Vite ya construida y funcional, desplegada en 
 
 **Repositorio GitHub:** https://github.com/smunozsader/club-738-app.git
 
-**URL en producción:** https://club-738-app.web.app
+**URL en producción:** https://yucatanctp.org
 
 ### Stack Actual
 - React 18 + Vite 5

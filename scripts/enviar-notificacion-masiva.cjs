@@ -85,7 +85,7 @@ async function enviarNotificacionMasiva() {
 
     // 4. Generar enlace WhatsApp para envío manual
     console.log('📱 ENLACE WHATSAPP PARA ENVÍO MANUAL:\n');
-    const mensajeWhatsApp = `*${plantillaNotificacion.titulo}*\n\n${plantillaNotificacion.mensaje}\n\n🔗 Accede al portal: https://club-738-app.web.app`;
+    const mensajeWhatsApp = `*${plantillaNotificacion.titulo}*\n\n${plantillaNotificacion.mensaje}\n\n🔗 Accede al portal: https://yucatanctp.org`;
     const numeroClub = '525665824667'; // WhatsApp del secretario
     const enlaceWhatsApp = `https://wa.me/${numeroClub}?text=${encodeURIComponent(mensajeWhatsApp)}`;
     

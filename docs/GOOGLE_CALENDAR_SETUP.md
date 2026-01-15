@@ -53,7 +53,7 @@ Esta guía detalla cómo configurar la integración entre el portal de Club 738 
    - Authorized redirect URIs:
      ```
      http://localhost:5000 (para testing local)
-     https://club-738-app.web.app (producción)
+     https://yucatanctp.org (producción)
      ```
 5. Download JSON de credenciales:
    - Guardar como `oauth2_credentials.json` en directorio seguro
@@ -361,7 +361,7 @@ firebase deploy
 
 ### 6.1 Test Manual desde Portal
 
-1. Login como socio en: https://club-738-app.web.app
+1. Login como socio en: https://yucatanctp.org
 2. Ir a **Agendar Cita**
 3. Seleccionar fecha, hora, propósito
 4. Submit

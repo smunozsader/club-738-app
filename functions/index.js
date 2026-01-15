@@ -167,7 +167,7 @@ ${domicilioStr || "No especificado"}
 
 🔔 ACCIÓN REQUERIDA:
    Ingresa al portal para verificar la documentación
-   https://club-738-app.web.app
+   https://yucatanctp.org
 
 Fecha de solicitud: ${fechaSolicitud}
 ID Solicitud: ${petaId}
@@ -310,7 +310,7 @@ DIRECCIÓN DEL CLUB
 Club de Caza, Tiro y Pesca de Yucatán, A.C.
 Calle 50 No. 531-E x 69 y 71
 Col. Centro, 97000 Mérida, Yucatán
-🌐 https://club-738-app.web.app
+🌐 https://yucatanctp.org
 
 SEDENA 738 | FEMETI YUC 05/2020
     `.trim();
@@ -539,7 +539,7 @@ exports.onNotificacionCreated = onDocumentCreated(
       <p><strong>Fecha:</strong> ${fecha}</p>
       
       <p style="margin-top: 30px;">
-        <a href="https://club-738-app.web.app" class="btn">
+        <a href="https://yucatanctp.org" class="btn">
           Ir al Portal de Socios
         </a>
       </p>

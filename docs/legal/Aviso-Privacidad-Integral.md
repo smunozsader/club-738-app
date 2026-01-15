@@ -197,7 +197,7 @@ El Club ha implementado medidas de seguridad administrativas, técnicas y físic
 
 ## 9. USO DE COOKIES Y WEB BEACONS
 
-El sitio web del Club (https://club-738-app.web.app) utiliza cookies y web beacons para mejorar la experiencia del usuario y recopilar información sobre el uso del sitio.
+El sitio web del Club (https://yucatanctp.org) utiliza cookies y web beacons para mejorar la experiencia del usuario y recopilar información sobre el uso del sitio.
 
 **¿Qué son las cookies?**  
 Las cookies son archivos de texto que se almacenan en su dispositivo (computadora, tablet o celular) cuando visita un sitio web.
@@ -224,7 +224,7 @@ El Club se reserva el derecho de modificar el presente Aviso de Privacidad en cu
 
 Cualquier modificación al presente Aviso de Privacidad le será notificada a través de los siguientes medios:
 
-1. Publicación en el sitio web del Club: https://club-738-app.web.app
+1. Publicación en el sitio web del Club: https://yucatanctp.org
 2. Envío de correo electrónico a la dirección registrada en su expediente
 3. Anuncio en las instalaciones del Club
 

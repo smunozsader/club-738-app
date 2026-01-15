@@ -1,8 +1,31 @@
 # Club 738 Web - TO-DO / Roadmap
 
-**Última actualización**: 14 de enero 2026 (v1.20.0 - 🎉 ROADMAP COMPLETO)
+**Última actualización**: 15 de enero 2026 (v1.20.1 - 🌐 DOMINIO YUCATANCTP.ORG ACTIVADO)
 
 **Progreso general**: ✅ 50/50 tareas completadas (100%) - TODAS LAS FASES COMPLETADAS
+
+---
+
+## 🎯 ACTUALIZACIÓN v1.20.1: CAMBIO DE DOMINIO
+
+### ✅ Migración de URL Completada (15 enero 2026)
+- [x] Cambiar `yucatanctp.org` → `yucatanctp.org` en componentes
+- [x] Actualizar referencias en Cloud Functions (emails)
+- [x] Actualizar scripts de administración
+- [x] Actualizar documentación interna
+- [x] Actualizar mensajes para socios
+
+**Archivos actualizados**:
+- ✅ `src/components/privacidad/ConsentimientoPriv.jsx` (2 referencias)
+- ✅ `src/components/privacidad/AvisoPrivacidad.jsx` (1 referencia)
+- ✅ `functions/index.js` (3 referencias - emails)
+- ✅ `scripts/enviar-notificacion-masiva.cjs` (WhatsApp)
+- ✅ `scripts/resetear-password-ivan-cabo.cjs`
+- ✅ `scripts/crear-usuario-ivan-cabo.cjs`
+- ✅ `MENSAJE_IVAN_CABO.txt`
+- ✅ `docs/MANUAL_SECRETARIO_BAJAS_ARSENAL.md`
+
+**Dominio activo**: 🌐 https://yucatanctp.org/ (con SEO implementado)
 
 ---
 
@@ -169,7 +192,7 @@
 
 ### Deploys recientes
 - 6+ deploys a producción durante debugging de CSS
-- URL: https://club-738-app.web.app
+- URL: https://yucatanctp.org
 
 ### Scripts ejecutados
 - ✅ sincronizar-curps-storage.cjs (75 CURPs)

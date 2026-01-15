@@ -22,7 +22,7 @@ Versión 1.14.0 - Enero 2026
 
 ## 🔐 Acceso al Portal
 
-1. Ingresa a: **https://club-738-app.web.app**
+1. Ingresa a: **https://yucatanctp.org**
 2. Inicia sesión con tu email y contraseña
 3. Si es tu primera vez, verás un diálogo de bienvenida
 

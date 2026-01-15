@@ -161,8 +161,8 @@ export default function ConsentimientoPrivacidad({ onConsentChange }) {
         </p>
         <p className="texto-pequeno">
           <strong>Consulta el Aviso de Privacidad Integral en:</strong>{' '}
-          <a href="https://club-738-app.web.app/aviso-privacidad" target="_blank" rel="noopener noreferrer">
-            https://club-738-app.web.app/aviso-privacidad
+          <a href="https://yucatanctp.org/aviso-privacidad" target="_blank" rel="noopener noreferrer">
+            https://yucatanctp.org/aviso-privacidad
           </a>
         </p>
       </div>

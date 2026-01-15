@@ -78,7 +78,7 @@ async function crearUsuarioIvanCabo() {
     console.log('═══════════════════════════════════════════════════════════');
     console.log('📧 CREDENCIALES PARA IVAN TSUIS CABO TORRES');
     console.log('═══════════════════════════════════════════════════════════');
-    console.log(`   Portal: https://club-738-app.web.app`);
+    console.log(`   Portal: https://yucatanctp.org`);
     console.log(`   Email: ${userData.email}`);
     console.log(`   Contraseña temporal: ${userData.passwordTemporal}`);
     console.log('═══════════════════════════════════════════════════════════');

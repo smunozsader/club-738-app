@@ -15,7 +15,7 @@
 
 This is a functional React + Vite web application deployed on Firebase Hosting. It serves as the member portal for a sport shooting club in Mexico (Club de Caza, Tiro y Pesca de Yucatán, A.C. - Hunting, Shooting & Fishing Club of Yucatan).
 
-**Production URL:** https://club-738-app.web.app
+**Production URL:** https://yucatanctp.org
 
 ---
 
