@@ -12,6 +12,7 @@ import React, { useState } from 'react';
 import { doc, updateDoc, collection, addDoc, serverTimestamp, deleteField } from 'firebase/firestore';
 import { ref, deleteObject } from 'firebase/storage';
 import { db, storage, auth } from '../../firebaseConfig';
+import { useToastContext } from '../../contexts/ToastContext';
 import './EliminarDocumentoModal.css';
 
 export default function EliminarDocumentoModal({ 
@@ -24,6 +25,7 @@ export default function EliminarDocumentoModal({
 }) {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState(null);
+  const toast = useToastContext();
 
   const eliminarDocumento = async () => {
     try {
@@ -73,6 +75,8 @@ export default function EliminarDocumentoModal({
 
       console.log(`✅ Documento ${documentType} eliminado exitosamente`);
       
+      toast.success(`${documentLabel} eliminado correctamente`);
+      
       if (onSuccess) {
         onSuccess();
       }
@@ -81,6 +85,7 @@ export default function EliminarDocumentoModal({
     } catch (err) {
       console.error('❌ Error eliminando documento:', err);
       setError(err.message);
+      toast.error(`Error al eliminar: ${err.message}`);
     } finally {
       setDeleting(false);
     }

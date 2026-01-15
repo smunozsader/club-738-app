@@ -11,6 +11,7 @@
 import React, { useState } from 'react';
 import { doc, updateDoc, collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { db, auth } from '../../../firebaseConfig';
+import { useToastContext } from '../../../contexts/ToastContext';
 import './CURPEditor.css';
 
 export default function CURPEditor({ socioEmail, curpActual, onClose, onSave }) {

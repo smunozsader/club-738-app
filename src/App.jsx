@@ -3,6 +3,7 @@ import { auth, db } from './firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { doc, getDoc, onSnapshot, collection, getDocs, query, where, collectionGroup } from 'firebase/firestore';
 import useRole from './hooks/useRole';
+import { ToastProvider } from './contexts/ToastContext';
 import LandingPage from './components/LandingPage';
 import AdminDashboard from './components/admin/AdminDashboard';
 import ExpedienteAdminView from './components/admin/ExpedienteAdminView';
@@ -714,4 +715,12 @@ function App() {
   );
 }
 
-export default App;
+function AppWithToast() {
+  return (
+    <ToastProvider>
+      <App />
+    </ToastProvider>
+  );
+}
+
+export default AppWithToast;

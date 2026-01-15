@@ -10,6 +10,7 @@
 import React, { useState } from 'react';
 import { doc, updateDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '../../../firebaseConfig';
+import { useToastContext } from '../../../contexts/ToastContext';
 import './DatosPersonalesEditor.css';
 
 export default function DatosPersonalesEditor({ socioEmail, nombreActual, onClose, onSave }) {
