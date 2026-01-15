@@ -30,7 +30,14 @@ export const storage = getStorage(app);
 // Initialize Firebase Analytics
 let analytics = null;
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
-  analytics = getAnalytics(app);
+  try {
+    analytics = getAnalytics(app);
+    if (firebaseConfig.measurementId === undefined) {
+      console.warn('[Analytics] measurementId no definido');
+    }
+  } catch (e) {
+    console.warn('[Analytics] No se pudo inicializar:', e?.message || e);
+  }
 }
 
 // Helper functions para analytics

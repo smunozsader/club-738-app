@@ -50,10 +50,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Ignorar Firebase requests (siempre network)
+  // Ignorar requests que deben ir siempre a la red (no cachear/interceptar)
   if (url.hostname.includes('firebase') || 
       url.hostname.includes('googleapis') ||
-      url.hostname.includes('firebaseio')) {
+      url.hostname.includes('firebaseio') ||
+      url.hostname.includes('googletagmanager') ||
+      url.hostname.includes('google-analytics')) {
     return;
   }
 
