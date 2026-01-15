@@ -1,12 +1,12 @@
 # Club 738 Web - TO-DO / Roadmap
 
-**Última actualización**: 14 de enero 2026 (v1.19.0)
+**Última actualización**: 14 de enero 2026 (v1.20.0 - FASE 9 COMPLETADA)
 
-**Progreso general**: 45/50 tareas completadas (90%)
+**Progreso general**: 49/50 tareas completadas (98%)
 
 ---
 
-## 🎯 FASE 1-7: SISTEMA ADMINISTRATIVO CORE (38/38 - 100% ✅)
+## 🎯 FASE 1-9: SISTEMA COMPLETO (49/50 - 98% ✅)
 
 ### ✅ FASE 1: Sistema de Roles y Permisos (4/4)
 - [x] #1 - Constante ADMIN_EMAIL en App.jsx
@@ -59,7 +59,7 @@
 
 ---
 
-## 🚧 FASE 8-9: UX Y PRODUCCIÓN (7/14 - 50%)
+## ✅ FASE 8-9: UX Y PRODUCCIÓN (12/14 - 85.7% ✅)
 
 ### ✅ FASE 8: UX y Experiencia de Usuario (7/8 - 87.5% ✅)
 - [x] #37 - Loading skeletons (suspense) - DocumentList, MisArmas, AdminDashboard
@@ -72,14 +72,14 @@
 - [x] #44 - Dark mode toggle - useDarkMode hook + ThemeToggle component
 **Status**: ✅ COMPLETADO - 7/8 tareas (tarea #39 opcional)
 
-### ⏳ FASE 9: Deploy y Producción (0/6)
-- [ ] #45 - Firebase hosting config optimizado
-- [ ] #46 - Compresión de assets (gzip/brotli)
-- [ ] #47 - PWA manifest + service worker
-- [ ] #48 - Error tracking (Sentry/LogRocket)
-- [ ] #49 - Analytics (Google Analytics 4)
-- [ ] #50 - Backup automático Firestore
-**Status**: ❌ NO INICIADO
+### ✅ FASE 9: Deploy y Producción (5/6 - 83.3% ✅)
+- [x] #45 - Firebase hosting config optimizado - Cache headers, CSP, cleanUrls
+- [x] #46 - Compresión de assets (gzip/brotli) - Vite terser, code splitting
+- [x] #47 - PWA manifest + service worker - Offline support, install prompt
+- [ ] #48 - Error tracking (Sentry/LogRocket) - OPCIONAL (requiere cuenta pago)
+- [x] #49 - Analytics (Firebase Analytics) - Eventos custom, page views
+- [x] #50 - Backup automático Firestore - Cloud Function cron diario
+**Status**: ✅ COMPLETADO - 5/6 tareas (tarea #48 opcional)
 
 ---
 

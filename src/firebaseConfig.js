@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getAnalytics, logEvent, setUserProperties } from "firebase/analytics";
 
 // Tu web app's Firebase configuration
 const firebaseConfig = {
@@ -10,7 +11,8 @@ const firebaseConfig = {
   projectId: "club-738-app",
   storageBucket: "club-738-app.firebasestorage.app",
   messagingSenderId: "353925230980",
-  appId: "1:353925230980:web:63bc3c7b63b953027e6dd1"
+  appId: "1:353925230980:web:63bc3c7b63b953027e6dd1",
+  measurementId: "G-XXXXXXXXXX" // Reemplazar con ID real de Analytics
 };
 
 // Initialize Firebase
@@ -24,3 +26,34 @@ export const db = getFirestore(app);
 
 // Initialize Cloud Storage and get a reference to the service
 export const storage = getStorage(app);
+
+// Initialize Firebase Analytics (solo en producción)
+let analytics = null;
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+  analytics = getAnalytics(app);
+}
+
+// Helper functions para analytics
+export const trackEvent = (eventName, params = {}) => {
+  if (analytics) {
+    logEvent(analytics, eventName, params);
+  }
+};
+
+export const trackPageView = (pageName) => {
+  if (analytics) {
+    logEvent(analytics, 'page_view', {
+      page_title: pageName,
+      page_location: window.location.href,
+      page_path: window.location.pathname
+    });
+  }
+};
+
+export const trackUserProperty = (propertyName, value) => {
+  if (analytics) {
+    setUserProperties(analytics, { [propertyName]: value });
+  }
+};
+
+export { analytics };

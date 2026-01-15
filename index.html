@@ -5,6 +5,14 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1a472a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Club 738" />
+    <link rel="apple-touch-icon" href="/assets/logo-club-738.jpg" />
+    
     <!-- SEO Principal -->
     <title>YucatanCTP - Club de Caza, Tiro y Pesca Yucatán | SEDENA 738</title>
     <meta name="description" content="Club de Caza, Tiro y Pesca de Yucatán A.C. (YucatanCTP) - Club SEDENA #738. Trámites PETA, campo de tiro en Mérida, competencias de tiro deportivo. Afiliado FEMETI." />
@@ -85,5 +93,31 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('✅ Service Worker registrado:', registration.scope);
+              
+              // Check for updates
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    console.log('🔄 Nueva versión disponible. Refresca la página.');
+                    // Aquí se podría mostrar un toast al usuario
+                  }
+                });
+              });
+            })
+            .catch((error) => {
+              console.error('❌ Error al registrar Service Worker:', error);
+            });
+        });
+      }
+    </script>
   </body>
 </html>
