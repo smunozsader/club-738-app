@@ -9,6 +9,12 @@ const MULTI_IMAGE_DOCS = ['ine', 'cartillaMilitar'];
 // Documentos que se suben como imagen (JPG) no como PDF
 const IMAGE_ONLY_DOCS = ['fotoCredencial'];
 
+// Documentos oficiales que DEBEN aceptar PDF (gobierno federal)
+const PDF_ALLOWED_DOCS = ['curp', 'constanciaAntecedentes'];
+
+// Documentos que están precargados masivamente
+const PRELOADED_DOCS = ['curp', 'constanciaAntecedentes'];
+
 export default function DocumentCard({ 
   userId,
   documentType, 
@@ -29,6 +35,12 @@ export default function DocumentCard({
   
   // Determinar si este documento es solo imagen (no PDF)
   const imageOnly = IMAGE_ONLY_DOCS.includes(documentType);
+  
+  // Determinar si este documento acepta PDF
+  const allowPdf = PDF_ALLOWED_DOCS.includes(documentType);
+  
+  // Determinar si este documento está precargado
+  const isDocumentoPrecargado = PRELOADED_DOCS.includes(documentType);
 
   const getStatusInfo = () => {
     if (!documentData) {
@@ -103,7 +115,16 @@ export default function DocumentCard({
 
       {hasDocument && !showUploader && (
         <div className="card-file-info">
-          <span className="file-name">📎 {documentData.fileName}</span>
+          {isPreloaded && isDocumentoPrecargado && (
+            <div className="aviso-precargado">
+              <span className="icono-info">ℹ️</span>
+              <div className="texto-aviso">
+                <strong>Este documento ya está en el sistema</strong>
+                <p>Fue cargado previamente por el club. Solo necesitas verificarlo.</p>
+              </div>
+            </div>
+          )}
+          <span className="file-name">📎 {documentData.fileName || 'Documento oficial'}</span>
           <span className="file-date">{formatDate(documentData.uploadDate)}</span>
           <div className="file-actions">
             <a 
@@ -114,24 +135,33 @@ export default function DocumentCard({
             >
               Ver
             </a>
-            <button 
-              className="btn-replace"
-              onClick={() => setShowUploader(true)}
-            >
-              Reemplazar
-            </button>
+            {!isPreloaded && (
+              <button 
+                className="btn-replace"
+                onClick={() => setShowUploader(true)}
+              >
+                Reemplazar
+              </button>
+            )}
           </div>
         </div>
       )}
 
       {(!hasDocument || showUploader) && (
         <div className="card-uploader">
+          {isDocumentoPrecargado && !hasDocument && (
+            <div className="mensaje-precargado-pendiente">
+              <span className="icono-atencion">⚠️</span>
+              <p><strong>Nota:</strong> Este documento normalmente ya está en el sistema. Si no lo ves, contacta al secretario antes de subirlo.</p>
+            </div>
+          )}
           <MultiImageUploader
             userId={userId}
             documentType={documentType}
             documentLabel={label}
             allowMultiple={allowMultiple}
             imageOnly={imageOnly}
+            allowPdf={allowPdf}
             onUploadComplete={handleUploadComplete}
           />
           {showUploader && (

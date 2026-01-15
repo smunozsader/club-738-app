@@ -13,6 +13,7 @@ export default function MultiImageUploader({
   documentLabel,
   allowMultiple = false, // true para INE (frente/vuelta)
   imageOnly = false, // true para fotoCredencial (sube JPG, no PDF)
+  allowPdf = false, // true para CURP y Constancia (acepta PDF oficial)
   onUploadComplete 
 }) {
   const [images, setImages] = useState([]);
@@ -468,8 +469,36 @@ export default function MultiImageUploader({
   return (
     <div className={`multi-image-uploader ${isDragging ? 'dragging' : ''}`}>
       
-      {/* Selector de modo (si no hay nada en progreso) */}
-      {!uploadMode && !uploading && images.length === 0 && (
+      {/* Caso especial: Documentos oficiales PDF (CURP, Constancia) */}
+      {allowPdf && !uploading && (
+        <div className="pdf-oficial-section">
+          <div className="pdf-oficial-info">
+            <span className="icono-oficial">🏛️</span>
+            <div>
+              <strong>Documento Oficial del Gobierno Federal</strong>
+              <p>Sube el PDF original tal como lo descargaste (ya tiene OCR y formato óptimo)</p>
+            </div>
+          </div>
+          
+          <label className="file-select-btn pdf-oficial-btn">
+            📄 Seleccionar PDF
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={handlePdfUpload}
+              hidden
+            />
+          </label>
+          
+          <div className="pdf-oficial-requisitos">
+            <p>✓ Peso máximo: 5 MB</p>
+            <p>✓ Formato: PDF original del portal oficial</p>
+          </div>
+        </div>
+      )}
+      
+      {/* Selector de modo (si no es allowPdf y no hay nada en progreso) */}
+      {!allowPdf && !uploadMode && !uploading && images.length === 0 && (
         <div className="upload-mode-selector">
           <p className="mode-title">¿Cómo quieres subir tu {documentLabel}?</p>
           
@@ -493,8 +522,8 @@ export default function MultiImageUploader({
         </div>
       )}
 
-      {/* Modo PDF: Subir PDF preparado */}
-      {uploadMode === 'pdf' && !uploading && (
+      {/* Modo PDF: Subir PDF preparado (solo si NO es allowPdf) */}
+      {!allowPdf && uploadMode === 'pdf' && !uploading && (
         <div className="pdf-upload-section">
           <div className="pdf-requirements">
             <h4>📋 Requisitos del PDF:</h4>
@@ -525,8 +554,8 @@ export default function MultiImageUploader({
         </div>
       )}
 
-      {/* Modo Foto: Tomar fotos */}
-      {uploadMode === 'photo' && !uploading && (
+      {/* Modo Foto: Tomar fotos (solo si NO es allowPdf) */}
+      {!allowPdf && uploadMode === 'photo' && !uploading && (
         <>
           {/* Preview de imágenes agregadas */}
           {images.length > 0 && (

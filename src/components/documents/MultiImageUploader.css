@@ -71,6 +71,72 @@
 /* ===================================
    Sección PDF
    =================================== */
+/* ===================================
+   PDF Oficial (CURP, Constancia)
+   =================================== */
+.pdf-oficial-section {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px dashed #16a34a;
+  border-radius: 12px;
+}
+
+.pdf-oficial-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.pdf-oficial-info .icono-oficial {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.pdf-oficial-info strong {
+  display: block;
+  color: #15803d;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.pdf-oficial-info p {
+  margin: 0;
+  color: #166534;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.pdf-oficial-btn {
+  background: linear-gradient(135deg, #16a34a, #15803d) !important;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.pdf-oficial-btn:hover {
+  background: linear-gradient(135deg, #15803d, #166534) !important;
+}
+
+.pdf-oficial-requisitos {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #86efac;
+}
+
+.pdf-oficial-requisitos p {
+  margin: 4px 0;
+  color: #166534;
+  font-size: 13px;
+}
+
+/* ===================================
+   Sección PDF Upload
+   =================================== */
 .pdf-upload-section {
   text-align: center;
 }

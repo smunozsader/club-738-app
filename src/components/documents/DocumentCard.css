@@ -210,3 +210,66 @@
   padding-bottom: 15px;
   border-bottom: 1px solid #e0e0e0;
 }
+
+/* Avisos para documentos precargados */
+.aviso-precargado {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+  border-left: 4px solid #8b5cf6;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.aviso-precargado .icono-info {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.aviso-precargado .texto-aviso {
+  flex: 1;
+}
+
+.aviso-precargado .texto-aviso strong {
+  display: block;
+  color: #5b21b6;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.aviso-precargado .texto-aviso p {
+  margin: 0;
+  color: #6b21a8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.mensaje-precargado-pendiente {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.mensaje-precargado-pendiente .icono-atencion {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.mensaje-precargado-pendiente p {
+  margin: 0;
+  color: #856404;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.mensaje-precargado-pendiente strong {
+  color: #664d03;
+}
+

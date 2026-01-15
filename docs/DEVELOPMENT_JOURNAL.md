@@ -1,3 +1,82 @@
+### 2026-01-14 - v1.14.3 Avisos para documentos precargados + PDF oficial
+
+#### Sistema de notificación para CURP y Constancia precargados
+
+**Objetivo**: Evitar que socios resuban documentos oficiales (CURP y Constancia de Antecedentes) que ya están en el sistema, y permitir el formato PDF oficial del gobierno.
+
+**Problema detectado**: 
+- 75 socios tienen CURP y Constancia ya cargados por el club
+- No había aviso visible de que estos documentos ya existen
+- Sistema forzaba conversión a imagen, perdiendo OCR nativo del PDF oficial
+- Socios intentaban resubir documentos innecesariamente
+
+**Solución implementada**:
+
+1. **DocumentCard.jsx** - Avisos visuales diferenciados
+   ```jsx
+   // Constantes para documentos especiales
+   PDF_ALLOWED_DOCS = ['curp', 'constanciaAntecedentes']
+   PRELOADED_DOCS = ['curp', 'constanciaAntecedentes']
+   ```
+   
+   - **Documento precargado presente**: Banner morado con ℹ️
+     - "Este documento ya está en el sistema"
+     - "Fue cargado previamente por el club. Solo necesitas verificarlo."
+     - Botón "Reemplazar" DESHABILITADO (solo "Ver")
+   
+   - **Documento precargado ausente**: Banner amarillo con ⚠️
+     - "Este documento normalmente ya está en el sistema"
+     - "Si no lo ves, contacta al secretario antes de subirlo"
+
+2. **MultiImageUploader.jsx** - Modo PDF oficial
+   - Nueva prop `allowPdf` para documentos gubernamentales
+   - **Interfaz simplificada** para CURP/Constancia:
+     - No muestra selector de modo (PDF vs Foto)
+     - Directamente permite subir PDF oficial
+     - Banner verde con 🏛️ "Documento Oficial del Gobierno Federal"
+     - Mensaje: "Sube el PDF original tal como lo descargaste"
+   
+   - **Ventajas del PDF oficial**:
+     - ✅ Mantiene OCR nativo del gobierno
+     - ✅ Formato óptimo (ya cumple estándares)
+     - ✅ Tamaño eficiente (compresión oficial)
+     - ✅ No requiere conversión
+
+3. **Estilos CSS** - Avisos destacados
+   - `.aviso-precargado`: Gradiente morado (#ede9fe → #ddd6fe)
+   - `.mensaje-precargado-pendiente`: Fondo amarillo (#fff3cd)
+   - `.pdf-oficial-section`: Gradiente verde (#f0fdf4 → #dcfce7)
+
+**Flujo del usuario**:
+
+- **Socio con CURP/Constancia precargados** (75 casos):
+  1. Ve banner morado "Ya está en el sistema"
+  2. Clic en "Ver" para verificar documento
+  3. No puede reemplazar (botón oculto)
+  4. Solo contacta secretario si hay error
+
+- **Socio sin documento precargado** (nuevos):
+  1. Ve banner amarillo de advertencia
+  2. Contacta secretario primero
+  3. Si confirma que debe subir: interfaz PDF oficial
+  4. Sube PDF original del gobierno
+
+**Resultados esperados**:
+- ✅ Reducción de uploads duplicados innecesarios
+- ✅ Preservación de calidad de PDFs oficiales
+- ✅ Comunicación clara al usuario sobre estado del documento
+- ✅ Menos consultas al secretario ("¿debo subir esto?")
+
+**Archivos modificados**:
+- `src/components/documents/DocumentCard.jsx` - Avisos y lógica precargado
+- `src/components/documents/MultiImageUploader.jsx` - Modo PDF oficial
+- `src/components/documents/DocumentCard.css` - Estilos avisos
+- `src/components/documents/MultiImageUploader.css` - Estilos PDF oficial
+
+**Deploy**: Hosting actualizado en producción
+
+---
+
 ### 2026-01-14 - v1.14.2 Fix permanente: Upload de PDFs de armas
 
 #### Corrección del flujo de subida en ArmaEditor.jsx
