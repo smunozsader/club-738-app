@@ -12,7 +12,7 @@ const firebaseConfig = {
   storageBucket: "club-738-app.firebasestorage.app",
   messagingSenderId: "353925230980",
   appId: "1:353925230980:web:63bc3c7b63b953027e6dd1",
-  measurementId: "G-XXXXXXXXXX" // Reemplazar con ID real de Analytics
+  measurementId: "G-73Y38RXJHT"
 };
 
 // Initialize Firebase
@@ -27,7 +27,7 @@ export const db = getFirestore(app);
 // Initialize Cloud Storage and get a reference to the service
 export const storage = getStorage(app);
 
-// Initialize Firebase Analytics (solo en producción)
+// Initialize Firebase Analytics
 let analytics = null;
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
   analytics = getAnalytics(app);
