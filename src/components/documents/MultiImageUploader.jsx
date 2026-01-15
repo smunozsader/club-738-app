@@ -466,22 +466,6 @@ export default function MultiImageUploader({
     setImages(images.filter((_, i) => i !== index));
   };
 
-  const handleDragOver = useCallback((e) => {
-    e.preventDefault();
-    setIsDragging(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e) => {
-    e.preventDefault();
-    setIsDragging(false);
-  }, []);
-
-  const handleDrop = useCallback((e) => {
-    e.preventDefault();
-    setIsDragging(false);
-    handleFiles(Array.from(e.dataTransfer.files));
-  }, [images]);
-
   const handleFileSelect = (e) => {
     handleFiles(Array.from(e.target.files));
   };

@@ -596,3 +596,10 @@ exports.onNotificacionCreated = onDocumentCreated(
 // Exportar funciones de Google Calendar
 // exports.crearEventoCalendar = calendarFunctions.crearEventoCalendar;
 // exports.actualizarEvent = calendarFunctions.actualizarEventoCalendar;
+
+// Exportar funciones de Backup
+const backupFunctions = require("./backupFirestore");
+exports.scheduledFirestoreBackup = backupFunctions.scheduledFirestoreBackup;
+exports.manualFirestoreBackup = backupFunctions.manualFirestoreBackup;
+exports.restoreFirestoreBackup = backupFunctions.restoreFirestoreBackup;
+exports.listFirestoreBackups = backupFunctions.listFirestoreBackups;
