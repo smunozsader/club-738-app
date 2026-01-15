@@ -10,6 +10,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
+import { DashboardSkeleton } from '../common/LoadingSkeleton';
 import './AdminDashboard.css';
 
 export default function AdminDashboard({ onVerExpediente }) {
@@ -77,12 +78,7 @@ export default function AdminDashboard({ onVerExpediente }) {
   });
 
   if (loading) {
-    return (
-      <div className="admin-dashboard-loading">
-        <div className="spinner">⏳</div>
-        <p>Cargando socios...</p>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (error) {

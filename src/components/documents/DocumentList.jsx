@@ -3,6 +3,7 @@ import { ref, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../firebaseConfig';
 import DocumentCard from './DocumentCard';
 import ProgressBar from './ProgressBar';
+import { ListSkeleton } from '../common/LoadingSkeleton';
 import './DocumentList.css';
 
 // Mapeo de documentos precargados (Storage) a IDs de documentos PETA

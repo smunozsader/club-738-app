@@ -1,0 +1,213 @@
+/* LoadingSkeleton.css */
+
+/* Animación shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-line,
+.skeleton-circle,
+.skeleton-badge {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0px,
+    #e0e0e0 40px,
+    #f0f0f0 80px
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.skeleton-circle-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.skeleton-circle-lg {
+  width: 80px;
+  height: 80px;
+}
+
+.skeleton-line {
+  height: 16px;
+  margin-bottom: 8px;
+}
+
+.skeleton-line-title {
+  height: 20px;
+  width: 60%;
+}
+
+.skeleton-line-subtitle {
+  height: 14px;
+  width: 40%;
+}
+
+.skeleton-line-short {
+  width: 30%;
+}
+
+.skeleton-line-number {
+  height: 32px;
+  width: 80px;
+  font-weight: bold;
+}
+
+.skeleton-badge {
+  width: 80px;
+  height: 24px;
+  border-radius: 12px;
+}
+
+/* Card Skeleton */
+.skeleton-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.skeleton-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.skeleton-text-group {
+  flex: 1;
+}
+
+.skeleton-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Document Card Skeleton */
+.skeleton-document-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #e0e0e0;
+  margin-bottom: 16px;
+}
+
+.skeleton-doc-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.skeleton-doc-body {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+/* Table Skeleton */
+.skeleton-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.skeleton-table thead th {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.skeleton-table-row td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Profile Skeleton */
+.skeleton-profile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.skeleton-profile-info {
+  flex: 1;
+}
+
+/* List Skeleton */
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Stat Card Skeleton */
+.skeleton-stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.skeleton-stat-content {
+  flex: 1;
+}
+
+/* Dashboard Skeleton */
+.skeleton-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.skeleton-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.skeleton-table-wrapper {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .skeleton-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .skeleton-card,
+  .skeleton-document-card {
+    padding: 16px;
+  }
+  
+  .skeleton-profile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
