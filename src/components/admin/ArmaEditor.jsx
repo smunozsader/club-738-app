@@ -116,23 +116,6 @@ export default function ArmaEditor({
     setError('');
   };
 
-  const subirPDF = async () => {
-    if (!pdfFile || !armaId) return null;
-
-    try {
-      setUploadingPdf(true);
-      const storageRef = ref(storage, `documentos/${socioEmail}/armas/${armaId}/registro.pdf`);
-      await uploadBytes(storageRef, pdfFile);
-      const url = await getDownloadURL(storageRef);
-      return url;
-    } catch (err) {
-      console.error('Error al subir PDF:', err);
-      throw new Error('Error al subir el PDF del registro');
-    } finally {
-      setUploadingPdf(false);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -144,26 +127,33 @@ export default function ArmaEditor({
     setLoading(true);
 
     try {
-      let urlPdf = pdfUrl; // URL existente
-
-      // Si hay un nuevo PDF para subir
-      if (pdfFile && armaId) {
-        urlPdf = await subirPDF();
-      }
-
       const armasRef = collection(db, 'socios', socioEmail, 'armas');
       
       if (modoEdicion && armaId) {
-        // Actualizar arma existente
+        // ============ MODO EDICIÓN ============
         const armaDocRef = doc(db, 'socios', socioEmail, 'armas', armaId);
         const dataToUpdate = {
           ...formData,
           fechaActualizacion: serverTimestamp()
         };
         
-        // Agregar URL del PDF si existe
-        if (urlPdf) {
-          dataToUpdate.documentoRegistro = urlPdf;
+        // Si hay nuevo PDF para subir
+        if (pdfFile) {
+          try {
+            setUploadingPdf(true);
+            const storageRef = ref(storage, `documentos/${socioEmail}/armas/${armaId}/registro.pdf`);
+            await uploadBytes(storageRef, pdfFile);
+            const nuevoPdfUrl = await getDownloadURL(storageRef);
+            dataToUpdate.documentoRegistro = nuevoPdfUrl;
+          } catch (pdfError) {
+            console.error('Error al subir PDF:', pdfError);
+            throw new Error('Error al subir el PDF del registro');
+          } finally {
+            setUploadingPdf(false);
+          }
+        } else if (pdfUrl) {
+          // Mantener URL existente si no hay nuevo archivo
+          dataToUpdate.documentoRegistro = pdfUrl;
         }
 
         await updateDoc(armaDocRef, dataToUpdate);
@@ -171,12 +161,13 @@ export default function ArmaEditor({
         // Log de auditoría
         await crearLogAuditoria('editar', {
           antes: armaData,
-          despues: { ...formData, documentoRegistro: urlPdf }
+          despues: { ...formData, documentoRegistro: dataToUpdate.documentoRegistro }
         });
 
         alert('Arma actualizada correctamente');
       } else {
-        // Crear nueva arma
+        // ============ MODO CREACIÓN ============
+        // 1. Crear arma primero (para obtener ID)
         const dataToCreate = {
           ...formData,
           fechaCreacion: serverTimestamp(),
@@ -184,23 +175,33 @@ export default function ArmaEditor({
         };
 
         const nuevoArmaDoc = await addDoc(armasRef, dataToCreate);
+        const newArmaId = nuevoArmaDoc.id;
 
-        // Si hay PDF, subirlo ahora y actualizar
+        // 2. Si hay PDF, subirlo Y actualizar el documento
         if (pdfFile) {
-          const newArmaId = nuevoArmaDoc.id;
-          const storageRef = ref(storage, `documentos/${socioEmail}/armas/${newArmaId}/registro.pdf`);
-          await uploadBytes(storageRef, pdfFile);
-          const nuevoPdfUrl = await getDownloadURL(storageRef);
-          
-          await updateDoc(nuevoArmaDoc, {
-            documentoRegistro: nuevoPdfUrl
-          });
+          try {
+            setUploadingPdf(true);
+            const storageRef = ref(storage, `documentos/${socioEmail}/armas/${newArmaId}/registro.pdf`);
+            await uploadBytes(storageRef, pdfFile);
+            const nuevoPdfUrl = await getDownloadURL(storageRef);
+            
+            // CRÍTICO: Actualizar Firestore con la URL del PDF
+            await updateDoc(doc(db, 'socios', socioEmail, 'armas', newArmaId), {
+              documentoRegistro: nuevoPdfUrl
+            });
+          } catch (pdfError) {
+            console.error('Error al subir PDF:', pdfError);
+            // No fallar la creación del arma, solo advertir
+            alert('Arma creada pero hubo un error al subir el PDF. Intenta subirlo después.');
+          } finally {
+            setUploadingPdf(false);
+          }
         }
 
         // Log de auditoría
         await crearLogAuditoria('crear', {
           arma: formData,
-          armaId: nuevoArmaDoc.id
+          armaId: newArmaId
         });
 
         alert('Arma agregada correctamente');

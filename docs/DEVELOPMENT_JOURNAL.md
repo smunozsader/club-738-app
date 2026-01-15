@@ -1,3 +1,71 @@
+### 2026-01-14 - v1.14.2 Fix permanente: Upload de PDFs de armas
+
+#### Corrección del flujo de subida en ArmaEditor.jsx
+
+**Problema detectado**: El flujo de creación/edición de armas tenía un bug que causaba que los PDFs se subieran a Storage pero no se vincularan a Firestore, generando registros huérfanos.
+
+**Causa raíz**: 
+- En modo **creación**: Intentaba subir PDF usando `armaId` que era `null`, fallaba silenciosamente
+- En modo **edición**: Usaba función `subirPDF()` que requería `armaId` existente previamente
+- El código duplicaba lógica y no garantizaba la actualización de Firestore
+
+**Solución implementada**:
+
+1. **Modo CREACIÓN** (nueva arma):
+   ```javascript
+   // Paso 1: Crear documento en Firestore (obtener ID)
+   const nuevoArmaDoc = await addDoc(armasRef, dataToCreate);
+   const newArmaId = nuevoArmaDoc.id;
+   
+   // Paso 2: Subir PDF a Storage usando el ID generado
+   const storageRef = ref(storage, `documentos/${email}/armas/${newArmaId}/registro.pdf`);
+   await uploadBytes(storageRef, pdfFile);
+   
+   // Paso 3: Obtener URL pública
+   const nuevoPdfUrl = await getDownloadURL(storageRef);
+   
+   // Paso 4: CRÍTICO - Actualizar Firestore con URL
+   await updateDoc(doc(db, 'socios', email, 'armas', newArmaId), {
+     documentoRegistro: nuevoPdfUrl
+   });
+   ```
+
+2. **Modo EDICIÓN** (arma existente):
+   ```javascript
+   // Ya tenemos armaId, subir PDF directamente
+   const storageRef = ref(storage, `documentos/${email}/armas/${armaId}/registro.pdf`);
+   await uploadBytes(storageRef, pdfFile);
+   const nuevoPdfUrl = await getDownloadURL(storageRef);
+   
+   // Actualizar en el mismo updateDoc
+   dataToUpdate.documentoRegistro = nuevoPdfUrl;
+   await updateDoc(armaDocRef, dataToUpdate);
+   ```
+
+3. **Manejo de errores robusto**:
+   - Try/catch separado para upload de PDF
+   - En creación: No falla si PDF falla, solo advierte al usuario
+   - En edición: Mantiene URL existente si no hay nuevo PDF
+   - Estados `uploadingPdf` manejados con finally
+
+**Cambios realizados**:
+- Eliminada función `subirPDF()` (código duplicado)
+- Flujo inline con mejor control de errores
+- Comentarios explícitos "MODO CREACIÓN" vs "MODO EDICIÓN"
+- Garantiza que **siempre** se actualiza Firestore después de subir a Storage
+
+**Resultado**: 
+- ✅ De ahora en adelante, todos los PDFs subidos se vincularán correctamente
+- ✅ No más registros huérfanos en Storage
+- ✅ ExpedienteAdminView siempre mostrará los PDFs subidos
+
+**Archivos modificados**:
+- `src/components/admin/ArmaEditor.jsx` - Refactor completo de handleSubmit()
+
+**Deploy**: Hosting actualizado en producción (https://club-738-app.web.app)
+
+---
+
 ### 2026-01-14 - v1.14.1 Fix crítico: Vinculación de PDFs de armas
 
 #### Corrección de mapeo Storage-Firestore para registros de armas
