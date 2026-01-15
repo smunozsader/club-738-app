@@ -3,6 +3,7 @@ import { auth, db } from './firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { doc, getDoc, onSnapshot, collection, getDocs, query, where, collectionGroup } from 'firebase/firestore';
 import useRole from './hooks/useRole';
+import { useDarkMode } from './hooks/useDarkMode';
 import { ToastProvider } from './contexts/ToastContext';
 import LandingPage from './components/LandingPage';
 import AdminDashboard from './components/admin/AdminDashboard';
@@ -32,6 +33,7 @@ import AdminAltasArsenal from './components/AdminAltasArsenal';
 import AgendarCita from './components/AgendarCita';
 import MiAgenda from './components/MiAgenda';
 import ManualUsuario from './components/ManualUsuario';
+import ThemeToggle from './components/ThemeToggle';
 import './App.css';
 
 // Email del administrador/secretario
@@ -60,6 +62,9 @@ function App() {
   
   // Detección de role (administrator, socio)
   const { role, loading: roleLoading } = useRole();
+  
+  // Dark mode hook
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   
   // Para modo admin: ver expediente de un socio específico
   const [socioSeleccionado, setSocioSeleccionado] = useState(null);
@@ -328,6 +333,7 @@ function App() {
           </div>
         </div>
         <div className="user-info">
+          <ThemeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
           <span className="user-email">{socioData?.nombre || user.email}</span>
           <button onClick={() => setActiveSection('mi-perfil')} className="btn-perfil">⚙️ Mi Perfil</button>
           <button onClick={handleLogout}>Cerrar Sesión</button>

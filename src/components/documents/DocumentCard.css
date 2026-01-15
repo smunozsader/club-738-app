@@ -103,13 +103,31 @@
   color: white;
   padding: 6px 14px;
   border-radius: 5px;
-  text-decoration: none;
+  border: none;
   font-size: 12px;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .btn-view:hover {
   background: #0f2d1a;
+  transform: translateY(-2px);
+}
+
+.btn-download {
+  background: #2196f3;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.btn-download:hover {
+  background: #1976d2;
+  transform: translateY(-2px);
 }
 
 .btn-replace {

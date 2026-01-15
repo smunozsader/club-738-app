@@ -10,6 +10,277 @@
 
 ## 📅 Enero 2026
 
+### 14 de Enero - v1.19.0 - FASE 8 COMPLETA: UX Excellence (7/8 tareas)
+
+---
+
+#### 🎨 FASE 8 COMPLETADA - Mejoras de UX y Experiencia de Usuario
+
+**Objetivo**: Elevar la experiencia de usuario con interacciones modernas, feedback visual y accesibilidad.
+
+**Progreso**: 7/8 tareas completadas (87.5%) - Tarea #39 (Optimistic UI) diferida
+
+---
+
+**[Tarea #40] ✅ Drag & Drop para Documentos**
+
+**Componente modificado**: MultiImageUploader.jsx
+
+**Implementación**:
+- Event handlers: dragEnter, dragOver, dragLeave, drop
+- Todos con useCallback para optimización
+- Estado isDragging para feedback visual
+- Soporte para:
+  - PDF directo (si allowPdf=true)
+  - Modo imageOnly (fotoCredencial)
+  - Múltiples imágenes (hasta maxImages)
+  - Conversión HEIC automática
+
+**CSS**: MultiImageUploader.css
+- `.drop-zone.dragging`:
+  - border-color: #16a34a (verde)
+  - border-width: 3px
+  - background gradient: #f0fdf4 → #dcfce7
+  - transform: scale(1.02)
+  - box-shadow con verde
+- Animación bounce para ícono:
+  ```css
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  ```
+
+**Archivos modificados**: 2 (jsx + css)
+
+---
+
+**[Tarea #41] ✅ PDF Preview Modal**
+
+**Componente nuevo**: PDFPreviewModal.jsx (115 líneas)
+
+**Features**:
+- Zoom controls: 50% - 200% (incrementos de 25%)
+- Keyboard shortcuts:
+  - Esc: Cerrar modal
+  - Ctrl/Cmd + Plus: Zoom in
+  - Ctrl/Cmd + Minus: Zoom out
+  - Ctrl/Cmd + 0: Reset zoom
+- Botones:
+  - Descargar PDF
+  - Abrir en nueva pestaña
+  - Cerrar modal
+- iframe con parámetros: `#toolbar=0&navpanes=0&scrollbar=1&view=FitH`
+- Error handling con fallback a link externo
+
+**CSS**: PDFPreviewModal.css (230 líneas)
+- Overlay: rgba(0,0,0,0.85) + backdrop-filter blur(4px)
+- Modal: 95% width, max 1200px, height 95vh
+- Header gradient: #1a472a → #2d5a3d
+- Zoom controls con hover states
+- Footer con shortcuts styled <kbd>
+- Responsive: mobile vertical layout
+- Accessibility: prefers-reduced-motion support
+
+**Integración**: DocumentCard.jsx
+- Botón "Ver" ahora abre modal (antes era link directo)
+- Nuevo botón "⬇️" para descarga directa
+- Estado `mostrarPreview` controla modal
+
+**Archivos creados**: 1 (jsx + css)
+**Archivos modificados**: 2 (DocumentCard jsx + css)
+
+---
+
+**[Tarea #42] ✅ Advanced Search con Debouncing**
+
+**Componente modificado**: AdminDashboard.jsx
+
+**Implementación**:
+- **Debouncing** (500ms):
+  ```javascript
+  const [searchInput, setSearchInput] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchTerm(searchInput);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+  ```
+
+- **useMemo optimization**:
+  ```javascript
+  const sociosFiltrados = useMemo(() => {
+    // Multi-criteria filtering + sorting
+  }, [socios, searchTerm, filtroEstado, filtroModalidad, ordenarPor]);
+  ```
+
+- **Nuevos filtros**:
+  - Estado: todos / completos / pendientes
+  - Modalidad: todos / caza / tiro / ambas (preparado para futuro)
+  - Ordenar por: nombre / progreso / armas
+
+- **UI Features**:
+  - Clear search button (✕) cuando hay texto
+  - `.filters-row` con `.filter-group` sections
+  - Select dropdown para ordenamiento
+  - Tabs para estado
+
+**CSS**: AdminDashboard.css
+- `.search-box { position: relative; }`
+- `.clear-search` absolute positioned
+- `.filters-row` flex con gap 24px
+- `.filter-group` flex: 1, min-width 200px
+- `.filter-select` full width con transitions
+
+**Archivos modificados**: 2 (jsx + css)
+
+---
+
+**[Tarea #43] ✅ Excel Export**
+
+**Componente modificado**: AdminDashboard.jsx
+
+**Función exportarAExcel()**:
+- Datos exportados (8 columnas):
+  1. Nombre
+  2. Email
+  3. CURP
+  4. Total Armas
+  5. Progreso Documentos (%)
+  6. Docs Subidos (X/16)
+  7. Estado (Completo/Pendiente)
+  8. Domicilio (concatenado)
+
+- Column widths optimizados:
+  ```javascript
+  ws['!cols'] = [
+    { wch: 30 }, // Nombre
+    { wch: 35 }, // Email
+    { wch: 20 }, // CURP
+    { wch: 12 }, // Total Armas
+    { wch: 18 }, // Progreso
+    { wch: 15 }, // Docs Subidos
+    { wch: 12 }, // Estado
+    { wch: 60 }  // Domicilio
+  ];
+  ```
+
+- Filename: `Socios_Club738_YYYY-MM-DD.xlsx`
+- Toast notifications: success con count, error
+- Estado exportando previene doble-click
+
+**UI Button**:
+- Header reestructurado con `.header-title` wrapper
+- Botón `.btn-export-excel`:
+  - Green gradient: #16a34a → #15803d
+  - Hover: darker gradient + translateY(-2px)
+  - Disabled: gray cuando no hay socios filtrados
+  - Text condicional: "⏳ Exportando..." vs "📊 Exportar a Excel"
+
+**Dependencias**:
+- `import * as XLSX from 'xlsx'` (v0.18.5)
+- `import { useToastContext } from '../../contexts/ToastContext'`
+
+**Archivos modificados**: 2 (jsx + css)
+
+---
+
+**[Tarea #44] ✅ Dark Mode Toggle**
+
+**Hook creado**: useDarkMode.js
+
+**Features**:
+- Detección automática de `prefers-color-scheme: dark`
+- Persistencia en localStorage (key: 'theme')
+- Listener para cambios en preferencia del sistema
+- Aplica clase `.dark-mode` al `<html>`
+- Return: `{ isDarkMode, toggleDarkMode }`
+
+**Componente creado**: ThemeToggle.jsx
+
+**UI**:
+- Toggle switch animado (60x30px)
+- Track con gradient:
+  - Light: #667eea → #764ba2
+  - Dark: #2d3748 → #1a202c
+- Thumb (26x26px) con emojis:
+  - ☀️ Light mode
+  - 🌙 Dark mode
+- Transform translateX(30px) en dark mode
+- Accessibility: aria-label, title, focus-visible
+
+**CSS Variables**: App.css
+
+**Light mode** (:root):
+- --color-background: #f8fafc
+- --color-surface: #ffffff
+- --color-text-primary: #1e293b
+- --color-border: #e2e8f0
+- etc.
+
+**Dark mode** (:root.dark-mode):
+- --color-background: #0f172a
+- --color-surface: #1e293b
+- --color-text-primary: #f1f5f9
+- --color-border: #334155
+- Colores semánticos ajustados
+- Sombras más intensas
+
+**Transiciones**:
+```css
+--transition-theme: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+```
+
+**Integración**: App.jsx
+- Hook: `const { isDarkMode, toggleDarkMode } = useDarkMode();`
+- Toggle en `.user-info` del dashboard header
+- `<ThemeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />`
+
+**Archivos creados**: 2 (useDarkMode.js, ThemeToggle jsx + css)
+**Archivos modificados**: 2 (App.jsx, App.css)
+
+---
+
+**[Tarea #39] ⏸️ Optimistic UI Updates - DIFERIDO**
+
+Decisión: Diferir para siguiente fase
+Razón: Nice-to-have, no crítico para lanzamiento
+Implementación futura: Actualizar UI antes de server confirmation con rollback
+
+---
+
+#### 📊 Resumen FASE 8
+
+**Archivos creados**: 5
+- PDFPreviewModal.jsx + .css
+- ThemeToggle.jsx + .css
+- useDarkMode.js
+
+**Archivos modificados**: 8
+- MultiImageUploader.jsx + .css
+- DocumentCard.jsx + .css
+- AdminDashboard.jsx + .css
+- App.jsx
+- App.css
+
+**Líneas de código**: ~1200 agregadas
+
+**Features implementados**:
+- ✅ Drag & drop con feedback visual
+- ✅ PDF preview con zoom y shortcuts
+- ✅ Search con debouncing y filtros
+- ✅ Excel export con column widths
+- ✅ Dark mode con persistencia
+
+**Progreso general**: 45/50 tareas (90%)
+
+**Deploy**: No (pendiente testing local)
+
+---
+
 ### 14 de Enero - v1.17.0 - FASE 8: Toast Notifications + Loading Skeletons
 
 ---

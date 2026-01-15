@@ -48,12 +48,68 @@
   /* Footer (fondo oscuro) */
   --color-footer-bg: #1e293b;
   --color-footer-text: #f1f5f9;       /* Contraste 14.6:1 sobre footer-bg */
+  
+  /* Transiciones suaves para tema */
+  --transition-theme: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ===================================
+   DARK MODE - Variables
+   =================================== */
+:root.dark-mode {
+  /* Colores principales adaptados */
+  --color-primary-dark: #60a5fa;
+  --color-primary: #3b82f6;
+  --color-primary-light: #93c5fd;
+  
+  /* Colores neutros invertidos */
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-text-light: #64748b;
+  --color-border: #334155;
+  --color-border-dark: #475569;
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  
+  /* Colores semánticos para dark mode */
+  --color-success: #22c55e;
+  --color-success-dark: #16a34a;
+  --color-success-light: #14532d;
+  
+  --color-warning: #f59e0b;
+  --color-warning-dark: #d97706;
+  --color-warning-light: #78350f;
+  
+  --color-error: #ef4444;
+  --color-error-dark: #dc2626;
+  --color-error-light: #7f1d1d;
+  
+  --color-info: #3b82f6;
+  --color-info-dark: #2563eb;
+  --color-info-light: #1e3a8a;
+  
+  /* Gold para dark mode */
+  --color-gold: #fbbf24;
+  --color-gold-light: #78350f;
+  
+  /* Footer en dark mode */
+  --color-footer-bg: #0f172a;
+  --color-footer-text: #e2e8f0;
+}
   --color-footer-muted: #cbd5e1;      /* Contraste 10.0:1 sobre footer-bg */
   
   /* Sombras */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Sombras para dark mode */
+:root.dark-mode {
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -65,6 +121,8 @@
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background: var(--color-background);
+  color: var(--color-text-primary);
+  transition: var(--transition-theme);
 }
 
 .loading {
@@ -81,6 +139,7 @@ body {
   background: linear-gradient(135deg, var(--color-background) 0%, var(--color-border) 100%);
   display: flex;
   flex-direction: column;
+  transition: var(--transition-theme);
 }
 
 /* Dashboard Header */
@@ -92,6 +151,12 @@ body {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: var(--transition-theme);
+}
+
+:root.dark-mode .dashboard-header {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 .header-brand {

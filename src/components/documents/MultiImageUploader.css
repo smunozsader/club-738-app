@@ -275,6 +275,24 @@
   text-align: center;
   transition: all 0.3s ease;
   background: var(--color-warning-light, #fef3c7);
+  cursor: pointer;
+}
+
+.multi-image-uploader .drop-zone.dragging {
+  border-color: #16a34a;
+  border-width: 3px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.3);
+}
+
+.multi-image-uploader .drop-zone.dragging .upload-icon {
+  animation: bounce 0.5s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 .multi-image-uploader.dragging .drop-zone {

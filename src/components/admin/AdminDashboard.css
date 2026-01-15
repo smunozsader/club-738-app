@@ -11,7 +11,16 @@
 /* Header */
 .admin-header {
   margin-bottom: 2rem;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.header-title {
+  flex: 1;
+  text-align: left;
 }
 
 .admin-header h1 {
@@ -23,6 +32,32 @@
 .admin-subtitle {
   color: #718096;
   font-size: 0.95rem;
+}
+
+.btn-export-excel {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+  white-space: nowrap;
+}
+
+.btn-export-excel:hover:not(:disabled) {
+  background: linear-gradient(135deg, #15803d 0%, #14532d 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
+}
+
+.btn-export-excel:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* Estadísticas */
@@ -79,11 +114,13 @@
 
 .search-box {
   margin-bottom: 1rem;
+  position: relative;
 }
 
 .search-input {
   width: 100%;
   padding: 0.75rem 1rem;
+  padding-right: 40px;
   font-size: 1rem;
   border: 2px solid #e2e8f0;
   border-radius: 8px;
@@ -93,6 +130,65 @@
 .search-input:focus {
   outline: none;
   border-color: #667eea;
+}
+
+.clear-search {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #999;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: color 0.2s;
+}
+
+.clear-search:hover {
+  color: #333;
+}
+
+.filters-row {
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 8px;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.filter-select:hover {
+  border-color: #cbd5e0;
 }
 
 .filter-tabs {

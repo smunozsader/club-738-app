@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import MultiImageUploader from './MultiImageUploader';
 import ArmasRegistroUploader from './ArmasRegistroUploader';
 import EliminarDocumentoModal from './EliminarDocumentoModal';
+import PDFPreviewModal from '../common/PDFPreviewModal';
 import './DocumentCard.css';
 
 // Documentos que permiten múltiples imágenes (frente/vuelta)
@@ -28,6 +29,7 @@ export default function DocumentCard({
 }) {
   const [showUploader, setShowUploader] = useState(false);
   const [mostrarEliminarModal, setMostrarEliminarModal] = useState(false);
+  const [mostrarPreview, setMostrarPreview] = useState(false);
   
   // Caso especial: Registros de Armas usa componente dedicado con OCR
   const isArmasRegistro = documentType === 'registrosArmas';
@@ -129,13 +131,19 @@ export default function DocumentCard({
           <span className="file-name">📎 {documentData.fileName || 'Documento oficial'}</span>
           <span className="file-date">{formatDate(documentData.uploadDate)}</span>
           <div className="file-actions">
+            <button 
+              className="btn-view"
+              onClick={() => setMostrarPreview(true)}
+            >
+              👁️ Ver
+            </button>
             <a 
               href={documentData.url} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="btn-view"
+              className="btn-download"
             >
-              Ver
+              ⬇️
             </a>
             {!isPreloaded && (
               <>
@@ -170,6 +178,14 @@ export default function DocumentCard({
               onUploadComplete();
             }
           }}
+        />
+      )}
+
+      {mostrarPreview && documentData?.url && (
+        <PDFPreviewModal
+          url={documentData.url}
+          title={label}
+          onClose={() => setMostrarPreview(false)}
         />
       )}
 

@@ -25,6 +25,72 @@ export default function MultiImageUploader({
   const [uploadMode, setUploadMode] = useState(null); // 'pdf' o 'photo'
   const maxImages = allowMultiple ? 4 : 1;
 
+  // Drag & Drop handlers
+  const handleDragEnter = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.currentTarget === e.target) {
+      setIsDragging(false);
+    }
+  }, []);
+
+  const handleDragOver = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDrop = useCallback(async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length === 0) return;
+
+    setError('');
+
+    // Si permite PDF y se suelta un PDF
+    if (allowPdf && files[0].type === 'application/pdf') {
+      if (!validateFile(files[0], true)) return;
+      await uploadFile(files[0]);
+      return;
+    }
+
+    // Si es imageOnly (fotoCredencial)
+    if (imageOnly) {
+      const file = files[0];
+      const resultado = validarDocumento('fotoCredencial', file);
+      if (!resultado.valido) {
+        setError(resultado.error.split('\n\n')[0]);
+        return;
+      }
+      await uploadFile(file, true);
+      return;
+    }
+
+    // Procesar imágenes para convertir a PDF
+    const validImages = files.filter(f => f.type.startsWith('image/'));
+    if (validImages.length === 0) {
+      setError('Por favor arrastra archivos de imagen (JPG, PNG, HEIC)');
+      return;
+    }
+
+    const processedImages = [];
+    for (const file of validImages.slice(0, maxImages)) {
+      const processed = await processFile(file);
+      processedImages.push(processed);
+    }
+
+    setImages(processedImages);
+    setUploadMode('photo');
+  }, [allowPdf, imageOnly, maxImages]);
+
   // Convertir HEIC (iOS) a JPEG
   const convertHeicToJpeg = async (file) => {
     try {
@@ -573,7 +639,8 @@ export default function MultiImageUploader({
           )}
 
           <div
-            className="drop-zone"
+            className={`drop-zone ${isDragging ? 'dragging' : ''}`}
+            onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}

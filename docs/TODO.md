@@ -1,8 +1,8 @@
 # Club 738 Web - TO-DO / Roadmap
 
-**Última actualización**: 14 de enero 2026 (v1.17.0)
+**Última actualización**: 14 de enero 2026 (v1.19.0)
 
-**Progreso general**: 40/50 tareas completadas (80%)
+**Progreso general**: 45/50 tareas completadas (90%)
 
 ---
 
@@ -59,21 +59,18 @@
 
 ---
 
-## 🚧 FASE 8-9: UX Y PRODUCCIÓN (2/14 - 14%)
+## 🚧 FASE 8-9: UX Y PRODUCCIÓN (7/14 - 50%)
 
-### ⏳ FASE 8: UX y Experiencia de Usuario (2/8 - 25%)
-- [x] #37 - Loading skeletons (suspense)
-- [x] #38 - Toast notifications (éxito/error)
-- [ ] #39 - Confirmaciones optimistas (UI updates)
-- [ ] #37 - Loading skeletons (suspense)
-- [ ] #38 - Toast notifications (éxito/error)
-- [ ] #39 - Confirmaciones optimistas (UI updates)
-- [ ] #40 - Drag & drop para documentos
-- [ ] #41 - Preview modal para PDFs
-- [ ] #42 - Búsqueda avanzada con filtros
-- [ ] #43 - Exportar a Excel (lista socios)
-- [ ] #44 - Dark mode toggle
-**Status**: ❌ NO INICIADO
+### ✅ FASE 8: UX y Experiencia de Usuario (7/8 - 87.5% ✅)
+- [x] #37 - Loading skeletons (suspense) - DocumentList, MisArmas, AdminDashboard
+- [x] #38 - Toast notifications (éxito/error) - ToastContext + Toast.jsx
+- [ ] #39 - Confirmaciones optimistas (UI updates) - OPCIONAL/DIFERIDO
+- [x] #40 - Drag & drop para documentos - MultiImageUploader con feedback visual
+- [x] #41 - Preview modal para PDFs - PDFPreviewModal.jsx con zoom y shortcuts
+- [x] #42 - Búsqueda avanzada con filtros - Debouncing 500ms + useMemo
+- [x] #43 - Exportar a Excel (lista socios) - XLSX export con 8 columnas
+- [x] #44 - Dark mode toggle - useDarkMode hook + ThemeToggle component
+**Status**: ✅ COMPLETADO - 7/8 tareas (tarea #39 opcional)
 
 ### ⏳ FASE 9: Deploy y Producción (0/6)
 - [ ] #45 - Firebase hosting config optimizado

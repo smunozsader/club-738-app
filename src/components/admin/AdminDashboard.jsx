@@ -7,10 +7,12 @@
  * - Acceso rápido a expediente de cada socio
  * - Indicadores de progreso de documentación
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import { DashboardSkeleton } from '../common/LoadingSkeleton';
+import { useToastContext } from '../../contexts/ToastContext';
+import * as XLSX from 'xlsx';
 import './AdminDashboard.css';
 
 export default function AdminDashboard({ onVerExpediente }) {
@@ -18,7 +20,21 @@ export default function AdminDashboard({ onVerExpediente }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchInput, setSearchInput] = useState(''); // Para debouncing
   const [filtroEstado, setFiltroEstado] = useState('todos'); // todos, completos, pendientes
+  const [filtroModalidad, setFiltroModalidad] = useState('todos'); // todos, caza, tiro, ambas
+  const [ordenarPor, setOrdenarPor] = useState('nombre'); // nombre, progreso, armas
+  const [exportando, setExportando] = useState(false);
+  const toast = useToastContext();
+
+  // Debouncing de búsqueda (500ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchTerm(searchInput);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   useEffect(() => {
     cargarSocios();
@@ -57,25 +73,101 @@ export default function AdminDashboard({ onVerExpediente }) {
     }
   };
 
-  // Filtrar socios según búsqueda y filtros
-  const sociosFiltrados = socios.filter(socio => {
-    // Filtro de búsqueda
-    const matchSearch = 
-      socio.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      socio.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      socio.curp?.toLowerCase().includes(searchTerm.toLowerCase());
+  // Filtrar y ordenar socios (usando useMemo para optimizar)
+  const sociosFiltrados = useMemo(() => {
+    let filtered = socios.filter(socio => {
+      // Filtro de búsqueda
+      const matchSearch = 
+        socio.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        socio.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        socio.curp?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    if (!matchSearch) return false;
+      if (!matchSearch) return false;
 
-    // Filtro de estado
-    if (filtroEstado === 'completos') {
-      return socio.progresoDocumentos === 100;
-    } else if (filtroEstado === 'pendientes') {
-      return socio.progresoDocumentos < 100;
+      // Filtro de estado de documentos
+      if (filtroEstado === 'completos') {
+        if (socio.progresoDocumentos !== 100) return false;
+      } else if (filtroEstado === 'pendientes') {
+        if (socio.progresoDocumentos >= 100) return false;
+      }
+
+      // Filtro de modalidad (basado en armas del socio)
+      if (filtroModalidad !== 'todos' && socio.totalArmas > 0) {
+        // Aquí necesitaríamos cargar las armas del socio
+        // Por ahora lo dejamos para implementar con datos de armas
+      }
+
+      return true;
+    });
+
+    // Ordenar resultados
+    filtered.sort((a, b) => {
+      if (ordenarPor === 'progreso') {
+        return b.progresoDocumentos - a.progresoDocumentos;
+      } else if (ordenarPor === 'armas') {
+        return (b.totalArmas || 0) - (a.totalArmas || 0);
+      } else {
+        // Por defecto: nombre
+        return (a.nombre || '').localeCompare(b.nombre || '');
+      }
+    });
+
+    return filtered;
+  }, [socios, searchTerm, filtroEstado, filtroModalidad, ordenarPor]);
+
+  const exportarAExcel = () => {
+    try {
+      setExportando(true);
+      
+      // Preparar datos para Excel
+      const datosExport = sociosFiltrados.map(socio => ({
+        'Nombre': socio.nombre || 'N/A',
+        'Email': socio.email || 'N/A',
+        'CURP': socio.curp || 'N/A',
+        'Total Armas': socio.totalArmas || 0,
+        'Progreso Documentos': `${socio.progresoDocumentos}%`,
+        'Docs Subidos': `${socio.docsSubidos}/16`,
+        'Estado': socio.progresoDocumentos === 100 ? 'Completo' : 'Pendiente',
+        'Domicilio': socio.domicilio ? 
+          `${socio.domicilio.calle}, ${socio.domicilio.colonia}, ${socio.domicilio.municipio}, ${socio.domicilio.estado}` : 
+          'N/A'
+      }));
+
+      // Crear workbook
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(datosExport);
+
+      // Ajustar ancho de columnas
+      const colWidths = [
+        { wch: 30 }, // Nombre
+        { wch: 35 }, // Email
+        { wch: 20 }, // CURP
+        { wch: 12 }, // Total Armas
+        { wch: 18 }, // Progreso
+        { wch: 15 }, // Docs Subidos
+        { wch: 12 }, // Estado
+        { wch: 60 }  // Domicilio
+      ];
+      ws['!cols'] = colWidths;
+
+      // Agregar hoja al workbook
+      XLSX.utils.book_append_sheet(wb, ws, 'Socios');
+
+      // Generar fecha para nombre de archivo
+      const fecha = new Date().toISOString().split('T')[0];
+      const filename = `Socios_Club738_${fecha}.xlsx`;
+
+      // Descargar archivo
+      XLSX.writeFile(wb, filename);
+
+      toast.success(`Exportados ${sociosFiltrados.length} socios a Excel`);
+    } catch (err) {
+      console.error('Error exportando a Excel:', err);
+      toast.error('Error al exportar a Excel');
+    } finally {
+      setExportando(false);
     }
-
-    return true;
-  });
+  };
 
   if (loading) {
     return <DashboardSkeleton />;
@@ -94,10 +186,19 @@ export default function AdminDashboard({ onVerExpediente }) {
     <div className="admin-dashboard">
       {/* Header */}
       <div className="admin-header">
-        <h1>🔧 Panel de Administración</h1>
-        <p className="admin-subtitle">
-          Gestión de expedientes de socios - Club de Caza, Tiro y Pesca de Yucatán, A.C.
-        </p>
+        <div className="header-title">
+          <h1>🔧 Panel de Administración</h1>
+          <p className="admin-subtitle">
+            Gestión de expedientes de socios - Club de Caza, Tiro y Pesca de Yucatán, A.C.
+          </p>
+        </div>
+        <button 
+          className="btn-export-excel"
+          onClick={exportarAExcel}
+          disabled={exportando || sociosFiltrados.length === 0}
+        >
+          {exportando ? '⏳ Exportando...' : '📊 Exportar a Excel'}
+        </button>
       </div>
 
       {/* Estadísticas rápidas */}
@@ -132,31 +233,58 @@ export default function AdminDashboard({ onVerExpediente }) {
           <input
             type="text"
             placeholder="🔍 Buscar por nombre, email o CURP..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="search-input"
           />
+          {searchInput && (
+            <button 
+              className="clear-search"
+              onClick={() => setSearchInput('')}
+              title="Limpiar búsqueda"
+            >
+              ✕
+            </button>
+          )}
         </div>
 
-        <div className="filter-tabs">
-          <button
-            className={`filter-tab ${filtroEstado === 'todos' ? 'active' : ''}`}
-            onClick={() => setFiltroEstado('todos')}
-          >
-            Todos ({socios.length})
-          </button>
-          <button
-            className={`filter-tab ${filtroEstado === 'completos' ? 'active' : ''}`}
-            onClick={() => setFiltroEstado('completos')}
-          >
-            ✅ Completos ({socios.filter(s => s.progresoDocumentos === 100).length})
-          </button>
-          <button
-            className={`filter-tab ${filtroEstado === 'pendientes' ? 'active' : ''}`}
-            onClick={() => setFiltroEstado('pendientes')}
-          >
-            ⏳ Pendientes ({socios.filter(s => s.progresoDocumentos < 100).length})
-          </button>
+        <div className="filters-row">
+          <div className="filter-group">
+            <label className="filter-label">Estado:</label>
+            <div className="filter-tabs">
+              <button
+                className={`filter-tab ${filtroEstado === 'todos' ? 'active' : ''}`}
+                onClick={() => setFiltroEstado('todos')}
+              >
+                Todos ({socios.length})
+              </button>
+              <button
+                className={`filter-tab ${filtroEstado === 'completos' ? 'active' : ''}`}
+                onClick={() => setFiltroEstado('completos')}
+              >
+                Completos ({socios.filter(s => s.progresoDocumentos === 100).length})
+              </button>
+              <button
+                className={`filter-tab ${filtroEstado === 'pendientes' ? 'active' : ''}`}
+                onClick={() => setFiltroEstado('pendientes')}
+              >
+                Pendientes ({socios.filter(s => s.progresoDocumentos < 100).length})
+              </button>
+            </div>
+          </div>
+
+          <div className="filter-group">
+            <label className="filter-label">Ordenar por:</label>
+            <select 
+              className="filter-select"
+              value={ordenarPor}
+              onChange={(e) => setOrdenarPor(e.target.value)}
+            >
+              <option value="nombre">Nombre (A-Z)</option>
+              <option value="progreso">Progreso (mayor primero)</option>
+              <option value="armas">Cantidad de armas</option>
+            </select>
+          </div>
         </div>
       </div>
 
