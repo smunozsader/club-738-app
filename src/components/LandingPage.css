@@ -11,7 +11,7 @@
   background: linear-gradient(135deg, var(--color-primary-dark, #1a365d) 0%, #2d5a87 100%);
   color: white;
   padding: 16px 24px;
-  position: sticky;
+  position: relative; /* Cambiado de sticky para evitar problemas en iOS */
   top: 0;
   z-index: 100;
   box-shadow: var(--shadow-md, 0 4px 12px rgba(0,0,0,0.15));
