@@ -83,6 +83,15 @@ async function enviarNotificacionMasiva() {
     console.log(`   Título: ${plantillaNotificacion.titulo}`);
     console.log(`   Mensaje: ${plantillaNotificacion.mensaje}\n`);
 
+    // 4. Generar enlace WhatsApp para envío manual
+    console.log('📱 ENLACE WHATSAPP PARA ENVÍO MANUAL:\n');
+    const mensajeWhatsApp = `*${plantillaNotificacion.titulo}*\n\n${plantillaNotificacion.mensaje}\n\n🔗 Accede al portal: https://club-738-app.web.app`;
+    const numeroClub = '525665824667'; // WhatsApp del secretario
+    const enlaceWhatsApp = `https://wa.me/${numeroClub}?text=${encodeURIComponent(mensajeWhatsApp)}`;
+    
+    console.log(`   ${enlaceWhatsApp}\n`);
+    console.log(`   💡 Copia este enlace para enviarlo por WhatsApp a los socios.\n`);
+
   } catch (error) {
     console.error('❌ Error al enviar notificaciones masivas:', error);
   } finally {

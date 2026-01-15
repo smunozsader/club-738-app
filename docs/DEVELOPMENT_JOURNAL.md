@@ -1,3 +1,166 @@
+### 2026-01-14 - v1.14.4 FASE 5 COMPLETADA - Sistema de notificaciones multi-canal
+
+#### Implementación completa de notificaciones: In-app + Email + WhatsApp
+
+**Objetivo**: Completar FASE 5 del roadmap con automatización completa de notificaciones a socios por 3 canales (portal web, email, WhatsApp).
+
+**FASE 5 completada**: 6/6 tareas (100%)
+- ✅ Task #20: Colección notificaciones Firestore
+- ✅ Task #21: Notificaciones.jsx banner component
+- ✅ Task #22: onSnapshot real-time listener
+- ✅ Task #23: Scripts admin (crear-notificacion-prueba.cjs, enviar-notificacion-masiva.cjs)
+- ✅ Task #24: Cloud Function para email (onNotificacionCreada)
+- ✅ Task #25: WhatsApp Business API integration
+
+**Cambios implementados**:
+
+1. **functions/index.js** - Cloud Function para email automático
+   ```javascript
+   exports.onNotificacionCreada = onDocumentCreated(
+     "notificaciones/{notifId}",
+     async (event) => {
+       const notificacion = event.data.data();
+       
+       // 1. Obtener nombre del socio desde Firestore
+       const socioDoc = await admin.firestore()
+         .collection('socios')
+         .doc(notificacion.socioEmail)
+         .get();
+       
+       // 2. Construir HTML email con template profesional
+       const emailMessage = {
+         from: "Club de Caza, Tiro y Pesca de Yucatán",
+         to: notificacion.socioEmail,
+         subject: `${icono} ${notificacion.titulo}`,
+         html: plantillaHTML // Gradientes, colores por tipo
+       };
+       
+       // 3. Enviar via nodemailer
+       const transporter = nodemailer.createTransport(EMAIL_CONFIG.smtp);
+       const info = await transporter.sendMail(emailMessage);
+       
+       // 4. Actualizar Firestore con estado de envío
+       await event.data.ref.update({
+         emailEnviado: true,
+         emailFechaEnvio: serverTimestamp(),
+         emailMessageId: info.messageId
+       });
+     }
+   );
+   ```
+   
+   **Características del email**:
+   - Header verde con logo del club
+   - Colores dinámicos según tipo de notificación:
+     - `info`: Azul (#2196f3)
+     - `exito`: Verde (#4caf50)
+     - `advertencia`: Naranja (#ff9800)
+     - `urgente`: Rojo (#f44336)
+   - Botón CTA "Ir al Portal de Socios"
+   - Footer con datos oficiales del club (SEDENA, FEMETI, SEMARNAT)
+   - Responsive design con max-width: 600px
+
+2. **whatsappIntegration.js** - Utilidad para enlaces WhatsApp
+   ```javascript
+   // Constante del número del club
+   export const WHATSAPP_CLUB = '525665824667';
+   
+   // Generador de enlaces wa.me
+   export function generarEnlaceWhatsApp(mensaje, telefono = WHATSAPP_CLUB) {
+     return `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+   }
+   
+   // 6 plantillas predefinidas
+   export const PLANTILLAS_WHATSAPP = {
+     notificarPETA: (nombre, tipo, numArmas) => {...},
+     consultaGeneral: (nombre, asunto) => {...},
+     agendarCita: (nombre, motivo) => {...},
+     consultaDocumento: (nombre, documento) => {...},
+     notificarPago: (nombre, concepto, monto, ref) => {...},
+     solicitarRenovacion: (nombre, año) => {...}
+   };
+   
+   // Helper para abrir WhatsApp
+   export function enviarWhatsApp(mensaje, telefono) {
+     const enlace = generarEnlaceWhatsApp(mensaje, telefono);
+     window.open(enlace, '_blank');
+   }
+   ```
+   
+   **Ventajas**:
+   - No requiere API key (usa wa.me public links)
+   - Funciona en desktop y móvil
+   - Auto-detecta WhatsApp app o WhatsApp Web
+   - Mensajes pre-formateados profesionales
+
+3. **enviar-notificacion-masiva.cjs** - Integración WhatsApp
+   - Después de crear notificaciones en Firestore
+   - Genera automáticamente enlace WhatsApp para envío manual
+   - Formato del mensaje:
+     ```
+     *{Título}*
+     
+     {Mensaje}
+     
+     🔗 Accede al portal: https://club-738-app.web.app
+     ```
+   - Secretario copia enlace y envía por WhatsApp Business
+
+4. **functions/.eslintrc.js** - Configuración actualizada
+   - `ecmaVersion: 2018` → `2020` (soporte optional chaining)
+   - `/* eslint-disable max-len */` para HTML templates
+
+**Flujo multi-canal**:
+
+```
+Script crea notificación en Firestore
+       ↓
+┌──────────────────────────────────────────┐
+│  Cloud Function (onNotificacionCreada)   │
+│  ↓ Envía email automáticamente          │
+│  ↓ Marca emailEnviado: true             │
+└──────────────────────────────────────────┘
+       ↓
+┌──────────────────────────────────────────┐
+│  React onSnapshot listener               │
+│  ↓ Detecta nueva notificación           │
+│  ↓ Muestra banner en portal             │
+└──────────────────────────────────────────┘
+       ↓
+┌──────────────────────────────────────────┐
+│  WhatsApp (opcional)                     │
+│  ↓ Secretario copia enlace generado     │
+│  ↓ Envía por WhatsApp Business          │
+└──────────────────────────────────────────┘
+```
+
+**Archivos modificados/creados**:
+- `functions/index.js` - onNotificacionCreada (+162 líneas)
+- `functions/.eslintrc.js` - ecmaVersion 2020
+- `src/utils/whatsappIntegration.js` - NUEVO (114 líneas)
+- `scripts/enviar-notificacion-masiva.cjs` - Integración WhatsApp
+
+**Deploy**:
+```bash
+firebase deploy --only functions:onNotificacionCreada
+```
+
+**Testing**:
+```bash
+# Crear notificación de prueba
+node scripts/crear-notificacion-prueba.cjs
+
+# Verificar:
+# 1. Banner aparece en portal (real-time)
+# 2. Email llega a bandeja de entrada
+# 3. Firestore actualizado con emailEnviado: true
+# 4. Enlace WhatsApp generado en console
+```
+
+**Próximos pasos**: FASE 6 - Edición de datos de socios (DatosPersonalesEditor, CURPEditor, DomicilioEditor, EmailEditor)
+
+---
+
 ### 2026-01-14 - v1.14.3 Avisos para documentos precargados + PDF oficial
 
 #### Sistema de notificación para CURP y Constancia precargados

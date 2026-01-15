@@ -1,12 +1,12 @@
 # Club 738 Web - TO-DO / Roadmap
 
-**Última actualización**: 13 de enero 2026 (v1.14.0)
+**Última actualización**: 14 de enero 2026 (v1.14.4)
 
-**Progreso general**: 25/50 tareas completadas (50%)
+**Progreso general**: 27/50 tareas completadas (54%)
 
 ---
 
-## 🎯 FASE 1-5: SISTEMA ADMINISTRATIVO CORE (25/25 - 100% ✅)
+## 🎯 FASE 1-5: SISTEMA ADMINISTRATIVO CORE (27/27 - 100% ✅)
 
 ### ✅ FASE 1: Sistema de Roles y Permisos (4/4)
 - [x] #1 - Constante ADMIN_EMAIL en App.jsx
@@ -39,18 +39,18 @@
 - [x] #19 - Integración en ExpedienteAdminView
 **Status**: ✅ COMPLETADO - Gestión completa con PDFs funcionando
 
-### ✅ FASE 5: Sistema de Notificaciones (4/6 - 67%)
+### ✅ FASE 5: Sistema de Notificaciones (6/6 - 100% ✅)
 - [x] #20 - Colección notificaciones en Firestore
 - [x] #21 - Notificaciones.jsx banner component
 - [x] #22 - onSnapshot real-time listener
 - [x] #23 - Scripts admin (individual + masivo)
-- [ ] #24 - Cloud Function para email (SendGrid)
-- [ ] #25 - Integración WhatsApp Business API
-**Status**: ⏳ PARCIAL - In-app funcionando, email/WhatsApp pendientes
+- [x] #24 - Cloud Function para email (onNotificacionCreada + nodemailer)
+- [x] #25 - Integración WhatsApp Business API (whatsappIntegration.js)
+**Status**: ✅ COMPLETADO - Sistema multi-canal: in-app + email + WhatsApp funcionando
 
 ---
 
-## 🚧 FASE 6-9: GESTIÓN AVANZADA (0/25 - 0%)
+## 🚧 FASE 6-9: GESTIÓN AVANZADA (0/23 - 0%)
 
 ### ⏳ FASE 6: Edición de Datos de Socios (0/6)
 - [ ] #26 - DatosPersonalesEditor.jsx (nombre)

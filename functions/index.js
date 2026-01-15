@@ -402,6 +402,197 @@ Fecha: ${fechaTest}
     },
 );
 
+/**
+ * Trigger: Cuando se crea una notificación en notificaciones/{notifId}
+ * Envía email al socio destinatario
+ */
+exports.onNotificacionCreated = onDocumentCreated(
+    "notificaciones/{notifId}",
+    async (event) => {
+      const notificacion = event.data.data();
+      const notifId = event.params.notifId;
+
+      console.log(`📧 Nueva notificación creada: ${notifId}`);
+      console.log(`Destinatario: ${notificacion.socioEmail}`);
+
+      // Validar que tiene email configurado
+      if (!EMAIL_CONFIG.smtp.auth.pass) {
+        console.warn("⚠️  EMAIL_PASS no configurado, saltando envío");
+        return null;
+      }
+
+      // Obtener datos del socio
+      let nombreSocio = "Socio";
+      try {
+        const socioDoc = await admin.firestore()
+            .collection("socios")
+            .doc(notificacion.socioEmail)
+            .get();
+        if (socioDoc.exists) {
+          nombreSocio = socioDoc.data().nombre || "Socio";
+        }
+      } catch (error) {
+        console.error("Error obteniendo datos del socio:", error);
+      }
+
+      // Determinar icono según tipo
+      const iconos = {
+        info: "ℹ️",
+        exito: "✅",
+        advertencia: "⚠️",
+        urgente: "🚨",
+      };
+      const icono = iconos[notificacion.tipo] || "📢";
+
+      // Formatear fecha
+      const fecha = notificacion.fecha?.toDate ?
+        notificacion.fecha.toDate().toLocaleString("es-MX", {
+          timeZone: "America/Merida",
+          dateStyle: "long",
+          timeStyle: "short",
+        }) :
+        new Date().toLocaleString("es-MX", {timeZone: "America/Merida"});
+
+      // Construir email
+      const emailSubject = `${icono} ${notificacion.titulo}`;
+      const emailFrom =
+        `"Club de Caza, Tiro y Pesca de Yucatán" <` +
+        `${EMAIL_CONFIG.smtp.auth.user}>`;
+
+      const emailMessage = {
+        from: emailFrom,
+        to: notificacion.socioEmail,
+        subject: emailSubject,
+        /* eslint-disable max-len */
+        html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { 
+      background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%); 
+      color: white; 
+      padding: 30px 20px; 
+      text-align: center;
+      border-radius: 8px 8px 0 0;
+    }
+    .header h1 { margin: 0; font-size: 24px; }
+    .header p { margin: 5px 0 0; font-size: 14px; opacity: 0.9; }
+    .content { 
+      background: white; 
+      padding: 30px 20px; 
+      border: 1px solid #e0e0e0;
+      border-top: none;
+    }
+    .notif-box {
+      background: #f5f5f5;
+      border-left: 4px solid #1a472a;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .notif-box.info { border-left-color: #2196f3; background: #e3f2fd; }
+    .notif-box.exito { border-left-color: #4caf50; background: #e8f5e9; }
+    .notif-box.advertencia { border-left-color: #ff9800; background: #fff3e0; }
+    .notif-box.urgente { border-left-color: #f44336; background: #ffebee; }
+    .notif-icon { font-size: 32px; margin-bottom: 10px; }
+    .notif-titulo { font-size: 20px; font-weight: bold; margin: 10px 0; color: #1a472a; }
+    .notif-mensaje { font-size: 16px; line-height: 1.8; margin: 15px 0; }
+    .footer { 
+      background: #f5f5f5; 
+      padding: 20px; 
+      text-align: center; 
+      font-size: 12px; 
+      color: #666;
+      border-radius: 0 0 8px 8px;
+    }
+    .btn { 
+      display: inline-block; 
+      background: #1a472a; 
+      color: white; 
+      padding: 12px 24px; 
+      text-decoration: none; 
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Club de Caza, Tiro y Pesca de Yucatán, A.C.</h1>
+      <p>Portal de Socios</p>
+    </div>
+    
+    <div class="content">
+      <p>Estimado ${nombreSocio},</p>
+      
+      <div class="notif-box ${notificacion.tipo}">
+        <div class="notif-icon">${icono}</div>
+        <div class="notif-titulo">${notificacion.titulo}</div>
+        <div class="notif-mensaje">${notificacion.mensaje.replace(/\n/g, "<br>")}</div>
+      </div>
+      
+      <p><strong>Fecha:</strong> ${fecha}</p>
+      
+      <p style="margin-top: 30px;">
+        <a href="https://club-738-app.web.app" class="btn">
+          Ir al Portal de Socios
+        </a>
+      </p>
+      
+      <p style="margin-top: 30px; font-size: 14px; color: #666;">
+        Esta notificación también está disponible en el portal web.
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p><strong>Club de Caza, Tiro y Pesca de Yucatán, A.C.</strong></p>
+      <p>Registro SEDENA: 738 | FEMETI: YUC 05/2020 | SEMARNAT: SEMARNAT-CLUB-CIN-005-YUC-05</p>
+      <p>Calle 50 No. 531-E x 69 y 71, Col. Centro, 97000 Mérida, Yucatán</p>
+      <p>Tel: +52 56 6582 4667 | Email: tiropracticoyucatan@gmail.com</p>
+    </div>
+  </div>
+  </body>
+</html>
+        `.trim(),
+        /* eslint-enable max-len */
+      };
+
+      // Enviar email
+      try {
+        const transporter = nodemailer.createTransport(EMAIL_CONFIG.smtp);
+        const info = await transporter.sendMail(emailMessage);
+
+        console.log(`✅ Email enviado: ${info.messageId}`);
+        console.log(`   A: ${notificacion.socioEmail}`);
+        console.log(`   Asunto: ${emailMessage.subject}`);
+
+        // Marcar email como enviado en Firestore
+        await event.data.ref.update({
+          emailEnviado: true,
+          emailFechaEnvio: admin.firestore.FieldValue.serverTimestamp(),
+          emailMessageId: info.messageId,
+        });
+
+        return {success: true, messageId: info.messageId};
+      } catch (error) {
+        console.error("❌ Error enviando email:", error);
+
+        // Registrar error en Firestore
+        await event.data.ref.update({
+          emailError: error.message,
+          emailIntentadoEn: admin.firestore.FieldValue.serverTimestamp(),
+        });
+
+        return {success: false, error: error.message};
+      }
+    },
+);
+
 // Exportar funciones de Google Calendar
 // exports.crearEventoCalendar = calendarFunctions.crearEventoCalendar;
 // exports.actualizarEvent = calendarFunctions.actualizarEventoCalendar;
