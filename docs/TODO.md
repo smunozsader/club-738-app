@@ -1,12 +1,12 @@
 # Club 738 Web - TO-DO / Roadmap
 
-**Última actualización**: 14 de enero 2026 (v1.15.0)
+**Última actualización**: 14 de enero 2026 (v1.16.0)
 
-**Progreso general**: 33/50 tareas completadas (66%)
+**Progreso general**: 38/50 tareas completadas (76%)
 
 ---
 
-## 🎯 FASE 1-6: SISTEMA ADMINISTRATIVO CORE (33/33 - 100% ✅)
+## 🎯 FASE 1-7: SISTEMA ADMINISTRATIVO CORE (38/38 - 100% ✅)
 
 ### ✅ FASE 1: Sistema de Roles y Permisos (4/4)
 - [x] #1 - Constante ADMIN_EMAIL en App.jsx
@@ -59,15 +59,15 @@
 
 ---
 
-## 🚧 FASE 7-9: GESTIÓN AVANZADA (0/17 - 0%)
+## 🚧 FASE 8-9: GESTIÓN AVANZADA (0/12 - 0%)
 
-### ⏳ FASE 7: Eliminación Segura de Documentos (0/5)
-- [ ] #32 - Confirmación de eliminación (modal)
-- [ ] #33 - eliminarDocumento() con Storage.delete()
-- [ ] #34 - Audit logging de eliminaciones
-- [ ] #35 - HistorialAuditoria.jsx component
-- [ ] #36 - Integración en DocumentCard
-**Status**: ❌ NO INICIADO
+### ✅ FASE 7: Eliminación Segura de Documentos (5/5 - 100% ✅)
+- [x] #32 - Confirmación de eliminación (modal)
+- [x] #33 - eliminarDocumento() con Storage.delete()
+- [x] #34 - Audit logging de eliminaciones
+- [x] #35 - HistorialAuditoria.jsx component
+- [x] #36 - Integración en DocumentCard
+**Status**: ✅ COMPLETADO - Modal confirmación, eliminación de Storage + Firestore, audit trail, historial timeline
 
 ### ⏳ FASE 8: UX y Experiencia de Usuario (0/8)
 - [ ] #37 - Loading skeletons (suspense)

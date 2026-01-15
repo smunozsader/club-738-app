@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import MultiImageUploader from './MultiImageUploader';
 import ArmasRegistroUploader from './ArmasRegistroUploader';
+import EliminarDocumentoModal from './EliminarDocumentoModal';
 import './DocumentCard.css';
 
 // Documentos que permiten múltiples imágenes (frente/vuelta)
@@ -26,6 +27,7 @@ export default function DocumentCard({
   onUploadComplete 
 }) {
   const [showUploader, setShowUploader] = useState(false);
+  const [mostrarEliminarModal, setMostrarEliminarModal] = useState(false);
   
   // Caso especial: Registros de Armas usa componente dedicado con OCR
   const isArmasRegistro = documentType === 'registrosArmas';
@@ -136,15 +138,39 @@ export default function DocumentCard({
               Ver
             </a>
             {!isPreloaded && (
-              <button 
-                className="btn-replace"
-                onClick={() => setShowUploader(true)}
-              >
-                Reemplazar
-              </button>
+              <>
+                <button 
+                  className="btn-replace"
+                  onClick={() => setShowUploader(true)}
+                >
+                  Reemplazar
+                </button>
+                <button 
+                  className="btn-delete"
+                  onClick={() => setMostrarEliminarModal(true)}
+                >
+                  Eliminar
+                </button>
+              </>
             )}
           </div>
         </div>
+      )}
+
+      {mostrarEliminarModal && (
+        <EliminarDocumentoModal
+          socioEmail={userId}
+          documentType={documentType}
+          documentLabel={label}
+          documentData={documentData}
+          onClose={() => setMostrarEliminarModal(false)}
+          onSuccess={() => {
+            setMostrarEliminarModal(false);
+            if (onUploadComplete) {
+              onUploadComplete();
+            }
+          }}
+        />
       )}
 
       {(!hasDocument || showUploader) && (

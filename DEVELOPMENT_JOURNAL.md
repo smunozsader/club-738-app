@@ -10,6 +10,98 @@
 
 ## 📅 Enero 2026
 
+### 14 de Enero - v1.16.0 - FASE 7: Eliminación Segura de Documentos
+
+---
+
+#### 🗑️ Sistema de Eliminación de Documentos - COMPLETADO
+
+**Objetivo**: Permitir al administrador eliminar documentos PETA de socios con confirmación, eliminación de Storage + Firestore, y registro de auditoría.
+
+**Cambios realizados**:
+
+**1. EliminarDocumentoModal.jsx** (165 líneas)
+- Modal de confirmación con advertencias críticas
+- Función `eliminarDocumento()`:
+  ```javascript
+  // 1. Extraer path de URL: url.match(/o\/(.+?)\?/)
+  // 2. Eliminar de Storage: deleteObject(ref(storage, filePath))
+  // 3. Actualizar Firestore: updateDoc({ [`documentosPETA.${type}`]: deleteField() })
+  // 4. Audit log: addDoc(auditoriaRef, { tipo: 'eliminacion_documento', ... })
+  ```
+- Try/catch para archivos ya eliminados de Storage
+- Props: socioEmail, documentType, documentLabel, documentData
+- Callbacks: onClose, onSuccess
+
+**2. EliminarDocumentoModal.css** (135 líneas)
+- `.warning-critical`: Gradiente rojo (#ffebee → #ffcdd2)
+- `.documento-detalles`: Info box gris con grid 2 columnas
+- `.consecuencias-box`: Warning naranja (#fff3e0)
+- `.btn-delete-critical`: Botón rojo con hover transform
+- Responsive: Stack 1 columna en móvil
+
+**3. HistorialAuditoria.jsx** (180 líneas)
+- Component para visualizar timeline de cambios
+- Constante `TIPOS_CAMBIO` con 9 tipos de cambio:
+  - edicion_datos_personales (✏️ azul)
+  - edicion_curp (🆔 morado)
+  - edicion_domicilio (📍 naranja)
+  - cambio_email (📧 rojo)
+  - eliminacion_documento (🗑️ rojo oscuro)
+  - subida_documento (📤 verde)
+  - verificacion_documento (✅ verde oscuro)
+  - edicion_arma (🔧 gris)
+  - eliminacion_arma (❌ rojo)
+- Query: `orderBy('fecha', 'desc')` para orden cronológico
+- Filtro por tipo de cambio
+- Display de before/after values
+- Manejo especial para eliminaciones (sin before/after, muestra detalles)
+
+**4. HistorialAuditoria.css** (270 líneas)
+- `.timeline`: Container con línea vertical
+- `.timeline-icon`: Círculos de color con iconos
+- `.timeline-content`: Cards con hover effect
+- `.cambio-valores`: Grid 3 columnas (before → after)
+- `.valor-anterior-audit`: Code con border rojo, tachado
+- `.valor-nuevo-audit`: Code con border verde
+- `.filtro-select`: Dropdown estilizado
+- Responsive: Timeline más angosto, grid vertical en móvil
+
+**5. DocumentCard.jsx** (modificado)
+- Import: `EliminarDocumentoModal`
+- Estado: `const [mostrarEliminarModal, setMostrarEliminarModal] = useState(false)`
+- Botón "Eliminar" agregado junto a "Reemplazar"
+- Condicional: Solo visible si `!isPreloaded`
+- Modal render: Pasa todas props necesarias
+- Callback onSuccess: Refresca datos con `onUploadComplete()`
+
+**6. DocumentCard.css** (modificado)
+- `.btn-delete`: Estilo de botón rojo outline
+  - `color: #d32f2f`, `border: 1px solid #d32f2f`
+  - Hover: Background rojo sólido, texto blanco
+  - Transition suave en 0.3s
+
+**Archivos modificados/creados**:
+- ✅ `src/components/documents/EliminarDocumentoModal.jsx` (CREADO)
+- ✅ `src/components/documents/EliminarDocumentoModal.css` (CREADO)
+- ✅ `src/components/admin/HistorialAuditoria.jsx` (CREADO)
+- ✅ `src/components/admin/HistorialAuditoria.css` (CREADO)
+- ✅ `src/components/documents/DocumentCard.jsx` (MODIFICADO - +25 líneas)
+- ✅ `src/components/documents/DocumentCard.css` (MODIFICADO - +16 líneas)
+- ✅ `docs/TODO.md` (ACTUALIZADO - FASE 7: 5/5 ✅, progreso 38/50)
+- ✅ `DEVELOPMENT_JOURNAL.md` (ACTUALIZADO - esta entrada)
+
+**Testing pendiente**:
+- [ ] Click botón eliminar → modal aparece
+- [ ] Confirmar eliminación → archivo removido de Storage
+- [ ] Verificar Firestore → campo `documentosPETA.{tipo}` eliminado
+- [ ] Check audit log → registro con tipo: 'eliminacion_documento'
+- [ ] Ver HistorialAuditoria → eliminación aparece en timeline
+
+**Deploy**: Pendiente commit v1.16.0
+
+---
+
 ### 13 de Enero - v2.0.0 - Testing y Mejoras de Arsenal
 
 ---
