@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { auth } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import './LandingPage.css';
@@ -9,6 +9,45 @@ const LandingPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showRequisitos, setShowRequisitos] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
+
+  useEffect(() => {
+    // Capturar evento de instalación PWA
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallButton(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // Ocultar botón si ya está instalado
+    window.addEventListener('appinstalled', () => {
+      setShowInstallButton(false);
+      setDeferredPrompt(null);
+    });
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) {
+      return;
+    }
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      console.log('✅ PWA instalada');
+    }
+    
+    setDeferredPrompt(null);
+    setShowInstallButton(false);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -41,6 +80,11 @@ const LandingPage = () => {
             <span className="badge">SEDENA 738</span>
             <span className="badge">FEMETI YUC 05/2020</span>
             <span className="badge">SEMARNAT-CLUB-CIN-005-YUC-05</span>
+            {showInstallButton && (
+              <button onClick={handleInstallClick} className="install-button" title="Instalar aplicación">
+                📲 Instalar App
+              </button>
+            )}
           </div>
         </div>
       </header>

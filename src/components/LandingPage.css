@@ -693,3 +693,29 @@
   width: 22px;
   height: 22px;
 }
+
+/* Botón de instalación PWA */
+.install-button {
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.25);
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 24px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.install-button:hover {
+  background: rgba(255,255,255,0.35);
+  border-color: rgba(255,255,255,0.6);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255,255,255,0.2);
+}
+
+.install-button:active {
+  transform: scale(0.98);
+}
