@@ -12,7 +12,7 @@
 
 **1.1 Instalación como App**
 - [ ] Abrir https://yucatanctp.org en Chrome/Safari
-- [ ] Verificar que aparezca prompt "Instalar Club 738"
+- [ ] Verificar que aparezca prompt "Instalar Club de Caza, Tiro y Pesca de Yucatán"
 - [ ] Instalar la PWA
 - [ ] Abrir desde escritorio/home screen
 - [ ] Verificar que se abra sin barra de navegador (standalone mode)
