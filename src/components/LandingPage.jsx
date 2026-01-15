@@ -140,14 +140,20 @@ const LandingPage = () => {
             
             <div className="form-row">
               <input
+                id="landing-email"
+                name="email"
                 type="email"
+                autoComplete="email"
                 placeholder="Correo electrónico"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <input
+                id="landing-password"
+                name="password"
                 type="password"
+                autoComplete="current-password"
                 placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
