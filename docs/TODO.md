@@ -1,8 +1,8 @@
 # Club 738 Web - TO-DO / Roadmap
 
-**Última actualización**: 14 de enero 2026 (v1.16.0)
+**Última actualización**: 14 de enero 2026 (v1.17.0)
 
-**Progreso general**: 38/50 tareas completadas (76%)
+**Progreso general**: 40/50 tareas completadas (80%)
 
 ---
 
@@ -59,17 +59,12 @@
 
 ---
 
-## 🚧 FASE 8-9: GESTIÓN AVANZADA (0/12 - 0%)
+## 🚧 FASE 8-9: UX Y PRODUCCIÓN (2/14 - 14%)
 
-### ✅ FASE 7: Eliminación Segura de Documentos (5/5 - 100% ✅)
-- [x] #32 - Confirmación de eliminación (modal)
-- [x] #33 - eliminarDocumento() con Storage.delete()
-- [x] #34 - Audit logging de eliminaciones
-- [x] #35 - HistorialAuditoria.jsx component
-- [x] #36 - Integración en DocumentCard
-**Status**: ✅ COMPLETADO - Modal confirmación, eliminación de Storage + Firestore, audit trail, historial timeline
-
-### ⏳ FASE 8: UX y Experiencia de Usuario (0/8)
+### ⏳ FASE 8: UX y Experiencia de Usuario (2/8 - 25%)
+- [x] #37 - Loading skeletons (suspense)
+- [x] #38 - Toast notifications (éxito/error)
+- [ ] #39 - Confirmaciones optimistas (UI updates)
 - [ ] #37 - Loading skeletons (suspense)
 - [ ] #38 - Toast notifications (éxito/error)
 - [ ] #39 - Confirmaciones optimistas (UI updates)

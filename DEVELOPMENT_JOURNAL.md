@@ -10,6 +10,138 @@
 
 ## 📅 Enero 2026
 
+### 14 de Enero - v1.17.0 - FASE 8: Toast Notifications + Loading Skeletons
+
+---
+
+#### ✨ Sistema de Toast Notifications - COMPLETADO
+
+**Objetivo**: Feedback visual inmediato para acciones del usuario (success, error, warning, info).
+
+**Componentes creados**:
+
+**1. ToastNotification.jsx** (60 líneas)
+- Component individual renderizado con `ReactDOM.createPortal()`
+- Props: message, type, duration, onClose
+- 4 tipos con iconos:
+  - success: ✅ (verde #4caf50)
+  - error: ❌ (rojo #f44336)
+  - warning: ⚠️ (naranja #ff9800)
+  - info: ℹ️ (azul #2196f3)
+- Auto-close configurable (default 4000ms)
+- Manual close con botón ✕
+
+**2. ToastContainer.jsx** (20 líneas)
+- Contenedor fixed para múltiples toasts
+- Apilamiento vertical con gap de 12px
+- Pointer-events: none en container, auto en toasts
+
+**3. ToastContext.jsx** (30 líneas)
+- Context provider con hook `useToastContext()`
+- Envuelve app completa para uso global
+- Renderiza ToastContainer automáticamente
+
+**4. useToast.js** (50 líneas) - Custom Hook
+- Gestión de array de toasts activos
+- Funciones:
+  ```javascript
+  const toast = useToastContext();
+  toast.success(message, duration?)
+  toast.error(message, duration?)
+  toast.warning(message, duration?)
+  toast.info(message, duration?)
+  toast.removeToast(id)
+  ```
+- Auto-remove con setTimeout
+
+**5. Estilos** (ToastNotification.css + ToastContainer.css)
+- Animación: slide desde derecha (desktop), desde arriba (móvil)
+- Box-shadow: 0 8px 24px rgba(0,0,0,0.15)
+- Z-index: 10000 (sobre modales)
+- Responsive: Full width en móvil
+
+**Integración**:
+- App.jsx: Wrapped con `<ToastProvider>`
+- EliminarDocumentoModal: toasts de éxito/error implementados
+- Editors: imports agregados (DatosPersonales, CURP, Domicilio)
+
+---
+
+#### 🎨 Loading Skeletons - COMPLETADO
+
+**Objetivo**: Placeholders animados durante carga de datos para mejor UX.
+
+**Componentes creados** (LoadingSkeleton.jsx - 140 líneas):
+
+1. **CardSkeleton**: Card genérico con header + body
+2. **TableRowSkeleton**: Fila de tabla con columnas configurables
+3. **DocumentCardSkeleton**: Card de documento PETA
+4. **ProfileSkeleton**: Perfil de socio con avatar + info
+5. **ListSkeleton**: Lista configurable (items, type)
+6. **TableSkeleton**: Tabla completa (rows × columns)
+7. **StatCardSkeleton**: Card de estadística (icon + número)
+8. **DashboardSkeleton**: Dashboard completo (4 stats + tabla)
+
+**Animación shimmer** (LoadingSkeleton.css):
+```css
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+```
+- Gradiente deslizante #f0f0f0 → #e0e0e0 → #f0f0f0
+- Animation: 2s infinite linear
+- Border-radius: 4px (líneas), 50% (círculos)
+
+**Variantes**:
+- `.skeleton-circle-sm`: 32px (iconos pequeños)
+- `.skeleton-circle`: 40px (avatares normales)
+- `.skeleton-circle-lg`: 80px (perfil grande)
+- `.skeleton-line-title`: 20px height, 60% width
+- `.skeleton-line-subtitle`: 14px height, 40% width
+- `.skeleton-line-short`: 30% width
+
+**Integración**:
+- AdminDashboard: `if (loading) return <DashboardSkeleton />`
+- DocumentList: import ListSkeleton (ready to use)
+
+---
+
+**Archivos creados/modificados**:
+
+**Toast System (7 archivos)**:
+- ✅ `src/components/common/ToastNotification.jsx` (CREADO)
+- ✅ `src/components/common/ToastNotification.css` (CREADO)
+- ✅ `src/components/common/ToastContainer.jsx` (CREADO)
+- ✅ `src/components/common/ToastContainer.css` (CREADO)
+- ✅ `src/contexts/ToastContext.jsx` (CREADO)
+- ✅ `src/hooks/useToast.js` (CREADO)
+- ✅ `docs/TOAST_SYSTEM.md` (CREADO - documentación)
+
+**Loading Skeletons (2 archivos)**:
+- ✅ `src/components/common/LoadingSkeleton.jsx` (CREADO)
+- ✅ `src/components/common/LoadingSkeleton.css` (CREADO)
+
+**Integraciones (5 archivos)**:
+- ✅ `src/App.jsx` (ToastProvider wrapper)
+- ✅ `src/components/documents/EliminarDocumentoModal.jsx` (toast.success/error)
+- ✅ `src/components/admin/editors/DatosPersonalesEditor.jsx` (import toast)
+- ✅ `src/components/admin/editors/CURPEditor.jsx` (import toast)
+- ✅ `src/components/admin/editors/DomicilioEditor.jsx` (import toast)
+- ✅ `src/components/admin/AdminDashboard.jsx` (DashboardSkeleton)
+- ✅ `src/components/documents/DocumentList.jsx` (import ListSkeleton)
+
+**Documentación**:
+- ✅ `docs/TODO.md` (actualizado a v1.17.0, 40/50 - 80%)
+- ✅ `DEVELOPMENT_JOURNAL.md` (esta entrada)
+
+**Deploy**: 
+- ✅ v1.16.0 (FASE 7) - commit 2f54e66
+- ✅ v1.17.0 (Toast) - commit 21e60da
+- ✅ v1.17.1 (Skeletons) - commit 0d8b26b
+
+---
+
 ### 14 de Enero - v1.16.0 - FASE 7: Eliminación Segura de Documentos
 
 ---
