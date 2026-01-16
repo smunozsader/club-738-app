@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
-import { ref, getDownloadURL } from 'firebase/storage';
+import { ref, getDownloadURL, getBlob } from 'firebase/storage';
 import { db, storage } from '../firebaseConfig';
 import './MisArmas.css';
 
@@ -56,11 +56,10 @@ export default function MisArmas({ user }) {
         // Verificar si existe documento en Storage
         if (!armaData.documentoRegistro) {
           try {
-            // Normalizar matrícula para la ruta (espacios → guion bajo)
-            const matriculaNormalizada = armaData.matricula.replace(/\s+/g, '_');
+            // USAR armaId (UUID) para la ruta - es único e inmutable
             const storageRef = ref(
               storage, 
-              `documentos/${user.email.toLowerCase()}/armas/${matriculaNormalizada}/registro.pdf`
+              `documentos/${user.email.toLowerCase()}/armas/${armaData.id}/registro.pdf`
             );
             const url = await getDownloadURL(storageRef);
             armaData.documentoRegistro = url;
@@ -186,15 +185,29 @@ export default function MisArmas({ user }) {
                     <button 
                       onClick={async () => {
                         try {
-                          // Obtener URL fresca con token de autenticación
-                          // Normalizar matrícula para la ruta (espacios → guion bajo)
-                          const matriculaNormalizada = arma.matricula.replace(/\s+/g, '_');
+                          // USAR armaId (UUID) para la ruta - es único e inmutable
                           const storageRef = ref(
                             storage, 
-                            `documentos/${user.email.toLowerCase()}/armas/${matriculaNormalizada}/registro.pdf`
+                            `documentos/${user.email.toLowerCase()}/armas/${arma.id}/registro.pdf`
                           );
-                          const url = await getDownloadURL(storageRef);
-                          window.open(url, '_blank');
+                          
+                          // Descargar el archivo como blob (con autenticación)
+                          const blob = await getBlob(storageRef);
+                          
+                          // Crear URL temporal del blob
+                          const blobUrl = URL.createObjectURL(blob);
+                          
+                          // Abrir en nueva pestaña
+                          const win = window.open(blobUrl, '_blank');
+                          
+                          // Limpiar URL del blob después de 1 minuto
+                          setTimeout(() => {
+                            URL.revokeObjectURL(blobUrl);
+                          }, 60000);
+                          
+                          if (!win) {
+                            alert('Por favor permite las ventanas emergentes para ver el documento');
+                          }
                         } catch (error) {
                           console.error('Error abriendo registro:', error);
                           alert('Error al abrir el documento. Verifica que el archivo exista.');

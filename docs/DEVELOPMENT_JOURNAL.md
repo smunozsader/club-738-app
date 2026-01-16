@@ -1,3 +1,112 @@
+### 2026-01-16 - v1.20.4 FIX CRÍTICO - Sistema de Espejo Firestore + Rutas UUID Estandarizadas
+
+#### Problema: Inconsistencia de rutas entre Admin y Socios
+
+**Reporte**: Usuario reportó error 403 al intentar ver PDFs de armas. Auditoría reveló problema arquitectónico grave.
+
+**Causa raíz identificada**:
+1. **ArmasRegistroUploader.jsx** (socio) → ❌ Usaba `matrícula normalizada`
+2. **ArmaEditor.jsx** (admin) → ✅ Usaba `UUID (armaId)`
+3. **MisArmas.jsx** (viewer) → ❌ Buscaba con `matrícula normalizada`
+
+**Resultado**: Archivos subidos por admin se veían, pero archivos subidos por socios NO se encontraban. PDFs existían en Storage pero con rutas incompatibles.
+
+**Solución implementada**:
+
+**1. Estandarización a UUID (`armaId`) - Ruta única e inmutable**:
+
+`src/components/documents/ArmasRegistroUploader.jsx`:
+```javascript
+// ANTES (INCONSISTENTE)
+const matriculaNormalizada = arma.matricula.replace(/\s+/g, '_');
+const filePath = `documentos/${userId}/armas/${matriculaNormalizada}/registro.pdf`;
+
+// DESPUÉS (ESTANDARIZADO)
+const filePath = `documentos/${userId}/armas/${armaId}/registro.pdf`;
+
+// AGREGADO: Actualizar Firestore para sistema espejo
+const armaRef = doc(db, 'socios', userId, 'armas', armaId);
+await updateDoc(armaRef, {
+  documentoRegistro: downloadURL
+});
+```
+
+`src/components/MisArmas.jsx` (2 ubicaciones):
+```javascript
+// Carga inicial - ANTES
+const matriculaNormalizada = armaData.matricula.replace(/\s+/g, '_');
+const storageRef = ref(storage, `documentos/${email}/armas/${matriculaNormalizada}/registro.pdf`);
+
+// Carga inicial - DESPUÉS
+const storageRef = ref(storage, `documentos/${email}/armas/${armaData.id}/registro.pdf`);
+
+// Ver PDF - ANTES
+const matriculaNormalizada = arma.matricula.replace(/\s+/g, '_');
+const storageRef = ref(storage, `documentos/${email}/armas/${matriculaNormalizada}/registro.pdf`);
+
+// Ver PDF - DESPUÉS
+const storageRef = ref(storage, `documentos/${email}/armas/${arma.id}/registro.pdf`);
+```
+
+**2. Fix error 403 "Permission denied"**:
+
+Problema: URLs de Storage con `?alt=media` requieren autenticación, pero `window.open()` no envía token de Firebase.
+
+Solución: Usar `getBlob()` para descargar con autenticación + crear blob URL temporal:
+```javascript
+// ANTES (403 Permission denied)
+const url = await getDownloadURL(storageRef);
+window.open(url, '_blank');
+
+// DESPUÉS (Funciona con autenticación)
+import { getBlob } from 'firebase/storage';
+
+const blob = await getBlob(storageRef);
+const blobUrl = URL.createObjectURL(blob);
+window.open(blobUrl, '_blank');
+
+// Limpiar después de 1 minuto
+setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+```
+
+**3. Migración de datos existentes**:
+
+Script: `migrar-rutas-armas.cjs`
+- **77 socios procesados**
+- **276 armas totales**
+- **21 armas migradas** con URLs actualizadas en Firestore:
+  - Sergio Martínez: 3 armas
+  - Fabián Sievers: 3 armas
+  - Iván Cabo: 3 armas
+  - Ricardo Gardoni: 6 armas (parcial)
+  - Ricardo Padilla: 5 armas
+  - Tino Sánchez: 1 arma
+- **255 armas sin PDF** (pendientes de subir por socios)
+
+**Beneficios del sistema espejo**:
+
+✅ **Una sola fuente de verdad**: Firestore `socios/{email}/armas/{armaId}.documentoRegistro`
+✅ **Sin duplicados**: Mismo archivo, misma referencia
+✅ **Bidireccional**: Lo que sube admin lo ve socio, y viceversa
+✅ **Sincronización automática**: Cambios instantáneos para ambos
+✅ **Rutas inmutables**: UUID nunca cambia (vs matrícula que puede variar)
+
+**Archivos modificados**:
+- `src/components/documents/ArmasRegistroUploader.jsx` - Agregar `updateDoc()` + cambio a UUID
+- `src/components/MisArmas.jsx` - Cambio a UUID en 2 ubicaciones + `getBlob()`
+- `migrar-rutas-armas.cjs` - Script de migración masiva
+
+**Scripts de verificación creados**:
+- `check-ricardo-desquens.cjs` - Verificar PDFs de Ricardo Desquens
+- `check-sergio-martinez.cjs` - Verificar PDFs de Sergio Martínez
+- `buscar-armas-ricardo.cjs` - Búsqueda exhaustiva en Storage
+- `debug-sergio-rutas.cjs` - Debug de rutas esperadas vs reales
+
+**Deploy**: Firebase Hosting
+**Fecha**: 16 Ene 2026 14:45 CST
+
+---
+
 ### 2026-01-15 - v1.20.3 CRISIS CRÍTICA - Error de Mapeo UUID vs MATRICULA
 
 #### Database Mapping Disaster - Todos los RFAs mostraban 404

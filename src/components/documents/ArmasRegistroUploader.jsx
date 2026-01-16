@@ -4,7 +4,7 @@
  * que el PDF contenga la matrícula correcta
  */
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, doc } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebaseConfig';
 import { validateArmaRegistro } from '../../utils/ocrValidation';
@@ -120,13 +120,18 @@ export default function ArmasRegistroUploader({ userId, onUploadComplete }) {
     setProgress('Subiendo documento...');
 
     try {
-      // Normalizar matrícula para la ruta (espacios → guion bajo)
-      const matriculaNormalizada = arma.matricula.replace(/\s+/g, '_');
-      const filePath = `documentos/${userId}/armas/${matriculaNormalizada}/registro.pdf`;
+      // USAR armaId (UUID) para la ruta - es único e inmutable
+      const filePath = `documentos/${userId}/armas/${armaId}/registro.pdf`;
       const storageRef = ref(storage, filePath);
       
       await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(storageRef);
+
+      // ✅ ACTUALIZAR FIRESTORE - Para que admin y socio vean lo mismo
+      const armaRef = doc(db, 'socios', userId, 'armas', armaId);
+      await updateDoc(armaRef, {
+        documentoRegistro: downloadURL
+      });
 
       // Actualizar estado local
       setArmas(prev => prev.map(a => 
