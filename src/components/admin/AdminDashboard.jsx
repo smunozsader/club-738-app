@@ -15,7 +15,7 @@ import { useToastContext } from '../../contexts/ToastContext';
 import * as XLSX from 'xlsx';
 import './AdminDashboard.css';
 
-export default function AdminDashboard({ onVerExpediente }) {
+export default function AdminDashboard({ onVerExpediente, onSolicitarPETA }) {
   const [socios, setSocios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -334,6 +334,13 @@ export default function AdminDashboard({ onVerExpediente }) {
                       onClick={() => onVerExpediente && onVerExpediente(socio.email)}
                     >
                       📋 Ver Expediente
+                    </button>
+                    <button
+                      className="btn-solicitar-peta"
+                      onClick={() => onSolicitarPETA && onSolicitarPETA(socio.email)}
+                      title="Solicitar PETA para este socio"
+                    >
+                      🎯 Solicitar PETA
                     </button>
                   </td>
                 </tr>

@@ -48,11 +48,16 @@ const ESTADOS_SUGERIDOS_CAZA = [
   'Sonora'             // Zona cinégetica popular
 ];
 
-export default function SolicitarPETA({ userEmail, onBack }) {
+export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
+  // targetEmail: email del socio para quien se solicita (admin puede solicitarlo para otros)
+  // userEmail: email del usuario autenticado (quien hace la solicitud)
+  const emailSocio = targetEmail || userEmail; // Si es admin solicitando para otro, usa targetEmail
+  
   const [loading, setLoading] = useState(true);
   const [enviando, setEnviando] = useState(false);
   const [socioData, setSocioData] = useState(null);
   const [armas, setArmas] = useState([]);
+  const [esAdminSolicitando, setEsAdminSolicitando] = useState(false);
   
   // Formulario
   const [tipoPETA, setTipoPETA] = useState('tiro'); // tiro, competencia, caza
@@ -75,13 +80,14 @@ export default function SolicitarPETA({ userEmail, onBack }) {
   });
 
   useEffect(() => {
+    setEsAdminSolicitando(targetEmail && targetEmail !== userEmail);
     cargarDatosSocio();
-  }, [userEmail]);
+  }, [userEmail, targetEmail, emailSocio]);
 
   const cargarDatosSocio = async () => {
     try {
       setLoading(true);
-      const socioRef = doc(db, 'socios', userEmail.toLowerCase());
+      const socioRef = doc(db, 'socios', emailSocio.toLowerCase());
       const socioSnap = await getDoc(socioRef);
       
       if (socioSnap.exists()) {
@@ -94,7 +100,7 @@ export default function SolicitarPETA({ userEmail, onBack }) {
         }
         
         // Cargar armas
-        const armasRef = collection(db, 'socios', userEmail.toLowerCase(), 'armas');
+        const armasRef = collection(db, 'socios', emailSocio.toLowerCase(), 'armas');
         const armasSnap = await getDocs(armasRef);
         const armasList = armasSnap.docs.map(doc => ({
           id: doc.id,
@@ -234,7 +240,7 @@ export default function SolicitarPETA({ userEmail, onBack }) {
       });
       
       // Crear documento en Firestore
-      const petasRef = collection(db, 'socios', userEmail.toLowerCase(), 'petas');
+      const petasRef = collection(db, 'socios', emailSocio.toLowerCase(), 'petas');
       await addDoc(petasRef, {
         tipo: tipoPETA,
         estado: 'documentacion_proceso',
@@ -246,7 +252,7 @@ export default function SolicitarPETA({ userEmail, onBack }) {
         
         // Datos del solicitante
         nombre: socioData.nombre,
-        email: userEmail.toLowerCase(),
+        email: emailSocio.toLowerCase(),
         domicilio: domicilio,
         
         // Armas y estados
@@ -261,12 +267,15 @@ export default function SolicitarPETA({ userEmail, onBack }) {
         historial: [{
           estado: 'documentacion_proceso',
           fecha: Timestamp.now(),
-          usuario: userEmail.toLowerCase(),
-          notas: 'Solicitud creada por el socio'
+          usuario: userEmail.toLowerCase(), // Quien creó la solicitud (puede ser admin)
+          notas: esAdminSolicitando ? 
+            `Solicitud creada por administrador (${userEmail}) para el socio` : 
+            'Solicitud creada por el socio'
         }],
         
         // Metadata
-        creadoPor: userEmail.toLowerCase(),
+        creadoPor: userEmail.toLowerCase(), // Quien la creó (admin o socio)
+        solicitadoPara: emailSocio.toLowerCase(), // Para quién es la solicitud
         fechaCreacion: Timestamp.now(),
         ultimaActualizacion: Timestamp.now()
       });
@@ -296,9 +305,23 @@ export default function SolicitarPETA({ userEmail, onBack }) {
 
   return (
     <div className="solicitar-peta-container">
+      {/* Banner si es admin solicitando para otro socio */}
+      {esAdminSolicitando && (
+        <div className="admin-solicitud-banner">
+          <span className="admin-icon">👤</span>
+          <div className="admin-info">
+            <strong>Solicitando PETA como Administrador</strong>
+            <p>Creando solicitud para: <strong>{socioData?.nombre || emailSocio}</strong> ({emailSocio})</p>
+          </div>
+        </div>
+      )}
+      
       <div className="solicitar-peta-header">
         <h2>🎯 Solicitar Nuevo PETA</h2>
         <p className="subtitle">Permiso Extraordinario de Transporte de Armas</p>
+        {esAdminSolicitando && (
+          <p className="socio-target">Para: {socioData?.nombre || emailSocio}</p>
+        )}
       </div>
 
       <div className="solicitar-peta-form">

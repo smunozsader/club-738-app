@@ -4,6 +4,40 @@
   padding: 20px;
 }
 
+/* Banner cuando admin solicita para otro socio */
+.admin-solicitud-banner {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.admin-solicitud-banner .admin-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.admin-solicitud-banner .admin-info {
+  flex: 1;
+}
+
+.admin-solicitud-banner .admin-info strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.admin-solicitud-banner .admin-info p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.95;
+}
+
 .solicitar-peta-header {
   text-align: center;
   margin-bottom: 30px;
@@ -16,6 +50,13 @@
 
 .solicitar-peta-header .subtitle {
   color: #7f8c8d;
+  font-size: 0.95rem;
+}
+
+.solicitar-peta-header .socio-target {
+  color: #667eea;
+  font-weight: 600;
+  margin-top: 8px;
   font-size: 0.95rem;
 }
 
@@ -423,6 +464,36 @@
 .btn-secondary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Dark mode support */
+:root.dark-mode .admin-solicitud-banner {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+:root.dark-mode .solicitar-peta-header h2 {
+  color: #f1f5f9;
+}
+
+:root.dark-mode .solicitar-peta-header .subtitle {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .solicitar-peta-header .socio-target {
+  color: #93c5fd;
+}
+
+:root.dark-mode .solicitar-peta-form {
+  background: #1e293b;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+:root.dark-mode .form-section h3 {
+  color: #f1f5f9;
+}
+
+:root.dark-mode .help-text {
+  color: #94a3b8;
 }
 
 /* Loading state */

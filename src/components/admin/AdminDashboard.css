@@ -352,20 +352,42 @@
 }
 
 /* Botones de acción */
-.btn-ver-expediente {
+.socio-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-ver-expediente,
+.btn-solicitar-peta {
   padding: 0.5rem 1rem;
-  background: #667eea;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 500;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-ver-expediente {
+  background: #667eea;
 }
 
 .btn-ver-expediente:hover {
   background: #5568d3;
+  transform: translateY(-1px);
+}
+
+.btn-solicitar-peta {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+}
+
+.btn-solicitar-peta:hover {
+  background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(72, 187, 120, 0.3);
 }
 
 /* Footer */

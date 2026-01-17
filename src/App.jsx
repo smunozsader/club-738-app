@@ -71,6 +71,9 @@ function App() {
   // Para modo admin: ver expediente de un socio específico
   const [socioSeleccionado, setSocioSeleccionado] = useState(null);
   
+  // Para solicitar PETA en nombre de un socio (admin)
+  const [socioParaPETA, setSocioParaPETA] = useState(null);
+  
   // Para el secretario: ver documentos de otro socio
   const [socioViendoDocumentos, setSocioViendoDocumentos] = useState(null);
   
@@ -226,6 +229,10 @@ function App() {
                 setSocioSeleccionado(email);
                 setActiveSection('expediente');
               }}
+              onSolicitarPETA={(email) => {
+                setSocioParaPETA(email);
+                setActiveSection('admin-solicitar-peta');
+              }}
             />
           )}
           
@@ -241,6 +248,25 @@ function App() {
                 setActiveSection('admin-dashboard');
               }}
             />
+          )}
+          
+          {activeSection === 'admin-solicitar-peta' && socioParaPETA && (
+            <div className="section-admin-peta">
+              <button className="btn-back" onClick={() => {
+                setSocioParaPETA(null);
+                setActiveSection('admin-dashboard');
+              }}>
+                ← Volver a Gestión de Socios
+              </button>
+              <SolicitarPETA 
+                userEmail={user.email}
+                targetEmail={socioParaPETA}
+                onBack={() => {
+                  setSocioParaPETA(null);
+                  setActiveSection('admin-dashboard');
+                }}
+              />
+            </div>
           )}
         </main>
 

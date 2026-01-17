@@ -1,3 +1,231 @@
+### 2026-01-17 - v1.21.0 Admin puede Solicitar PETAs para Socios
+
+#### Workflow mejorado: Administrador puede iniciar solicitudes PETA
+
+**Problema identificado**: No todos los socios completan el proceso de solicitud PETA por su cuenta, pero el módulo SolicitarPETA es muy útil.
+
+**Solución**: Permitir que el administrador solicite PETAs en nombre de cualquier socio desde el AdminDashboard.
+
+**Cambios implementados**:
+
+**1. SolicitarPETA.jsx - Soporte para solicitudes delegadas** 🎯
+
+Modificado para aceptar parámetro `targetEmail` (socio para quien se solicita):
+
+```javascript
+// ANTES: Solo podía solicitar para sí mismo
+export default function SolicitarPETA({ userEmail, onBack }) {
+  // userEmail era tanto quien solicita como para quien se solicita
+}
+
+// DESPUÉS: Puede solicitar para otros (admin)
+export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
+  // targetEmail: email del socio para quien se solicita (opcional)
+  // userEmail: email del usuario autenticado (quien hace la solicitud)
+  const emailSocio = targetEmail || userEmail;
+  const [esAdminSolicitando, setEsAdminSolicitando] = useState(false);
+  
+  useEffect(() => {
+    setEsAdminSolicitando(targetEmail && targetEmail !== userEmail);
+    cargarDatosSocio();
+  }, [userEmail, targetEmail, emailSocio]);
+}
+```
+
+**Cambios en cargarDatosSocio()**:
+```javascript
+// Usa emailSocio en lugar de userEmail
+const socioRef = doc(db, 'socios', emailSocio.toLowerCase());
+const armasRef = collection(db, 'socios', emailSocio.toLowerCase(), 'armas');
+```
+
+**Cambios en enviarSolicitud()**:
+```javascript
+// Guarda en la colección del socio destino
+const petasRef = collection(db, 'socios', emailSocio.toLowerCase(), 'petas');
+
+await addDoc(petasRef, {
+  // ... otros campos
+  email: emailSocio.toLowerCase(),        // Email del socio
+  creadoPor: userEmail.toLowerCase(),     // Quien la creó (admin o socio)
+  solicitadoPara: emailSocio.toLowerCase(), // Para quién es
+  historial: [{
+    usuario: userEmail.toLowerCase(),
+    notas: esAdminSolicitando ? 
+      `Solicitud creada por administrador (${userEmail}) para el socio` : 
+      'Solicitud creada por el socio'
+  }]
+});
+```
+
+**2. Banner informativo cuando admin solicita** 🎨
+
+Agregado banner visual distintivo:
+
+`SolicitarPETA.jsx`:
+```jsx
+{esAdminSolicitando && (
+  <div className="admin-solicitud-banner">
+    <span className="admin-icon">👤</span>
+    <div className="admin-info">
+      <strong>Solicitando PETA como Administrador</strong>
+      <p>Creando solicitud para: <strong>{socioData?.nombre}</strong> ({emailSocio})</p>
+    </div>
+  </div>
+)}
+```
+
+`SolicitarPETA.css`:
+```css
+.admin-solicitud-banner {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+:root.dark-mode .admin-solicitud-banner {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+```
+
+**3. AdminDashboard.jsx - Botón "Solicitar PETA"** 🎯
+
+Agregado nuevo botón de acción para cada socio:
+
+```jsx
+// Props actualizadas
+export default function AdminDashboard({ onVerExpediente, onSolicitarPETA }) {
+
+// En la tabla
+<td className="socio-acciones">
+  <button
+    className="btn-ver-expediente"
+    onClick={() => onVerExpediente && onVerExpediente(socio.email)}
+  >
+    📋 Ver Expediente
+  </button>
+  <button
+    className="btn-solicitar-peta"
+    onClick={() => onSolicitarPETA && onSolicitarPETA(socio.email)}
+    title="Solicitar PETA para este socio"
+  >
+    🎯 Solicitar PETA
+  </button>
+</td>
+```
+
+**Estilos del botón**:
+
+`AdminDashboard.css`:
+```css
+.socio-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-solicitar-peta {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-solicitar-peta:hover {
+  background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(72, 187, 120, 0.3);
+}
+```
+
+**4. App.jsx - Estado y routing para admin solicitar PETA** 🔄
+
+**Estado agregado**:
+```javascript
+// Para solicitar PETA en nombre de un socio (admin)
+const [socioParaPETA, setSocioParaPETA] = useState(null);
+```
+
+**Routing en modo admin**:
+```jsx
+{activeSection === 'admin-dashboard' && (
+  <AdminDashboard 
+    onVerExpediente={(email) => {
+      setSocioSeleccionado(email);
+      setActiveSection('expediente');
+    }}
+    onSolicitarPETA={(email) => {
+      setSocioParaPETA(email);
+      setActiveSection('admin-solicitar-peta');
+    }}
+  />
+)}
+
+{activeSection === 'admin-solicitar-peta' && socioParaPETA && (
+  <div className="section-admin-peta">
+    <button className="btn-back" onClick={() => {
+      setSocioParaPETA(null);
+      setActiveSection('admin-dashboard');
+    }}>
+      ← Volver a Gestión de Socios
+    </button>
+    <SolicitarPETA 
+      userEmail={user.email}
+      targetEmail={socioParaPETA}
+      onBack={() => {
+        setSocioParaPETA(null);
+        setActiveSection('admin-dashboard');
+      }}
+    />
+  </div>
+)}
+```
+
+**Archivos modificados**:
+- `src/components/SolicitarPETA.jsx` (+15 líneas lógica, +15 banner UI)
+- `src/components/SolicitarPETA.css` (+60 líneas banner + dark mode)
+- `src/components/admin/AdminDashboard.jsx` (+10 líneas botón)
+- `src/components/admin/AdminDashboard.css` (+30 líneas estilos botón)
+- `src/App.jsx` (+40 líneas estado + routing)
+
+**Flujo de trabajo**:
+
+1. **Admin accede a "Gestión de Socios"**
+2. **Busca/filtra al socio** que necesita PETA
+3. **Click en "🎯 Solicitar PETA"** en la columna de acciones
+4. **Formulario SolicitarPETA se abre** con datos del socio pre-cargados
+5. **Banner púrpura indica** que está solicitando para otro socio
+6. **Admin completa formulario** (tipo PETA, armas, estados, etc.)
+7. **Solicitud se guarda** en `socios/{emailSocio}/petas/` con metadata:
+   - `creadoPor`: email del admin
+   - `solicitadoPara`: email del socio
+   - `historial`: indica que fue creada por admin
+8. **PETA aparece en MisPETAs del socio** y en VerificadorPETA
+
+**Ventajas**:
+- ✅ Admin no depende de que socios inicien solicitudes
+- ✅ Proceso más ágil para socios que no son tech-savvy
+- ✅ Admin mantiene control del pipeline de PETAs
+- ✅ Auditoría completa (historial muestra quién creó cada solicitud)
+- ✅ UX clara: banner distintivo evita confusión
+- ✅ Datos del socio pre-cargados (armas, domicilio, etc.)
+
+**Deploy**: Exitoso a https://yucatanctp.org
+
+---
+
 ### 2026-01-16 - v1.20.5 Reporteador de Expedientes - Links Clickeables + Dark Mode + Footer
 
 #### Mejoras UX en Panel de Auditoría
