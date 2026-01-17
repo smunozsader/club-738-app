@@ -203,25 +203,7 @@ function App() {
           </div>
         </header>
 
-        {/* Sidebar Admin */}
-        <aside className="admin-sidebar">
-          <nav className="admin-nav">
-            <button 
-              className={`admin-nav-btn ${activeSection === 'admin-dashboard' ? 'active' : ''}`}
-              onClick={() => setActiveSection('admin-dashboard')}
-            >
-              👥 Gestión de Socios
-            </button>
-            <button 
-              className={`admin-nav-btn ${activeSection === 'reportador-expedientes' ? 'active' : ''}`}
-              onClick={() => setActiveSection('reportador-expedientes')}
-            >
-              📋 Reportador Expedientes
-            </button>
-          </nav>
-        </aside>
-
-        {/* Content Admin */}
+        {/* Content Admin - Sidebar ahora está dentro de AdminDashboard */}
         <main className="app-main admin-main">
           {activeSection === 'admin-dashboard' && (
             <AdminDashboard 
@@ -233,6 +215,18 @@ function App() {
                 setSocioParaPETA(email);
                 setActiveSection('admin-solicitar-peta');
               }}
+              onVerificadorPETA={() => setActiveSection('verificador-peta')}
+              onGeneradorPETA={() => setActiveSection('generador-peta')}
+              onExpedienteImpresor={() => setActiveSection('expediente-impresor')}
+              onCobranza={() => setActiveSection('cobranza')}
+              onRegistroPagos={() => setActiveSection('registro-pagos')}
+              onReporteCaja={() => setActiveSection('reporte-caja')}
+              onDashboardRenovaciones={() => setActiveSection('dashboard-renovaciones')}
+              onDashboardCumpleanos={() => setActiveSection('cumpleanos')}
+              onAdminBajas={() => setActiveSection('admin-bajas-arsenal')}
+              onAdminAltas={() => setActiveSection('admin-altas-arsenal')}
+              onMiAgenda={() => setActiveSection('mi-agenda')}
+              onReportadorExpedientes={() => setActiveSection('reportador-expedientes')}
             />
           )}
           
@@ -266,6 +260,34 @@ function App() {
                   setActiveSection('admin-dashboard');
                 }}
               />
+            </div>
+          )}
+
+          {/* NUEVAS SECCIONES ADMIN */}
+          {activeSection === 'registro-pagos' && user.email === ADMIN_EMAIL && (
+            <div className="section-registro-pagos">
+              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+                ← Volver a Panel Admin
+              </button>
+              <RegistroPagos />
+            </div>
+          )}
+
+          {activeSection === 'reporte-caja' && user.email === ADMIN_EMAIL && (
+            <div className="section-reporte-caja">
+              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+                ← Volver a Panel Admin
+              </button>
+              <ReporteCaja />
+            </div>
+          )}
+
+          {activeSection === 'dashboard-renovaciones' && user.email === ADMIN_EMAIL && (
+            <div className="section-dashboard-renovaciones">
+              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+                ← Volver a Panel Admin
+              </button>
+              <DashboardRenovaciones />
             </div>
           )}
         </main>

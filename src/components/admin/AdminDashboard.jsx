@@ -15,7 +15,22 @@ import { useToastContext } from '../../contexts/ToastContext';
 import * as XLSX from 'xlsx';
 import './AdminDashboard.css';
 
-export default function AdminDashboard({ onVerExpediente, onSolicitarPETA }) {
+export default function AdminDashboard({ 
+  onVerExpediente, 
+  onSolicitarPETA,
+  onVerificadorPETA,
+  onGeneradorPETA,
+  onExpedienteImpresor,
+  onRegistroPagos,
+  onReporteCaja,
+  onCobranza,
+  onDashboardRenovaciones,
+  onDashboardCumpleanos,
+  onAdminBajas,
+  onAdminAltas,
+  onMiAgenda,
+  onReportadorExpedientes
+}) {
   const [socios, setSocios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -184,22 +199,175 @@ export default function AdminDashboard({ onVerExpediente, onSolicitarPETA }) {
 
   return (
     <div className="admin-dashboard">
-      {/* Header */}
-      <div className="admin-header">
-        <div className="header-title">
-          <h1>🔧 Panel de Administración</h1>
-          <p className="admin-subtitle">
-            Gestión de expedientes de socios - Club de Caza, Tiro y Pesca de Yucatán, A.C.
-          </p>
+      {/* Sidebar con herramientas admin */}
+      <aside className="admin-tools-sidebar">
+        <h3 className="sidebar-title">🛠️ Herramientas Administrativas</h3>
+        
+        {/* MÓDULO: GESTIÓN DE SOCIOS */}
+        <div className="sidebar-section">
+          <h4 className="sidebar-section-title">👥 Gestión de Socios</h4>
+          <nav className="admin-tools-nav">
+            <button 
+              className="admin-tool-btn socios active"
+              title="Vista activa: Tabla de socios"
+            >
+              <span className="tool-icon">📋</span>
+              <span className="tool-text">Gestión de Socios</span>
+            </button>
+            
+            <button 
+              className="admin-tool-btn socios"
+              onClick={() => onReportadorExpedientes && onReportadorExpedientes()}
+              title="Reportador de expedientes"
+            >
+              <span className="tool-icon">📊</span>
+              <span className="tool-text">Reportador Expedientes</span>
+            </button>
+          </nav>
         </div>
-        <button 
-          className="btn-export-excel"
-          onClick={exportarAExcel}
-          disabled={exportando || sociosFiltrados.length === 0}
-        >
-          {exportando ? '⏳ Exportando...' : '📊 Exportar a Excel'}
-        </button>
-      </div>
+
+        {/* MÓDULO: PETA */}
+        <div className="sidebar-section">
+          <h4 className="sidebar-section-title">🎯 Módulo PETA</h4>
+          <nav className="admin-tools-nav">
+            <button 
+              className="admin-tool-btn peta"
+              onClick={() => onVerificadorPETA && onVerificadorPETA()}
+              title="Verificar documentos de PETAs solicitadas"
+            >
+              <span className="tool-icon">✅</span>
+              <span className="tool-text">Verificador PETA</span>
+            </button>
+            
+            <button 
+              className="admin-tool-btn peta"
+              onClick={() => onGeneradorPETA && onGeneradorPETA()}
+              title="Generar oficios PETA en PDF"
+            >
+              <span className="tool-icon">📄</span>
+              <span className="tool-text">Generador PETA</span>
+            </button>
+            
+            <button 
+              className="admin-tool-btn peta"
+              onClick={() => onExpedienteImpresor && onExpedienteImpresor()}
+              title="Preparar expedientes para impresión"
+            >
+              <span className="tool-icon">🖨️</span>
+              <span className="tool-text">Expediente Impresor</span>
+            </button>
+          </nav>
+        </div>
+
+        {/* MÓDULO: COBRANZA */}
+        <div className="sidebar-section">
+          <h4 className="sidebar-section-title">💰 Módulo Cobranza</h4>
+          <nav className="admin-tools-nav">
+            <button 
+              className="admin-tool-btn pagos"
+              onClick={() => onCobranza && onCobranza()}
+              title="Panel de cobranza unificado"
+            >
+              <span className="tool-icon">💵</span>
+              <span className="tool-text">Panel Cobranza</span>
+            </button>
+            
+            <button 
+              className="admin-tool-btn pagos"
+              onClick={() => onRegistroPagos && onRegistroPagos()}
+              title="Registrar pagos de membresías"
+            >
+              <span className="tool-icon">💳</span>
+              <span className="tool-text">Registro de Pagos</span>
+            </button>
+            
+            <button 
+              className="admin-tool-btn pagos"
+              onClick={() => onReporteCaja && onReporteCaja()}
+              title="Reporte de caja y corte"
+            >
+              <span className="tool-icon">📊</span>
+              <span className="tool-text">Reporte de Caja</span>
+            </button>
+
+            <button 
+              className="admin-tool-btn pagos"
+              onClick={() => onDashboardRenovaciones && onDashboardRenovaciones()}
+              title="Dashboard de renovaciones 2026"
+            >
+              <span className="tool-icon">📈</span>
+              <span className="tool-text">Renovaciones 2026</span>
+            </button>
+            
+            <button 
+              className="admin-tool-btn pagos"
+              onClick={() => onDashboardCumpleanos && onDashboardCumpleanos()}
+              title="Cumpleaños y demografía de socios"
+            >
+              <span className="tool-icon">🎂</span>
+              <span className="tool-text">Cumpleaños</span>
+            </button>
+          </nav>
+        </div>
+
+        {/* MÓDULO: ARSENAL */}
+        <div className="sidebar-section">
+          <h4 className="sidebar-section-title">🔫 Gestión de Arsenal</h4>
+          <nav className="admin-tools-nav">
+            <button 
+              className="admin-tool-btn arsenal"
+              onClick={() => onAdminBajas && onAdminBajas()}
+              title="Administrar solicitudes de baja de armas"
+            >
+              <span className="tool-icon">📦</span>
+              <span className="tool-text">Bajas de Arsenal</span>
+            </button>
+            
+            <button 
+              className="admin-tool-btn arsenal"
+              onClick={() => onAdminAltas && onAdminAltas()}
+              title="Administrar solicitudes de alta de armas"
+            >
+              <span className="tool-icon">📝</span>
+              <span className="tool-text">Altas de Arsenal</span>
+            </button>
+          </nav>
+        </div>
+
+        {/* MÓDULO: AGENDA */}
+        <div className="sidebar-section">
+          <h4 className="sidebar-section-title">📅 Agenda & Citas</h4>
+          <nav className="admin-tools-nav">
+            <button 
+              className="admin-tool-btn agenda"
+              onClick={() => onMiAgenda && onMiAgenda()}
+              title="Gestionar citas de socios"
+            >
+              <span className="tool-icon">📅</span>
+              <span className="tool-text">Mi Agenda</span>
+            </button>
+          </nav>
+        </div>
+      </aside>
+
+      {/* Contenido principal con grid layout */}
+      <div className="admin-main-content">
+        {/* Header */}
+        <div className="admin-header">
+          <div className="header-title">
+            <h1>🔧 Panel de Administración</h1>
+            <p className="admin-subtitle">
+              Gestión de expedientes de socios - Club de Caza, Tiro y Pesca de Yucatán, A.C.
+            </p>
+          </div>
+          <button 
+            className="btn-export-excel"
+            onClick={exportarAExcel}
+            disabled={exportando || sociosFiltrados.length === 0}
+          >
+            {exportando ? '⏳ Exportando...' : '📊 Exportar a Excel'}
+          </button>
+        </div>
 
       {/* Estadísticas rápidas */}
       <div className="admin-stats">
@@ -356,6 +524,7 @@ export default function AdminDashboard({ onVerExpediente, onSolicitarPETA }) {
           Mostrando {sociosFiltrados.length} de {socios.length} socios
         </p>
       </div>
+      </div> {/* Cierre de admin-main-content */}
     </div>
   );
 }

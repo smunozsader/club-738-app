@@ -1,3 +1,169 @@
+## 2026-01-17 - v1.22.0 Panel de Administración Completo con Sidebar Unificado
+
+### Problema: Admin PETA workflow incompleto + UI limitada
+
+**Issues identificados**:
+1. ❌ Error "Missing or insufficient permissions" al crear PETAs para otros socios
+2. ❌ Yucatán pre-seleccionado incorrectamente (no es obligatorio para PETAs nacionales)
+3. ❌ Panel de admin con solo 2 funciones visibles (de 15 disponibles)
+4. ❌ Sidebar duplicado en App.jsx y AdminDashboard
+
+### Solución: Fix de permisos + Audit completo + Sidebar unificado
+
+**1. Firestore Rules - Permitir admin crear PETAs para socios**
+
+Problema: Regla solo permitía `isOwner(email)` → admin no podía crear PETAs en colección de otros socios
+
+```javascript
+// ANTES (firestore.rules)
+match /petas/{petaId} {
+  allow create: if isOwner(email); // ❌ Solo el socio
+}
+
+// DESPUÉS
+match /petas/{petaId} {
+  allow create: if isOwner(email) || isAdminOrSecretary(); // ✅ Socio O admin
+}
+```
+
+Deploy: `firebase deploy --only firestore:rules`
+
+**2. SolicitarPETA.jsx - Fix Yucatán pre-selección + Logging**
+
+Cambios:
+- Removido Yucatán de `useState(['Yucatán'])` → `useState([])` (línea 70)
+- Agregado logging extensivo en `handleEnviarSolicitud`:
+  ```javascript
+  console.log('📝 Datos de la solicitud:', {emailSocio, tipoPETA, ...});
+  console.log('🔫 Armas incluidas:', armasIncluidas);
+  console.log('💾 Guardando PETA en Firestore:', petaData);
+  console.log('✅ PETA creada exitosamente');
+  ```
+- Enhanced error handler con `error.message`, `error.code`, `error.stack`
+
+**3. Audit Completo de Funcionalidades Admin**
+
+**Componentes importados pero NO renderizados**:
+- ❌ RegistroPagos - Importado línea 27, nunca usado
+- ❌ ReporteCaja - Importado línea 28, nunca usado
+- ❌ DashboardRenovaciones - Importado línea 18, nunca usado
+
+**Resultado del Audit - 15 herramientas en 5 módulos**:
+
+**👥 GESTIÓN DE SOCIOS** (2)
+- Gestión de Socios (tabla principal)
+- Reportador Expedientes
+
+**🎯 MÓDULO PETA** (3)
+- Verificador PETA
+- Generador PETA ← **GENERA PDF DEL OFICIO**
+- Expediente Impresor
+
+**💰 MÓDULO COBRANZA** (5)
+- Panel Cobranza
+- Registro de Pagos **(RECIÉN ACTIVADO)**
+- Reporte de Caja **(RECIÉN ACTIVADO)**
+- Renovaciones 2026 **(RECIÉN ACTIVADO)**
+- Cumpleaños
+
+**🔫 GESTIÓN DE ARSENAL** (2)
+- Bajas de Arsenal
+- Altas de Arsenal
+
+**📅 AGENDA & CITAS** (1)
+- Mi Agenda
+
+**4. AdminDashboard.jsx - Sidebar completo**
+
+Props agregadas:
+```javascript
+export default function AdminDashboard({ 
+  onVerExpediente, 
+  onSolicitarPETA,
+  onVerificadorPETA,        // NUEVO
+  onGeneradorPETA,          // NUEVO
+  onExpedienteImpresor,     // NUEVO
+  onCobranza,               // NUEVO
+  onRegistroPagos,          // NUEVO
+  onReporteCaja,            // NUEVO
+  onDashboardRenovaciones,  // NUEVO
+  onDashboardCumpleanos,    // NUEVO
+  onAdminBajas,             // NUEVO
+  onAdminAltas,             // NUEVO
+  onMiAgenda,               // NUEVO
+  onReportadorExpedientes   // NUEVO
+})
+```
+
+Sidebar con 5 secciones categorizadas (260px width, scroll vertical)
+
+**5. AdminDashboard.css - Estilos del sidebar**
+
+```css
+.admin-tools-sidebar {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  max-height: calc(100vh - 80px);
+}
+
+.sidebar-section-title {
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+/* Colores por categoría */
+.admin-tool-btn.socios { border-left: 3px solid #8b5cf6; }
+.admin-tool-btn.peta { border-left: 3px solid #3b82f6; }
+.admin-tool-btn.pagos { border-left: 3px solid #10b981; }
+.admin-tool-btn.arsenal { border-left: 3px solid #f59e0b; }
+.admin-tool-btn.agenda { border-left: 3px solid #ec4899; }
+```
+
+**6. App.jsx - Callbacks + Secciones + Eliminado sidebar duplicado**
+
+Agregadas secciones:
+- `activeSection === 'registro-pagos'` → RegistroPagos
+- `activeSection === 'reporte-caja'` → ReporteCaja
+- `activeSection === 'dashboard-renovaciones'` → DashboardRenovaciones
+
+Eliminado sidebar duplicado:
+```javascript
+// REMOVIDO:
+<aside class="admin-sidebar">
+  <nav class="admin-nav">...</nav>
+</aside>
+```
+
+### Archivos modificados
+
+**Backend/Reglas**:
+- `firestore.rules` - Allow admin crear PETAs para socios
+
+**Frontend/Componentes**:
+- `src/components/SolicitarPETA.jsx` - Fix Yucatán + logging
+- `src/components/admin/AdminDashboard.jsx` - Sidebar completo con 15 herramientas
+- `src/components/admin/AdminDashboard.css` - Estilos sidebar categorizado
+- `src/App.jsx` - Callbacks + secciones faltantes + eliminado sidebar duplicado
+
+### Testing
+
+✅ Admin puede crear PETA para Eduardo Denis Herrera (lalodenis23@hotmail.com)
+✅ No hay error "Missing or insufficient permissions"
+✅ Yucatán no se pre-selecciona en estados
+✅ Sidebar único con 15 herramientas en 5 categorías
+✅ Generador PETA accesible desde sidebar → descarga PDF del oficio
+
+### Deploy
+
+```bash
+firebase deploy --only firestore:rules  # Primero las reglas
+npm run build
+firebase deploy --only hosting
+```
+
+URL: https://yucatanctp.org
+
+---
+
 ### 2026-01-17 - v1.21.0 Admin puede Solicitar PETAs para Socios
 
 #### Workflow mejorado: Administrador puede iniciar solicitudes PETA

@@ -68,7 +68,8 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
   const [armasSeleccionadas, setArmasSeleccionadas] = useState([]);
   
   // Estados seleccionados (máx 10, solo para competencia/caza)
-  const [estadosSeleccionados, setEstadosSeleccionados] = useState(['Yucatán']);
+  // NOTA: Yucatán NO es obligatorio para PETAs nacionales
+  const [estadosSeleccionados, setEstadosSeleccionados] = useState([]);
   
   // Dirección (pre-llenada desde Firestore)
   const [domicilio, setDomicilio] = useState({
@@ -223,6 +224,18 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
     try {
       setEnviando(true);
       
+      console.log('📝 Datos de la solicitud:', {
+        emailSocio,
+        userEmail,
+        esAdminSolicitando,
+        tipoPETA,
+        armasSeleccionadas: armasSeleccionadas.length,
+        estadosSeleccionados: estadosSeleccionados.length,
+        domicilio,
+        esRenovacion,
+        petaAnterior
+      });
+      
       const { inicio, fin } = calcularVigencia();
       
       // Preparar datos de armas incluidas
@@ -239,9 +252,12 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
         };
       });
       
+      console.log('🔫 Armas incluidas:', armasIncluidas);
+      
       // Crear documento en Firestore
       const petasRef = collection(db, 'socios', emailSocio.toLowerCase(), 'petas');
-      await addDoc(petasRef, {
+      
+      const petaData = {
         tipo: tipoPETA,
         estado: 'documentacion_proceso',
         
@@ -278,7 +294,17 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
         solicitadoPara: emailSocio.toLowerCase(), // Para quién es la solicitud
         fechaCreacion: Timestamp.now(),
         ultimaActualizacion: Timestamp.now()
-      });
+      };
+      
+      console.log('💾 Guardando PETA en Firestore:', petaData);
+      
+      await addDoc(petasRef, petaData);
+      
+      console.log('💾 Guardando PETA en Firestore:', petaData);
+      
+      await addDoc(petasRef, petaData);
+      
+      console.log('✅ PETA creada exitosamente');
       
       alert('✅ Solicitud de PETA enviada exitosamente.\n\n' +
             '📋 Próximos pasos:\n' +
@@ -290,8 +316,13 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
       onBack();
       
     } catch (error) {
-      console.error('Error enviando solicitud:', error);
-      alert('Error al enviar la solicitud. Por favor intenta de nuevo.');
+      console.error('❌ Error enviando solicitud:', error);
+      console.error('Error details:', {
+        message: error.message,
+        code: error.code,
+        stack: error.stack
+      });
+      alert(`Error al enviar la solicitud: ${error.message}\n\nPor favor intenta de nuevo o contacta al administrador.`);
     } finally {
       setEnviando(false);
     }

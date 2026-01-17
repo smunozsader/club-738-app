@@ -154,7 +154,8 @@ service cloud.firestore {
         allow read: if isOwner(email) || isAdminOrSecretary();
         
         // Creación: el socio puede crear solicitudes PETA en su propia colección
-        allow create: if isOwner(email);
+        // O el admin/secretario pueden crear PETAs para cualquier socio
+        allow create: if isOwner(email) || isAdminOrSecretary();
         
         // Actualización: el socio puede actualizar sus PETAs en estado 'documentacion_proceso'
         // El secretario/admin pueden actualizar cualquier PETA (verificación, cambio de estado)
