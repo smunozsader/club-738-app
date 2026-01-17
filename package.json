@@ -1,7 +1,7 @@
 {
   "name": "club-738-web",
   "private": true,
-  "version": "1.10.0",
+  "version": "1.22.1",
   "type": "module",
   "description": "Portal de socios Club 738 - Caza, Tiro y Pesca de Yucatán, A.C.",
   "scripts": {

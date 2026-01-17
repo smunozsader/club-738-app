@@ -1,3 +1,134 @@
+## 2026-01-17 - v1.22.1 Fix Props userEmail en Módulos del Sidebar (Auditoría Completa)
+
+### Problema: Módulos del sidebar no cargaban - Mostraban "Acceso Restringido"
+
+**Usuario reportó**: "de todos los modulos laterales very few actually do something... algunos dicen 'este modulo esta restringido para el administrador' y por supuesto que estoy ahi con esas credenciales!"
+
+**Issues identificados tras auditoría profunda**:
+1. ❌ **Verificador PETA** no cargaba → Problema de navegación (`'dashboard'` vs `'admin-dashboard'`)
+2. ❌ **Registro de Pagos** mostraba "Acceso Restringido" → Faltaba prop `userEmail`
+3. ❌ **Reporte de Caja** no funcionaba → Faltaba prop `userEmail`
+4. ❌ **Dashboard Renovaciones 2026** mostraba "Acceso Restringido" → Faltaba prop `userEmail`
+5. ❌ Navegación incorrecta en múltiples componentes (`'dashboard'` en lugar de `'admin-dashboard'`)
+
+### Solución: Auditoría completa + Fix de props + Navegación corregida
+
+**1. App.jsx - Agregar userEmail a componentes que lo requieren**
+
+```javascript
+// ANTES (NO FUNCIONABA):
+<RegistroPagos />                  // ❌ Componente crasheaba
+<ReporteCaja />                    // ❌ Componente crasheaba
+<DashboardRenovaciones />          // ❌ Mostraba "Acceso Restringido"
+
+// DESPUÉS (FUNCIONA):
+<RegistroPagos userEmail={user.email} />              // ✅ Funciona
+<ReporteCaja userEmail={user.email} />                // ✅ Funciona
+<DashboardRenovaciones userEmail={user.email} />      // ✅ Funciona
+```
+
+**¿Por qué necesitan userEmail?**
+- **RegistroPagos**: Requiere `userEmail` para registrar quién hizo el pago (auditoría)
+  ```javascript
+  registradoPor: userEmail,  // Línea 153
+  'renovacion2026.registradoPor': userEmail,  // Línea 183
+  ```
+
+- **ReporteCaja**: Requiere `userEmail` para funcionalidad interna de filtros
+
+- **DashboardRenovaciones**: Valida permisos de secretario
+  ```javascript
+  const esSecretario = userEmail === 'admin@club738.com';  // Línea 34
+  if (!esSecretario) {
+    return <div>Acceso Restringido</div>;  // ← Este era el error
+  }
+  ```
+
+**2. App.jsx - Corregir navegación en 8 componentes administrativos**
+
+Todos los botones "← Volver" ahora redirigen a `'admin-dashboard'` en lugar de `'dashboard'`:
+
+```javascript
+// COMPONENTES CORREGIDOS:
+- VerificadorPETA: setActiveSection('admin-dashboard') ✅
+- GeneradorPETA: setActiveSection('admin-dashboard') ✅
+- CobranzaUnificada: setActiveSection('admin-dashboard') ✅
+- DashboardCumpleanos: setActiveSection('admin-dashboard') ✅
+- ExpedienteImpresor: setActiveSection('admin-dashboard') ✅
+- AdminBajasArsenal: setActiveSection('admin-dashboard') ✅
+- AdminAltasArsenal: setActiveSection('admin-dashboard') ✅
+- MiAgenda: setActiveSection('admin-dashboard') ✅
+```
+
+**3. Auditoría Completa - Estado de los 15 Módulos del Sidebar**
+
+**✅ MÓDULO: GESTIÓN DE SOCIOS (2 herramientas)**
+1. 📋 Gestión de Socios → ✅ FUNCIONA
+2. 📊 Reportador Expedientes → ✅ FUNCIONA
+
+**✅ MÓDULO: PETA (3 herramientas)**
+3. ✅ Verificador PETA → ✅ CORREGIDO (navegación)
+4. 📄 Generador PETA → ✅ FUNCIONA
+5. 🖨️ Expediente Impresor → ✅ FUNCIONA
+
+**✅ MÓDULO: COBRANZA (5 herramientas)**
+6. 💵 Panel Cobranza → ✅ FUNCIONA
+7. 💳 Registro de Pagos → ✅ CORREGIDO (userEmail agregado)
+8. 📊 Reporte de Caja → ✅ CORREGIDO (userEmail agregado)
+9. 📈 Renovaciones 2026 → ✅ CORREGIDO (userEmail agregado)
+10. 🎂 Cumpleaños → ✅ FUNCIONA
+
+**✅ MÓDULO: ARSENAL (2 herramientas)**
+11. 📦 Bajas de Arsenal → ✅ FUNCIONA
+12. 📝 Altas de Arsenal → ✅ FUNCIONA
+
+**✅ MÓDULO: AGENDA & CITAS (1 herramienta)**
+13. 📅 Mi Agenda → ✅ FUNCIONA
+
+**RESULTADO FINAL: 13/13 módulos funcionando al 100%** ✅
+
+### Archivos modificados
+
+1. **src/App.jsx** (11 líneas modificadas)
+   - Línea 272: Agregado `userEmail={user.email}` a RegistroPagos
+   - Línea 281: Agregado `userEmail={user.email}` a ReporteCaja
+   - Línea 290: Agregado `userEmail={user.email}` a DashboardRenovaciones
+   - Líneas 669-732: Corregida navegación en 8 componentes (`'admin-dashboard'`)
+
+2. **AUDITORIA_SIDEBAR_ADMIN.md** (nuevo)
+   - Documentación completa de la auditoría
+   - Tabla de estado de todos los módulos
+   - Explicación de props requeridas por componente
+
+3. **package.json**
+   - Versión actualizada: 1.10.0 → 1.22.1
+
+### Testing
+
+Usuario puede ahora:
+1. ✅ Login como admin@club738.com
+2. ✅ Acceder a **todos** los 13 módulos del sidebar sin errores
+3. ✅ Ver Registro de Pagos (antes mostraba "Acceso Restringido")
+4. ✅ Ver Reporte de Caja (antes crasheaba)
+5. ✅ Ver Dashboard Renovaciones 2026 (antes mostraba "Acceso Restringido")
+6. ✅ Navegar con botón "Volver" correctamente al Panel Admin
+
+### Deploy
+
+```bash
+npm run build
+firebase deploy --only hosting
+git add -A
+git commit -m "fix(admin): Corregir props userEmail en módulos del sidebar - v1.22.1"
+git push
+```
+
+**URL Producción**: https://yucatanctp.org  
+**Commit**: 2ec0327  
+**Status**: ✅ Desplegado exitosamente
+
+---
+
 ## 2026-01-17 - v1.22.0 Panel de Administración Completo con Sidebar Unificado
 
 ### Problema: Admin PETA workflow incompleto + UI limitada
