@@ -1,5 +1,27 @@
 /* CalendarioTiradas.css - Estilos para el calendario de tiradas */
 
+/* Botón Home */
+.btn-home {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-home:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
 .calendario-tiradas {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -779,4 +801,176 @@
   .stat-numero {
     font-size: 1.5rem;
   }
+}
+
+/* ========================================
+   DARK MODE STYLES
+   ======================================== */
+
+:root.dark-mode .calendario-tiradas {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+:root.dark-mode .calendario-header {
+  background: #1e293b;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+:root.dark-mode .header-titulo h2 {
+  color: #e2e8f0;
+}
+
+:root.dark-mode .header-titulo p {
+  color: #94a3b8;
+}
+
+:root.dark-mode .calendario-nav .nav-link {
+  color: #cbd5e1;
+  background: #334155;
+}
+
+:root.dark-mode .calendario-nav .nav-link:hover {
+  background: #475569;
+  color: white;
+}
+
+:root.dark-mode .calendario-nav .nav-link.active {
+  background: #3b82f6;
+  color: white;
+}
+
+:root.dark-mode .controles-seccion,
+:root.dark-mode .calendario-seccion,
+:root.dark-mode .lista-seccion {
+  background: #1e293b;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+:root.dark-mode .stats-bar {
+  background: #334155;
+  border: 1px solid #475569;
+}
+
+:root.dark-mode .stat-item {
+  border-right: 1px solid #475569;
+}
+
+:root.dark-mode .stat-label {
+  color: #94a3b8;
+}
+
+:root.dark-mode .stat-numero {
+  color: #e2e8f0;
+}
+
+:root.dark-mode .filtros-grid label {
+  color: #cbd5e1;
+}
+
+:root.dark-mode select {
+  background: #334155;
+  color: #e2e8f0;
+  border: 1px solid #475569;
+}
+
+:root.dark-mode select:focus {
+  border-color: #3b82f6;
+}
+
+:root.dark-mode .btn-group button {
+  background: #334155;
+  color: #cbd5e1;
+  border: 1px solid #475569;
+}
+
+:root.dark-mode .btn-group button:hover {
+  background: #475569;
+  color: white;
+}
+
+:root.dark-mode .btn-group button.activo {
+  background: #3b82f6;
+  color: white;
+}
+
+:root.dark-mode .calendario-grid {
+  background: #1e293b;
+}
+
+:root.dark-mode .dia-header {
+  background: #334155;
+  color: #cbd5e1;
+}
+
+:root.dark-mode .dia-celda {
+  background: #1e293b;
+  border: 1px solid #334155;
+}
+
+:root.dark-mode .dia-celda:hover {
+  background: #334155;
+}
+
+:root.dark-mode .dia-numero {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .dia-vacio {
+  background: #0f172a;
+}
+
+:root.dark-mode .tarjeta-tirada {
+  background: #334155;
+  border: 1px solid #475569;
+}
+
+:root.dark-mode .tarjeta-tirada:hover {
+  background: #475569;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
+
+:root.dark-mode .tirada-nombre {
+  color: #e2e8f0;
+}
+
+:root.dark-mode .tirada-fecha,
+:root.dark-mode .tirada-club,
+:root.dark-mode .tirada-lugar {
+  color: #94a3b8;
+}
+
+:root.dark-mode .modal-overlay {
+  background: rgba(0,0,0,0.85);
+}
+
+:root.dark-mode .modal-contenido {
+  background: #1e293b;
+}
+
+:root.dark-mode .modal-cerrar {
+  color: #cbd5e1;
+  background: #334155;
+}
+
+:root.dark-mode .modal-cerrar:hover {
+  background: #475569;
+}
+
+:root.dark-mode .modal-body h3 {
+  color: #e2e8f0;
+}
+
+:root.dark-mode .info-item strong {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .info-item p {
+  color: #94a3b8;
+}
+
+:root.dark-mode .nota-inscripcion {
+  background: #334155;
+  color: #cbd5e1;
+  border-left-color: #3b82f6;
 }

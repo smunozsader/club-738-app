@@ -64,12 +64,22 @@ export default function DocumentCard({
   const isDocumentoPrecargado = PRELOADED_DOCS.includes(documentType);
 
   const getStatusInfo = () => {
+    // Si no hay datos de documento, está pendiente
     if (!documentData) {
       return { status: 'pendiente', label: 'Pendiente', color: '#ff9800' };
     }
-    if (isPreloaded || documentData.estado === 'precargado') {
+    
+    // Si tiene URL y es precargado o está marcado como precargado
+    if (documentData.url && (isPreloaded || documentData.estado === 'precargado' || documentData.isPreloaded)) {
       return { status: 'precargado', label: 'Ya cargado ✓', color: '#8b5cf6' };
     }
+    
+    // Si tiene URL pero no tiene estado definido, considerarlo como en revisión
+    if (documentData.url && !documentData.estado) {
+      return { status: 'revision', label: 'En revisión', color: '#2196f3' };
+    }
+    
+    // Estados explícitos
     switch (documentData.estado) {
       case 'aprobado':
         return { status: 'aprobado', label: 'Aprobado', color: '#4caf50' };

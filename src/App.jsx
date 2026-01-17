@@ -5,6 +5,7 @@ import { doc, getDoc, onSnapshot, collection, getDocs, query, where, collectionG
 import useRole from './hooks/useRole';
 import { useDarkMode } from './hooks/useDarkMode';
 import { ToastProvider } from './contexts/ToastContext';
+import './dark-mode-premium.css';
 import LandingPage from './components/LandingPage';
 import AdminDashboard from './components/admin/AdminDashboard';
 import ExpedienteAdminView from './components/admin/ExpedienteAdminView';
@@ -26,6 +27,7 @@ import ExpedienteImpresor from './components/ExpedienteImpresor';
 import RegistroPagos from './components/RegistroPagos';
 import ReporteCaja from './components/ReporteCaja';
 import CobranzaUnificada from './components/CobranzaUnificada';
+import ReportadorExpedientes from './components/admin/ReportadorExpedientes';
 import MiPerfil from './components/MiPerfil';
 import GestionArsenal from './components/GestionArsenal';
 import AdminBajasArsenal from './components/AdminBajasArsenal';
@@ -198,6 +200,24 @@ function App() {
           </div>
         </header>
 
+        {/* Sidebar Admin */}
+        <aside className="admin-sidebar">
+          <nav className="admin-nav">
+            <button 
+              className={`admin-nav-btn ${activeSection === 'admin-dashboard' ? 'active' : ''}`}
+              onClick={() => setActiveSection('admin-dashboard')}
+            >
+              👥 Gestión de Socios
+            </button>
+            <button 
+              className={`admin-nav-btn ${activeSection === 'reportador-expedientes' ? 'active' : ''}`}
+              onClick={() => setActiveSection('reportador-expedientes')}
+            >
+              📋 Reportador Expedientes
+            </button>
+          </nav>
+        </aside>
+
         {/* Content Admin */}
         <main className="app-main admin-main">
           {activeSection === 'admin-dashboard' && (
@@ -207,6 +227,10 @@ function App() {
                 setActiveSection('expediente');
               }}
             />
+          )}
+          
+          {activeSection === 'reportador-expedientes' && (
+            <ReportadorExpedientes />
           )}
           
           {activeSection === 'expediente' && socioSeleccionado && (

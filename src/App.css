@@ -54,48 +54,54 @@
 }
 
 /* ===================================
-   DARK MODE - Variables
+   DARK MODE - Variables Premium
    =================================== */
 :root.dark-mode {
-  /* Colores principales adaptados */
-  --color-primary-dark: #60a5fa;
-  --color-primary: #3b82f6;
-  --color-primary-light: #93c5fd;
+  /* Colores principales - tonos vibrantes pero profesionales */
+  --color-primary-dark: #38bdf8;
+  --color-primary: #0ea5e9;
+  --color-primary-light: #7dd3fc;
   
-  /* Colores neutros invertidos */
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #94a3b8;
-  --color-text-light: #64748b;
-  --color-border: #334155;
-  --color-border-dark: #475569;
-  --color-background: #0f172a;
-  --color-surface: #1e293b;
+  /* Colores neutros - alto contraste */
+  --color-text-primary: #e0f2fe;      /* Títulos principales */
+  --color-text-secondary: #cbd5e1;    /* Texto normal */
+  --color-text-muted: #94a3b8;        /* Texto secundario */
+  --color-text-light: #64748b;        /* Texto terciario */
+  --color-border: #475569;            /* Bordes principales */
+  --color-border-dark: #334155;       /* Bordes sutiles */
+  --color-background: #0f172a;        /* Fondo más oscuro */
+  --color-surface: #1e293b;           /* Superficies/tarjetas */
   
-  /* Colores semánticos para dark mode */
-  --color-success: #22c55e;
-  --color-success-dark: #16a34a;
+  /* Colores semánticos vibrantes */
+  --color-success: #4ade80;           /* Verde brillante */
+  --color-success-dark: #22c55e;
   --color-success-light: #14532d;
+  --color-success-bg: #1e293b;        /* Fondo para badges success */
   
-  --color-warning: #f59e0b;
-  --color-warning-dark: #d97706;
+  --color-warning: #fbbf24;           /* Amarillo dorado */
+  --color-warning-dark: #f59e0b;
   --color-warning-light: #78350f;
+  --color-warning-bg: #1e293b;
   
-  --color-error: #ef4444;
-  --color-error-dark: #dc2626;
+  --color-error: #f87171;             /* Rojo suave */
+  --color-error-dark: #ef4444;
   --color-error-light: #7f1d1d;
+  --color-error-bg: #1e293b;
   
-  --color-info: #3b82f6;
-  --color-info-dark: #2563eb;
+  --color-info: #38bdf8;              /* Azul cielo */
+  --color-info-dark: #0ea5e9;
   --color-info-light: #1e3a8a;
+  --color-info-bg: #1e293b;
   
-  /* Gold para dark mode */
+  /* Gold/Premium */
   --color-gold: #fbbf24;
-  --color-gold-light: #78350f;
+  --color-gold-light: #fde68a;
+  --color-gold-dark: #f59e0b;
   
-  /* Footer en dark mode */
+  /* Footer */
   --color-footer-bg: #0f172a;
-  --color-footer-text: #e2e8f0;
+  --color-footer-text: #cbd5e1;
+  --color-footer-muted: #94a3b8;
 }
   --color-footer-muted: #cbd5e1;      /* Contraste 10.0:1 sobre footer-bg */
   
@@ -155,8 +161,21 @@ body {
 }
 
 :root.dark-mode .dashboard-header {
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);\n  border-bottom: 1px solid #475569;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+:root.dark-mode .dashboard-header h2 {
+  color: #e0f2fe;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+:root.dark-mode .dashboard-header p {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .app-container {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
 .header-brand {
@@ -1226,10 +1245,19 @@ main {
 /* Container admin mode */
 .app-container.admin-mode {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 250px 1fr;
+  min-height: 100vh;
 }
 
 /* Header Admin */
 .app-header.admin-header {
+  grid-area: header;
   background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
   border-bottom: 3px solid #667eea;
 }
@@ -1282,13 +1310,71 @@ main {
   color: white;
 }
 
+/* Sidebar Admin */
+.admin-sidebar {
+  grid-area: sidebar;
+  background: #1a202c;
+  border-right: 2px solid #667eea;
+  padding: 1rem 0;
+}
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  grid-area: footer;
+  background: #1a202c;
+  border-top: 2px solid #667eea;
+  color: #cbd5e1;
+}
+
+/* Responsive admin */
+@media (max-width: 768px) {
+  .app-container.admin-mode {
+    grid-template-areas:
+      "header"
+      "main"
+      "footer";
+    grid-template-columns: 1fr;
+  }
+  
+  .admin-sidebar {
+    display: none;
+  }
+  
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-nav-btn:hover {
+  background: rgba(102, 126, 234, 0.15);
+  color: white;
+}
+
+.admin-nav-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+}
+
 /* Main Admin */
 .app-main.admin-main {
+  grid-area: main;
   flex: 1;
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  overflow-y: auto;
 }
 
 /* Footer Admin */

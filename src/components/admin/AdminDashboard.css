@@ -230,7 +230,7 @@
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: auto;
+  table-layout: fixed;
 }
 
 .admin-table thead {
@@ -249,18 +249,38 @@
   white-space: nowrap;
 }
 
-.admin-table tbody tr {
-  border-bottom: 1px solid #e2e8f0;
-  transition: background-color 0.2s;
+/* Anchos específicos para cada columna - 6 COLUMNAS */
+.admin-table th:nth-child(1), /* Socio (nombre) */
+.admin-table td:nth-child(1) {
+  width: 20%;
 }
 
-.admin-table tbody tr:hover {
-  background: #f7fafc;
+.admin-table th:nth-child(2), /* Email */
+.admin-table td:nth-child(2) {
+  width: 22%;
 }
 
-.admin-table td {
-  padding: 1rem;
-  font-size: 0.95rem;
+.admin-table th:nth-child(3), /* CURP */
+.admin-table td:nth-child(3) {
+  width: 16%;
+  font-family: 'Courier New', monospace;
+}
+
+.admin-table th:nth-child(4), /* Armas */
+.admin-table td:nth-child(4) {
+  width: 10%;
+  text-align: center;
+}
+
+.admin-table th:nth-child(5), /* Progreso */
+.admin-table td:nth-child(5) {
+  width: 20%;
+}
+
+.admin-table th:nth-child(6), /* Acciones */
+.admin-table td:nth-child(6) {
+  width: 12%;
+  text-align: center;
 }
 
 .socio-nombre {
@@ -277,6 +297,21 @@
   font-family: 'Courier New', monospace;
   color: #718096;
   font-size: 0.85rem;
+}
+
+.admin-table tbody tr {
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s;
+}
+
+.admin-table tbody tr:hover {
+  background: #f7fafc;
+}
+
+.admin-table td {
+  padding: 1rem;
+  font-size: 0.95rem;
+  vertical-align: middle;
 }
 
 .badge {
@@ -408,4 +443,50 @@
   .filter-tab {
     width: 100%;
   }
+}
+
+/* Dark Mode Styles */
+:root.dark-mode .admin-table-container {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border: 1px solid #475569;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+:root.dark-mode .admin-table thead {
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
+}
+
+:root.dark-mode .admin-table th {
+  color: #e0f2fe;
+  border-bottom: 2px solid #64748b;
+}
+
+:root.dark-mode .admin-table tbody tr {
+  border-bottom: 1px solid #475569;
+}
+
+:root.dark-mode .admin-table tbody tr:hover {
+  background: rgba(51, 65, 85, 0.5);
+}
+
+:root.dark-mode .admin-table td {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .socio-nombre {
+  color: #e0f2fe;
+}
+
+:root.dark-mode .socio-email {
+  color: #94a3b8;
+}
+
+:root.dark-mode .socio-curp {
+  color: #94a3b8;
+}
+
+:root.dark-mode .badge {
+  background: #334155;
+  color: #94a3b8;
+  border: 1px solid #475569;
 }

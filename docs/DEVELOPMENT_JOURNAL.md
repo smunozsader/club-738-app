@@ -1,3 +1,204 @@
+### 2026-01-16 - v1.20.5 Reporteador de Expedientes - Links Clickeables + Dark Mode + Footer
+
+#### Mejoras UX en Panel de Auditoría
+
+**Objetivo**: Mejorar usabilidad del Reporteador de Expedientes con acceso directo a documentos y consistencia visual.
+
+**Cambios realizados**:
+
+**1. Links clickeables en documentos** 📄🔗
+
+`src/components/admin/ReportadorExpedientes.jsx`:
+- **Función cargarExpedientes()** - Preservar URLs de documentos:
+  ```javascript
+  // Inicialización de docs object (líneas 54-63)
+  const docs = {
+    ine: false,
+    ineUrl: null,           // AGREGADO
+    curp: false,
+    curpUrl: null,          // AGREGADO
+    certificadoAntecedentes: false,
+    certificadoUrl: null,   // AGREGADO
+    certificadoVigente: null,
+    certificadoFecha: null
+  };
+  
+  // Guardar URLs junto con booleans (líneas 63-93)
+  if (files?.url) {
+    docs.ine = true;
+    docs.ineUrl = files.url;  // AGREGADO
+  }
+  ```
+
+- **Tabla de expedientes** - Convertir ✅ en links:
+  ```jsx
+  {/* ANTES: Solo indicador visual */}
+  <span className={`doc-estado ${socio.ine ? 'si' : 'no'}`}>
+    {socio.ine ? '✅' : '❌'}
+  </span>
+  
+  {/* DESPUÉS: Link clickeable cuando existe documento */}
+  {socio.ine && socio.ineUrl ? (
+    <a 
+      href={socio.ineUrl} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="doc-estado si"
+      title="Abrir INE"
+    >
+      ✅
+    </a>
+  ) : (
+    <span className="doc-estado no">❌</span>
+  )}
+  ```
+
+- **Documentos con links**: INE, CURP, Certificado de Antecedentes
+- **Documentos sin link**: ❌ permanecen como texto (no clickeables)
+
+`src/components/admin/ReportadorExpedientes.css`:
+- **Efectos hover** para indicar clickeabilidad:
+  ```css
+  .doc-estado.si {
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+  }
+  
+  .doc-estado.si:hover {
+    transform: scale(1.2);
+    filter: brightness(1.1);
+  }
+  
+  .cert-estado:hover {
+    transform: translateY(-1px);
+    filter: brightness(0.95);
+    cursor: pointer;
+  }
+  ```
+
+**2. Dark Mode Toggle Switch** 🌙
+
+`src/components/admin/ReportadorExpedientes.jsx`:
+- **Imports agregados**:
+  ```javascript
+  import { useDarkMode } from '../../hooks/useDarkMode';
+  import ThemeToggle from '../ThemeToggle';
+  ```
+
+- **Hook integrado**:
+  ```javascript
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
+  ```
+
+- **Header reorganizado** con toggle:
+  ```jsx
+  <div className="header-top">
+    <div className="header-title">
+      <h2>📋 Reportador de Expedientes Digitales</h2>
+      <p className="reportador-descripcion">...</p>
+    </div>
+    <ThemeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
+  </div>
+  ```
+
+`src/components/admin/ReportadorExpedientes.css`:
+- **Header responsive** con flex layout
+- **Dark mode** para links de documentos:
+  ```css
+  :root.dark-mode a.doc-estado.si:hover {
+    filter: brightness(1.3);
+  }
+  ```
+
+**3. Footer Institucional** 📋
+
+`src/components/admin/ReportadorExpedientes.jsx`:
+- **Footer completo** idéntico a páginas públicas:
+  - 📍 Ubicación con link a Google Maps
+  - 📞 Contacto (WhatsApp + Email con icono SVG)
+  - 📜 Registros Oficiales (SEDENA, FEMETI, SEMARNAT)
+  - 🌐 Redes sociales (4 iconos): Facebook, Instagram, Maps, FEMETI
+  - © Copyright Club de Caza, Tiro y Pesca de Yucatán, A.C.
+
+`src/components/admin/ReportadorExpedientes.css`:
+- **Estilos del footer** (~100 líneas):
+  ```css
+  .reportador-footer {
+    margin-top: 60px;
+    padding: 40px 20px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-top: 3px solid #3b82f6;
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+  }
+  
+  .footer-social a {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    color: #3b82f6;
+    transition: all 0.3s;
+  }
+  
+  .footer-social a:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-3px);
+  }
+  ```
+
+- **Dark mode para footer**:
+  ```css
+  :root.dark-mode .reportador-footer {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border-top-color: #3b82f6;
+  }
+  
+  :root.dark-mode .footer-info h4 {
+    color: #f1f5f9;
+  }
+  
+  :root.dark-mode .footer-social a {
+    background: #334155;
+    color: #60a5fa;
+  }
+  ```
+
+- **Responsive** (móviles):
+  ```css
+  @media (max-width: 768px) {
+    .header-top {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .footer-content {
+      grid-template-columns: 1fr;
+      gap: 25px;
+    }
+  }
+  ```
+
+**Archivos modificados**:
+- `src/components/admin/ReportadorExpedientes.jsx` (+80 líneas footer, +5 imports/hooks, +14 tabla links)
+- `src/components/admin/ReportadorExpedientes.css` (+120 líneas footer + dark mode, +20 header layout, +15 hover effects)
+
+**Resultado**:
+- ✅ Secretario puede abrir documentos con un click desde el panel de auditoría
+- ✅ Consistencia visual total: dark mode + footer idéntico en todas las páginas
+- ✅ UX mejorada: hover effects indican elementos clickeables
+- ✅ Mobile responsive: footer y header adaptan a pantallas pequeñas
+
+**Deploy**: Exitoso a https://yucatanctp.org
+
+---
+
 ### 2026-01-16 - v1.20.4 FIX CRÍTICO - Sistema de Espejo Firestore + Rutas UUID Estandarizadas
 
 #### Problema: Inconsistencia de rutas entre Admin y Socios

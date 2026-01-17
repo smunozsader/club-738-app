@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { auth } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useDarkMode } from '../hooks/useDarkMode';
+import ThemeToggle from './ThemeToggle';
 import './LandingPage.css';
 
 const LandingPage = () => {
@@ -11,6 +13,7 @@ const LandingPage = () => {
   const [showRequisitos, setShowRequisitos] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   useEffect(() => {
     // Capturar evento de instalación PWA
@@ -80,6 +83,7 @@ const LandingPage = () => {
             <span className="badge">SEDENA 738</span>
             <span className="badge">FEMETI YUC 05/2020</span>
             <span className="badge">SEMARNAT-CLUB-CIN-005-YUC-05</span>
+            <ThemeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
             {showInstallButton && (
               <button onClick={handleInstallClick} className="install-button" title="Instalar aplicación">
                 📲 Instalar App
@@ -91,6 +95,13 @@ const LandingPage = () => {
 
       {/* Tarjetas principales */}
       <section className="cards-section">
+        <div className="feature-card requisitos-card" onClick={() => setShowRequisitos(true)}>
+          <div className="card-icon">📋</div>
+          <h3>Hazte Socio</h3>
+          <p>Conoce los requisitos y cuotas para formar parte del Club de Caza, Tiro y Pesca de Yucatán, A.C.</p>
+          <span className="card-cta">Ver requisitos →</span>
+        </div>
+
         <a href="/calendario" className="feature-card calendario-card">
           <div className="card-icon">📅</div>
           <h3>Calendario de Tiradas</h3>
@@ -100,17 +111,10 @@ const LandingPage = () => {
 
         <a href="/calculadora" className="feature-card calculadora-card">
           <div className="card-icon">🔢</div>
-          <h3>Calculadora PCP</h3>
-          <p>Calcula la energía cinética de tu rifle de aire y verifica el límite legal</p>
+          <h3>Rifles de Aire - ¿Requiere Registro?</h3>
+          <p>Calcula la potencia de tu rifle de aire y verifica si requiere registro ante SEDENA</p>
           <span className="card-cta">Calcular →</span>
         </a>
-
-        <div className="feature-card requisitos-card" onClick={() => setShowRequisitos(true)}>
-          <div className="card-icon">📋</div>
-          <h3>Hazte Socio</h3>
-          <p>Conoce los requisitos y cuotas para formar parte del Club 738</p>
-          <span className="card-cta">Ver requisitos →</span>
-        </div>
       </section>
 
       {/* Enlaces SEDENA */}
@@ -150,20 +154,27 @@ const LandingPage = () => {
           >
             <div className="sedena-icon">💰</div>
             <h3>Todos los Formatos e5cinco</h3>
-            <p>Catálogo completo de hojas de ayuda para pago de derechos</p>
+            <p>Catálogo completo de hojas de ayuda para pago de derechos SEDENA</p>
             <span className="sedena-cta">Ver catálogo →</span>
           </a>
-          
+        </div>
+      </section>
+
+      {/* Enlaces SEMARNAT */}
+      <section className="sedena-links-section">
+        <h2>🦆 Enlaces Útiles SEMARNAT</h2>
+        <p className="sedena-subtitle">Secretaría de Medio Ambiente y Recursos Naturales</p>
+        <div className="sedena-links-grid">
           <a 
-            href="https://www.gob.mx/defensa/acciones-y-programas/comercializacion-de-armas" 
+            href="https://www.gob.mx/public/tramites/detalleTramite.xhtml?homoclave=SEMARNAT-08-044" 
             target="_blank" 
             rel="noopener noreferrer"
             className="sedena-link-card"
           >
-            <div className="sedena-icon">🏪</div>
-            <h3>Comercialización de Armas</h3>
-            <p>DCAM - Compra de armas y municiones autorizadas</p>
-            <span className="sedena-cta">Ver información →</span>
+            <div className="sedena-icon">🎯</div>
+            <h3>Licencia de Caza Deportiva</h3>
+            <p>Trámite para obtener o renovar tu licencia de cazador deportivo ante SEMARNAT</p>
+            <span className="sedena-cta">Ver trámite →</span>
           </a>
         </div>
       </section>
@@ -297,9 +308,9 @@ const LandingPage = () => {
                   <li>Licencia de Caza SEMARNAT vigente (2 copias)</li>
                   <li>Constancia Modo Honesto de Vivir (original + copia) - Se proporciona formato</li>
                   <li>Constancia de Antecedentes Penales Federales (original + copia) - <a href="https://constancias.oadprs.gob.mx/" target="_blank" rel="noopener noreferrer">Tramitar aquí</a></li>
-                  <li>Certificado Médico (original + copia)</li>
-                  <li>Certificado Toxicológico (original + copia)</li>
-                  <li>Certificado Psicológico (original + copia)</li>
+                  <li>Certificado Médico (original + copia) - Pida informes al club</li>
+                  <li>Certificado Toxicológico (original + copia) - Pida informes al club</li>
+                  <li>Certificado Psicológico (original + copia) - Pida informes al club</li>
                 </ul>
               </div>
               

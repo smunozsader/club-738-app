@@ -1,5 +1,27 @@
 /* Calculadora PCP - Estilos */
 
+/* Botón Home */
+.btn-home {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-home:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
 .calculadora-pcp {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -526,4 +548,146 @@
   .calibres-grid {
     grid-template-columns: 1fr 1fr;
   }
+}
+
+/* ========================================
+   DARK MODE STYLES
+   ======================================== */
+
+:root.dark-mode .calculadora-pcp {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+:root.dark-mode .calc-container {
+  color: #e2e8f0;
+}
+
+:root.dark-mode .calc-instructivo h2,
+:root.dark-mode .calc-form h3,
+:root.dark-mode .calibres-seccion h3 {
+  color: #e2e8f0;
+}
+
+:root.dark-mode .calc-subtitle {
+  color: #94a3b8;
+}
+
+:root.dark-mode .calc-paso,
+:root.dark-mode .calc-form,
+:root.dark-mode .calibre-card {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+:root.dark-mode .calc-paso:hover,
+:root.dark-mode .calibre-card:hover {
+  background: #334155;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+:root.dark-mode .paso-numero {
+  background: #3b82f6;
+  color: white;
+}
+
+:root.dark-mode .paso-texto h4 {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .paso-texto p {
+  color: #94a3b8;
+}
+
+:root.dark-mode .calibre-nombre,
+:root.dark-mode .calibre-uso {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .calibre-desc,
+:root.dark-mode .calibre-peso {
+  color: #94a3b8;
+}
+
+:root.dark-mode .categoria-header h4 {
+  color: #e2e8f0;
+}
+
+:root.dark-mode .categoria-header p {
+  color: #94a3b8;
+}
+
+:root.dark-mode .form-group label {
+  color: #cbd5e1;
+}
+
+:root.dark-mode input {
+  background: #334155;
+  color: #e2e8f0;
+  border: 1px solid #475569;
+}
+
+:root.dark-mode input:focus {
+  border-color: #3b82f6;
+  background: #475569;
+}
+
+:root.dark-mode .btn-calcular {
+  background: #3b82f6;
+}
+
+:root.dark-mode .btn-calcular:hover {
+  background: #2563eb;
+}
+
+:root.dark-mode .btn-limpiar {
+  background: #334155;
+  color: #cbd5e1;
+}
+
+:root.dark-mode .btn-limpiar:hover {
+  background: #475569;
+}
+
+:root.dark-mode .resultado-box {
+  background: #1e293b;
+  border: 2px solid #334155;
+}
+
+:root.dark-mode .resultado-box.peligro {
+  background: #7f1d1d;
+  border-color: #991b1b;
+}
+
+:root.dark-mode .resultado-box.seguro {
+  background: #14532d;
+  border-color: #166534;
+}
+
+:root.dark-mode .resultado-energia {
+  color: #e2e8f0;
+}
+
+:root.dark-mode .resultado-joules {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .resultado-mensaje {
+  color: #94a3b8;
+}
+
+:root.dark-mode .advertencia-legal,
+:root.dark-mode .info-box {
+  background: #1e293b;
+  border-color: #3b82f6;
+}
+
+:root.dark-mode .advertencia-legal p,
+:root.dark-mode .info-box p {
+  color: #94a3b8;
+}
+
+:root.dark-mode .error-message {
+  background: #7f1d1d;
+  color: #fca5a5;
 }

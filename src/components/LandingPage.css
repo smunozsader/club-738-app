@@ -719,3 +719,244 @@
 .install-button:active {
   transform: scale(0.98);
 }
+
+/* ===================================
+   DARK MODE - Premium Design
+   =================================== */
+
+/* Fondo general oscuro con gradiente sutil */
+:root.dark-mode .landing-page {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+/* Header en dark mode - más profundo */
+:root.dark-mode .landing-header {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border-bottom: 1px solid #334155;
+}
+
+:root.dark-mode .badge {
+  background: rgba(148, 163, 184, 0.15);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #cbd5e1;
+}
+
+/* Tarjetas principales - fondo oscuro profesional */
+:root.dark-mode .feature-card {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border: 1px solid #475569;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+:root.dark-mode .feature-card:hover {
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
+  border-color: #64748b;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+:root.dark-mode .feature-card h3 {
+  color: #e0f2fe;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+:root.dark-mode .feature-card p {
+  color: #cbd5e1;
+}
+
+/* CTAs con colores vibrantes en dark mode */
+:root.dark-mode .calendario-card:hover {
+  border-color: #4ade80;
+}
+
+:root.dark-mode .calendario-card .card-cta {
+  color: #4ade80;
+}
+
+:root.dark-mode .calculadora-card:hover {
+  border-color: #38bdf8;
+}
+
+:root.dark-mode .calculadora-card .card-cta {
+  color: #38bdf8;
+}
+
+:root.dark-mode .requisitos-card:hover {
+  border-color: #a78bfa;
+}
+
+:root.dark-mode .requisitos-card .card-cta {
+  color: #a78bfa;
+}
+
+/* Enlaces SEDENA/SEMARNAT en dark mode */
+:root.dark-mode .sedena-links-section h2 {
+  color: #e0f2fe;
+}
+
+:root.dark-mode .sedena-subtitle {
+  color: #94a3b8;
+}
+
+:root.dark-mode .sedena-link-card {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border: 1px solid #475569;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+:root.dark-mode .sedena-link-card:hover {
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
+  border-color: #38bdf8;
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.3);
+}
+
+:root.dark-mode .sedena-link-card h3 {
+  color: #e0f2fe;
+}
+
+:root.dark-mode .sedena-link-card p {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .sedena-cta {
+  color: #38bdf8;
+}
+
+/* Login card en dark mode */
+:root.dark-mode .login-card {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border: 1px solid #475569;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+:root.dark-mode .form-row input {
+  background: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid #475569;
+}
+
+:root.dark-mode .form-row input::placeholder {
+  color: #64748b;
+}
+
+:root.dark-mode .form-row input:focus {
+  outline: 2px solid #fbbf24;
+  border-color: #fbbf24;
+  background: #1e293b;
+}
+
+/* Footer en dark mode */
+:root.dark-mode .landing-footer {
+  background: #0f172a;
+  border-top: 1px solid #1e293b;
+}
+
+:root.dark-mode .footer-content {
+  border-bottom-color: #1e293b;
+}
+
+:root.dark-mode .footer-info h4 {
+  color: #e0f2fe;
+}
+
+:root.dark-mode .footer-info p,
+:root.dark-mode .footer-info a {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .footer-info a:hover {
+  color: #e0f2fe;
+}
+
+:root.dark-mode .map-link,
+:root.dark-mode .whatsapp-link,
+:root.dark-mode .email-link {
+  color: #38bdf8;
+}
+
+:root.dark-mode .map-link:hover,
+:root.dark-mode .whatsapp-link:hover {
+  color: #7dd3fc;
+}
+
+:root.dark-mode .footer-social a {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+:root.dark-mode .footer-social a:hover {
+  background: #334155;
+  border-color: #475569;
+  color: #e0f2fe;
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+}
+
+:root.dark-mode .footer-bottom {
+  border-top-color: #1e293b;
+  color: #94a3b8;
+}
+
+/* Modal en dark mode */
+:root.dark-mode .modal-overlay {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+:root.dark-mode .modal-requisitos {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border: 1px solid #475569;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+:root.dark-mode .modal-requisitos h2 {
+  color: #e0f2fe;
+}
+
+:root.dark-mode .modal-requisitos h3 {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .modal-requisitos p,
+:root.dark-mode .modal-requisitos li {
+  color: #94a3b8;
+}
+
+:root.dark-mode .modal-close {
+  color: #cbd5e1;
+  background: #1e293b;
+}
+
+:root.dark-mode .modal-close:hover {
+  background: #475569;
+  color: #e0f2fe;
+}
+
+:root.dark-mode .requisitos-section {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid #334155;
+}
+
+:root.dark-mode .contacto-cuotas a,
+:root.dark-mode .modal-email {
+  color: #38bdf8;
+}
+
+:root.dark-mode .whatsapp-btn {
+  background: #22c55e;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+}
+
+:root.dark-mode .whatsapp-btn:hover {
+  background: #16a34a;
+  box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4);
+}
+
+/* Botón de instalación PWA en dark mode */
+:root.dark-mode .install-button {
+  background: rgba(148, 163, 184, 0.15);
+  border-color: rgba(203, 213, 225, 0.3);
+}
+
+:root.dark-mode .install-button:hover {
+  background: rgba(148, 163, 184, 0.25);
+  border-color: rgba(226, 232, 240, 0.5);
+}

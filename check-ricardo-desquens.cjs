@@ -46,8 +46,30 @@ async function checkRicardoDesquens() {
     console.log('❌ No hay archivos en Storage para este socio');
   } else {
     files.forEach(file => {
-      console.log(`✅ ${file.name}`);
+      const fileName = file.name.split('/').pop();
+      const ext = fileName.split('.').pop().toUpperCase();
+      const size = (file.metadata.size / 1024).toFixed(2);
+      console.log(`✅ ${file.name} [${ext}, ${size} KB]`);
     });
+  }
+  
+  // Buscar documentos médicos en JPG
+  console.log('');
+  console.log('--- DOCUMENTOS MÉDICOS (JPG/JPEG) ---');
+  const medicosJpg = files.filter(f => {
+    const name = f.name.toLowerCase();
+    return (name.includes('.jpg') || name.includes('.jpeg')) && 
+           (name.includes('medico') || name.includes('toxico') || name.includes('psico'));
+  });
+  
+  if (medicosJpg.length > 0) {
+    medicosJpg.forEach(file => {
+      console.log(`📄 ${file.name}`);
+      console.log(`   Tamaño: ${(file.metadata.size / 1024).toFixed(2)} KB`);
+      console.log(`   Fecha: ${file.metadata.timeCreated}`);
+    });
+  } else {
+    console.log('⚠️ No se encontraron certificados médicos en JPG');
   }
   
   // Buscar PDFs de armas específicamente
