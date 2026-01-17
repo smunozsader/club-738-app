@@ -269,7 +269,7 @@ function App() {
               <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
                 ← Volver a Panel Admin
               </button>
-              <RegistroPagos />
+              <RegistroPagos userEmail={user.email} />
             </div>
           )}
 
@@ -278,7 +278,7 @@ function App() {
               <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
                 ← Volver a Panel Admin
               </button>
-              <ReporteCaja />
+              <ReporteCaja userEmail={user.email} />
             </div>
           )}
 
@@ -287,7 +287,7 @@ function App() {
               <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
                 ← Volver a Panel Admin
               </button>
-              <DashboardRenovaciones />
+              <DashboardRenovaciones userEmail={user.email} />
             </div>
           )}
         </main>
@@ -666,14 +666,14 @@ function App() {
 
         {activeSection === 'cobranza' && user.email === ADMIN_EMAIL && (
           <div className="section-cobranza">
-            <CobranzaUnificada onBack={() => setActiveSection('dashboard')} />
+            <CobranzaUnificada onBack={() => setActiveSection('admin-dashboard')} />
           </div>
         )}
 
         {activeSection === 'cumpleanos' && user.email === ADMIN_EMAIL && (
           <div className="section-cumpleanos">
-            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
-              ← Volver al Dashboard
+            <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+              ← Volver al Panel Admin
             </button>
             <DashboardCumpleanos userEmail={user.email} />
           </div>
@@ -681,8 +681,8 @@ function App() {
 
         {activeSection === 'generador-peta' && user.email === ADMIN_EMAIL && (
           <div className="section-generador-peta">
-            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
-              ← Volver al Dashboard
+            <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+              ← Volver al Panel Admin
             </button>
             <GeneradorPETA userEmail={user.email} />
           </div>
@@ -690,23 +690,23 @@ function App() {
 
         {activeSection === 'verificador-peta' && user.email === ADMIN_EMAIL && (
           <div className="section-verificador-peta">
-            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
-              ← Volver al Dashboard
+            <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+              ← Volver al Panel Admin
             </button>
-            <VerificadorPETA userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
+            <VerificadorPETA userEmail={user.email} onBack={() => setActiveSection('admin-dashboard')} />
           </div>
         )}
 
         {activeSection === 'expediente-impresor' && user.email === ADMIN_EMAIL && (
           <div className="section-expediente-impresor">
-            <ExpedienteImpresor userEmail={user.email} onBack={() => setActiveSection('dashboard')} />
+            <ExpedienteImpresor userEmail={user.email} onBack={() => setActiveSection('admin-dashboard')} />
           </div>
         )}
 
         {activeSection === 'admin-bajas-arsenal' && user.email === ADMIN_EMAIL && (
           <div className="section-admin-bajas-arsenal">
-            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
-              ← Volver al Dashboard
+            <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+              ← Volver al Panel Admin
             </button>
             <AdminBajasArsenal />
           </div>
@@ -714,8 +714,8 @@ function App() {
 
         {activeSection === 'admin-altas-arsenal' && user.email === ADMIN_EMAIL && (
           <div className="section-admin-altas-arsenal">
-            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
-              ← Volver al Dashboard
+            <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+              ← Volver al Panel Admin
             </button>
             <AdminAltasArsenal />
           </div>
@@ -729,7 +729,7 @@ function App() {
         
         {activeSection === 'mi-agenda' && user.email === ADMIN_EMAIL && (
           <div className="section-mi-agenda">
-            <MiAgenda onBack={() => setActiveSection('dashboard')} />
+            <MiAgenda onBack={() => setActiveSection('admin-dashboard')} />
           </div>
         )}
         
