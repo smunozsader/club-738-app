@@ -671,6 +671,15 @@ main {
   margin: 0 auto;
 }
 
+.landing-footer .footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  margin-top: 24px;
+  width: 100%;
+}
+
 .footer-social {
   display: flex;
   justify-content: center;
@@ -940,6 +949,9 @@ main {
   margin-top: auto;
   width: 100%;
   order: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .landing-footer.admin-footer-full {
@@ -951,12 +963,16 @@ main {
 
 .landing-footer .footer-content {
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 40px;
   padding-bottom: 32px;
   border-bottom: 1px solid #334155;
+  padding-left: 24px;
+  padding-right: 24px;
+  box-sizing: border-box;
 }
 
 .landing-footer .footer-info h4 {
@@ -984,9 +1000,13 @@ main {
 
 .landing-footer .footer-bottom {
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   padding-top: 24px;
   text-align: center;
+  padding-left: 24px;
+  padding-right: 24px;
+  box-sizing: border-box;
 }
 
 .landing-footer .footer-bottom p {
