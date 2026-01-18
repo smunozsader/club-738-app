@@ -598,37 +598,83 @@ function GestionArsenal() {
               </div>
 
               <div className="form-row">
-                <label>
+                <label htmlFor="formAlta-marca">
                   Marca: *
-                  <input type="text" value={formAlta.marca} onChange={(e) => setFormAlta({ ...formAlta, marca: e.target.value })} placeholder="Ej: GLOCK, BROWNING" required />
+                  <input 
+                    id="formAlta-marca"
+                    type="text" 
+                    name="marca"
+                    value={formAlta.marca} 
+                    onChange={(e) => setFormAlta({ ...formAlta, marca: e.target.value })} 
+                    placeholder="Ej: GLOCK, BROWNING" 
+                    required 
+                    aria-required="true"
+                    aria-label="Marca del arma - Requerido"
+                  />
                 </label>
               </div>
 
               <div className="form-row">
-                <label>
+                <label htmlFor="formAlta-modelo">
                   Modelo:
-                  <input type="text" value={formAlta.modelo} onChange={(e) => setFormAlta({ ...formAlta, modelo: e.target.value })} placeholder="Ej: G19, PHOENIX" />
+                  <input 
+                    id="formAlta-modelo"
+                    type="text" 
+                    name="modelo"
+                    value={formAlta.modelo} 
+                    onChange={(e) => setFormAlta({ ...formAlta, modelo: e.target.value })} 
+                    placeholder="Ej: G19, PHOENIX"
+                    aria-label="Modelo del arma"
+                  />
                 </label>
               </div>
 
               <div className="form-row">
-                <label>
+                <label htmlFor="formAlta-calibre">
                   Calibre: *
-                  <input type="text" value={formAlta.calibre} onChange={(e) => setFormAlta({ ...formAlta, calibre: e.target.value })} placeholder="Ej: 9mm, .22 LR, .308 Win" required />
+                  <input 
+                    id="formAlta-calibre"
+                    type="text" 
+                    name="calibre"
+                    value={formAlta.calibre} 
+                    onChange={(e) => setFormAlta({ ...formAlta, calibre: e.target.value })} 
+                    placeholder="Ej: 9mm, .22 LR, .308 Win" 
+                    required
+                    aria-required="true"
+                    aria-label="Calibre del arma - Requerido"
+                  />
                 </label>
               </div>
 
               <div className="form-row">
-                <label>
+                <label htmlFor="formAlta-matricula">
                   Matrícula: *
-                  <input type="text" value={formAlta.matricula} onChange={(e) => setFormAlta({ ...formAlta, matricula: e.target.value })} placeholder="Matrícula grabada en el arma" required />
+                  <input 
+                    id="formAlta-matricula"
+                    type="text" 
+                    name="matricula"
+                    value={formAlta.matricula} 
+                    onChange={(e) => setFormAlta({ ...formAlta, matricula: e.target.value })} 
+                    placeholder="Matrícula grabada en el arma" 
+                    required
+                    aria-required="true"
+                    aria-label="Matrícula del arma - Requerido"
+                  />
                 </label>
               </div>
 
               <div className="form-row">
-                <label>
-                  Folio SEDENA:
-                  <input type="text" value={formAlta.folio} onChange={(e) => setFormAlta({ ...formAlta, folio: e.target.value })} placeholder="Si ya tienes registro federal" />
+                <label htmlFor="formAlta-folio">
+                  Folio:
+                  <input 
+                    id="formAlta-folio"
+                    type="text" 
+                    name="folio"
+                    value={formAlta.folio} 
+                    onChange={(e) => setFormAlta({ ...formAlta, folio: e.target.value })} 
+                    placeholder="Si ya tienes registro federal"
+                    aria-label="Folio del registro SEDENA"
+                  />
                 </label>
               </div>
 

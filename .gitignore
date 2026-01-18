@@ -34,6 +34,8 @@ serviceAccountKey.json
 CREDENTIALS*.txt
 *_CREDENTIALS.txt
 passwords.txt
+credenciales_socios.csv
+credenciales_socios.json
 
 # ====================================
 # DATA FILES - Keep locally only

@@ -431,6 +431,21 @@ main {
   color: #f59e0b;
 }
 
+/* Comunicados Oficiales Card */
+.dash-card.comunicados {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-color: #f59e0b;
+}
+
+.dash-card.comunicados:hover {
+  border-color: #d97706;
+  box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+}
+
+.dash-card.comunicados .dash-card-cta {
+  color: #d97706;
+}
+
 /* Admin Cards */
 .dash-card.admin {
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
@@ -1382,6 +1397,29 @@ main {
   background: #1a202c;
   border-top: 2px solid #667eea;
   color: #cbd5e1;
+}
+
+/* Sección Comunicados Oficiales */
+.section-comunicados {
+  padding: 20px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.section-comunicados .btn-back {
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.section-comunicados .btn-back:hover {
+  background: #1565c0;
+  transform: translateX(-3px);
 }
 
 /* Responsive admin */

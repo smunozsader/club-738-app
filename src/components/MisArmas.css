@@ -227,6 +227,20 @@
   font-size: 0.95rem;
 }
 
+.nota-registros a {
+  color: #0d47a1;
+  text-decoration: none;
+  border-bottom: 2px solid #2196f3;
+  padding-bottom: 2px;
+  transition: all 0.3s ease;
+}
+
+.nota-registros a:hover {
+  color: #1976d2;
+  border-bottom-color: #1976d2;
+  cursor: pointer;
+}
+
 .nota-registros strong {
   color: #0d47a1;
 }

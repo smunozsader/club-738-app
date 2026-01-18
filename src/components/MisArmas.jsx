@@ -125,7 +125,10 @@ export default function MisArmas({ user }) {
       <div className="nota-registros">
         <p>
           📄 Para subir los registros de tus armas, ve a{' '}
-          <strong>"Documentos PETA" → "Registros de Armas (RFA)"</strong>
+          <a href="#" onClick={(e) => { e.preventDefault(); window.location.hash = 'documentos-socio'; window.location.reload(); }}>
+            <strong>Mi Expediente Digital</strong>
+          </a>
+          {' '}→ <strong>Armas y Permisos</strong>
         </p>
       </div>
 

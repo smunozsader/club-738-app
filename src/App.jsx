@@ -36,6 +36,7 @@ import AgendarCita from './components/AgendarCita';
 import MiAgenda from './components/MiAgenda';
 import ManualUsuario from './components/ManualUsuario';
 import ThemeToggle from './components/ThemeToggle';
+import ComunicadosOficiales from './components/ComunicadosOficiales';
 import './App.css';
 
 // Email del administrador/secretario
@@ -485,6 +486,13 @@ function App() {
                 )}
                 <span className="dash-card-cta">Ver detalles →</span>
               </div>
+
+              <div className="dash-card comunicados" onClick={() => setActiveSection('comunicados')}>
+                <div className="dash-card-icon">📢</div>
+                <h3>Comunicados Oficiales</h3>
+                <p>Oficios y comunicaciones de la 32 ZM y del Club</p>
+                <span className="dash-card-cta">Ver comunicados →</span>
+              </div>
             </div>
             
             {/* Sección Herramientas */}
@@ -724,6 +732,15 @@ function App() {
         {activeSection === 'agendar-cita' && (
           <div className="section-agendar-cita">
             <AgendarCita onBack={() => setActiveSection('dashboard')} />
+          </div>
+        )}
+        
+        {activeSection === 'comunicados' && (
+          <div className="section-comunicados">
+            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
+              ← Volver al Portal
+            </button>
+            <ComunicadosOficiales />
           </div>
         )}
         
