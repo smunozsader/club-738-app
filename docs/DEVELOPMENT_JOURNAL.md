@@ -1,3 +1,49 @@
+## 2026-01-17 - Auditoría y Corrección FUENTE_DE_VERDAD.xlsx
+
+### Auditoría de Integridad de Datos
+
+**Objetivo**: Identificar y corregir errores en columnas ESTADO y CP de FUENTE_DE_VERDAD.xlsx
+
+**Problema Reportado**: 
+- Columna ESTADO mostraba "MÉRIDA" cuando debía mostrar "YUCATÁN" (u otros estados)
+- Columna CP contenía "YUCATÁN" en lugar de códigos postales válidos
+
+**Investigación**:
+1. ✅ Comparación automática con archivo histórico (referencia confiable)
+2. ✅ Identificación de patrón: Columnas desplazadas en FUENTE_DE_VERDAD
+3. ✅ Auditoría de primeros 10 registros → 20 diferencias encontradas (100%)
+
+**Errores Detectados**:
+- **ESTADO**: 279 registros con "MÉRIDA" en lugar de "YUCATÁN"
+- **CP**: 286 registros con "YUCATÁN" en lugar de códigos postales
+
+**Proceso de Corrección**:
+1. Crear script Python con openpyxl para comparación automatizada
+2. Script `fix-excel.py` corrige todos los registros en batch
+3. Validación post-fix: re-auditoría confirma 0 diferencias
+
+**Estadísticas**:
+| Métrica | Valor |
+|---------|-------|
+| Registros procesados | 286 |
+| Correcciones ESTADO | 279 filas |
+| Correcciones CP | 286 filas |
+| Total correcciones | 565 cambios |
+| Tasa de error pre-fix | 100% |
+| Tasa de error post-fix | 0% ✅ |
+
+**Archivos modificados/creados**:
+- ✅ `socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx` - CORREGIDO
+- ✅ `docs/AUDITORIA_FUENTE_VERDAD_17_ENE_2026.md` - Documentación completa
+
+**Commit**: `18f6c1f` - fix(data): Corregir FUENTE_DE_VERDAD.xlsx
+
+**Próximos pasos**:
+- Sincronizar datos corregidos con Firestore si es necesario
+- Verificar socios de otros estados (Campeche, Quintana Roo, Tabasco, Chiapas, Veracruz)
+
+---
+
 ## 2026-01-18 - v1.30.0 Contabilidad: Columna Inscripción para Socios Nuevos
 
 ### Fix Contabilidad - Desglose de Inscripciones
