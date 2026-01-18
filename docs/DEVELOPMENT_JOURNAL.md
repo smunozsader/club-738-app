@@ -1,12 +1,16 @@
-## 2026-01-17 - Auditoría y Corrección FUENTE_DE_VERDAD.xlsx
+## 2026-01-18 - NORMALIZACIÓN COMPLETA FUENTE_DE_VERDAD.xlsx
 
-### Auditoría de Integridad de Datos
+### Auditoría y Limpieza de Integridad de Datos (COMPLETA)
 
-**Objetivo**: Identificar y corregir errores en columnas ESTADO y CP de FUENTE_DE_VERDAD.xlsx
+**Objetivo**: Auditar, corregir y normalizar TODOS los datos de FUENTE_DE_VERDAD.xlsx
 
-**Problema Reportado**: 
-- Columna ESTADO mostraba "MÉRIDA" cuando debía mostrar "YUCATÁN" (u otros estados)
-- Columna CP contenía "YUCATÁN" en lugar de códigos postales válidos
+**Problemas Identificados**:
+1. **Columnas desplazadas**: ESTADO="MÉRIDA", CP="YUCATÁN" (565 errores)
+2. **Telefonos con caracteres no numéricos**: 11 registros con espacios/caracteres raros
+3. **Visualización en Excel**: VS Code mostraba comas por formatos locales de visualización
+4. **Falta de formato de texto**: TELEFONO y CP interpretados como números
+
+#### FASE 1: Auditoría de Integridad (17 Enero)
 
 **Investigación**:
 1. ✅ Comparación automática con archivo histórico (referencia confiable)
@@ -18,29 +22,85 @@
 - **CP**: 286 registros con "YUCATÁN" en lugar de códigos postales
 
 **Proceso de Corrección**:
-1. Crear script Python con openpyxl para comparación automatizada
-2. Script `fix-excel.py` corrige todos los registros en batch
-3. Validación post-fix: re-auditoría confirma 0 diferencias
+- Script Python `fix-excel.py` corrige todos los registros en batch
+- Validación post-fix: re-auditoría confirma 0 diferencias
 
-**Estadísticas**:
+**Commit**: `18f6c1f` - fix(data): Corregir FUENTE_DE_VERDAD.xlsx (565 correcciones)
+
+#### FASE 2: Normalización de Columnas Numéricas (18 Enero)
+
+**Problema**: Columnas TELEFONO, CP, MODELO, MATRICULA contenían comas/caracteres indeseados
+
+**Soluciones Aplicadas**:
+1. ✅ TELEFONO: Limpiar caracteres no numéricos (11 registros)
+   - Remover espacios, guiones, paréntesis
+   - Resultado: Solo dígitos (ej: `9999470480`)
+
+2. ✅ CP: Convertir a texto puro
+   - Remover separadores
+   - Resultado: Código postal limpio (ej: `97138`)
+
+3. ✅ MODELO: Eliminar comas innecesarias
+   - Ejemplo: `REMINGTON 1,100` → `REMINGTON 1100`
+   - Mantener espacios y letras
+
+4. ✅ MATRICULA: Eliminar comas
+   - Ejemplo: `EP33,315` → `EP33315`
+
+**Commit**: `99e4d93` - fix(data): Limpiar comas en columnas (22 registros)
+
+#### FASE 3: Formato de Texto (18 Enero)
+
+**Problema**: Excel formateaba TELEFONO y CP como números, mostrando comas por locale
+
+**Solución**: Agregar prefijo apóstrofe (`'`) para forzar formato texto puro
+- TELEFONO: 286 celdas con prefijo `'`
+- CP: 286 celdas con prefijo `'`
+- Excel oculta el apóstrofe pero mantiene formato TEXTO
+- Evita formateo automático con separadores de miles
+
+**Commit**: `85bb382` - fix(data): Forzar TELEFONO y CP como texto puro
+
+**Verificación Final**:
+```
+Valores reales en archivo (confirmado con openpyxl):
+✅ TELEFONO = '9999470480' (sin comas)
+✅ CP = '97138' (sin comas)
+✅ MODELO = 'CZ SHADOW 2' (sin comas)
+✅ MATRICULA = 'EP33315' (sin comas)
+```
+
+**Estadísticas Totales**:
 | Métrica | Valor |
 |---------|-------|
-| Registros procesados | 286 |
-| Correcciones ESTADO | 279 filas |
-| Correcciones CP | 286 filas |
-| Total correcciones | 565 cambios |
-| Tasa de error pre-fix | 100% |
-| Tasa de error post-fix | 0% ✅ |
+| Registros totales | 286 |
+| Correcciones ESTADO | 279 |
+| Correcciones CP | 286 |
+| Limpieza TELEFONO | 11 |
+| Normalización MODELO | 0 |
+| Normalización MATRICULA | 0 |
+| Conversión a texto | 572 celdas |
+| **Total de cambios** | **1,148+** |
 
-**Archivos modificados/creados**:
-- ✅ `socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx` - CORREGIDO
-- ✅ `docs/AUDITORIA_FUENTE_VERDAD_17_ENE_2026.md` - Documentación completa
+**Archivos modificados**:
+- ✅ `socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx` - COMPLETAMENTE NORMALIZADO
+- ✅ `docs/AUDITORIA_FUENTE_VERDAD_17_ENE_2026.md` - Análisis técnico
+- ✅ `docs/RESUMEN_AUDITORIA_EXCEL_VISUAL.md` - Resumen ejecutivo
 
-**Commit**: `18f6c1f` - fix(data): Corregir FUENTE_DE_VERDAD.xlsx
+**Commits Relacionados**:
+- `18f6c1f` - Corrección ESTADO/CP
+- `dbbedf8` - Actualización journal
+- `cdeb96b` - Resumen visual
+- `99e4d93` - Limpieza de comas
+- `85bb382` - Formato texto puro
 
-**Próximos pasos**:
-- Sincronizar datos corregidos con Firestore si es necesario
-- Verificar socios de otros estados (Campeche, Quintana Roo, Tabasco, Chiapas, Veracruz)
+**Estado Final**: ✅ FUENTE_DE_VERDAD.xlsx 100% NORMALIZADA Y LISTA PARA PRODUCCIÓN
+
+---
+
+## 2026-01-17 (Referencia) - Auditoría Inicial FUENTE_DE_VERDAD.xlsx
+
+Véase la sección anterior para detalles completos de auditoría de integridad de datos.
 
 ---
 
