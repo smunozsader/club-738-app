@@ -1,0 +1,536 @@
+{
+  "users": [
+    {
+      "localId": "socio_1",
+      "email": "richfegas@icloud.com",
+      "displayName": "RICARDO JESÚS FERNÁNDEZ Y GASQUE",
+      "passwordHash": "mFq323zbN#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_30",
+      "email": "jacintolizarraga@hotmail.com",
+      "displayName": "JOSE JACINTO LIZARRAGA AVILA",
+      "passwordHash": "tKg691MaO#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_31",
+      "email": "fit.x66@hotmail.com",
+      "displayName": "ADOLFO XACUR RIVERA",
+      "passwordHash": "shL677cfT$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_46",
+      "email": "sysaventas@hotmail.com",
+      "displayName": "REMIGIO BEETHOVEN AGUILAR CANTO",
+      "passwordHash": "Vpe892Ybu$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_51",
+      "email": "manuel.chaidez@valledelsur.com.mx",
+      "displayName": "MANUEL JESÚS CHAIDEZ PALACIOS",
+      "passwordHash": "OeZ068KzN$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_53",
+      "email": "talleresmonforte@hotmail.com",
+      "displayName": "PAULINO EDILBERTO MONFORTE TRAVA",
+      "passwordHash": "dLy922VcF#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_70",
+      "email": "recosadecv@prodigy.net.mx",
+      "displayName": "RIGOMAR HINOJOSA SHIELDS",
+      "passwordHash": "Zuw091ttw!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_74",
+      "email": "jordan910@hotmail.com",
+      "displayName": "JUAN CARLOS JORDAN LOPEZ",
+      "passwordHash": "LNf948nNY#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_87",
+      "email": "jorgedawn@prodigy.net.mx",
+      "displayName": "JORGE ALFREDO DAWN MEDINA",
+      "passwordHash": "HyQ325uee!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_88",
+      "email": "ssg@santinelli.com.mx",
+      "displayName": "SERGIO SANTINELLI GRAJALES",
+      "passwordHash": "mDd007VHR@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_97",
+      "email": "cc@secure.mx",
+      "displayName": "CLAUDIO MAURICIO CANAVATI FARAH",
+      "passwordHash": "hRj753YMT@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_99",
+      "email": "al3xrivas@gmail.com",
+      "displayName": "ALEJANDRO FRANCISCO RIVAS PINTADO",
+      "passwordHash": "cre508jpZ$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_102",
+      "email": "jvtl@hotmail.com",
+      "displayName": "JOSE VICENTE TRUJILLO LUCIC",
+      "passwordHash": "jBD616CSl$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_103",
+      "email": "monfo87_@hotmail.com",
+      "displayName": "EDGAR EDILBERTO MONFORTE ESCOBEDO",
+      "passwordHash": "lZK969LWR$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_107",
+      "email": "jcb197624@hotmail.com",
+      "displayName": "JUAN CARLOS BRICEÑO GONZALEZ",
+      "passwordHash": "qsV335PeJ@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_113",
+      "email": "carlosgranja@gmail.com",
+      "displayName": "CARLOS ANTONIO GRANJA PEREZ",
+      "passwordHash": "BGy825uxT#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_115",
+      "email": "madahuar@cotexsa.com.mx",
+      "displayName": "ROBERTO JOSE MADAHUAR BOEHM",
+      "passwordHash": "xTA541gEM$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_123",
+      "email": "humh4@hotmail.com",
+      "displayName": "HUGO MARTINEZ HERNANDEZ",
+      "passwordHash": "kzO077Qgm!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_137",
+      "email": "josebadz@outlook.com",
+      "displayName": "JOSE HIPOLITO BARRERA AKE",
+      "passwordHash": "WhD938iKs$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_142",
+      "email": "cudaosj@hotmail.com",
+      "displayName": "ALEJANDRO JAVIER GARCÍA GAMBOA",
+      "passwordHash": "Mtg939Fig@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_144",
+      "email": "smunozam@gmail.com",
+      "displayName": "SERGIO MUÑOZ DE ALBA MEDRANO",
+      "passwordHash": "UWM366hWU!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_147",
+      "email": "agm@galletasdonde.com",
+      "displayName": "ALEJANDRO GOMORY MARTINEZ",
+      "passwordHash": "qXb662ZRE$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_148",
+      "email": "javier_ruzperaza@hotmail.com",
+      "displayName": "JAVIER RUZ PERAZA",
+      "passwordHash": "iDh587gmH@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_149",
+      "email": "hanstb@gmail.com",
+      "displayName": "HANS JURGEN THIES BARBACHANO",
+      "passwordHash": "pbf799fWO#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_151",
+      "email": "david_xolz@hotmail.com",
+      "displayName": "DAVID HOMERO SCHOLZ MORENO",
+      "passwordHash": "HOO826CbK#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_153",
+      "email": "josegilbertohernandezcarrillo@gmail.com",
+      "displayName": "JOSE GILBERTO HERNANDEZ CARRILLO",
+      "passwordHash": "yKd537bLZ@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_157",
+      "email": "galvani@hotmail.com",
+      "displayName": "EZEQUIEL GALVAN VAZQUEZ",
+      "passwordHash": "JxB060JNA#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_161",
+      "email": "agustin.moreno@email.com",
+      "displayName": "AGUSTIN MORENO VILLALOBOS",
+      "passwordHash": "NOw663xva!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_166",
+      "email": "rafael-rivas-p@hotmail.com",
+      "displayName": "RAFAEL RIVAS POLANCO",
+      "passwordHash": "UoU130gnu$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_167",
+      "email": "alejandrapintado@yahoo.com.mx",
+      "displayName": "ALEJANDRA GEORGINA PINTADO VILLAFAÑA",
+      "passwordHash": "Tow989SYJ@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_178",
+      "email": "tonysantacruz@hotmail.com",
+      "displayName": "ANTONIO RAMÓN SANTA CRUZ POLANCO CABRALES",
+      "passwordHash": "FxK462wme$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_179",
+      "email": "marcotonyjr@hotmail.com",
+      "displayName": "MARCO ANTONIO SANTA CRUZ POLANCO CORDOVA",
+      "passwordHash": "qUp146voY@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_181",
+      "email": "chafi70@hotmail.com",
+      "displayName": "CHAFI XACUR RIVERA",
+      "passwordHash": "MDP025Ejc!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_182",
+      "email": "jcmaneo@hotmail.com",
+      "displayName": "JUAN CARLOS MAÑE ORTIZ",
+      "passwordHash": "CoL153OCG$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_183",
+      "email": "tinosanchezf@yahoo.com.mx",
+      "displayName": "CELESTINO SÁNCHEZ FERNÁNDEZ",
+      "passwordHash": "Mgc342fjG#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_186",
+      "email": "lalodenis23@hotmail.com",
+      "displayName": "EDUARDO DENIS HERRERA",
+      "passwordHash": "SoE390gDk#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_188",
+      "email": "mayayuc3006@gmail.com",
+      "displayName": "EDUARDO JOSE ARZAMENDI MONTEJO",
+      "passwordHash": "MdF957zOh#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_192",
+      "email": "rodrigo.garcia.e@live.com.mx",
+      "displayName": "RODRIGO GARCÍA ESCALANTE",
+      "passwordHash": "LyU897MSS@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_193",
+      "email": "jretana@live.com.mx",
+      "displayName": "JULIO RETANA VILLARREAL",
+      "passwordHash": "lCS757Yhg@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_194",
+      "email": "d@azarcorp.mx",
+      "displayName": "DAVID AZAR CÁMARA",
+      "passwordHash": "lMg184EPu@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_195",
+      "email": "quiquis77@hotmail.com",
+      "displayName": "ENRIQUE GAONA CASTAÑEDA",
+      "passwordHash": "fEW747VWL@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_196",
+      "email": "armando.pard@gmail.com",
+      "displayName": "ARMANDO PARDIÑAZ ALCANTARA",
+      "passwordHash": "nXo008SgJ@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_199",
+      "email": "jrgardoni@gmail.com",
+      "displayName": "JOAQUIN RODOLFO GARDONI NUÑEZ",
+      "passwordHash": "Mvf688rpw!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_200",
+      "email": "valenciarojasjjesus@gmail.com",
+      "displayName": "J. JESÚS VALENCIA ROJAS",
+      "passwordHash": "RLN380qOM!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_201",
+      "email": "brayerbyv@gmail.com",
+      "displayName": "BRAYER KERMITH VERDE CHIN",
+      "passwordHash": "tYf492sqP!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_202",
+      "email": "rafle_30@hotmail.com",
+      "displayName": "ROGER IRÁN MÉNDEZ CARRILLO",
+      "passwordHash": "vgO187moA$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_203",
+      "email": "mjtzab@yahoo.com",
+      "displayName": "MANUEL JESÚS TZAB CHUC",
+      "passwordHash": "AsF517cSU$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_204",
+      "email": "lic.arielparedescetina@hotmail.com",
+      "displayName": "ARIEL ANTONIO PAREDES CETINA",
+      "passwordHash": "Mtx135jVx@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_205",
+      "email": "dr.ricardocastillo@me.com",
+      "displayName": "RICARDO ERNESTO CASTILLO MANCERA",
+      "passwordHash": "PQu553YQa$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_206",
+      "email": "cpedgardo_gomez@hotmail.com",
+      "displayName": "EDGARDO RAUL GÓMEZ ARZAMENDI",
+      "passwordHash": "crs352Tsb#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_209",
+      "email": "lolita@concepthaus.mx",
+      "displayName": "MARIA DOLORES DAVIS BETANZOS",
+      "passwordHash": "iDr430FHR$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_210",
+      "email": "santiago100100@hotmail.com",
+      "displayName": "SANTIAGO LAMAS RINGENBACH",
+      "passwordHash": "XQk978KqL#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_211",
+      "email": "egpiccolo@gmail.com",
+      "displayName": "ERNESTO GONZALEZ PICCOLO",
+      "passwordHash": "HGd008ANI!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_212",
+      "email": "arechiga@jogarplastics.com",
+      "displayName": "MARIA FERNANDA GUADALUPE ARECHIGA RAMOS",
+      "passwordHash": "lWm223ZQx@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_214",
+      "email": "gfernandez63@gmail.com",
+      "displayName": "GERARDO ANTONIO FERNÁNDEZ QUIJANO",
+      "passwordHash": "Sxj461GjI#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_215",
+      "email": "ridesquens@yahoo.com.mx",
+      "displayName": "RICARDO ALBERTO DESQUENS BONILLA",
+      "passwordHash": "DMP113bDP#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_216",
+      "email": "martinezasergio@hotmail.com",
+      "displayName": "SERGIO FERNANDO MARTINEZ AGUILAR",
+      "passwordHash": "hti031xmf@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_217",
+      "email": "arobert01@protonmail.com",
+      "displayName": "ALEJANDRO OLIVER ROBERT EASTMOND",
+      "passwordHash": "PXy294gzn!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_218",
+      "email": "olga.garcia@mayaseguridad.mx",
+      "displayName": "JUAN CARLOS RAMIREZ GOMEZ",
+      "passwordHash": "gEm589POD@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_219",
+      "email": "gocaamal@hotmail.com",
+      "displayName": "GADDI OTHONIEL CAAMAL PUC",
+      "passwordHash": "hcd929PnP@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_220",
+      "email": "guidorcuevasabraham@gmail.com",
+      "displayName": "GUIDO RENY CUEVAS ABRAHAM",
+      "passwordHash": "hpX190uJd#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_221",
+      "email": "santiagorueda2@gmail.com",
+      "displayName": "SANTIAGO RUEDA ESCOBEDO",
+      "passwordHash": "lfb297eON#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_222",
+      "email": "ivancabo@gmail.com",
+      "displayName": "IVAN TSUIS CABO TORRES",
+      "passwordHash": "iVI979gie#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_223",
+      "email": "alejandro18sosa@gmail.com",
+      "displayName": "JESUS ALEJANDRO PUC SOSA",
+      "passwordHash": "ipa299Tjn$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_224",
+      "email": "jgheredia@hotmail.com",
+      "displayName": "JOSE GIL HEREDIA HAGAR",
+      "passwordHash": "SaF510CsR!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_225",
+      "email": "squintal158@gmail.com",
+      "displayName": "SANTIAGO ALEJANDRO QUINTAL PAREDES",
+      "passwordHash": "DfP531eBM@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_226",
+      "email": "atietzbabam@gmail.com",
+      "displayName": "ARIEL BALTAZAR CÓRDOBA WILSON",
+      "passwordHash": "eEC190eJl@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_227",
+      "email": "ttok09136@gmail.com",
+      "displayName": "KRISZTIAN GOR",
+      "passwordHash": "JpP900dND@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_228",
+      "email": "fabian.sievers3548@gmail.com",
+      "displayName": "FABIAN MARQUEZ ORTEGA",
+      "passwordHash": "Atg843GCp$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_229",
+      "email": "padilla_079@hotmail.com",
+      "displayName": "DANIEL DE JESUS PADILLA ROBLES",
+      "passwordHash": "YVv364Jip$",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_230",
+      "email": "rsoberanis11@hotmail.com",
+      "displayName": "RICARDO ANTONIO SOBERANIS GAMBOA",
+      "passwordHash": "hGh461vZt@",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_231",
+      "email": "rcervantes@live.com.mx",
+      "displayName": "RAÚL CERVANTES CEBALLOS",
+      "passwordHash": "laz925mrg#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_232",
+      "email": "richfer0304@gmail.com",
+      "displayName": "RICARDO DANIEL FERNÁNDEZ PÉREZ",
+      "passwordHash": "ZiD502CTR!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_233",
+      "email": "richfer1020@gmail.com",
+      "displayName": "RICARDO MANUEL FERNÁNDEZ QUIJANO",
+      "passwordHash": "XwT717PDw!",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_234",
+      "email": "licyaelromero@gmail.com",
+      "displayName": "YAEL ROMERO DE DIOS",
+      "passwordHash": "pzB162VrJ#",
+      "emailVerified": false
+    },
+    {
+      "localId": "socio_235",
+      "email": "aimeegomez615@gmail.com",
+      "displayName": "AIMEE GOMEZ MENDOZA",
+      "passwordHash": "YDB564Aad$",
+      "emailVerified": false
+    }
+  ]
+}

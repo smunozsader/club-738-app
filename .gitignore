@@ -39,16 +39,15 @@ passwords.txt
 # DATA FILES - Keep locally only
 # ====================================
 
-# Socios data (Excel, CSVs con info personal)
-data/socios/
-data/credenciales/
+# Carpetas con archivos pesados (PDFs, imágenes)
 data/constancias/
+data/credenciales/
 data/curps/
 data/fotos/
 
-# Any Office documents
-*.xlsx
-*.docx
+# Documentos de Office en data/ (excepto socios/)
+data/*.xlsx
+data/*.docx
 
 # Context file (may contain sensitive info)
 CONTEXT.md

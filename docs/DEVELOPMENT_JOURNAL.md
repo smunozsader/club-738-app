@@ -1,3 +1,63 @@
+## 2026-01-17 - v1.24.2 Reorganización: Carpeta socios/ al ROOT + Incluida en Git
+
+### Cambio de Ubicación de Base de Datos
+
+**Objetivo**: Mover la carpeta de socios al root del proyecto e incluirla en control de versiones (Git), manteniendo solo archivos pesados (PDFs, imágenes) en .gitignore.
+
+**Cambios realizados**:
+
+1. **Movida carpeta**: `data/socios/` → `socios/` (root del proyecto)
+
+2. **Actualizado .gitignore**:
+   ```diff
+   - data/socios/                    # REMOVIDO
+   - *.xlsx                          # REMOVIDO (bloqueaba Excel)
+   - *.docx                          # REMOVIDO
+   
+   + data/constancias/               # Solo PDFs pesados
+   + data/credenciales/              # Solo credenciales generadas
+   + data/curps/                     # Solo PDFs de CURPs
+   + data/fotos/                     # Solo imágenes
+   + data/*.xlsx                     # Excel en data/ (no en socios/)
+   ```
+
+3. **Excel AHORA INCLUIDO en Git**:
+   - ✅ `socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx` (40 KB)
+   - ✅ `socios/README.md`
+   - ✅ `socios/firebase_auth_import.json`
+   - ✅ `socios/referencia_historica/` (18 archivos históricos)
+
+**Archivos modificados**:
+- ✅ `.gitignore` - Excluir solo carpetas con archivos pesados
+- ✅ `.github/copilot-instructions.md` - Rutas actualizadas
+- ✅ `socios/README.md` - Rutas actualizadas
+- ✅ Scripts Python recientes (normalizar_campos_excel.py, etc.)
+
+**Ventajas**:
+1. **Backup automático**: Fuente de verdad protegida en GitHub
+2. **Sincronización multi-máquina**: Mismo Excel en iMac y Laptop
+3. **Historial de cambios**: Git track de modificaciones al Excel
+4. **Carpeta pesada separada**: data/ sigue en .gitignore (PDFs, imágenes)
+
+**Estructura final**:
+```
+/Applications/club-738-web/
+├── socios/                           ← ✅ EN GIT (40 KB total)
+│   ├── FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx
+│   ├── README.md
+│   ├── firebase_auth_import.json
+│   └── referencia_historica/         (18 archivos)
+└── data/                             ← ❌ IGNORADO (archivos pesados)
+    ├── constancias/                  (PDFs grandes)
+    ├── credenciales/                 (credenciales generadas)
+    ├── curps/                        (PDFs de CURPs)
+    └── fotos/                        (imágenes de socios)
+```
+
+**Deploy**: Base de datos ahora sincronizada en GitHub
+
+---
+
 ## 2026-01-17 - v1.24.1 Normalización de Campos Numéricos para Sincronización Firebase
 
 ### Corrección de Formatos Excel

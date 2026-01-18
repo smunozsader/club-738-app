@@ -462,7 +462,7 @@ npx md-to-pdf docs/*.md
 
 **Archivo Excel Maestro (ÚNICA FUENTE DE VERDAD):**
 ```
-data/socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx
+socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx
 ```
 
 **IMPORTANTE**: Este Excel es la **única fuente de verdad consolidada** que combina:
@@ -507,7 +507,7 @@ data/socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx
 - Metadata Firebase agregada (credencial, teléfono, fecha_alta)
 - Sincronización Excel-Firebase completada ✅
 
-**Archivos históricos movidos a** `data/socios/referencia_historica/`:
+**Archivos históricos movidos a** `socios/referencia_historica/`:
 ```
 2026.31.01_RELACION_SOCIOS_ARMAS_SEPARADO_verified.xlsx (66 socios solamente)
 Copy of 2026.31.01_RELACION_SOCIOS_ARMAS_SEPARADO_verified.xlsx (66 socios)
