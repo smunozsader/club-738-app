@@ -584,6 +584,138 @@
   }
 }
 
+/* ===== EMERGENCY FIXES - Remover colores hardcodeados en todo el CSS ===== */
+/* Estos fixes capturan colores específicos que NO se heredan de las clases */
+
+/* Fix para colores específicos: #2c3e50, #7f8c8d, #ecf0f1, etc */
+:root.dark-mode h1,
+:root.dark-mode h2,
+:root.dark-mode h3,
+:root.dark-mode h4,
+:root.dark-mode h5,
+:root.dark-mode h6 {
+  color: var(--dm-text-primary) !important;
+}
+
+/* Reemplazar todos los grises claros */
+:root.dark-mode .panel-header,
+:root.dark-mode .socios-panel,
+:root.dark-mode .details-panel,
+:root.dark-mode .verificador-peta-container,
+:root.dark-mode .cobranza-unificada,
+:root.dark-mode .expediente-impresor,
+:root.dark-mode .registro-pagos {
+  background: var(--dm-surface-primary) !important;
+  color: var(--dm-text-primary) !important;
+  border-color: var(--dm-border) !important;
+}
+
+/* Subtítulos y textos secundarios */
+:root.dark-mode .subtitle,
+:root.dark-mode .section-subtitle,
+:root.dark-mode .panel-description {
+  color: var(--dm-text-tertiary) !important;
+}
+
+/* Bordes que eran #ecf0f1 */
+:root.dark-mode .panel-header,
+:root.dark-mode .section-header,
+:root.dark-mode [class*="border"] {
+  border-color: var(--dm-border) !important;
+}
+
+/* Inputs y campos de búsqueda */
+:root.dark-mode .search-input,
+:root.dark-mode .filter-input,
+:root.dark-mode .form-input {
+  background: var(--dm-bg-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+:root.dark-mode .search-input:focus,
+:root.dark-mode .filter-input:focus,
+:root.dark-mode .form-input:focus {
+  border-color: var(--dm-primary) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
+}
+
+/* Items en listas */
+:root.dark-mode .socio-item,
+:root.dark-mode .item-row,
+:root.dark-mode .list-item,
+:root.dark-mode .peta-item {
+  background: var(--dm-surface-primary) !important;
+  border: 1px solid var(--dm-border-light) !important;
+  color: var(--dm-text-tertiary) !important;
+}
+
+:root.dark-mode .socio-item:hover,
+:root.dark-mode .item-row:hover,
+:root.dark-mode .list-item:hover {
+  background: var(--dm-surface-secondary) !important;
+  border-color: var(--dm-border-hover) !important;
+}
+
+/* Status y badges */
+:root.dark-mode .status-badge,
+:root.dark-mode .estado-badge,
+:root.dark-mode .progress-indicator {
+  background: var(--dm-surface-secondary) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+/* Tablas específicas del admin */
+:root.dark-mode table tbody tr,
+:root.dark-mode .table-row {
+  background: var(--dm-surface-primary) !important;
+  border: 1px solid var(--dm-border-light) !important;
+  color: var(--dm-text-tertiary) !important;
+}
+
+:root.dark-mode table tbody tr:hover,
+:root.dark-mode .table-row:hover {
+  background: var(--dm-surface-secondary) !important;
+}
+
+/* Contenedores de detalles */
+:root.dark-mode .detail-section,
+:root.dark-mode .info-section,
+:root.dark-mode .datos-section {
+  background: var(--dm-surface-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-tertiary) !important;
+}
+
+/* Labels y textos de formularios */
+:root.dark-mode .form-label,
+:root.dark-mode .field-label,
+:root.dark-mode label {
+  color: var(--dm-text-secondary) !important;
+}
+
+/* Checkboxes y radios - asegurar visibilidad */
+:root.dark-mode input[type="checkbox"],
+:root.dark-mode input[type="radio"] {
+  background: var(--dm-bg-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  accent-color: var(--dm-primary) !important;
+}
+
+/* Secciones específicas del admin */
+:root.dark-mode .empty-message {
+  color: var(--dm-text-tertiary) !important;
+}
+
+:root.dark-mode .verification-form,
+:root.dark-mode .documento-item,
+:root.dark-mode .archivo-item {
+  background: var(--dm-surface-secondary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-tertiary) !important;
+}
+
 /* Títulos y textos */
 :root.dark-mode h1,
 :root.dark-mode h2,
