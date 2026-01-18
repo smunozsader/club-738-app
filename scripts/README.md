@@ -1,85 +1,158 @@
 # Scripts del Proyecto Club 738
 
-Esta carpeta contiene todos los scripts de desarrollo y administración organizados por categoría.
+Esta carpeta contiene todos los scripts de desarrollo y administración organizados por función.
 
-## 📁 Estructura
+## 📁 Estructura Completa
 
 ```
 scripts/
-├── analisis/          Scripts de análisis y verificación de datos
-├── actualizacion/     Scripts de actualización y modificación de datos
-├── normalizacion/     Scripts de normalización de Excel y formatos
-├── migracion/         Scripts de migración de datos a Firebase
-├── debug/             Scripts de debugging y testing
-└── temp/              Scripts temporales (del día, experimentos)
+├── actualizacion/        Scripts de actualización de datos
+├── analisis/             Scripts de análisis y búsqueda
+├── debug/                Scripts de debugging y testing
+├── email_whatsapp/       Scripts de generación de emails y WhatsApp
+├── generacion/           Scripts de generación de archivos y datos
+├── importacion/          Scripts de importación y sincronización
+├── limpieza/             Scripts de corrección y limpieza de datos
+├── migracion/            Scripts de migración Firebase
+├── normalizacion/        Scripts de normalización de formatos
+├── temp/                 Scripts temporales
+├── validacion/           Scripts de verificación y auditoría
+└── README.md             Este archivo
 ```
 
-## 📊 analisis/ (0 scripts)
-Scripts para analizar, comparar y verificar datos:
-- Comparación entre versiones de Excel
-- Verificación de integridad de datos
-- Análisis de discrepancias
-- Búsqueda y extracción de información
+## 📊 Descripción de Categorías
 
-## 🔄 actualizacion/ (15 scripts)
-Scripts para actualizar datos en Excel y Firebase:
-- `actualizar_base_verdad.py` - Actualizar archivo maestro
-- `actualizar_firestore_arechiga.py` - Actualizar datos Arechiga en Firebase
-- `actualizar_folios_arechiga.py` - Actualizar folios específicos
-- `actualizar_gardoni_arechiga.py` - Actualizar datos Gardoni
-- `actualizar_ivan_cabo_firestore.py` - Actualizar datos Iván Cabo
-- `agregar_11_socios.py` - Agregar socios faltantes
-- `corregir_telefono_ariel.py` - Correcciones específicas
-- `corregir_y_crear_fuente.py` - Crear fuente de verdad corregida
-- `crear_fuente_verdad_completa.py` - Crear fuente completa
-- `crear_nueva_fuente_verdad.py` - Crear nueva versión
-- `fix_k078999.py` - Fix específico de arma
-- `reasignar_k078999.py` - Reasignar arma
-- `sincronizar_firestore.py` - Sincronización Firebase
-- `subir_pdfs_registros.py` - Subir PDFs de registros
+### 🔄 actualizacion/ (4 scripts)
+Scripts para actualizar datos en Firebase:
+- `actualizar-curps-firestore.cjs`
+- `actualizar-domicilios-6-campos.cjs`
+- `actualizar-modalidad-armas.cjs`
+- `actualizar-modalidad-caza-sergio.cjs`
 
-## 📝 normalizacion/ (6 scripts)
-Scripts para normalizar formatos de Excel:
-- `normalizar_campos_excel.py` - Normalizar campos numéricos
-- `normalizar_diciembre_2025.py` - Normalizar versión diciembre
-- `normalizar_final.py` - Normalización final
-- `normalizar_v2.py` - Versión 2 de normalización
-- `mostrar_normalizacion.py` - Mostrar ejemplos normalizados
-- `verificacion_final.py` - Verificación post-normalización
+### 🔍 analisis/ (27 scripts)
+Scripts para analizar, buscar y comparar datos:
+- Búsqueda de socios, armas, registros
+- Análisis de domicilios, emails, morosos
+- Arqueología de datos (arqueo-*.cjs)
+- Normalización y separación de datos
+- Ejemplos: `buscar-arma.cjs`, `arqueo-curps.py`, `separar-direcciones.py`
 
-## 🔀 migracion/ (4 scripts)
+### 🐛 debug/ (11 scripts)
+Scripts de debugging, testing y verificación:
+- Búsquedas y verificaciones específicas
+- Testing de funcionalidades
+- Ejemplos: `check-firebase-pagos.js`, `debug-pagos.cjs`
+
+### 📧 email_whatsapp/ (17 scripts)
+Scripts para generar campañas de email y WhatsApp:
+- Generación de CSVs para campañas
+- Generación de mensajes WhatsApp
+- Mail merge para morosos y general
+- Importación a WAPI Sender
+- Ejemplos: `generar-whatsapp-segmentado.cjs`, `generar-mail-merge-general.cjs`
+
+### 📝 generacion/ (32 scripts)
+Scripts para generar archivos y datos:
+- Creación de usuarios, colecciones, notificaciones
+- Generación de PDFs (credenciales)
+- Subida de documentos a Firebase Storage
+- Conversión y regeneración de URLs
+- Ejemplos: `crear_pdfs_credenciales.py`, `subir-curps.cjs`
+
+### 📥 importacion/ (14 scripts)
+Scripts para importar y sincronizar datos:
+- Importación a Firebase (usuarios, armas, domicilios)
+- Repoblación de datos
+- Sincronización de CURPs y documentos
+- Agregación de socios faltantes
+- Ejemplos: `importar-usuarios-firebase.cjs`, `repoblar-armas-y-fechas.py`
+
+### 🧹 limpieza/ (10 scripts)
+Scripts para corrección y limpieza de datos:
+- Corrección de emails, teléfonos, mapeos
+- Eliminación de filas duplicadas
+- Limpieza de duplicados en Firebase
+- Reseteo de passwords
+- Ejemplos: `limpiar-duplicados-ivan-cabo.cjs`, `corregir-curps-excel.py`
+
+### 🔀 migracion/ (4 scripts)
 Scripts de migración Firebase (Node.js):
-- `migrar-estructura-completa.cjs` - Migración completa
-- `migrar-estructura-pagos.cjs` - Migración de pagos
-- `migrar-final.cjs` - Migración final
-- `migrar-rutas-armas.cjs` - Migración de rutas de armas
+- `migrar-estructura-completa.cjs`
+- `migrar-estructura-pagos.cjs`
+- `migrar-final.cjs`
+- `migrar-rutas-armas.cjs`
 
-## 🐛 debug/ (11 scripts)
-Scripts de debugging y testing:
-- `buscar-armas-ricardo.cjs` - Búsqueda específica
-- `buscar-medicos-ricardo.cjs` - Búsqueda médicos
-- `check-firebase-pagos.js` - Verificar pagos
-- `check-luis.cjs` - Verificar datos Luis
-- `check-pagos.cjs` - Verificar estructura pagos
-- `check-ricardo-desquens.cjs` - Verificar datos Ricardo
-- `check-santiago-full.cjs` - Verificar datos Santiago
-- `check-sergio-martinez.cjs` - Verificar datos Sergio
-- `debug-pagos.cjs` - Debug de pagos
-- `debug-sergio-rutas.cjs` - Debug rutas
-- `verify-estructura.cjs` - Verificar estructura general
+### 📝 normalizacion/ (6 scripts)
+Scripts para normalizar formatos:
+- Normalización de Excel
+- Normalización de domicilios
+- Ejemplos: `normalizar_campos_excel.py`, `normalizar_diciembre_2025.py`
 
-## 🗑️ temp/ (1 script)
+### 🗑️ temp/ (2 scripts)
 Scripts temporales (se pueden eliminar después de testing):
-- `organizar.py` - Script de organización de carpetas
+- `organizar.py` - Reorganización de scripts
+
+### ✅ validacion/ (21 scripts)
+Scripts de verificación, auditoría e inspección:
+- Verificación de integridad de datos
+- Auditoría de Storage y Firestore
+- Comparación entre fuentes de datos
+- Inspección de estructuras
+- Ejemplos: `verificar-integridad-datos.cjs`, `auditoria-completa-storage.cjs`
 
 ---
 
-## Notas
+## 📊 Estadísticas
 
-- **Scripts Python**: Requieren venv activado (`.venv/bin/python`)
-- **Scripts Node.js (.cjs)**: Requieren dependencias instaladas (`npm install`)
-- **Scripts en temp/**: Revisar y eliminar periódicamente
-- **Fuente de verdad actual**: `socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx`
+| Categoría | Scripts | Descripción |
+|-----------|---------|------------|
+| analisis | 27 | Búsqueda, comparación, análisis |
+| generacion | 32 | Generación de archivos y datos |
+| validacion | 21 | Verificación e inspección |
+| importacion | 14 | Importación y sincronización |
+| email_whatsapp | 17 | Campañas email/WhatsApp |
+| limpieza | 10 | Corrección y limpieza |
+| actualizacion | 4 | Actualización de datos |
+| migracion | 4 | Migración Firebase |
+| normalizacion | 6 | Normalización de formatos |
+| debug | 11 | Testing y debugging |
+| temp | 2 | Temporales |
+| **TOTAL** | **148** | **Scripts categorizados** |
+
+---
+
+## 🚀 Uso
+
+### Scripts Python
+Requieren venv activado:
+```bash
+source .venv/bin/activate
+python scripts/analisis/arqueo_curps.py
+```
+
+### Scripts Node.js (.cjs)
+Requieren dependencias instaladas:
+```bash
+npm install
+node scripts/importacion/importar-usuarios-firebase.cjs
+```
+
+---
+
+## 📋 Archivos Especiales
+
+- **serviceAccountKey.json**: Credenciales Firebase Admin (NO COMMITEAR)
+- **README.md**: Documentación (este archivo)
+
+---
+
+## 🔗 Enlaces Importantes
+
+- **Fuente de verdad**: `socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx`
+- **Base de datos**: `socios/`
+- **Documentación**: `docs/`
+
+---
 
 ## Última actualización
-17 de Enero 2026 - Reorganización completa de scripts
+17 de Enero 2026 - Reorganización completa de scripts (148 archivos en 11 categorías)
