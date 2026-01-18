@@ -42,7 +42,14 @@ export default function AdminDashboard({
   const [exportando, setExportando] = useState(false);
   const toast = useToastContext();
 
-  // Debouncing de búsqueda (500ms)
+  // DEBUG: Verificar que los props se reciben correctamente
+  useEffect(() => {
+    console.log('🔍 AdminDashboard Props Debug:');
+    console.log('  ✓ onVerificadorPETA:', typeof onVerificadorPETA === 'function' ? '✅ Function' : '❌ ' + typeof onVerificadorPETA);
+    console.log('  ✓ onGeneradorPETA:', typeof onGeneradorPETA === 'function' ? '✅ Function' : '❌ ' + typeof onGeneradorPETA);
+    console.log('  ✓ onRegistroPagos:', typeof onRegistroPagos === 'function' ? '✅ Function' : '❌ ' + typeof onRegistroPagos);
+    console.log('  ✓ onCobranza:', typeof onCobranza === 'function' ? '✅ Function' : '❌ ' + typeof onCobranza);
+  }, [onVerificadorPETA, onGeneradorPETA, onRegistroPagos, onCobranza]);
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearchTerm(searchInput);
@@ -232,7 +239,17 @@ export default function AdminDashboard({
           <nav className="admin-tools-nav">
             <button 
               className="admin-tool-btn peta"
-              onClick={() => onVerificadorPETA && onVerificadorPETA()}
+              onClick={() => {
+                console.log('🔍 Verificador PETA clicked!');
+                console.log('  onVerificadorPETA exists:', !!onVerificadorPETA);
+                console.log('  onVerificadorPETA type:', typeof onVerificadorPETA);
+                if (onVerificadorPETA) {
+                  console.log('  Calling onVerificadorPETA...');
+                  onVerificadorPETA();
+                } else {
+                  console.error('  ❌ onVerificadorPETA is undefined!');
+                }
+              }}
               title="Verificar documentos de PETAs solicitadas"
             >
               <span className="tool-icon">✅</span>
