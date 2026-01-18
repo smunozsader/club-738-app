@@ -10,6 +10,49 @@
 
 ## 📅 Enero 2026
 
+### 18 de Enero - v1.28.0 - ✅ Phase 3B Complete: RegistroPagos & MiPerfil
+
+#### ✅ Phase 3B: Priority MEDIUM Accessibility Completed
+
+**RegistroPagos.jsx - 6 inputs + dynamic elements**:
+- Search input:
+  - Added: id="pagos-busqueda" with aria-label
+- Conceptos checkboxes (4 dynamic):
+  - Pattern: id="concepto-{concepto}" with htmlFor
+  - Each with aria-label including price: "Cuota Anual 2026 - $6000"
+- Método pago radios (4 options):
+  - Pattern: id="metodo-{id}" with htmlFor
+  - aria-label: "Método de pago: Efectivo/Transferencia/etc"
+- Fecha y recibo (2 inputs):
+  - id="pagos-fecha" with aria-label, aria-required="true"
+  - id="pagos-recibo" with aria-label, aria-required="true"
+- Notas textarea:
+  - id="pagos-notas" with aria-label
+
+**MiPerfil.jsx - 3 password inputs**:
+- Password actual:
+  - Added: name="passwordActual", aria-label, aria-required="true"
+  - Toggle button: aria-label for show/hide state
+- Password nueva:
+  - Added: name="passwordNueva", aria-label, aria-required="true"
+  - Toggle button: aria-label for show/hide state
+- Password confirmar:
+  - Added: name="passwordConfirmar", aria-label, aria-required="true"
+
+**Resultados**:
+- ✅ v1.28.0 build: Success
+- ✅ Firebase deploy: Complete
+- ✅ Git commit & push: Complete
+- Total inputs fixed in v1.28.0: **9 inputs** + dynamic checkboxes/radios
+- Cumulative progress: **51+ inputs** WCAG AA across app (v1.26.0 + v1.27.0 + v1.28.0)
+
+**Phase 3 Status**:
+- ✅ Phase 3A (Priority HIGH): SolicitarPETA, GeneradorPETA
+- ✅ Phase 3B (Priority MEDIUM): RegistroPagos, MiPerfil
+- ⏳ Phase 3C (Priority LOW): Admin components, DocumentUploader, file inputs
+
+---
+
 ### 18 de Enero - v1.27.0 - ✅ Priority HIGH Accessibility Complete
 
 #### ✅ Phase 3A: SolicitarPETA & GeneradorPETA Accessibility
