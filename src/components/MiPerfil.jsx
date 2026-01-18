@@ -141,17 +141,21 @@ export default function MiPerfil({ user, onBack }) {
                 <input
                   type={mostrarPasswordActual ? 'text' : 'password'}
                   id="passwordActual"
+                  name="passwordActual"
                   value={passwordActual}
                   onChange={(e) => setPasswordActual(e.target.value)}
                   placeholder="Ej: Club738-XXXX"
                   disabled={loading}
                   autoComplete="current-password"
+                  aria-label="Contraseña actual para verificación"
+                  aria-required="true"
                 />
                 <button
                   type="button"
                   className="toggle-password"
                   onClick={() => setMostrarPasswordActual(!mostrarPasswordActual)}
                   tabIndex="-1"
+                  aria-label={mostrarPasswordActual ? 'Ocultar contraseña actual' : 'Mostrar contraseña actual'}
                 >
                   {mostrarPasswordActual ? '👁️' : '👁️‍🗨️'}
                 </button>
@@ -164,17 +168,21 @@ export default function MiPerfil({ user, onBack }) {
                 <input
                   type={mostrarPasswordNueva ? 'text' : 'password'}
                   id="passwordNueva"
+                  name="passwordNueva"
                   value={passwordNueva}
                   onChange={(e) => setPasswordNueva(e.target.value)}
                   placeholder="Mínimo 8 caracteres"
                   disabled={loading}
                   autoComplete="new-password"
+                  aria-label="Nueva contraseña (mínimo 8 caracteres)"
+                  aria-required="true"
                 />
                 <button
                   type="button"
                   className="toggle-password"
                   onClick={() => setMostrarPasswordNueva(!mostrarPasswordNueva)}
                   tabIndex="-1"
+                  aria-label={mostrarPasswordNueva ? 'Ocultar nueva contraseña' : 'Mostrar nueva contraseña'}
                 >
                   {mostrarPasswordNueva ? '👁️' : '👁️‍🗨️'}
                 </button>
@@ -189,11 +197,14 @@ export default function MiPerfil({ user, onBack }) {
               <input
                 type="password"
                 id="passwordConfirmar"
+                name="passwordConfirmar"
                 value={passwordConfirmar}
                 onChange={(e) => setPasswordConfirmar(e.target.value)}
                 placeholder="Repite la nueva contraseña"
                 disabled={loading}
                 autoComplete="new-password"
+                aria-label="Confirmar nueva contraseña"
+                aria-required="true"
               />
             </div>
 

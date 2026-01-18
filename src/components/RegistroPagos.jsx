@@ -227,11 +227,14 @@ export default function RegistroPagos({ userEmail, onBack }) {
           <div className="panel-header">
             <h3>Seleccionar Socio</h3>
             <input
+              id="pagos-busqueda"
               type="text"
+              name="busqueda"
               placeholder="Buscar socio..."
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               className="search-input"
+              aria-label="Buscar socio por nombre o email"
             />
           </div>
           
@@ -290,11 +293,14 @@ export default function RegistroPagos({ userEmail, onBack }) {
                   <h4>Conceptos a pagar</h4>
                   <div className="conceptos-list">
                     {Object.keys(CONCEPTOS_PAGO).map(concepto => (
-                      <label key={concepto} className="concepto-item">
+                      <label key={concepto} htmlFor={`concepto-${concepto}`} className="concepto-item">
                         <input
+                          id={`concepto-${concepto}`}
                           type="checkbox"
+                          name={`concepto-${concepto}`}
                           checked={conceptosSeleccionados[concepto]}
                           onChange={() => toggleConcepto(concepto)}
+                          aria-label={`${CONCEPTOS_PAGO[concepto].nombre} - $${CONCEPTOS_PAGO[concepto].monto}`}
                         />
                         <span className="concepto-nombre">{CONCEPTOS_PAGO[concepto].nombre}</span>
                         <span className="concepto-monto">
@@ -315,13 +321,15 @@ export default function RegistroPagos({ userEmail, onBack }) {
                   <h4>Método de pago</h4>
                   <div className="metodos-grid">
                     {METODOS_PAGO.map(metodo => (
-                      <label key={metodo.id} className={`metodo-option ${metodoPago === metodo.id ? 'active' : ''}`}>
+                      <label key={metodo.id} htmlFor={`metodo-${metodo.id}`} className={`metodo-option ${metodoPago === metodo.id ? 'active' : ''}`}>
                         <input
+                          id={`metodo-${metodo.id}`}
                           type="radio"
                           name="metodoPago"
                           value={metodo.id}
                           checked={metodoPago === metodo.id}
                           onChange={(e) => setMetodoPago(e.target.value)}
+                          aria-label={`Método de pago: ${metodo.nombre}`}
                         />
                         <span>{metodo.nombre}</span>
                       </label>
@@ -333,21 +341,29 @@ export default function RegistroPagos({ userEmail, onBack }) {
                 <div className="form-section">
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Fecha de pago:</label>
+                      <label htmlFor="pagos-fecha">Fecha de pago:</label>
                       <input
+                        id="pagos-fecha"
                         type="date"
+                        name="fechaPago"
                         value={fechaPago}
                         onChange={(e) => setFechaPago(e.target.value)}
+                        aria-label="Fecha del pago"
+                        aria-required="true"
                       />
                     </div>
                     
                     <div className="form-group">
-                      <label>Número de recibo:</label>
+                      <label htmlFor="pagos-recibo">Número de recibo:</label>
                       <input
+                        id="pagos-recibo"
                         type="text"
+                        name="numeroRecibo"
                         value={numeroRecibo}
                         onChange={(e) => setNumeroRecibo(e.target.value)}
                         placeholder="REC-2026-01-0001"
+                        aria-label="Número de recibo del pago"
+                        aria-required="true"
                       />
                     </div>
                   </div>
@@ -357,11 +373,14 @@ export default function RegistroPagos({ userEmail, onBack }) {
                 <div className="form-section">
                   <h4>Notas adicionales (opcional)</h4>
                   <textarea
+                    id="pagos-notas"
+                    name="notas"
                     value={notas}
                     onChange={(e) => setNotas(e.target.value)}
                     placeholder="Observaciones, detalles de la transacción, etc."
                     rows="3"
                     className="notas-textarea"
+                    aria-label="Notas adicionales sobre el pago"
                   />
                 </div>
 
