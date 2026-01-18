@@ -1,46 +1,60 @@
 /* ===================================
-   DARK MODE PREMIUM - Global Styles
-   Paleta profesional aplicada a TODA la app
+   DARK MODE PREMIUM v2.0
+   Industry Best Practices - Total Dark Mode Overhaul
+   Paleta profesional con overrides AGRESIVOS para eliminar white
    =================================== */
 
-/* Variables CSS para Dark Mode */
+/* ===== VARIABLES CSS - PALETA COMPLETA ===== */
 :root.dark-mode {
-  /* Fondos */
-  --dm-bg-primary: #0f172a;      /* Fondo más oscuro para la app */
+  /* Fondos - Escala de grises oscuros */
+  --dm-bg-primary: #0f172a;      /* Fondo primario - muy oscuro */
   --dm-bg-secondary: #1e293b;    /* Fondo secundario */
   --dm-bg-tertiary: #334155;     /* Fondo terciario */
-  --dm-bg-hover: #475569;        /* Hover state */
+  --dm-bg-hover: #475569;        /* Estado hover */
+  --dm-bg-light: #64748b;        /* Background ligero */
   
-  /* Superficies - Cards, modals */
-  --dm-surface-primary: #1e293b;     /* Card/surface principal */
+  /* Superficies - Cards, modals, panels */
+  --dm-surface-primary: #1e293b;     /* Surface principal */
   --dm-surface-secondary: #334155;   /* Surface secundaria */
-  --dm-surface-hover: #475569;       /* Surface hover */
+  --dm-surface-tertiary: #475569;    /* Surface terciaria */
+  --dm-surface-hover: #64748b;       /* Surface hover */
+  --dm-surface-active: #0ea5e9;      /* Surface activa */
   
   /* Bordes */
   --dm-border: #475569;
   --dm-border-light: #334155;
+  --dm-border-dark: #0f172a;
   --dm-border-hover: #64748b;
+  --dm-border-focus: #0ea5e9;
   
-  /* Textos */
-  --dm-text-primary: #e2e8f0;    /* Texto principal (muy legible) */
-  --dm-text-secondary: #cbd5e1;  /* Texto secundario */
-  --dm-text-tertiary: #94a3b8;   /* Texto terciario (subtítulos) */
-  --dm-text-muted: #64748b;      /* Texto apagado */
-  --dm-text-inverse: #0f172a;    /* Texto inverso (para fondos claros) */
+  /* Textos - Escala de contraste WCAG AA (4.5:1+) */
+  --dm-text-primary: #f1f5f9;    /* Texto principal - muy claro */
+  --dm-text-secondary: #e2e8f0;  /* Texto secundario */
+  --dm-text-tertiary: #cbd5e1;   /* Texto terciario */
+  --dm-text-muted: #94a3b8;      /* Texto apagado */
+  --dm-text-inverse: #0f172a;    /* Texto inverso (para backgrounds claros) */
+  --dm-text-placeholder: #64748b;/* Placeholders */
   
-  /* Colores de estado */
-  --dm-primary: #0ea5e9;         /* Azul primario */
-  --dm-primary-light: #38bdf8;   /* Azul claro */
-  --dm-primary-dark: #0284c7;    /* Azul oscuro */
-  --dm-success: #4ade80;         /* Verde */
-  --dm-warning: #fbbf24;         /* Amarillo/Naranja */
-  --dm-error: #f87171;           /* Rojo */
-  --dm-info: #38bdf8;            /* Cian */
+  /* Colores de estado - Saturados y contrastados */
+  --dm-primary: #0ea5e9;         /* Azul cian - primario */
+  --dm-primary-light: #38bdf8;   /* Azul más claro */
+  --dm-primary-dark: #0284c7;    /* Azul más oscuro */
+  --dm-success: #4ade80;         /* Verde - éxito */
+  --dm-success-light: #86efac;   /* Verde claro */
+  --dm-success-dark: #22c55e;    /* Verde oscuro */
+  --dm-warning: #fbbf24;         /* Ámbar/Naranja - advertencia */
+  --dm-warning-light: #fcd34d;   /* Ámbar claro */
+  --dm-warning-dark: #f59e0b;    /* Ámbar oscuro */
+  --dm-error: #f87171;           /* Rojo - error */
+  --dm-error-light: #fca5a5;     /* Rojo claro */
+  --dm-error-dark: #dc2626;      /* Rojo oscuro */
+  --dm-info: #38bdf8;            /* Cian/Info */
   
-  /* Sombras */
-  --dm-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --dm-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --dm-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  /* Sombras profesionales */
+  --dm-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --dm-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.6);
+  --dm-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+  --dm-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.8);
 }
 
 /* Light Mode - Variables para consistencia */
@@ -49,60 +63,525 @@
   --dm-bg-secondary: #f8fafc;
   --dm-bg-tertiary: #f1f5f9;
   --dm-bg-hover: #e2e8f0;
+  --dm-bg-light: #cbd5e1;
   
   --dm-surface-primary: #ffffff;
   --dm-surface-secondary: #f8fafc;
-  --dm-surface-hover: #f1f5f9;
+  --dm-surface-tertiary: #f1f5f9;
+  --dm-surface-hover: #e2e8f0;
+  --dm-surface-active: #1976d2;
   
   --dm-border: #cbd5e1;
   --dm-border-light: #e2e8f0;
+  --dm-border-dark: #f1f5f9;
   --dm-border-hover: #94a3b8;
+  --dm-border-focus: #1976d2;
   
-  --dm-text-primary: #1e293b;
-  --dm-text-secondary: #334155;
-  --dm-text-tertiary: #64748b;
+  --dm-text-primary: #0f172a;
+  --dm-text-secondary: #1e293b;
+  --dm-text-tertiary: #334155;
   --dm-text-muted: #94a3b8;
   --dm-text-inverse: #ffffff;
+  --dm-text-placeholder: #cbd5e1;
   
   --dm-primary: #1976d2;
   --dm-primary-light: #42a5f5;
   --dm-primary-dark: #1565c0;
   --dm-success: #4caf50;
+  --dm-success-light: #81c784;
+  --dm-success-dark: #388e3c;
   --dm-warning: #fbc02d;
+  --dm-warning-light: #ffeb3b;
+  --dm-warning-dark: #f57f17;
   --dm-error: #f44336;
+  --dm-error-light: #ef5350;
+  --dm-error-dark: #c62828;
   --dm-info: #2196f3;
   
   --dm-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
   --dm-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
-  --dm-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --dm-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+  --dm-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
 }
 
-/* Aplicar variables a elementos base */
-body {
-  background: var(--dm-bg-primary);
-  color: var(--dm-text-primary);
+/* ===== ELEMENTOS BASE ===== */
+:root.dark-mode body {
+  background: var(--dm-bg-primary) !important;
+  color: var(--dm-text-primary) !important;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Cards y superficies oscuras profesionales */
+:root.dark-mode * {
+  /* Garantizar transiciones suaves */
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* ===== OVERRIDES GLOBALES - ELIMINACIÓN DE WHITE ===== */
+/* MÁXIMA PRIORIDAD - !important en todo */
+
+:root.dark-mode div,
+:root.dark-mode section,
+:root.dark-mode article,
+:root.dark-mode aside {
+  background-color: transparent !important; /* Permitir que el padre defina el bg */
+}
+
+/* Cards, Panels, Containers - FUERZA MÁXIMA */
 :root.dark-mode .card,
 :root.dark-mode .info-card,
 :root.dark-mode .stats-card,
 :root.dark-mode .arma-card,
 :root.dark-mode .peta-card,
-:root.dark-mode .comunicado-card {
-  background: var(--dm-surface-primary);
-  border: 1px solid var(--dm-border);
-  box-shadow: var(--dm-shadow-md);
-  color: var(--dm-text-primary);
+:root.dark-mode .comunicado-card,
+:root.dark-mode .container,
+:root.dark-mode .panel,
+:root.dark-mode .box,
+:root.dark-mode [class*="section"],
+:root.dark-mode [class*="wrapper"] {
+  background: var(--dm-surface-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
 }
 
 :root.dark-mode .card:hover,
 :root.dark-mode .arma-card:hover,
 :root.dark-mode .comunicado-card:hover {
-  background: var(--dm-surface-secondary);
-  box-shadow: var(--dm-shadow-lg);
-  border-color: var(--dm-border-hover);
+  background: var(--dm-surface-secondary) !important;
+  border-color: var(--dm-border-hover) !important;
+  box-shadow: var(--dm-shadow-lg) !important;
+}
+
+/* Modals y Diálogos - OVERRIDE TOTAL */
+:root.dark-mode .modal,
+:root.dark-mode .modal-content,
+:root.dark-mode .dialog-box,
+:root.dark-mode [role="dialog"],
+:root.dark-mode .dialog {
+  background: var(--dm-surface-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+  box-shadow: var(--dm-shadow-xl) !important;
+}
+
+:root.dark-mode .modal-header {
+  background: var(--dm-surface-secondary) !important;
+  border-bottom: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+:root.dark-mode .modal-footer {
+  background: var(--dm-surface-secondary) !important;
+  border-top: 1px solid var(--dm-border) !important;
+}
+
+:root.dark-mode .modal-overlay,
+:root.dark-mode .modal-background {
+  background: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* Documentos y Expedientes */
+:root.dark-mode .document-card,
+:root.dark-mode .document-list,
+:root.dark-mode .document-section,
+:root.dark-mode .expediente,
+:root.dark-mode .expediente-container {
+  background: var(--dm-surface-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+/* Cobranza y Pagos */
+:root.dark-mode .cobranza,
+:root.dark-mode .cobranza-container,
+:root.dark-mode .pagos,
+:root.dark-mode .pagos-container,
+:root.dark-mode .payment-section {
+  background: var(--dm-surface-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+/* Arsenal */
+:root.dark-mode .arsenal,
+:root.dark-mode .arsenal-container,
+:root.dark-mode .gestion-arsenal {
+  background: var(--dm-surface-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+/* Info boxes y notificaciones */
+:root.dark-mode .info-box,
+:root.dark-mode .notice,
+:root.dark-mode .notification,
+:root.dark-mode [class*="notice"] {
+  background: var(--dm-surface-secondary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+/* Formularios y inputs */
+:root.dark-mode form,
+:root.dark-mode fieldset,
+:root.dark-mode .form-container {
+  background: transparent !important;
+  color: var(--dm-text-primary) !important;
+}
+
+:root.dark-mode input,
+:root.dark-mode textarea,
+:root.dark-mode select,
+:root.dark-mode input[type="text"],
+:root.dark-mode input[type="email"],
+:root.dark-mode input[type="password"],
+:root.dark-mode input[type="number"],
+:root.dark-mode input[type="date"],
+:root.dark-mode input[type="file"] {
+  background: var(--dm-bg-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+  padding: 8px 12px !important;
+}
+
+:root.dark-mode input::placeholder,
+:root.dark-mode textarea::placeholder {
+  color: var(--dm-text-placeholder) !important;
+}
+
+:root.dark-mode input:focus,
+:root.dark-mode textarea:focus,
+:root.dark-mode select:focus {
+  background: var(--dm-bg-primary) !important;
+  border-color: var(--dm-primary) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
+}
+
+:root.dark-mode input:disabled,
+:root.dark-mode textarea:disabled,
+:root.dark-mode select:disabled {
+  background: var(--dm-surface-secondary) !important;
+  color: var(--dm-text-muted) !important;
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+:root.dark-mode label {
+  color: var(--dm-text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+/* Botones - COLORES VIVOS */
+:root.dark-mode button,
+:root.dark-mode .btn,
+:root.dark-mode [role="button"] {
+  background: linear-gradient(135deg, var(--dm-primary) 0%, var(--dm-primary-dark) 100%) !important;
+  color: white !important;
+  border: none !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3) !important;
+}
+
+:root.dark-mode button:hover:not(:disabled),
+:root.dark-mode .btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--dm-primary-light) 0%, var(--dm-primary) 100%) !important;
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+:root.dark-mode button:disabled,
+:root.dark-mode .btn:disabled {
+  background: var(--dm-surface-secondary) !important;
+  color: var(--dm-text-muted) !important;
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+
+:root.dark-mode .btn-danger {
+  background: linear-gradient(135deg, var(--dm-error) 0%, var(--dm-error-dark) 100%) !important;
+  box-shadow: 0 2px 8px rgba(248, 113, 113, 0.3) !important;
+}
+
+:root.dark-mode .btn-danger:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--dm-error-light) 0%, var(--dm-error) 100%) !important;
+  box-shadow: 0 4px 16px rgba(248, 113, 113, 0.5) !important;
+}
+
+:root.dark-mode .btn-success {
+  background: linear-gradient(135deg, var(--dm-success) 0%, var(--dm-success-dark) 100%) !important;
+  box-shadow: 0 2px 8px rgba(74, 222, 128, 0.3) !important;
+}
+
+:root.dark-mode .btn-warning {
+  background: linear-gradient(135deg, var(--dm-warning) 0%, var(--dm-warning-dark) 100%) !important;
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3) !important;
+}
+
+:root.dark-mode .btn-cancel,
+:root.dark-mode .btn-secondary {
+  background: var(--dm-surface-secondary) !important;
+  color: var(--dm-text-secondary) !important;
+  border: 1px solid var(--dm-border) !important;
+  box-shadow: none !important;
+}
+
+:root.dark-mode .btn-cancel:hover,
+:root.dark-mode .btn-secondary:hover {
+  background: var(--dm-surface-hover) !important;
+  border-color: var(--dm-border-hover) !important;
+}
+
+/* Títulos y Textos */
+:root.dark-mode h1,
+:root.dark-mode h2,
+:root.dark-mode h3 {
+  color: var(--dm-text-primary) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+}
+
+:root.dark-mode h4,
+:root.dark-mode h5,
+:root.dark-mode h6 {
+  color: var(--dm-text-secondary) !important;
+}
+
+:root.dark-mode p,
+:root.dark-mode span,
+:root.dark-mode li,
+:root.dark-mode td,
+:root.dark-mode th {
+  color: var(--dm-text-tertiary) !important;
+}
+
+:root.dark-mode strong,
+:root.dark-mode .font-bold,
+:root.dark-mode .font-semibold {
+  color: var(--dm-text-secondary) !important;
+}
+
+/* Links */
+:root.dark-mode a,
+:root.dark-mode [role="link"] {
+  color: var(--dm-primary) !important;
+  text-decoration: none !important;
+  transition: color 0.3s ease !important;
+}
+
+:root.dark-mode a:hover {
+  color: var(--dm-primary-light) !important;
+  text-decoration: underline !important;
+}
+
+/* Alerts y Warnings */
+:root.dark-mode .alert,
+:root.dark-mode .alert-success {
+  background: rgba(74, 222, 128, 0.15) !important;
+  border-left: 4px solid var(--dm-success) !important;
+  color: var(--dm-success) !important;
+  padding: 12px !important;
+}
+
+:root.dark-mode .alert-warning {
+  background: rgba(251, 191, 36, 0.15) !important;
+  border-left: 4px solid var(--dm-warning) !important;
+  color: var(--dm-warning) !important;
+}
+
+:root.dark-mode .alert-error,
+:root.dark-mode .alert-danger {
+  background: rgba(248, 113, 113, 0.15) !important;
+  border-left: 4px solid var(--dm-error) !important;
+  color: var(--dm-error) !important;
+}
+
+:root.dark-mode .alert-info {
+  background: rgba(56, 189, 248, 0.15) !important;
+  border-left: 4px solid var(--dm-info) !important;
+  color: var(--dm-info) !important;
+}
+
+/* Tables */
+:root.dark-mode table {
+  background: var(--dm-surface-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+:root.dark-mode table thead {
+  background: var(--dm-surface-secondary) !important;
+  border-bottom: 2px solid var(--dm-border-hover) !important;
+}
+
+:root.dark-mode table thead th {
+  color: var(--dm-text-primary) !important;
+  font-weight: 700 !important;
+  padding: 12px !important;
+  text-align: left !important;
+}
+
+:root.dark-mode table tbody tr {
+  border-bottom: 1px solid var(--dm-border-light) !important;
+}
+
+:root.dark-mode table tbody tr:hover {
+  background: var(--dm-surface-secondary) !important;
+}
+
+:root.dark-mode table td {
+  color: var(--dm-text-tertiary) !important;
+  padding: 12px !important;
+}
+
+/* Badges */
+:root.dark-mode .badge,
+:root.dark-mode .badge-primary {
+  background: var(--dm-primary) !important;
+  color: white !important;
+}
+
+:root.dark-mode .badge-success {
+  background: var(--dm-success) !important;
+  color: var(--dm-bg-primary) !important;
+}
+
+:root.dark-mode .badge-warning {
+  background: var(--dm-warning) !important;
+  color: var(--dm-bg-primary) !important;
+}
+
+:root.dark-mode .badge-error,
+:root.dark-mode .badge-danger {
+  background: var(--dm-error) !important;
+  color: white !important;
+}
+
+/* Progress bars */
+:root.dark-mode .progress {
+  background: var(--dm-surface-secondary) !important;
+  border: 1px solid var(--dm-border) !important;
+}
+
+:root.dark-mode .progress-bar {
+  background: linear-gradient(90deg, var(--dm-primary) 0%, var(--dm-primary-light) 100%) !important;
+  height: 100% !important;
+  border-radius: 3px !important;
+}
+
+/* Scrollbars */
+:root.dark-mode ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+:root.dark-mode ::-webkit-scrollbar-track {
+  background: var(--dm-bg-primary);
+}
+
+:root.dark-mode ::-webkit-scrollbar-thumb {
+  background: var(--dm-border);
+  border-radius: 6px;
+}
+
+:root.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: var(--dm-border-hover);
+}
+
+/* Dropdowns */
+:root.dark-mode .dropdown-menu {
+  background: var(--dm-surface-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  box-shadow: var(--dm-shadow-lg) !important;
+}
+
+:root.dark-mode .dropdown-item {
+  color: var(--dm-text-secondary) !important;
+}
+
+:root.dark-mode .dropdown-item:hover {
+  background: var(--dm-surface-secondary) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+/* Tooltips */
+:root.dark-mode .tooltip,
+:root.dark-mode [role="tooltip"] {
+  background: var(--dm-surface-primary) !important;
+  color: var(--dm-text-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  box-shadow: var(--dm-shadow-md) !important;
+}
+
+/* Code blocks */
+:root.dark-mode code,
+:root.dark-mode pre {
+  background: var(--dm-bg-primary) !important;
+  color: var(--dm-primary-light) !important;
+  border: 1px solid var(--dm-border-light) !important;
+  padding: 8px 12px !important;
+  border-radius: 4px !important;
+}
+
+/* Dividers */
+:root.dark-mode hr {
+  border-color: var(--dm-border) !important;
+}
+
+/* Tabs */
+:root.dark-mode .tabs {
+  border-bottom: 2px solid var(--dm-border) !important;
+  background: transparent !important;
+}
+
+:root.dark-mode .tab-button {
+  color: var(--dm-text-tertiary) !important;
+  border-bottom: 2px solid transparent !important;
+  background: transparent !important;
+  transition: all 0.3s ease !important;
+}
+
+:root.dark-mode .tab-button.active {
+  color: var(--dm-primary) !important;
+  border-bottom-color: var(--dm-primary) !important;
+}
+
+:root.dark-mode .tab-button:hover {
+  color: var(--dm-text-secondary) !important;
+}
+
+/* Loading spinners */
+:root.dark-mode .spinner,
+:root.dark-mode .loading,
+:root.dark-mode [class*="spinner"] {
+  color: var(--dm-primary) !important;
+}
+
+/* ===== CLASES ESPECIALES PARA LIGHT MODE ===== */
+:root:not(.dark-mode) [class*="white-bg"],
+:root:not(.dark-mode) .light-background {
+  background: var(--dm-bg-primary) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+/* ===== ASEGURAR CONTRAST WCAG AA ===== */
+:root.dark-mode {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Garantizar que el contraste sea suficiente */
+@media (prefers-contrast: more) {
+  :root.dark-mode {
+    --dm-text-primary: #ffffff;
+    --dm-text-secondary: #f1f5f9;
+    --dm-text-tertiary: #e2e8f0;
+  }
 }
 
 /* Títulos y textos */

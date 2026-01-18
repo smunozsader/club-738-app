@@ -1,9 +1,6 @@
-import { useState } from 'react';
 import './ComunicadosOficiales.css';
 
 export default function ComunicadosOficiales() {
-  const [selectedOficio, setSelectedOficio] = useState(null);
-
   const comunicados = [
     {
       id: 1,
@@ -61,54 +58,21 @@ export default function ComunicadosOficiales() {
                 href={comunicado.archivo} 
                 target="_blank" 
                 rel="noopener noreferrer"
+                className="btn-leer"
+              >
+                👁️ Abrir PDF
+              </a>
+              <a 
+                href={comunicado.archivo} 
+                download
                 className="btn-descargar"
               >
-                ⬇️ Descargar PDF
+                ⬇️ Descargar
               </a>
-              <button 
-                className="btn-leer"
-                onClick={() => setSelectedOficio(selectedOficio?.id === comunicado.id ? null : comunicado)}
-              >
-                👁️ {selectedOficio?.id === comunicado.id ? 'Cerrar' : 'Leer'}
-              </button>
             </div>
           </div>
         ))}
       </div>
-
-      {/* Vista expandida del oficio seleccionado */}
-      {selectedOficio && (
-        <div className="oficio-expanded">
-          <div className="oficio-expanded-header">
-            <h3>{selectedOficio.titulo}</h3>
-            <button 
-              className="btn-close"
-              onClick={() => setSelectedOficio(null)}
-            >
-              ✕
-            </button>
-          </div>
-          
-          <div className="oficio-viewer">
-            <iframe 
-              src={selectedOficio.archivo}
-              title={selectedOficio.titulo}
-              className="pdf-viewer"
-            ></iframe>
-          </div>
-          
-          <div className="oficio-actions">
-            <a 
-              href={selectedOficio.archivo} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="btn-descargar-full"
-            >
-              ⬇️ Descargar PDF Completo
-            </a>
-          </div>
-        </div>
-      )}
 
       {/* Información adicional */}
       <div className="comunicados-info">
