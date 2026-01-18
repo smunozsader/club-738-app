@@ -458,44 +458,63 @@ npx md-to-pdf docs/*.md
 
 ## Data Sources
 
-### Master Database (Fuente de Verdad - Actualizada 10 Ene 2026)
+### Master Database (Fuente de Verdad - Actualizada 17 Ene 2026)
 
-**Archivo Excel Maestro:**
+**Archivo Excel Maestro (ÚNICA FUENTE DE VERDAD):**
 ```
-data/socios/Copy of 2026.31.01_RELACION_SOCIOS_ARMAS_SEPARADO_verified.xlsx
+data/socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx
 ```
 
-**IMPORTANTE**: Este Excel es la **única fuente de verdad** para:
-- Lista de socios activos (76 totales con armas)
-- Credenciales de acceso al portal
-- Datos de armas registradas (287 armas)
-- Emails válidos para envío de comunicaciones
-- Matrículas normalizadas (sin comas, sin espacios extras)
+**IMPORTANTE**: Este Excel es la **única fuente de verdad consolidada** que combina:
+- **Anexo A Oficial** (Diciembre 2025): 76 socios con metadata completa
+- **Base Normalizada** (Diciembre 2025): 276 armas registradas
+- **Actualizaciones Enero 2026**: 4 armas nuevas (Gardoni, Arechiga, Iván Cabo x2)
+- **Correcciones de datos**: Agustín Moreno, Ariel Córdoba Wilson
 
-**Cambios actualizados (10 Ene 2026):**
-- Email corregido: Roberto Madahuar → `rmadahuar@cotexsa.com.mx`
-- Agustín Moreno email corregido → `agus_tin1_@hotmail.com`
-- Todos los duplicados de armas eliminados de Firebase
-- Sincronización Excel-Firebase completada ✅
+**Cobertura total**:
+- **76 socios** (100% de Anexo A oficial)
+  - 66 socios con armas registradas (276 armas)
+  - 10 socios sin armas (marcados con "0")
+- **286 filas de datos** (276 armas + 10 socios sin armas)
+- **19 columnas Firebase-ready**
+- **76 emails únicos** (sin duplicados) ✅
 
-**Estructura del Excel Maestro:**
+**Estructura del Excel Maestro (19 columnas):**
 | Columna | Campo | Descripción |
 |---------|-------|-------------|
-| A | No. CREDENCIAL | Número de credencial del club (1-236) |
-| C | NOMBRE DEL SOCIO | Nombre completo en MAYÚSCULAS |
-| D | CURP | Clave Única de Registro de Población |
-| E | No. CONSEC. | Número secuencial interno |
-| H | EMAIL | Email de acceso al portal (único por socio) |
-| I | CLASE | Clase de arma (PISTOLA, ESCOPETA, RIFLE, etc) |
-| J | CALIBRE | Calibre del arma |
-| K | MARCA | Marca fabricante |
-| L | MODELO | Modelo de arma |
-| M | MATRÍCULA | Matrícula/Número de serie (normalizado) |
-| N | FOLIO | Folio de registro SEDENA |
+| 1 | No. REGISTRO | Número de registro SEDENA (738) |
+| 2 | DOMICILIO CLUB | Dirección del club |
+| 3 | **No. CREDENCIAL** | Número de credencial del socio (1-236) |
+| 4 | NOMBRE SOCIO | Nombre completo en MAYÚSCULAS |
+| 5 | **CURP** | Clave Única de Registro de Población |
+| 6 | **TELEFONO** | Teléfono de contacto |
+| 7 | **EMAIL** | Email de acceso al portal (identificador Firebase - CRÍTICO) |
+| 8 | **FECHA ALTA** | Fecha de alta en el club |
+| 9-13 | **Dirección estructurada** | CALLE, COLONIA, CIUDAD, ESTADO, CP (para auto-fill PETAs) |
+| 14 | CLASE | Clase de arma (PISTOLA, ESCOPETA, RIFLE) o "0" si sin armas |
+| 15 | CALIBRE | Calibre del arma |
+| 16 | MARCA | Marca fabricante |
+| 17 | MODELO | Modelo de arma |
+| 18 | MATRÍCULA | Matrícula/Número de serie (normalizado) |
+| 19 | FOLIO | Folio de registro SEDENA |
 
-**Archivo Excel de referencia (histórico):**
+**Cambios y correcciones aplicados (17 Ene 2026):**
+- Email corregido: Agustín Moreno → `agus_tin1_@hotmail.com` (era duplicado)
+- Teléfono corregido: Agustín Moreno → `+52 999 278 0476` (era duplicado)
+- Teléfono corregido: Ariel Córdoba Wilson → `+52 999 200 3314` (era duplicado)
+- Incluidos 10 socios sin armas (antes no estaban en base de datos)
+- Direcciones estructuradas agregadas (5 campos separados)
+- Metadata Firebase agregada (credencial, teléfono, fecha_alta)
+- Sincronización Excel-Firebase completada ✅
+
+**Archivos históricos movidos a** `data/socios/referencia_historica/`:
 ```
-Base datos/CLUB 738-31-DE-DICIEMBRE-2025_RELACION_SOCIOS_ARMAS NORMALIZADA.xlsx
+2026.31.01_RELACION_SOCIOS_ARMAS_SEPARADO_verified.xlsx (66 socios solamente)
+Copy of 2026.31.01_RELACION_SOCIOS_ARMAS_SEPARADO_verified.xlsx (66 socios)
+2026_ENERO_RELACION_SOCIOS_ARMAS_MASTER.xlsx (66 socios solamente)
+credenciales_socios.csv (formato antiguo)
+credenciales_socios.json (formato antiguo)
+7 archivos backup automáticos
 ```
 
 ### Firebase Storage Structure

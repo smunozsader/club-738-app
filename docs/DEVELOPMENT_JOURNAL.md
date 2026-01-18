@@ -1,3 +1,96 @@
+## 2026-01-17 - v1.24.0 Consolidación Fuente de Verdad Única: 76 Socios con Campos Firebase Completos
+
+### Creación de Base Maestra Unificada
+
+**Objetivo**: Crear una única fuente de verdad consolidando Anexo A oficial (76 socios), base normalizada diciembre (276 armas), direcciones estructuradas, y correcciones de datos. Archivo 100% Firebase-ready.
+
+**Resultado**:
+```
+📁 FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx
+   ├─ 76 socios (100% cobertura Anexo A)
+   ├─ 286 filas (276 armas + 10 socios sin armas)
+   ├─ 19 columnas (Firebase-ready)
+   └─ Direcciones estructuradas (5 campos)
+```
+
+**Proceso realizado**:
+
+#### 1️⃣ Análisis y Reconciliación de Fuentes
+- **Anexo A Oficial** (Diciembre 2025): 76 socios con metadata completa
+- **Base Normalizada** (Diciembre 2025): 66 socios con 276 armas
+- **Discrepancia detectada**: 10 socios faltantes (sin armas registradas)
+- **Solución**: Incluir 10 socios sin armas marcados con "0" en columna CLASE
+
+#### 2️⃣ Corrección de Errores en Anexo A (Fuente Oficial)
+**Backup creado**: `CLUB 738-31-DE-DICIEMBRE-2025_ANEXOS A, B Y C_BACKUP.xlsx`
+
+**Errores encontrados y corregidos**:
+1. **Agustín Moreno Villalobos** (CURP: MOVA910904HCCRLG09):
+   - Email duplicado de celda superior: `galvani@hotmail.com` → `agus_tin1_@hotmail.com` ✅
+   - Teléfono duplicado: `9991335899` → `+52 999 278 0476` ✅
+
+2. **Ariel Baltazar Córdoba Wilson** (CURP: COWA700106TSRLR00):
+   - Teléfono duplicado de Ariel Paredes: `9994912883` → `+52 999 200 3314` ✅
+
+#### 3️⃣ Estructura de Campos Firebase (19 columnas)
+**Metadatos del socio**:
+1. No. REGISTRO (738)
+2. DOMICILIO CLUB
+3. **No. CREDENCIAL** (identificador numérico)
+4. NOMBRE SOCIO
+5. **CURP** (identificador único nacional)
+6. **TELEFONO**
+7. **EMAIL** (identificador Firebase - CRÍTICO)
+8. **FECHA ALTA**
+
+**Dirección estructurada** (para auto-fill PETAs):
+9. CALLE
+10. COLONIA
+11. CIUDAD
+12. ESTADO
+13. CP
+
+**Datos de armas**:
+14. CLASE
+15. CALIBRE
+16. MARCA
+17. MODELO
+18. MATRÍCULA
+19. FOLIO
+
+#### 4️⃣ Organización de Archivos
+```bash
+data/socios/
+├── FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx  ← ✅ NUEVA BASE ÚNICA
+├── firebase_auth_import.json
+└── referencia_historica/  ← Movidos 14 archivos obsoletos
+    ├── 2026.31.01_RELACION_SOCIOS_ARMAS_SEPARADO_verified.xlsx
+    ├── Copy of 2026.31.01_RELACION_SOCIOS_ARMAS_SEPARADO_verified.xlsx
+    ├── 2026_ENERO_RELACION_SOCIOS_ARMAS_MASTER.xlsx
+    ├── credenciales_socios.csv
+    ├── credenciales_socios.json
+    └── 7 archivos backup + CSV diciembre
+```
+
+**Archivos modificados/creados**:
+- ✅ `data/socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx` (NUEVA - 40KB)
+- ✅ `data/socios/README.md` (actualizado con nueva estructura)
+- ✅ `2025-dic-usb-738/CLUB 738-31-DE-DICIEMBRE-2025_ANEXOS A, B Y C_CORREGIDO_FINAL.xlsx`
+- 📁 `data/socios/referencia_historica/` (14 archivos movidos)
+
+**Estadísticas finales**:
+- **76 socios** (100% de Anexo A)
+  - 66 con armas (276 armas totales)
+  - 10 sin armas (marcados con "0")
+- **76 emails únicos** (sin duplicados) ✅
+- **76 CURPs únicos** ✅
+- **Direcciones estructuradas**: 98.5% cobertura
+- **Firebase-ready**: Email como identificador principal
+
+**Deploy**: Base de datos lista para sincronización con Firestore
+
+---
+
 ## 2026-01-17 - v1.23.0 Sincronización Completa Excel ↔ Firestore + Transferencias de Arsenal
 
 ### Actualización Masiva de Base de Datos de Socios y Armas
