@@ -224,7 +224,14 @@ export default function AdminDashboard({
             
             <button 
               className="admin-tool-btn socios"
-              onClick={() => onReportadorExpedientes && onReportadorExpedientes()}
+              onClick={() => {
+                console.log('📊 Reportador Expedientes clicked!');
+                if (typeof onReportadorExpedientes === 'function') {
+                  onReportadorExpedientes();
+                } else {
+                  console.error('❌ onReportadorExpedientes is not a function:', typeof onReportadorExpedientes);
+                }
+              }}
               title="Reportador de expedientes"
             >
               <span className="tool-icon">📊</span>
@@ -258,7 +265,14 @@ export default function AdminDashboard({
             
             <button 
               className="admin-tool-btn peta"
-              onClick={() => onGeneradorPETA && onGeneradorPETA()}
+              onClick={() => {
+                console.log('📄 Generador PETA clicked!');
+                if (typeof onGeneradorPETA === 'function') {
+                  onGeneradorPETA();
+                } else {
+                  console.error('❌ onGeneradorPETA is not a function:', typeof onGeneradorPETA);
+                }
+              }}
               title="Generar oficios PETA en PDF"
             >
               <span className="tool-icon">📄</span>
@@ -267,7 +281,14 @@ export default function AdminDashboard({
             
             <button 
               className="admin-tool-btn peta"
-              onClick={() => onExpedienteImpresor && onExpedienteImpresor()}
+              onClick={() => {
+                console.log('🖨️ Expediente Impresor clicked!');
+                if (typeof onExpedienteImpresor === 'function') {
+                  onExpedienteImpresor();
+                } else {
+                  console.error('❌ onExpedienteImpresor is not a function:', typeof onExpedienteImpresor);
+                }
+              }}
               title="Preparar expedientes para impresión"
             >
               <span className="tool-icon">🖨️</span>
@@ -282,7 +303,14 @@ export default function AdminDashboard({
           <nav className="admin-tools-nav">
             <button 
               className="admin-tool-btn pagos"
-              onClick={() => onCobranza && onCobranza()}
+              onClick={() => {
+                console.log('💵 Panel Cobranza clicked!');
+                if (typeof onCobranza === 'function') {
+                  onCobranza();
+                } else {
+                  console.error('❌ onCobranza is not a function:', typeof onCobranza);
+                }
+              }}
               title="Panel de cobranza unificado"
             >
               <span className="tool-icon">💵</span>
@@ -291,7 +319,14 @@ export default function AdminDashboard({
             
             <button 
               className="admin-tool-btn pagos"
-              onClick={() => onRegistroPagos && onRegistroPagos()}
+              onClick={() => {
+                console.log('💳 Registro de Pagos clicked!');
+                if (typeof onRegistroPagos === 'function') {
+                  onRegistroPagos();
+                } else {
+                  console.error('❌ onRegistroPagos is not a function:', typeof onRegistroPagos);
+                }
+              }}
               title="Registrar pagos de membresías"
             >
               <span className="tool-icon">💳</span>
@@ -300,7 +335,14 @@ export default function AdminDashboard({
             
             <button 
               className="admin-tool-btn pagos"
-              onClick={() => onReporteCaja && onReporteCaja()}
+              onClick={() => {
+                console.log('📊 Reporte de Caja clicked!');
+                if (typeof onReporteCaja === 'function') {
+                  onReporteCaja();
+                } else {
+                  console.error('❌ onReporteCaja is not a function:', typeof onReporteCaja);
+                }
+              }}
               title="Reporte de caja y corte"
             >
               <span className="tool-icon">📊</span>
@@ -309,7 +351,14 @@ export default function AdminDashboard({
 
             <button 
               className="admin-tool-btn pagos"
-              onClick={() => onDashboardRenovaciones && onDashboardRenovaciones()}
+              onClick={() => {
+                console.log('📈 Renovaciones 2026 clicked!');
+                if (typeof onDashboardRenovaciones === 'function') {
+                  onDashboardRenovaciones();
+                } else {
+                  console.error('❌ onDashboardRenovaciones is not a function:', typeof onDashboardRenovaciones);
+                }
+              }}
               title="Dashboard de renovaciones 2026"
             >
               <span className="tool-icon">📈</span>
@@ -318,7 +367,14 @@ export default function AdminDashboard({
             
             <button 
               className="admin-tool-btn pagos"
-              onClick={() => onDashboardCumpleanos && onDashboardCumpleanos()}
+              onClick={() => {
+                console.log('🎂 Cumpleaños clicked!');
+                if (typeof onDashboardCumpleanos === 'function') {
+                  onDashboardCumpleanos();
+                } else {
+                  console.error('❌ onDashboardCumpleanos is not a function:', typeof onDashboardCumpleanos);
+                }
+              }}
               title="Cumpleaños y demografía de socios"
             >
               <span className="tool-icon">🎂</span>
@@ -333,7 +389,14 @@ export default function AdminDashboard({
           <nav className="admin-tools-nav">
             <button 
               className="admin-tool-btn arsenal"
-              onClick={() => onAdminBajas && onAdminBajas()}
+              onClick={() => {
+                console.log('📦 Bajas de Arsenal clicked!');
+                if (typeof onAdminBajas === 'function') {
+                  onAdminBajas();
+                } else {
+                  console.error('❌ onAdminBajas is not a function:', typeof onAdminBajas);
+                }
+              }}
               title="Administrar solicitudes de baja de armas"
             >
               <span className="tool-icon">📦</span>
@@ -342,7 +405,14 @@ export default function AdminDashboard({
             
             <button 
               className="admin-tool-btn arsenal"
-              onClick={() => onAdminAltas && onAdminAltas()}
+              onClick={() => {
+                console.log('📝 Altas de Arsenal clicked!');
+                if (typeof onAdminAltas === 'function') {
+                  onAdminAltas();
+                } else {
+                  console.error('❌ onAdminAltas is not a function:', typeof onAdminAltas);
+                }
+              }}
               title="Administrar solicitudes de alta de armas"
             >
               <span className="tool-icon">📝</span>
@@ -357,7 +427,14 @@ export default function AdminDashboard({
           <nav className="admin-tools-nav">
             <button 
               className="admin-tool-btn agenda"
-              onClick={() => onMiAgenda && onMiAgenda()}
+              onClick={() => {
+                console.log('📅 Mi Agenda clicked!');
+                if (typeof onMiAgenda === 'function') {
+                  onMiAgenda();
+                } else {
+                  console.error('❌ onMiAgenda is not a function:', typeof onMiAgenda);
+                }
+              }}
               title="Gestionar citas de socios"
             >
               <span className="tool-icon">📅</span>
