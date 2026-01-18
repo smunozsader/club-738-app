@@ -180,15 +180,22 @@ https://yucatanctp.org
 | **MisDocumentosOficiales.jsx** | Autenticado | CURP y Constancia de antecedentes descargables |
 | **DocumentList.jsx** | Autenticado | Lista de documentos PETA con estado (Mi Expediente Digital) |
 | **DocumentUploader.jsx** | Autenticado | Subida de documentos con validación |
-| **SolicitarPETA.jsx** | Autenticado | Formulario para solicitar trámite PETA (hasta 10 armas, 10 estados) |
+| **SolicitarPETA.jsx** | Autenticado | Formulario para solicitar trámite PETA (hasta 10 armas, 10 estados). Admin puede solicitar para cualquier socio |
 | **MisPETAs.jsx** | Autenticado | Vista de estado de solicitudes PETA del socio con timeline |
-| **VerificadorPETA.jsx** | Solo Secretario | Checklist de verificación de documentos por socio/PETA |
-| **ExpedienteImpresor.jsx** | Solo Secretario | Preparar e imprimir documentos digitales del socio |
-| **RegistroPagos.jsx** | Solo Secretario | Registro de pagos y activación de membresías |
-| **ReporteCaja.jsx** | Solo Secretario | Corte de caja, reporte de pagos con filtros y exportar CSV |
-| **DashboardRenovaciones.jsx** | Solo Secretario | Panel de cobranza 2026 |
-| **DashboardCumpleanos.jsx** | Solo Secretario | Demografía y cumpleaños de socios |
-| **GeneradorPETA.jsx** | Solo Secretario | Generador de oficios PETA en PDF (jsPDF) |
+| **VerificadorPETA.jsx** | Solo Admin | Checklist de verificación de documentos por socio/PETA |
+| **ExpedienteImpresor.jsx** | Solo Admin | Preparar e imprimir documentos digitales del socio |
+| **RegistroPagos.jsx** | Solo Admin | Registro de pagos y activación de membresías |
+| **ReporteCaja.jsx** | Solo Admin | Corte de caja, reporte de pagos con filtros y exportar CSV |
+| **DashboardRenovaciones.jsx** | Solo Admin | Panel de cobranza 2026 |
+| **DashboardCumpleanos.jsx** | Solo Admin | Demografía y cumpleaños de socios |
+| **GeneradorPETA.jsx** | Solo Admin | Generador de oficios PETA en PDF (jsPDF) |
+| **AdminDashboard.jsx** | Solo Admin | Panel principal de administración con tabla de socios y sidebar de herramientas |
+| **ExpedienteAdminView.jsx** | Solo Admin | Vista detallada del expediente de un socio específico |
+| **ReportadorExpedientes.jsx** | Solo Admin | Reportes y análisis de expedientes de socios |
+| **AdminBajasArsenal.jsx** | Solo Admin | Gestión de solicitudes de baja de armas |
+| **AdminAltasArsenal.jsx** | Solo Admin | Gestión de solicitudes de alta de armas |
+| **CobranzaUnificada.jsx** | Solo Admin | Panel unificado de cobranza (integra pagos, reportes, renovaciones) |
+| **MiAgenda.jsx** | Solo Admin | Gestión de citas y agenda del secretario |
 | **WelcomeDialog.jsx** | Autenticado | Diálogo de bienvenida para nuevos usuarios |
 | **Login.jsx** | Público | Formulario de login standalone (usado en LandingPage) |
 | **AvisoPrivacidad.jsx** | Público | Componente de aviso de privacidad integral |
@@ -307,27 +314,25 @@ npx md-to-pdf docs/*.md
 3. Para rutas públicas: agregar detector en App.jsx
 4. Para features autenticados: agregar en el dashboard
 
-### File Structure
-```
-src/
-├── App.jsx              # Router principal + auth state
-├── App.css              # Estilos globales + variables CSS :root
-├── firebaseConfig.js    # Firebase initialization
-├── main.jsx             # Entry point
+### dark-mode-premium.css # Estilos dark mode
 ├── components/
 │   ├── LandingPage.jsx/css      # Página pública de inicio + enlaces SEDENA
 │   ├── Login.jsx/css            # Formulario de login
 │   ├── CalendarioTiradas.jsx/css # Calendario público
 │   ├── CalculadoraPCP.jsx/css   # Calculadora pública
-│   ├── MisArmas.jsx/css         # Armas del socio (editable por secretario)
-│   ├── MisDocumentosOficiales.jsx/css
-│   ├── WelcomeDialog.jsx/css
+│   ├── MisArmas.jsx/css         # Armas del socio (editable por admin)
+│   ├── MisDocumentosOficiales.jsx/css  # CURP y Constancia descargables
+│   ├── WelcomeDialog.jsx/css    # Diálogo de bienvenida
+│   ├── Notificaciones.jsx/css   # Sistema de notificaciones
+│   ├── MiPerfil.jsx/css         # Perfil del socio
+│   ├── ThemeToggle.jsx/css      # Toggle dark/light mode
+│   ├── ManualUsuario.jsx/css    # Manual del usuario
 │   │
 │   │  # Módulo PETA (v1.10.0+)
-│   ├── SolicitarPETA.jsx/css    # Socio solicita trámite PETA
+│   ├── SolicitarPETA.jsx/css    # Socio/Admin solicita trámite PETA
 │   ├── MisPETAs.jsx/css         # Socio ve estado de sus PETAs
-│   ├── VerificadorPETA.jsx/css  # Secretario verifica documentos
-│   ├── ExpedienteImpresor.jsx/css  # Secretario prepara impresión
+│   ├── VerificadorPETA.jsx/css  # Admin verifica documentos
+│   ├── ExpedienteImpresor.jsx/css  # Admin prepara impresión
 │   ├── GeneradorPETA.jsx/css    # Generador de oficios PETA
 │   │
 │   │  # Módulo Cobranza (v1.10.0+)
@@ -335,6 +340,23 @@ src/
 │   ├── ReporteCaja.jsx/css      # Corte de caja / reportes
 │   ├── DashboardRenovaciones.jsx/css  # Panel cobranza 2026
 │   ├── DashboardCumpleanos.jsx/css    # Demografía socios
+│   ├── CobranzaUnificada.jsx/css # Panel unificado de cobranza
+│   │
+│   │  # Módulo Arsenal (v1.14.0+)
+│   ├── GestionArsenal.jsx/css   # Gestión de arsenal del socio
+│   ├── AdminBajasArsenal.jsx/css  # Admin gestiona bajas
+│   ├── AdminAltasArsenal.jsx/css  # Admin gestiona altas
+│   │
+│   │  # Módulo Agenda (v1.14.0+)
+│   ├── AgendarCita.jsx/css      # Socio agenda citas
+│   ├── MiAgenda.jsx/css         # Admin gestiona agenda
+│   │
+│   ├── admin/           # Componentes admin
+│   │   ├── AdminDashboard.jsx/css     # Panel principal admin
+│   │   ├── ExpedienteAdminView.jsx/css # Vista de expediente
+│   │   ├── ReportadorExpedientes.jsx/css # Reportes
+│   │   ├── ArmaEditor.jsx/css         # Editor de armas
+│   │   └── HistorialAuditoria.jsx/css # Historial de cambios
 │   │
 │   ├── documents/       # Componentes de documentos PETA
 │   │   ├── DocumentList.jsx/css     # Mi Expediente Digital
@@ -342,6 +364,25 @@ src/
 │   │   ├── DocumentUploader.jsx/css
 │   │   ├── ArmasRegistroUploader.jsx/css  # Subida de RFA
 │   │   ├── ImageEditor.jsx/css    # Editor de imágenes
+│   │   ├── MultiImageUploader.jsx/css  # Subida múltiple
+│   │   └── ProgressBar.jsx/css    # Barra de progreso
+│   │
+│   ├── privacidad/      # Avisos de privacidad
+│   │   ├── AvisoPrivacidad.jsx/css
+│   │   └── ConsentimientoPriv.jsx/css
+│   │
+│   └── common/          # Componentes comunes
+│
+├── hooks/
+│   ├── useRole.js       # Hook de detección de rol
+│   └── useDarkMode.js   # Hook de dark mode
+│
+├── contexts/
+│   └── ToastContext.js  # Context para notificaciones toast
+│
+├── data/
+│   └── tiradasData.js   # Calendario de tiradas 2026
+│es
 │   │   ├── MultiImageUploader.jsx/css  # Subida múltiple
 │   │   └── ProgressBar.jsx/css    # Barra de progreso
 │   └── privacidad/      # Avisos de privacidad
@@ -541,27 +582,44 @@ socios/{email}
 ### Roles
 | Rol | Email | Permisos | Notas |
 |-----|-------|----------|-------|
-| **Administrador** | smunozam@gmail.com | Acceso total (vía Console/Admin SDK) | Cuenta del secretario (webapp) |
-| **Secretario** | smunozam@gmail.com | Lectura de todos los socios, paneles admin | Cuenta del secretario (webapp) |
-| **Socio** | {email} | Solo sus propios datos | Todos los socios incluido smunozam@gmail.com |
+| **Admin/Secretario** | admin@club738.com | Acceso total al panel admin | Usuario administrativo del portal |
+| **Socio** | {email} | Solo sus propios datos | Todos los demás usuarios |
 
 **IMPORTANTE**: 
 - Usuario GitHub: `smunozsader` (SERGIO MUÑOZ SADER) - Solo para desarrollo
-- Usuario webapp secretario: `smunozam@gmail.com` - Cuenta de socio + permisos admin
-- NO confundir: El nombre del socio con email `smunozam@gmail.com` está registrado en Firestore
+- Usuario webapp admin: `admin@club738.com` - Cuenta exclusiva del secretario
+- El admin puede ver y gestionar datos de todos los socios
 
 ### Firestore Rules Summary
 ```javascript
-// Cada socio solo accede a sus datos
+// Funciones helper para roles
+function isOwner(email) {
+  return request.auth.token.email == email;
+}
+
+function isAdminOrSecretary() {
+  return request.auth.token.email == 'admin@club738.com';
+}
+
+// Cada socio solo accede a sus datos, admin puede leer todos
 match /socios/{email} {
-  allow read: if isOwner(email) || isSecretario();
+  allow read: if isOwner(email) || isAdminOrSecretary();
   allow write: if isOwner(email);
 }
 
-// Armas: solo lectura para socios
+// PETAs: Socio crea sus propias solicitudes, admin puede crear para cualquiera
+match /socios/{email}/petas/{petaId} {
+  allow read: if isOwner(email) || isAdminOrSecretary();
+  allow create: if isOwner(email) || isAdminOrSecretary();
+  allow update: if (isOwner(email) && resource.data.estado == 'documentacion_proceso') 
+                || isAdminOrSecretary();
+  allow delete: if isAdminOrSecretary();
+}
+
+// Armas: solo lectura para socios, escritura via Admin SDK
 match /socios/{email}/armas/{armaId} {
-  allow read: if isOwner(email);
-  // Escritura solo via Admin SDK
+  allow read: if isOwner(email) || isAdminOrSecretary();
+  // Escritura solo via Admin SDK o scripts
 }
 ```
 
@@ -643,17 +701,42 @@ Los scripts en /scripts/ requieren serviceAccountKey.json (nunca commitear):
 
 1. **Firebase API keys en source**: Es normal para apps web públicas, las reglas de seguridad son lo que importa
 2. **Auth state changes**: Pueden ocurrir en otra pestaña - onAuthStateChanged lo maneja
-3. **Cleanup de listeners**: Siempre retornar () => unsubscribe() en useEffect
-4. **CURPs**: Verificar contra PDFs oficiales en curp_socios/ antes de modificar
-5. **Rutas públicas**: Deben detectarse ANTES del check de autenticación en App.jsx
+3.**v1.22.1** | 17 Ene 2026 | **ACTUAL** - Fix props userEmail en módulos sidebar (RegistroPagos, ReporteCaja, DashboardRenovaciones) |
+| v1.22.0 | 17 Ene 2026 | Panel admin completo con sidebar unificado (15 herramientas en 5 categorías) |
+| v1.21.0 | Ene 2026 | Admin puede solicitar PETAs para socios |
+| v1.19.1 | 9 Ene 2026 | Preparación WAPI Sender - Formato Excel Oficial |
+| v1.19.0 | 9 Ene 2026 | Campaña WhatsApp - Difusión Lanzamiento Portal |
+| v1.18.0 | 9 Ene 2026 | Campaña de Emails y Corrección de Datos |
+| v1.14.3 | 14 Ene 2026 | Avisos para documentos precargados + PDF oficial |
+| v1.14.2 | 14 Ene 2026 | Fix permanente: Upload de PDFs de armas |
+| v1.14.1 | 14 Ene 2026 | Fix crítico: Vinculación de PDFs de armas |
+| v1.14.0 | 13 Ene 2026 | Separación Admin + Arsenal PDF + Notificaciones |
+| v1.13.4 | 12 Ene 2026 | Mejora de formato PDF: bordes decorativos y tablas |
+| v1.13.3 | 12 Ene 2026 | Ajustes de formato PDF PETA |
+| v1.13.2 | 11 Ene 2026 | Revisión secretaria: armas fijas |
+| v1.13.1 | 11 Ene 2026 | Límites legales de cartuchos (PETA) |
+| v1.13.0 | 7 Ene 2026 | ExpedienteImpresor, fix VerificadorPETA progreso |
+| v1.12.1 | 6 Ene 2026 | Enlaces SEDENA, redes sociales footer |
+| v1.12.0 | 6 Ene 2026 | Rediseño UX Expediente Digital, foto credencial JPG |
+| v1.11.0 | 6 Ene 2026 | ReporteCaja (corte de caja), sincronización pagos |
+| v1.10.1 | 5 Ene 2026 | Modalidad armas, estados sugeridos FEMETI |
+| v1.10.0 | 5 Ene 2026 | Módulo PETA completo (SolicitarPETA, MisPETAs, VerificadorPETA, RegistroPagos) |
+| v1.9.1 | 5 Ene 2026 | Renombrado sitio, mensajes VIP, cuotas $6,000 |
+| v1.9.0 | 5 Ene 2026 | Domicilios normalizados, UI unificada |
+| v1.8.0 | 5 Ene 2026 | GeneradorPETA, headers/footers unificados |
+| v1.7.0 | 4 Ene 2026 | Credenciales 2026 con Canva |
+| v1.6.0 | 4 Ene 2026 | Portal público completo (landing, calendario, calculadora) |
+| v1.3.0 | 3 Ene 2026 | OCR Validation + Centralización de Registros de Armas |
+| v1.2.0 | 3 Ene 2026 | Uploader con opción PDF preparado |
+| v1.1.1 | 3 Ene 2026 | Fix Storage Path + CORS |
+| v1.1.0 | 3 Ene 2026 | Privacidad LFPDPPP |
+| v1.0.0 | 3 Ene 2026 | Release inicial |
+| v0.2.0 | 2 Ene 2026 | Expansión de documentos PETA |
+| v0.1.0 | 1 Ene 2026 | Setup inicial y seguridad |
 
-## Calendario de Tiradas 2026
-
-### Tiradas Club 738
-11 tiradas confirmadas en /src/data/tiradasData.js:
-- Recorrido de Caza (RC): Tirada del Benemérito, Tirada del Padre, etc.
-- Tiro Práctico Mexicano (TPM): Competencias mensuales
-- Blancos en Movimiento (BM)
+**Total de versiones**: 40+  
+**Período de desarrollo**: 17 días (1-17 enero 2026)  
+**Promedio**: 2.35 versiones por día
 - Siluetas Metálicas (SM)
 
 ### Campo de Tiro
@@ -676,9 +759,82 @@ Estados: Yucatán, Campeche, Quintana Roo, Tabasco, Chiapas, Veracruz
 - [x] Estado de pagos/cobranza por socio - RegistroPagos.jsx + ReporteCaja.jsx
 - [x] Enlaces SEDENA e5cinco en landing page
 - [x] Redes sociales en footer (Facebook, Instagram, Google Maps)
+- [x] Panel administrativo completo con 15 herramientas organizadas en sidebar
+- [x] Admin puede solicitar PETAs para socios que no auto-inician
+- [x] Sistema de notificaciones y toasts
+- [x] Dark mode / Light mode toggle
+- [x] Gestión de arsenal (altas y bajas)
+- [x] Sistema de citas y agenda
 - [ ] Descarga de credencial desde portal del socio (integrar PDFs generados)
 - [ ] Notificaciones de vencimiento de documentos
 - [ ] Firma del presidente para credenciales
+- [ ] Sistema de recordatorios automáticos (pagos, documentos)
+
+## Panel Administrativo - Sidebar Unificado (v1.22.0+)
+
+### Estructura del Sidebar
+
+El panel administrativo (`AdminDashboard.jsx`) incluye 15 herramientas organizadas en 5 categorías:
+
+**👥 GESTIÓN DE SOCIOS** (2 herramientas)
+1. **Gestión de Socios** - Vista activa por defecto (tabla de todos los socios)
+2. **Reportador Expedientes** - Reportes y análisis de expedientes
+
+**🎯 MÓDULO PETA** (3 herramientas)
+3. **Verificador PETA** - Checklist de verificación de documentos digitales y físicos
+4. **Generador PETA** - Generar oficios PETA en PDF para descargar
+5. **Expediente Impresor** - Preparar expedientes completos para impresión
+
+**💰 MÓDULO COBRANZA** (5 herramientas)
+6. **Panel Cobranza** - Vista unificada de cobranza (CobranzaUnificada)
+7. **Registro de Pagos** - Registrar pagos de membresías individuales
+8. **Reporte de Caja** - Corte de caja con filtros y exportación CSV
+9. **Renovaciones 2026** - Dashboard de seguimiento de renovaciones
+10. **Cumpleaños** - Demografía y cumpleaños de socios
+
+**🔫 GESTIÓN DE ARSENAL** (2 herramientas)
+11. **Bajas de Arsenal** - Administrar solicitudes de baja de armas
+12. **Altas de Arsenal** - Administrar solicitudes de alta de armas
+
+**📅 AGENDA & CITAS** (1 herramienta)
+13. **Mi Agenda** - Gestión de citas y agenda del secretario
+
+### Props Requeridas por Componentes Admin
+
+**IMPORTANTE**: Varios componentes administrativos requieren la prop `userEmail` para funcionar:
+
+| Componente | Props Requeridas | Propósito |
+|------------|------------------|-----------|
+| RegistroPagos | `userEmail`, `onBack` | Registrar quién hace el pago (auditoría) |
+| ReporteCaja | `userEmail`, `onBack` | Filtros y reportes |
+| DashboardRenovaciones | `userEmail` | Validar `esSecretario = userEmail === 'admin@club738.com'` |
+| VerificadorPETA | `userEmail`, `onBack` | Auditoría de verificaciones |
+| GeneradorPETA | `userEmail` | Firma digital en PDFs |
+| ExpedienteImpresor | `userEmail`, `onBack` | Auditoría de impresiones |
+| DashboardCumpleanos | `userEmail` | Permisos de visualización |
+| CobranzaUnificada | `onBack` | Navegación |
+| MiAgenda | `onBack` | Navegación |
+| AdminBajasArsenal | ninguna | Componente autónomo |
+| AdminAltasArsenal | ninguna | Componente autónomo |
+
+**Patrón de implementación en App.jsx**:
+```jsx
+{activeSection === 'registro-pagos' && user.email === ADMIN_EMAIL && (
+  <div className="section-registro-pagos">
+    <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+      ← Volver a Panel Admin
+    </button>
+    <RegistroPagos userEmail={user.email} />
+  </div>
+)}
+```
+
+### Navegación Admin
+
+- **Estado activo**: `activeSection === 'admin-dashboard'` muestra el panel principal
+- **Botones "Volver"**: SIEMPRE deben usar `setActiveSection('admin-dashboard')`, NO `'dashboard'`
+- **Acceso**: Solo usuarios con email `admin@club738.com`
+- **Seguridad**: Verificar `user.email === ADMIN_EMAIL` en cada sección admin
 
 ## Version History
 
