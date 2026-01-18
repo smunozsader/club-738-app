@@ -10,6 +10,44 @@
 
 ## 📅 Enero 2026
 
+### 18 de Enero - v1.27.0 - ✅ Priority HIGH Accessibility Complete
+
+#### ✅ Phase 3A: SolicitarPETA & GeneradorPETA Accessibility
+
+**SolicitarPETA.jsx - 13 inputs fixed**:
+- Domicilio fields (5 inputs):
+  - Added: id="peta-calle", id="peta-colonia", id="peta-cp", id="peta-municipio", id="peta-estado"
+  - All with htmlFor linking, aria-label, aria-required="true"
+- Renewal section (2 inputs):
+  - Added: id="peta-renovacion" (checkbox)
+  - Added: id="peta-anterior" (text input)
+- Armas selection (dynamic checkboxes):
+  - Pattern: id="arma-{armaId}" with aria-label including full weapon description
+  - Example: aria-label="GLOCK 19 (9mm) - Matrícula: ABC123"
+- Estados selection (dynamic checkboxes):
+  - Pattern: id="estado-{estado}" with aria-label="Autorizar transporte en {estado}"
+  - Handles state names with spaces (converted to hyphens in id)
+
+**GeneradorPETA.jsx - 8 inputs fixed**:
+- Domicilio fields (6 inputs):
+  - Added: id="gen-calle", id="gen-colonia", id="gen-cp", id="gen-municipio", id="gen-estado-domicilio"
+  - All with htmlFor linking, aria-labels
+- Vigencia dates (2 inputs):
+  - Added: id="gen-fecha-inicio", id="gen-fecha-fin"
+  - Both with aria-label and aria-required="true"
+  - Maintained readOnly state on fecha-fin with proper aria-label
+- Renovación:
+  - Added: id="gen-peta-anterior" with aria-label
+
+**Resultados**:
+- ✅ v1.27.0 build: Success
+- ✅ Firebase deploy: Complete
+- ✅ Git commit & push: Complete
+- Total inputs fixed in v1.27.0: **21 inputs**
+- Cumulative progress: **42 inputs** (v1.26.0 + v1.27.0)
+
+---
+
 ### 18 de Enero - v1.26.0 - ✅ Phase 2 Accessibility Complete
 
 #### ✅ Phase 2: Complete GestionArsenal Input Accessibility
