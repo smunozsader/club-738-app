@@ -1,3 +1,119 @@
+## 2026-01-17 - v1.23.0 Sincronización Completa Excel ↔ Firestore + Transferencias de Arsenal
+
+### Actualización Masiva de Base de Datos de Socios y Armas
+
+**Objetivo**: Sincronizar completamente el Excel maestro (fuente de verdad) con Firestore, aplicar transferencias de armas entre socios, y corregir discrepancias detectadas.
+
+**Cambios aplicados**:
+
+#### 1️⃣ JOAQUIN GARDONI (jrgardoni@gmail.com)
+- ✅ **Agregada**: Shadow 2 DP25087 (faltaba en Excel y Firestore)
+- ✅ **Transferidas a Arechiga**: K078999 (LP380), K084328 (LP380)
+- **Total armas**: 8 → **7 armas** (después de transferencias)
+
+**Armas finales**:
+```
+K078928     (Grand Power K22 X-Trim)
+DP25246     (CZ Shadow 2)
+DP25086     (CZ Shadow 2)
+DP25087     (CZ Shadow 2) ← NUEVA
+0008-32069  (Ruger 10/22)
+0013-82505  (Ruger 10/22)
+22C002369   (Kriss)
+```
+
+#### 2️⃣ MARIA FERNANDA ARECHIGA (arechiga@jogarplastics.com)
+- ✅ **Recibidas de Gardoni**: K078999 (LP380), K084328 (LP380)
+- ✅ **Agregada nueva**: C647155 (CZ P07)
+- ✅ **Folio K078999 recuperado**: A3601943 (encontrado en archivos históricos)
+- ✅ **Modelo K084328 corregido**: P380 → LP380
+- **Total armas**: 0 → **3 armas**
+
+**Armas finales**:
+```
+K084328  (Grand Power LP380) - FOLIO: A3714371
+K078999  (Grand Power LP380) - FOLIO: A3601943 ← Recuperado de históricos
+C647155  (CZ P07)            - FOLIO: ⚠️ PENDIENTE
+```
+
+**Problema detectado**: Las 3 armas de Arechiga estaban registradas bajo el email de Gardoni (esposo). Se separaron correctamente a su propio registro.
+
+#### 3️⃣ IVÁN CABO (ivancabo@gmail.com)
+- ✅ **Agregadas**: 2 armas nuevas
+  * ESCOPETA 12 GA RETAY GORDION 73-H21YT-001717 (FOLIO: A3905284)
+  * PISTOLA .380" CZ SHADOW 2 FP40104 (FOLIO: A3901317)
+- **Total armas**: 3 → **5 armas**
+
+#### 4️⃣ Organización de archivos históricos
+- ✅ Creada carpeta `data/socios/referencia_historica/`
+- ✅ Movidos 5 archivos Excel antiguos (versiones 2025 y preliminares 2026)
+- ✅ Estructura limpia: Master files en `/data/socios/`, históricos en `/referencia_historica/`
+
+#### 5️⃣ Búsqueda de folios en archivos históricos
+- ✅ Script `buscar_folios_historicos.py` creado
+- ✅ Folio K078999 encontrado: **A 3601943** (normalizado a A3601943)
+- ❌ Folio C647155 **NO encontrado** (arma nueva, no en registros 2025)
+
+### Archivos modificados/creados
+
+**Excel Maestro**:
+- `data/socios/Copy of 2026.31.01_RELACION_SOCIOS_ARMAS_SEPARADO_verified.xlsx`
+  * 287 → 289 → **291 registros** (2 armas Iván Cabo + 1 arma Arechiga)
+  * Transferencias: K078999 y K084328 reasignadas de Gardoni a Arechiga
+  * Modelo K084328 corregido: P380 → LP380
+  * Folio K078999 agregado: A3601943
+  * 5 backups automáticos creados
+
+**Scripts Python creados** (temporales):
+- `actualizar_gardoni_arechiga_v2.py` - Actualizar Excel con transferencias
+- `sincronizar_firestore.py` - Sincronizar Firestore con Excel
+- `actualizar_ivan_cabo_firestore.py` - Agregar armas de Iván Cabo
+- `verificar_transferencias_firebase.py` - Verificar solicitudes pendientes
+- `reasignar_k078999.py` / `fix_k078999.py` - Reasignar K078999 a Arechiga
+- `buscar_folios_historicos.py` - Buscar folios en archivos históricos
+- `actualizar_folios_arechiga.py` - Actualizar folios en Excel
+- `actualizar_firestore_arechiga.py` - Actualizar folios en Firestore
+
+**Firestore Collections actualizadas**:
+- `socios/jrgardoni@gmail.com/armas` - 7 armas (actualizado totalArmas)
+- `socios/arechiga@jogarplastics.com/armas` - 3 armas (antes 0, actualizado totalArmas)
+- `socios/ivancabo@gmail.com/armas` - 5 armas (actualizado totalArmas)
+
+### Validación y verificación
+
+**✅ Excel Maestro verificado**:
+```bash
+GARDONI: 7 armas
+  0008-32069, 0013-82505, 22C002369, DP25086, DP25087, DP25246, K078928
+
+ARECHIGA: 3 armas (antes 0)
+  C647155, K078999, K084328
+```
+
+**✅ Firestore verificado**:
+```
+GARDONI: 7 armas (sincronizado)
+ARECHIGA: 3 armas (sincronizado)
+IVAN CABO: 5 armas (sincronizado)
+```
+
+**✅ Transferencias completadas**:
+- K078999: Gardoni → Arechiga ✓ (Excel + Firestore)
+- K084328: Gardoni → Arechiga ✓ (Excel + Firestore)
+
+### Pendientes
+
+⚠️ **1 folio faltante**:
+- C647155 (CZ P07) de Arechiga → Folio debe obtenerse del registro RFA físico
+
+### Deploy
+
+- **Excel**: ✅ Actualizado y respaldado
+- **Firestore**: ✅ Sincronizado
+- **Testing**: ✅ Verificaciones cruzadas Excel ↔ Firestore completadas
+
+---
+
 ## 2026-01-17 - v1.22.1 Fix Props userEmail en Módulos del Sidebar (Auditoría Completa)
 
 ### Problema: Módulos del sidebar no cargaban - Mostraban "Acceso Restringido"
