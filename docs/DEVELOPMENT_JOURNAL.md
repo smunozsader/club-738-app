@@ -33,16 +33,37 @@ DP25087     (CZ Shadow 2) ← NUEVA
 ```
 K084328  (Grand Power LP380) - FOLIO: A3714371
 K078999  (Grand Power LP380) - FOLIO: A3601943 ← Recuperado de históricos
-C647155  (CZ P07)            - FOLIO: ⚠️ PENDIENTE
+C647155  (CZ P07)            - FOLIO: B611940 ✅
 ```
 
 **Problema detectado**: Las 3 armas de Arechiga estaban registradas bajo el email de Gardoni (esposo). Se separaron correctamente a su propio registro.
+
+**PDFs de Registros**: 3/3 ✅
+- K078999: registro.pdf subido desde armas_socios/Registros RFA arechiga gardoni/
+- K084328: registro.pdf subido desde armas_socios/Registros RFA arechiga gardoni/
+- C647155: registro.pdf subido desde armas_socios/Registros RFA arechiga gardoni/
 
 #### 3️⃣ IVÁN CABO (ivancabo@gmail.com)
 - ✅ **Agregadas**: 2 armas nuevas
   * ESCOPETA 12 GA RETAY GORDION 73-H21YT-001717 (FOLIO: A3905284)
   * PISTOLA .380" CZ SHADOW 2 FP40104 (FOLIO: A3901317)
 - **Total armas**: 3 → **5 armas**
+
+**Armas finales**:
+```
+DP23540           (CZ P-10 C)
+US515YY19935      (Browning Buck Mark)
+27280             (Mendoza Puma)
+73-H21YT-001717   (Retay Gordion) ← NUEVA
+FP40104           (CZ Shadow 2) ← NUEVA
+```
+
+**PDFs de Registros**: 5/5 ✅
+- DP23540: CZP10C.pdf (pre-existente)
+- US515YY19935: Buckmark.pdf (subido desde armas_socios/Registros RFA IVAN/)
+- 27280: Puma.pdf (subido desde armas_socios/Registros RFA IVAN/)
+- 73-H21YT-001717: retay.pdf (subido desde armas_socios/Registros RFA IVAN/)
+- FP40104: shadow.pdf (subido desde armas_socios/Registros RFA IVAN/) ← **Última subida**
 
 #### 4️⃣ Organización de archivos históricos
 - ✅ Creada carpeta `data/socios/referencia_historica/`
@@ -73,11 +94,18 @@ C647155  (CZ P07)            - FOLIO: ⚠️ PENDIENTE
 - `buscar_folios_historicos.py` - Buscar folios en archivos históricos
 - `actualizar_folios_arechiga.py` - Actualizar folios en Excel
 - `actualizar_firestore_arechiga.py` - Actualizar folios en Firestore
+- `subir_pdfs_registros.py` - Subir PDFs de Arechiga y Gardoni a Storage
+- `verificar_subir_ivan_cabo.py` - Verificar y subir PDFs de Iván Cabo
+
+**Firebase Storage**:
+- `documentos/arechiga@jogarplastics.com/armas/*/registro.pdf` - 3 PDFs subidos
+- `documentos/jrgardoni@gmail.com/armas/*/registro.pdf` - 1 PDF subido (DP25087)
+- `documentos/ivancabo@gmail.com/armas/*/registro.pdf` - 5 PDFs subidos
 
 **Firestore Collections actualizadas**:
-- `socios/jrgardoni@gmail.com/armas` - 7 armas (actualizado totalArmas)
-- `socios/arechiga@jogarplastics.com/armas` - 3 armas (antes 0, actualizado totalArmas)
-- `socios/ivancabo@gmail.com/armas` - 5 armas (actualizado totalArmas)
+- `socios/jrgardoni@gmail.com/armas` - 7 armas (actualizado totalArmas, 7/7 PDFs ✅)
+- `socios/arechiga@jogarplastics.com/armas` - 3 armas (antes 0, actualizado totalArmas, 3/3 PDFs ✅)
+- `socios/ivancabo@gmail.com/armas` - 5 armas (actualizado totalArmas, 5/5 PDFs ✅)
 
 ### Validación y verificación
 
@@ -92,10 +120,27 @@ ARECHIGA: 3 armas (antes 0)
 
 **✅ Firestore verificado**:
 ```
-GARDONI: 7 armas (sincronizado)
-ARECHIGA: 3 armas (sincronizado)
-IVAN CABO: 5 armas (sincronizado)
+GARDONI: 7 armas (sincronizado) - 7/7 PDFs ✅
+ARECHIGA: 3 armas (sincronizado) - 3/3 PDFs ✅
+IVAN CABO: 5 armas (sincronizado) - 5/5 PDFs ✅
 ```
+
+### Resumen ejecutivo
+
+**Datos actualizados**:
+- ✅ Excel maestro: 287 → **291 armas** (4 nuevas)
+- ✅ Firestore: 3 socios sincronizados (15 armas totales entre los 3)
+- ✅ Firebase Storage: **9 PDFs subidos** (Gardoni 1, Arechiga 3, Iván Cabo 5)
+- ✅ Transferencias: 2 armas de Gardoni → Arechiga
+- ✅ Folios completados: K078999 (A3601943), C647155 (B611940)
+- ✅ Correcciones: K084328 modelo P380 → LP380
+
+**Estado final**:
+- **GARDONI**: 7/7 armas completas (Excel + Firestore + PDFs) ✅
+- **ARECHIGA**: 3/3 armas completas (Excel + Firestore + PDFs) ✅
+- **IVÁN CABO**: 5/5 armas completas (Excel + Firestore + PDFs) ✅
+
+**Sincronización 100% completa** 🎯
 
 **✅ Transferencias completadas**:
 - K078999: Gardoni → Arechiga ✓ (Excel + Firestore)
