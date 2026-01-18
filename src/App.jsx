@@ -94,6 +94,13 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  // AUTO-LOAD: Si el usuario es admin, cargar admin-dashboard automáticamente
+  useEffect(() => {
+    if (role === 'administrator' && !roleLoading) {
+      setActiveSection('admin-dashboard');
+    }
+  }, [role, roleLoading]);
+
   // Escuchar cambios en documentos del usuario
   useEffect(() => {
     if (!user) return;

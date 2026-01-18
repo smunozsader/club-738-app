@@ -1139,3 +1139,314 @@
   /* Prevenir que los textos hereden color blanco */
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+/* ========================================
+   ADMIN DASHBOARD OVERRIDES - SIDEBAR Y BOTONES
+   Asegurar máxima visibilidad y clickability
+   ======================================== */
+
+/* Sidebar Admin */
+:root.dark-mode .admin-tools-sidebar {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+  border-right: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+:root.dark-mode .sidebar-title {
+  color: #f1f5f9 !important;
+  border-bottom: 2px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+:root.dark-mode .sidebar-section-title {
+  color: #94a3b8 !important;
+}
+
+/* Botones del sidebar admin - CRÍTICO */
+:root.dark-mode .admin-tool-btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  color: #e2e8f0 !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 6px !important;
+  transition: all 0.2s !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+:root.dark-mode .admin-tool-btn:hover {
+  background: rgba(59, 130, 246, 0.15) !important;
+  border-color: rgba(59, 130, 246, 0.6) !important;
+  color: #f1f5f9 !important;
+  transform: translateX(4px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
+}
+
+:root.dark-mode .admin-tool-btn:active,
+:root.dark-mode .admin-tool-btn:focus {
+  background: rgba(59, 130, 246, 0.25) !important;
+  border-color: #3b82f6 !important;
+  outline: 2px solid rgba(59, 130, 246, 0.4) !important;
+  outline-offset: 2px !important;
+}
+
+:root.dark-mode .admin-tool-btn.active {
+  background: rgba(59, 130, 246, 0.2) !important;
+  border-color: #3b82f6 !important;
+  font-weight: 600 !important;
+  color: #38bdf8 !important;
+}
+
+:root.dark-mode .admin-tool-btn.socios {
+  border-left: 3px solid #8b5cf6 !important;
+}
+
+:root.dark-mode .admin-tool-btn.peta {
+  border-left: 3px solid #3b82f6 !important;
+}
+
+:root.dark-mode .admin-tool-btn.pagos {
+  border-left: 3px solid #10b981 !important;
+}
+
+:root.dark-mode .admin-tool-btn.arsenal {
+  border-left: 3px solid #f59e0b !important;
+}
+
+:root.dark-mode .admin-tool-btn.agenda {
+  border-left: 3px solid #ec4899 !important;
+}
+
+/* Iconos dentro de botones */
+:root.dark-mode .tool-icon {
+  font-size: 1.1rem !important;
+  flex-shrink: 0 !important;
+}
+
+:root.dark-mode .tool-text {
+  font-size: 0.9rem !important;
+  color: #e2e8f0 !important;
+}
+
+/* Admin Main Content */
+:root.dark-mode .admin-main-content {
+  background: var(--dm-bg-primary) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+:root.dark-mode .admin-header {
+  background: var(--dm-surface-secondary) !important;
+  border-bottom: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+:root.dark-mode .header-title h1 {
+  color: var(--dm-text-primary) !important;
+}
+
+:root.dark-mode .admin-subtitle {
+  color: var(--dm-text-secondary) !important;
+}
+
+/* Stats cards */
+:root.dark-mode .admin-stats {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+  gap: 1rem !important;
+}
+
+:root.dark-mode .stat-card {
+  background: var(--dm-surface-secondary) !important;
+  border: 1px solid var(--dm-border) !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  color: var(--dm-text-primary) !important;
+}
+
+:root.dark-mode .stat-value {
+  font-size: 1.8rem !important;
+  font-weight: bold !important;
+  color: var(--dm-primary) !important;
+}
+
+:root.dark-mode .stat-label {
+  color: var(--dm-text-secondary) !important;
+  font-size: 0.9rem !important;
+}
+
+/* Controles admin */
+:root.dark-mode .admin-controls {
+  background: var(--dm-surface-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+}
+
+:root.dark-mode .search-input {
+  background: var(--dm-surface-secondary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 6px !important;
+}
+
+:root.dark-mode .search-input:focus {
+  outline: none !important;
+  border-color: var(--dm-primary) !important;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
+}
+
+:root.dark-mode .search-input::placeholder {
+  color: var(--dm-text-placeholder) !important;
+}
+
+/* Tabs de filtros */
+:root.dark-mode .filter-tab {
+  background: var(--dm-surface-secondary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-secondary) !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+}
+
+:root.dark-mode .filter-tab:hover {
+  background: var(--dm-surface-hover) !important;
+  border-color: var(--dm-border-hover) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+:root.dark-mode .filter-tab.active {
+  background: var(--dm-primary) !important;
+  border-color: var(--dm-primary) !important;
+  color: var(--dm-text-inverse) !important;
+  font-weight: 600 !important;
+}
+
+/* Select de filtros */
+:root.dark-mode .filter-select {
+  background: var(--dm-surface-secondary) !important;
+  border: 1px solid var(--dm-border) !important;
+  color: var(--dm-text-primary) !important;
+  padding: 0.5rem !important;
+  border-radius: 4px !important;
+}
+
+/* Tabla Admin */
+:root.dark-mode .admin-table {
+  background: var(--dm-surface-primary) !important;
+  border-collapse: collapse !important;
+  width: 100% !important;
+}
+
+:root.dark-mode .admin-table thead {
+  background: var(--dm-surface-secondary) !important;
+  border-bottom: 2px solid var(--dm-border) !important;
+}
+
+:root.dark-mode .admin-table th {
+  color: var(--dm-text-primary) !important;
+  font-weight: 600 !important;
+  padding: 1rem !important;
+  text-align: left !important;
+}
+
+:root.dark-mode .admin-table tbody tr {
+  border-bottom: 1px solid var(--dm-border) !important;
+  background: var(--dm-surface-primary) !important;
+  color: var(--dm-text-primary) !important;
+}
+
+:root.dark-mode .admin-table tbody tr:hover {
+  background: var(--dm-surface-secondary) !important;
+}
+
+:root.dark-mode .admin-table td {
+  padding: 1rem !important;
+  color: var(--dm-text-primary) !important;
+}
+
+/* Botones en tabla */
+:root.dark-mode .btn-ver-expediente,
+:root.dark-mode .btn-solicitar-peta {
+  background: var(--dm-primary) !important;
+  color: var(--dm-text-inverse) !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 0.85rem !important;
+  transition: all 0.2s !important;
+  margin: 0.25rem !important;
+}
+
+:root.dark-mode .btn-ver-expediente:hover,
+:root.dark-mode .btn-solicitar-peta:hover {
+  background: var(--dm-primary-dark) !important;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3) !important;
+}
+
+/* Badge */
+:root.dark-mode .badge {
+  background: var(--dm-surface-secondary) !important;
+  color: var(--dm-text-primary) !important;
+  border: 1px solid var(--dm-border) !important;
+  padding: 0.25rem 0.75rem !important;
+  border-radius: 12px !important;
+  font-size: 0.85rem !important;
+}
+
+/* Botón exportar */
+:root.dark-mode .btn-export-excel {
+  background: var(--dm-success) !important;
+  color: var(--dm-text-inverse) !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  transition: all 0.2s !important;
+}
+
+:root.dark-mode .btn-export-excel:hover:not(:disabled) {
+  background: var(--dm-success-dark) !important;
+  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3) !important;
+}
+
+:root.dark-mode .btn-export-excel:disabled {
+  background: var(--dm-surface-secondary) !important;
+  color: var(--dm-text-muted) !important;
+  cursor: not-allowed !important;
+}
+
+/* Admin Footer */
+:root.dark-mode .admin-footer {
+  background: var(--dm-surface-secondary) !important;
+  color: var(--dm-text-secondary) !important;
+  border-top: 1px solid var(--dm-border) !important;
+  padding: 1rem !important;
+  text-align: center !important;
+}
+
+/* Barra de progreso */
+:root.dark-mode .progress-bar-mini {
+  background: var(--dm-surface-secondary) !important;
+  border: 1px solid var(--dm-border) !important;
+  border-radius: 4px !important;
+  height: 6px !important;
+  overflow: hidden !important;
+}
+
+:root.dark-mode .progress-fill-mini {
+  background: var(--dm-primary) !important;
+  height: 100% !important;
+  border-radius: 4px !important;
+  transition: width 0.3s ease !important;
+}
+
+:root.dark-mode .progress-text {
+  color: var(--dm-text-secondary) !important;
+  font-size: 0.8rem !important;
+  margin-left: 0.5rem !important;
+}
