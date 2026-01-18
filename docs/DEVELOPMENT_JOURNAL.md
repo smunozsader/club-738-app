@@ -1,3 +1,61 @@
+## 2026-01-18 - v1.30.0 Contabilidad: Columna Inscripción para Socios Nuevos
+
+### Fix Contabilidad - Desglose de Inscripciones
+
+**Objetivo**: Registrar correctamente inscripciones de socios nuevos en columna separada en reporte de caja.
+
+**Problema Reportado**: 
+- Socio nuevo LUIS FERNANDO GUILLERMO GAMBOA contabilizado como total $8,700 sin desglose
+- Debía mostrar: Inscripción $2,000 + Cuota $6,000 + FEMETI $700
+
+**Cambios realizados**:
+
+#### 1. ReporteCaja.jsx - Nueva Columna Inscripción
+- ✅ Agregada constante `INSCRIPCION = 2000`
+- ✅ Nueva columna "Inscripción" en tabla (entre Fecha Pago y Cuota Club)
+- ✅ Campo `inscripcion` en estado de socios (detecta si `membresia2026.esNuevo`)
+- ✅ Cálculo de totales por inscripción (`totalInscripcion`)
+- ✅ Desglose en tarjeta resumen (muestra si hay inscripciones)
+- ✅ Exportación CSV incluye nueva columna
+
+**Estructura de Tabla (NUEVA)**:
+```
+Socio | Estado | Fecha Pago | INSCRIPCIÓN | Cuota Club | FEMETI | Total | Método | Comprobante
+```
+
+**Footer Actualizado**:
+```
+TOTALES: | $2,000 | $42,000 | $2,450 | $52,800
+         (nueva)                           (suma correcta)
+```
+
+#### 2. Fix Firestore - LUIS FERNANDO GUILLERMO GAMBOA
+- 📧 Email: `oso.guigam@gmail.com`
+- ✅ Agregado `membresia2026.esNuevo = true`
+- ✅ Agregado `membresia2026.inscripcion = 2000`
+- ✅ Agregado `membresia2026.cuotaClub = 6000`
+- ✅ Agregado `membresia2026.cuotaFemeti = 700`
+- ✅ Total conservado: `monto = 8700`
+
+**Script creado**: `scripts/fix-luis-fernando-inscripcion.cjs`
+
+#### 3. Impacto en Reportes
+- **ReporteCaja**: Nueva columna "Inscripción" visible
+- **Totales**: Desglosados por concepto (inscripción, cuota, FEMETI)
+- **Exportación CSV**: Columna Inscripción incluida
+- **Cálculos**: Los totales se suman correctamente sin errores
+
+**Archivos modificados**:
+- `src/components/ReporteCaja.jsx` - Nueva lógica de columnas
+- `scripts/fix-luis-fernando-inscripcion.cjs` - Script de corrección (NUEVO)
+
+**Build & Deploy**:
+- ✅ npm run build: SUCCESS (dist compilado)
+- ✅ firebase deploy --only hosting: v1.30.0 LIVE
+- 🌐 URL: https://club-738-app.web.app
+
+---
+
 ## 2026-01-18 - v1.29.0 Dark Mode Premium v2.0 + Admin Bugs Fixed
 
 ### Dark Mode Comprehensive Overhaul & Admin Functionality Restored

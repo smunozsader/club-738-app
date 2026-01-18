@@ -15,6 +15,8 @@ import './ReporteCaja.css';
 // Configuración de cuotas (igual que otros módulos)
 const CUOTA_CLUB = 6000;
 const CUOTA_FEMETI = 350;
+const INSCRIPCION = 2000; // Solo socios nuevos
+const FEMETI_NUEVO = 700; // FEMETI para socios nuevos
 
 export default function ReporteCaja({ userEmail, onBack }) {
   const [loading, setLoading] = useState(true);
@@ -58,6 +60,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
                          (data.membresia2026?.activa ? CUOTA_CLUB : 0);
         const cuotaFemeti = data.renovacion2026?.cuotaFemeti || 
                           (data.membresia2026?.activa ? CUOTA_FEMETI : 0);
+        const inscripcion = data.membresia2026?.esNuevo ? INSCRIPCION : 0;
         const montoTotal = data.renovacion2026?.montoTotal || 
                           data.membresia2026?.monto || 0;
         
@@ -67,6 +70,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
           noSocio: data.noSocio || '-',
           pagado,
           fechaPago,
+          inscripcion,
           cuotaClub,
           cuotaFemeti,
           montoTotal: pagado ? montoTotal : 0,
@@ -74,6 +78,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
                      data.membresia2026?.metodoPago || '-',
           comprobante: data.renovacion2026?.comprobante || 
                       data.membresia2026?.numeroRecibo || '-',
+          esNuevo: data.membresia2026?.esNuevo || false,
           exento: data.renovacion2026?.exento || false,
           motivoExencion: data.renovacion2026?.motivoExencion || null
         });
@@ -138,6 +143,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
     const exentos = socios.filter(s => s.exento);
     
     const totalRecaudado = pagados.reduce((sum, s) => sum + (s.montoTotal || 0), 0);
+    const totalInscripcion = pagados.reduce((sum, s) => sum + (s.inscripcion || 0), 0);
     const totalCuotaClub = pagados.reduce((sum, s) => sum + (s.cuotaClub || 0), 0);
     const totalFemeti = pagados.reduce((sum, s) => sum + (s.cuotaFemeti || 0), 0);
     
@@ -160,6 +166,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
       pendientes: pendientes.length,
       exentos: exentos.length,
       totalRecaudado,
+      totalInscripcion,
       totalCuotaClub,
       totalFemeti,
       porRecaudar,
@@ -171,13 +178,14 @@ export default function ReporteCaja({ userEmail, onBack }) {
 
   // Exportar a CSV
   const exportarCSV = () => {
-    const headers = ['Socio', 'Email', 'Estado', 'Fecha Pago', 'Cuota Club', 'FEMETI', 'Total', 'Método', 'Comprobante'];
+    const headers = ['Socio', 'Email', 'Estado', 'Fecha Pago', 'Inscripción', 'Cuota Club', 'FEMETI', 'Total', 'Método', 'Comprobante'];
     
     const rows = sociosFiltrados.map(s => [
       s.nombre,
       s.email,
       s.pagado ? 'PAGADO' : (s.exento ? 'EXENTO' : 'PENDIENTE'),
       s.fechaPago ? s.fechaPago.toLocaleDateString('es-MX') : '-',
+      s.inscripcion || 0,
       s.cuotaClub || 0,
       s.cuotaFemeti || 0,
       s.montoTotal || 0,
@@ -261,6 +269,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
           <div className="card-icon">📋</div>
           <div className="card-content">
             <div className="card-label">Desglose</div>
+            {totales.totalInscripcion > 0 && <div className="card-detail">Inscripciones: ${totales.totalInscripcion.toLocaleString('es-MX')}</div>}
             <div className="card-detail">Cuota Club: ${totales.totalCuotaClub.toLocaleString('es-MX')}</div>
             <div className="card-detail">FEMETI: ${totales.totalFemeti.toLocaleString('es-MX')}</div>
           </div>
@@ -347,6 +356,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
               <th>Socio</th>
               <th>Estado</th>
               <th>Fecha Pago</th>
+              <th className="text-right">Inscripción</th>
               <th className="text-right">Cuota Club</th>
               <th className="text-right">FEMETI</th>
               <th className="text-right">Total</th>
@@ -369,6 +379,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
                   </span>
                 </td>
                 <td>{socio.fechaPago ? socio.fechaPago.toLocaleDateString('es-MX') : '-'}</td>
+                <td className="text-right">{socio.inscripcion ? `$${socio.inscripcion.toLocaleString('es-MX')}` : '-'}</td>
                 <td className="text-right">{socio.cuotaClub ? `$${socio.cuotaClub.toLocaleString('es-MX')}` : '-'}</td>
                 <td className="text-right">{socio.cuotaFemeti ? `$${socio.cuotaFemeti.toLocaleString('es-MX')}` : '-'}</td>
                 <td className="text-right font-bold">{socio.montoTotal ? `$${socio.montoTotal.toLocaleString('es-MX')}` : '-'}</td>
@@ -380,6 +391,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
           <tfoot>
             <tr className="totales-row">
               <td colSpan="3"><strong>TOTALES</strong></td>
+              <td className="text-right"><strong>${totales.totalInscripcion.toLocaleString('es-MX')}</strong></td>
               <td className="text-right"><strong>${totales.totalCuotaClub.toLocaleString('es-MX')}</strong></td>
               <td className="text-right"><strong>${totales.totalFemeti.toLocaleString('es-MX')}</strong></td>
               <td className="text-right"><strong>${totales.totalRecaudado.toLocaleString('es-MX')}</strong></td>
