@@ -674,10 +674,36 @@ main {
 .landing-footer .footer-social {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-bottom: 15px;
-  margin-top: 24px;
+  gap: 20px;
+  padding: 20px 0;
+  border-top: 1px solid #cbd5e1;
+  border-bottom: 1px solid #cbd5e1;
+  margin: 0 auto 16px auto;
+  max-width: 300px;
   width: 100%;
+}
+
+.landing-footer .footer-social a {
+  color: #475569;
+  transition: color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.landing-footer .footer-social a:hover {
+  color: #1e40af;
+  background: rgba(59, 130, 246, 0.25);
+  transform: scale(1.15);
+}
+
+.landing-footer .footer-social a svg {
+  width: 24px;
+  height: 24px;
 }
 
 .footer-social {
@@ -688,7 +714,7 @@ main {
 }
 
 .footer-social a {
-  color: white;
+  color: #1e293b;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -941,10 +967,10 @@ main {
   font-weight: 600;
 }
 
-/* Footer Oficial del Club */
+/* Footer Oficial del Club - Light Mode */
 .landing-footer {
-  background: var(--color-footer-bg);
-  color: white;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: #1e293b;
   padding: 48px 24px 24px;
   margin-top: auto;
   width: 100%;
@@ -952,6 +978,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-top: 2px solid #0f172a;
 }
 
 .landing-footer.admin-footer-full {
@@ -969,7 +996,7 @@ main {
   grid-template-columns: repeat(3, 1fr);
   gap: 40px;
   padding-bottom: 32px;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid #cbd5e1;
   padding-left: 24px;
   padding-right: 24px;
   box-sizing: border-box;
@@ -978,20 +1005,26 @@ main {
 .landing-footer .footer-info h4 {
   margin: 0 0 16px 0;
   font-size: 1rem;
+  color: #0f172a;
+  font-weight: 700;
 }
 
 .landing-footer .footer-info p {
   margin: 4px 0;
-  color: var(--color-footer-text);
+  color: #334155;
   font-size: 0.9rem;
 }
 
 .landing-footer .map-link {
   display: inline-block;
   margin-top: 8px;
-  color: var(--color-primary-light);
+  color: #0f172a;
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .landing-footer .map-link:hover {
@@ -1011,7 +1044,7 @@ main {
 
 .landing-footer .footer-bottom p {
   margin: 0;
-  color: var(--color-footer-muted);
+  color: #475569;
   font-size: 0.85rem;
 }
 

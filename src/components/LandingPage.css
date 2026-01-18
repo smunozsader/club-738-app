@@ -374,12 +374,13 @@
   font-size: 0.9rem;
 }
 
-/* Footer */
+/* Footer - Light Mode (Default) */
 .landing-footer {
-  background: var(--color-footer-bg, #1e293b);
-  color: white;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: #1e293b;
   padding: 48px 24px 24px;
   margin-top: 40px;
+  border-top: 2px solid #0f172a;
 }
 
 .footer-content {
@@ -389,26 +390,36 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 40px;
   padding-bottom: 32px;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid #cbd5e1;
 }
 
 .footer-info h4 {
   margin: 0 0 16px 0;
   font-size: 1rem;
+  color: #0f172a;
+  font-weight: 700;
 }
 
 .footer-info p {
   margin: 4px 0;
-  color: var(--color-footer-text, #cbd5e1);
+  color: #334155;
   font-size: 0.9rem;
+}
+
+.footer-info a {
+  color: #334155;
 }
 
 .map-link {
   display: inline-block;
   margin-top: 8px;
-  color: var(--color-primary-light, #3b82f6);
+  color: #0f172a;
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .map-link:hover {
@@ -420,23 +431,33 @@
   justify-content: center;
   gap: 20px;
   padding: 20px 0;
-  border-top: 1px solid var(--color-border-light, #334155);
-  border-bottom: 1px solid var(--color-border-light, #334155);
+  border-top: 1px solid #cbd5e1;
+  border-bottom: 1px solid #cbd5e1;
   margin: 0 auto 16px auto;
   max-width: 300px;
 }
 
 .footer-social a {
-  color: var(--color-footer-text, #cbd5e1);
+  color: #475569;
   transition: color 0.2s ease, transform 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.1);
 }
 
 .footer-social a:hover {
-  color: var(--color-primary, #3b82f6);
+  color: #1e40af;
+  background: rgba(59, 130, 246, 0.25);
   transform: scale(1.15);
+}
+
+.footer-social a svg {
+  width: 24px;
+  height: 24px;
 }
 
 .footer-bottom {
@@ -448,6 +469,8 @@
 
 .footer-bottom p {
   margin: 0;
+  color: #475569;
+  font-size: 0.85rem;
   color: var(--color-footer-muted, #94a3b8);
   font-size: 0.85rem;
 }
