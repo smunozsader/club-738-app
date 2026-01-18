@@ -287,6 +287,20 @@ npx md-to-pdf ruta/al/archivo.md
 npx md-to-pdf archivo.md --pdf-options '{"format":"A4","margin":"20mm"}'
 ```
 
+### ⚠️ IMPORTANTE - URL de Producción
+**NUNCA decir que se desplegó en `https://club-738-app.web.app`**
+
+La URL de PRODUCCIÓN oficial es:
+```
+https://yucatanctp.org
+```
+
+Esta URL es un dominio custom configurado en Firebase Hosting. Cuando hagas deploy, SIEMPRE menciona:
+- ✅ "Deploy completado en https://yucatanctp.org"
+- ❌ "Deploy completado en https://club-738-app.web.app" (NO correcto)
+
+Ambas URLs apuntan al mismo sitio, pero la oficial es `yucatanctp.org`.
+
 ### Markdown to PDF
 **Herramienta:** `md-to-pdf` via npx (NO usar extensión VS Code Markdown PDF)
 
