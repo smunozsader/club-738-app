@@ -1,3 +1,29 @@
+## 2026-01-17 - v1.24.1 Normalización de Campos Numéricos para Sincronización Firebase
+
+### Corrección de Formatos Excel
+
+**Objetivo**: Normalizar todos los campos numéricos (matrículas, teléfonos, modelos) a formato texto SIN comas, para evitar discrepancias con Firebase.
+
+**Cambios aplicados**:
+1. **Matrículas**: 274 celdas convertidas a formato texto (@)
+2. **Teléfonos**: 286 celdas convertidas a formato texto (@)
+3. **Modelos**: Eliminadas comas de números (ej: 1,100 → 1100)
+4. **Corrección REMIGIO**: RUGER 19/22 → RUGER 10/22 ✅
+
+**Verificación**:
+- ✅ Sin comas en matrículas
+- ✅ Sin comas en modelos
+- ✅ Todos los teléfonos como texto
+- ✅ Todas las matrículas como texto
+- ✅ REMIGIO corregido (C63-1970)
+
+**Archivos modificados**:
+- ✅ `data/socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx`
+
+**Razón**: Firebase almacena campos como strings. Excel auto-formateaba números con comas (ej: 1,970 en lugar de 1970), causando discrepancias. Ahora TODOS los campos numéricos son texto plano.
+
+---
+
 ## 2026-01-17 - v1.24.0 Consolidación Fuente de Verdad Única: 76 Socios con Campos Firebase Completos
 
 ### Creación de Base Maestra Unificada
