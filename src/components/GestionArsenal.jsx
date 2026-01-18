@@ -732,16 +732,33 @@ function GestionArsenal() {
                   ) : (
                     <>
                       <div className="form-row">
-                        <label>
+                        <label htmlFor="formAlta-vendedor">
                           Nombre del vendedor/cedente:
-                          <input type="text" value={formAlta.vendedor} onChange={(e) => setFormAlta({ ...formAlta, vendedor: e.target.value })} placeholder="Nombre completo o entidad" required={formAlta.origenAdquisicion !== 'herencia' && formAlta.origenAdquisicion !== 'donacion'} />
+                          <input 
+                            id="formAlta-vendedor"
+                            type="text" 
+                            name="vendedor"
+                            value={formAlta.vendedor} 
+                            onChange={(e) => setFormAlta({ ...formAlta, vendedor: e.target.value })} 
+                            placeholder="Nombre completo o entidad" 
+                            required={formAlta.origenAdquisicion !== 'herencia' && formAlta.origenAdquisicion !== 'donacion'}
+                            aria-label="Nombre del vendedor o cedente"
+                          />
                         </label>
                       </div>
                       {(formAlta.origenAdquisicion === 'compra' || formAlta.origenAdquisicion === 'transferencia') && (
                         <div className="form-row">
-                          <label>
+                          <label htmlFor="formAlta-numeroRegistro">
                             Número de Registro Anterior:
-                            <input type="text" value={formAlta.numeroRegistroAnterior} onChange={(e) => setFormAlta({ ...formAlta, numeroRegistroAnterior: e.target.value })} placeholder="Número del registro anterior (si existe)" />
+                            <input 
+                              id="formAlta-numeroRegistro"
+                              type="text" 
+                              name="numeroRegistroAnterior"
+                              value={formAlta.numeroRegistroAnterior} 
+                              onChange={(e) => setFormAlta({ ...formAlta, numeroRegistroAnterior: e.target.value })} 
+                              placeholder="Número del registro anterior (si existe)"
+                              aria-label="Número del registro anterior si existe"
+                            />
                           </label>
                         </div>
                       )}
@@ -749,9 +766,17 @@ function GestionArsenal() {
                   )}
                   {(formAlta.origenAdquisicion === 'transferencia') && (
                     <div className="form-row">
-                      <label>
+                      <label htmlFor="formAlta-folioTransferencia">
                         Folio del registro de transferencia:
-                        <input type="text" value={formAlta.folioRegistroTransferencia} onChange={(e) => setFormAlta({ ...formAlta, folioRegistroTransferencia: e.target.value })} placeholder="Si ya tramitaron ante SEDENA" />
+                        <input 
+                          id="formAlta-folioTransferencia"
+                          type="text" 
+                          name="folioRegistroTransferencia"
+                          value={formAlta.folioRegistroTransferencia} 
+                          onChange={(e) => setFormAlta({ ...formAlta, folioRegistroTransferencia: e.target.value })} 
+                          placeholder="Si ya tramitaron ante SEDENA"
+                          aria-label="Folio del registro de transferencia ante SEDENA"
+                        />
                       </label>
                     </div>
                   )}
