@@ -901,66 +901,85 @@ export default function GeneradorPETA({ userEmail, onBack }) {
 
             {esRenovacion && (
               <div className="form-row">
-                <label>
+                <label htmlFor="gen-peta-anterior">
                   No. PETA Anterior:
                   <input
+                    id="gen-peta-anterior"
                     type="text"
+                    name="petaAnterior"
                     value={petaAnterior}
                     onChange={(e) => setPetaAnterior(e.target.value)}
                     placeholder="Número del PETA anterior"
+                    aria-label="Número del PETA anterior"
+                    aria-required="true"
                   />
                 </label>
               </div>
             )}
 
             <div className="form-row direccion">
-              <label className="calle">
+              <label htmlFor="gen-calle" className="calle">
                 Calle:
                 <input
+                  id="gen-calle"
                   type="text"
+                  name="calle"
                   value={calle}
                   onChange={(e) => setCalle(e.target.value)}
                   placeholder="Calle y número"
+                  aria-label="Calle del domicilio"
                 />
               </label>
-              <label className="colonia">
+              <label htmlFor="gen-colonia" className="colonia">
                 Colonia:
                 <input
+                  id="gen-colonia"
                   type="text"
+                  name="colonia"
                   value={colonia}
                   onChange={(e) => setColonia(e.target.value)}
                   placeholder="Colonia"
+                  aria-label="Colonia del domicilio"
                 />
               </label>
             </div>
 
             <div className="form-row direccion2">
-              <label className="cp">
+              <label htmlFor="gen-cp" className="cp">
                 C.P.:
                 <input
+                  id="gen-cp"
                   type="text"
+                  name="cp"
                   value={cp}
                   onChange={(e) => setCp(e.target.value)}
                   placeholder="97000"
                   maxLength={5}
+                  aria-label="Código postal del domicilio"
                 />
               </label>
-              <label className="municipio">
+              <label htmlFor="gen-municipio" className="municipio">
                 Municipio:
                 <input
+                  id="gen-municipio"
                   type="text"
+                  name="municipio"
                   value={municipio}
                   onChange={(e) => setMunicipio(e.target.value)}
                   placeholder="Mérida"
+                  aria-label="Municipio del domicilio"
                 />
               </label>
-              <label className="estado-domicilio">
+              <label htmlFor="gen-estado-domicilio" className="estado-domicilio">
                 Estado:
                 <input
+                  id="gen-estado-domicilio"
                   type="text"
+                  name="estadoDomicilio"
                   value={estadoDomicilio}
                   onChange={(e) => setEstadoDomicilio(e.target.value)}
                   placeholder="YUC."
+                  aria-label="Estado del domicilio"
                 />
               </label>
             </div>
@@ -974,22 +993,29 @@ export default function GeneradorPETA({ userEmail, onBack }) {
             <p className="nota">Mínimo 15 días después de la fecha de solicitud</p>
             
             <div className="form-row fechas">
-              <label>
+              <label htmlFor="gen-fecha-inicio">
                 Fecha de inicio:
                 <input
+                  id="gen-fecha-inicio"
                   type="date"
+                  name="fechaInicio"
                   value={fechaInicio}
                   onChange={(e) => setFechaInicio(e.target.value)}
                   min={new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                  aria-label="Fecha de inicio de vigencia del PETA"
+                  aria-required="true"
                 />
               </label>
-              <label>
+              <label htmlFor="gen-fecha-fin">
                 Fecha de fin:
                 <input
+                  id="gen-fecha-fin"
                   type="date"
+                  name="fechaFin"
                   value={fechaFin}
                   onChange={(e) => setFechaFin(e.target.value)}
                   readOnly
+                  aria-label="Fecha de fin de vigencia del PETA"
                 />
                 <span className="fecha-hint">
                   {tipoPETA === 'caza' ? '30 de junio del siguiente año' : '31 de diciembre del mismo año'}

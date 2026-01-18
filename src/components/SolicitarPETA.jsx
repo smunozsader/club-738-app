@@ -417,21 +417,28 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
         <div className="form-section">
           <label className="checkbox-label">
             <input
+              id="peta-renovacion"
               type="checkbox"
+              name="esRenovacion"
               checked={esRenovacion}
               onChange={(e) => setEsRenovacion(e.target.checked)}
+              aria-label="Indicar si es renovación de PETA anterior"
             />
             <span>¿Es renovación de PETA anterior?</span>
           </label>
           
           {esRenovacion && (
             <div className="form-group">
-              <label>Número de PETA anterior (ej: S-1/M-4/86):</label>
+              <label htmlFor="peta-anterior">Número de PETA anterior (ej: S-1/M-4/86):</label>
               <input
+                id="peta-anterior"
                 type="text"
+                name="petaAnterior"
                 value={petaAnterior}
                 onChange={(e) => setPetaAnterior(e.target.value)}
                 placeholder="S-1/M-4/86"
+                aria-label="Número del PETA anterior"
+                aria-required="true"
               />
             </div>
           )}
@@ -458,13 +465,17 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
                 return (
                   <label 
                     key={arma.id} 
+                    htmlFor={`arma-${arma.id}`}
                     className={`arma-checkbox ${armasSeleccionadas.includes(arma.id) ? 'selected' : ''} ${!modalidadCoincide && !sinModalidad ? 'advertencia' : ''} ${sinModalidad ? 'sin-modalidad' : ''}`}
                     title={!modalidadCoincide && !sinModalidad ? `Modalidad sugerida: ${arma.modalidad.toUpperCase()} (verifica tu RFA)` : ''}
                   >
                     <input
+                      id={`arma-${arma.id}`}
                       type="checkbox"
+                      name={`arma-${arma.id}`}
                       checked={armasSeleccionadas.includes(arma.id)}
                       onChange={() => toggleArma(arma.id)}
+                      aria-label={`${arma.marca} ${arma.modelo} (${arma.calibre}) - Matrícula: ${arma.matricula}`}
                     />
                     <div className="arma-info">
                       <div className="arma-clase">{arma.clase} {arma.marca} {arma.calibre}</div>
@@ -518,11 +529,18 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
             
             <div className="estados-grid">
               {ESTADOS_MEXICO.map(estado => (
-                <label key={estado} className={`estado-checkbox ${estadosSeleccionados.includes(estado) ? 'selected' : ''}`}>
+                <label 
+                  key={estado} 
+                  htmlFor={`estado-${estado.replace(/\s+/g, '-')}`}
+                  className={`estado-checkbox ${estadosSeleccionados.includes(estado) ? 'selected' : ''}`}
+                >
                   <input
+                    id={`estado-${estado.replace(/\s+/g, '-')}`}
                     type="checkbox"
+                    name={`estado-${estado}`}
                     checked={estadosSeleccionados.includes(estado)}
                     onChange={() => toggleEstado(estado)}
+                    aria-label={`Autorizar transporte en ${estado}`}
                   />
                   <span>{estado}</span>
                 </label>
@@ -537,55 +555,75 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
           
           <div className="form-row">
             <div className="form-group full-width">
-              <label>Calle y Número:</label>
+              <label htmlFor="peta-calle">Calle y Número:</label>
               <input
+                id="peta-calle"
                 type="text"
+                name="calle"
                 value={domicilio.calle}
                 onChange={(e) => setDomicilio({...domicilio, calle: e.target.value})}
                 placeholder="Calle 50 No. 531-E x 69 y 71"
+                aria-label="Calle y número del domicilio"
+                aria-required="true"
               />
             </div>
           </div>
           
           <div className="form-row">
             <div className="form-group">
-              <label>Colonia:</label>
+              <label htmlFor="peta-colonia">Colonia:</label>
               <input
+                id="peta-colonia"
                 type="text"
+                name="colonia"
                 value={domicilio.colonia}
                 onChange={(e) => setDomicilio({...domicilio, colonia: e.target.value})}
                 placeholder="Centro"
+                aria-label="Colonia del domicilio"
+                aria-required="true"
               />
             </div>
             
             <div className="form-group">
-              <label>C.P.:</label>
+              <label htmlFor="peta-cp">C.P.:</label>
               <input
+                id="peta-cp"
                 type="text"
+                name="cp"
                 value={domicilio.cp}
                 onChange={(e) => setDomicilio({...domicilio, cp: e.target.value})}
                 placeholder="97000"
                 maxLength="5"
+                aria-label="Código postal del domicilio"
+                aria-required="true"
               />
             </div>
           </div>
           
           <div className="form-row">
             <div className="form-group">
-              <label>Municipio:</label>
+              <label htmlFor="peta-municipio">Municipio:</label>
               <input
+                id="peta-municipio"
                 type="text"
+                name="municipio"
                 value={domicilio.municipio}
                 onChange={(e) => setDomicilio({...domicilio, municipio: e.target.value})}
                 placeholder="Mérida"
+                aria-label="Municipio del domicilio"
+                aria-required="true"
               />
             </div>
             
             <div className="form-group">
-              <label>Estado:</label>
+              <label htmlFor="peta-estado">Estado:</label>
               <select
+                id="peta-estado"
+                name="estado"
                 value={domicilio.estado}
                 onChange={(e) => setDomicilio({...domicilio, estado: e.target.value})}
+                aria-label="Estado del domicilio"
+                aria-required="true"
               >
                 <option value="">Selecciona...</option>
                 {ESTADOS_MEXICO.map(estado => (
