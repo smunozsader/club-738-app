@@ -1,3 +1,72 @@
+## 2026-01-17 - v1.24.3 Reorganización de Scripts y Documentación
+
+### House Cleaning del Proyecto
+
+**Objetivo**: Organizar 62 scripts dispersos en el root y archivos de documentación en carpetas categorizadas.
+
+**Cambios realizados**:
+
+1. **Scripts organizados** (62 archivos → 6 categorías):
+   ```
+   scripts/
+   ├── analisis/          27 scripts (análisis, comparación, verificación)
+   ├── actualizacion/     15 scripts (updates Excel, Firebase)
+   ├── normalizacion/      6 scripts (normalización formatos)
+   ├── migracion/          4 scripts (migración Firebase)
+   ├── debug/             11 scripts (debugging, testing)
+   └── temp/               1 script (temporales)
+   ```
+
+2. **Documentos organizados**:
+   ```
+   docs/
+   ├── analisis-enero-2026/   4 archivos md (análisis diciembre-enero)
+   └── temp/                  3 archivos txt (listas temporales)
+   ```
+
+**Archivos movidos**:
+- ✅ 27 scripts de análisis (comparar, verificar, buscar, etc.)
+- ✅ 15 scripts de actualización (actualizar, agregar, corregir, etc.)
+- ✅ 6 scripts de normalización (normalizar Excel, verificar formatos)
+- ✅ 4 scripts de migración Firebase (.cjs)
+- ✅ 11 scripts de debug y testing
+- ✅ 4 documentos markdown de análisis
+- ✅ 3 archivos temporales (.txt)
+
+**Archivos creados**:
+- ✅ `scripts/README.md` - Documentación completa de categorías
+
+**Root limpio**:
+- Solo quedan archivos esenciales: README.md, CHANGELOG.md, CONTEXT.md, etc.
+- Todos los scripts operacionales movidos a `scripts/`
+- Documentación organizada en `docs/`
+
+**Estructura final**:
+```
+/Applications/club-738-web/
+├── scripts/                    (64 archivos organizados)
+│   ├── analisis/
+│   ├── actualizacion/
+│   ├── normalizacion/
+│   ├── migracion/
+│   ├── debug/
+│   └── temp/
+├── docs/                       (documentación)
+│   ├── analisis-enero-2026/
+│   └── temp/
+├── socios/                     (base de datos)
+└── data/                       (archivos pesados ignorados)
+```
+
+**Beneficios**:
+1. Root folder limpio y profesional
+2. Scripts categorizados por función
+3. Fácil localización de herramientas
+4. Mejor mantenimiento del proyecto
+5. Documentación clara de cada categoría
+
+---
+
 ## 2026-01-17 - v1.24.2 Reorganización: Carpeta socios/ al ROOT + Incluida en Git
 
 ### Cambio de Ubicación de Base de Datos
