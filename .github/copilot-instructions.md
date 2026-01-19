@@ -149,7 +149,7 @@ uploadTask.on('state_changed',
    - `.22` (excepto Magnum/Hornet): 500 máx
    - ESCOPETA (12/16/20/28/.410): 1000 máx
    - OTROS CALIBRES: 200 máx
-   - Períodos: Anual (caza protección), Trimestral (caza cinegética), Mensual (tiro)
+   - Períodos: Anual (protección de domicilio), Trimestral (caza cinegética), Mensual (tiro)
 
 2. **Pagos e5cinco** (`src/utils/pagosE5cinco.js`):
    - Tabla oficial: 1-3 armas=$1,819 → 10 armas=$6,047
