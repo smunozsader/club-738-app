@@ -870,23 +870,21 @@ export default function GeneradorPETA({ userEmail, onBack }) {
               </label>
             </div>
 
-            {esRenovacion && (
-              <div className="form-row">
-                <label htmlFor="gen-peta-anterior">
-                  No. PETA Anterior:
-                  <input
-                    id="gen-peta-anterior"
-                    type="text"
-                    name="petaAnterior"
-                    value={petaAnterior}
-                    onChange={(e) => setPetaAnterior(e.target.value)}
-                    placeholder="Número del PETA anterior"
-                    aria-label="Número del PETA anterior"
-                    aria-required="true"
-                  />
-                </label>
-              </div>
-            )}
+            <div className="form-row">
+              <label htmlFor="gen-peta-anterior">
+                No. PETA Anterior:
+                <input
+                  id="gen-peta-anterior"
+                  type="text"
+                  name="petaAnterior"
+                  value={petaAnterior}
+                  onChange={(e) => setPetaAnterior(e.target.value)}
+                  placeholder={esRenovacion ? "Ej: S-1/M-4/86" : ""}
+                  aria-label="Número del PETA anterior"
+                  aria-required={esRenovacion}
+                />
+              </label>
+            </div>
 
             <div className="form-row direccion">
               <label htmlFor="gen-calle" className="calle">
