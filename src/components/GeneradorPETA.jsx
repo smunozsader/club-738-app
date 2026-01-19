@@ -34,6 +34,32 @@ const ESTADOS_MEXICO = [
   'Yucatán', 'Zacatecas'
 ];
 
+// Estados sugeridos para Tiro Práctico/Competencia Nacional FEMETI 2026
+const ESTADOS_SUGERIDOS_TIRO = [
+  'Yucatán',           // Base del club
+  'Baja California',   // Sede FEMETI
+  'Coahuila',          // Sede FEMETI
+  'Estado de México',  // Sede FEMETI
+  'Guanajuato',        // Sede FEMETI
+  'Hidalgo',           // Sede FEMETI
+  'Jalisco',           // Sede FEMETI
+  'Michoacán',         // Sede FEMETI
+  'San Luis Potosí',   // Sede FEMETI
+  'Tabasco'            // Sede FEMETI (región Sureste)
+];
+
+// Estados sugeridos para Caza (región Sureste y zonas cinégeticas populares)
+const ESTADOS_SUGERIDOS_CAZA = [
+  'Yucatán',           // Base del club
+  'Campeche',          // Región Sureste - UMAs
+  'Quintana Roo',      // Región Sureste - UMAs
+  'Tabasco',           // Región Sureste
+  'Chiapas',           // Región Sureste
+  'Veracruz',          // Región Sureste
+  'Tamaulipas',        // Zona cinégetica popular
+  'Sonora'             // Zona cinégetica popular
+];
+
 // Meses en español
 const MESES = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 
                'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
@@ -385,6 +411,12 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       }
       return prev; // Ya tiene 10
     });
+  };
+
+  // Magic suggestion: Pre-select FEMETI-recommended states
+  const aplicarEstadosSugeridos = () => {
+    const sugeridos = tipoPETA === 'caza' ? ESTADOS_SUGERIDOS_CAZA : ESTADOS_SUGERIDOS_TIRO;
+    setEstadosSeleccionados(sugeridos);
   };
 
   const formatearFechaPETA = (fechaStr) => {
@@ -1065,6 +1097,24 @@ export default function GeneradorPETA({ userEmail, onBack }) {
             <p className="seleccion-info">
               Seleccionados: {estadosSeleccionados.length}/10
             </p>
+
+            <button
+              className="btn-sugerir"
+              onClick={aplicarEstadosSugeridos}
+              style={{
+                marginBottom: '12px',
+                padding: '8px 16px',
+                backgroundColor: '#6366f1',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600'
+              }}
+            >
+              ✨ Sugerir estados FEMETI {tipoPETA === 'caza' ? 'para Caza' : 'para Competencia'}
+            </button>
 
             <div className="estados-grid">
               {ESTADOS_MEXICO.map(estado => (
