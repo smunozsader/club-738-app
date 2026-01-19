@@ -513,7 +513,16 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       const cazaX = tipoPETA === 'caza' ? 'X' : ' ';
       const tiroX = tipoPETA === 'tiro' ? 'X' : ' ';
       const compX = tipoPETA === 'competencia' ? 'X' : ' ';
-      doc.text(`CAZA(  ${cazaX}  )          TIRO(  ${tiroX}  )          COMPETENCIA NACIONAL(  ${compX}  )`, margin, y);
+      
+      // Distribuir las tres opciones uniformemente
+      const activityWidth = pageWidth - (margin * 2);
+      const cazaPos = margin;
+      const tiroPos = margin + activityWidth / 3;
+      const compPos = margin + (activityWidth * 2 / 3);
+      
+      doc.text(`CAZA(  ${cazaX}  )`, cazaPos, y);
+      doc.text(`TIRO(  ${tiroX}  )`, tiroPos, y);
+      doc.text(`COMPETENCIA NACIONAL(  ${compX}  )`, compPos, y);
       y += 8;
 
       // ========== PERIODO ==========
