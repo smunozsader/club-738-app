@@ -10,6 +10,60 @@
 
 ## 📅 Enero 2026
 
+### 19 de Enero - Actualización de Instrucciones AI para Copilot
+
+#### Análisis y Documentación de Arquitectura
+
+**Objetivo**: Generar instrucciones comprensivas en `.github/copilot-instructions.md` para que agentes AI puedan ser inmediatamente productivos en el codebase.
+
+**Trabajo realizado**:
+
+1. **Análisis profundo del codebase**
+   - Examinado estructura del proyecto (React 18 + Vite 5 + Firebase)
+   - Identificados patrones clave de comunicación de componentes
+   - Documentados flujos de datos en tiempo real (Firestore listeners)
+   - Analizadas convenciones de naming y estilos CSS
+
+2. **Reorganización de instrucciones existentes**
+   - Condensada sección Quick Start con comandos esenciales y restricciones críticas
+   - Consolidada arquitectura Firebase (email normalization, listeners, storage patterns)
+   - Aclarado el flujo PETA como un **paquete de 16 documentos físicos + forma generada automáticamente**
+   - Documentado el rol crítico de `GeneradorPETA.jsx` en automatizar la población del formulario oficial desde datos en Firestore
+
+3. **Adición de dos pilares operacionales clave**
+
+   **Pilar 1: Data Integrity - "LA FUENTE DE VERDAD"**
+   - SEDENA requiere reportes bimensuales (Feb, Abr, Jun, Ago, Oct, Dic) sobre cambios en arsenal
+   - Documentado qué datos deben estar actualizados diariamente en `socios/{email}/armas/{armaId}`
+   - Especificadas herramientas para gestión: MisArmas, AdminAltasArsenal, AdminBajasArsenal, ReportadorExpedientes
+   - Referenciado el archivo maestro Excel `FUENTE_DE_VERDAD_CLUB_738_*.xlsx` (76 socios, 276+ armas)
+
+   **Pilar 2: Financial Operations - "Renovación de Membresías"**
+   - Documentada estructura de pagos: nuevos socios ($8,700) vs renovaciones ($6,350)
+   - Desglosado pago en componentes: Inscripción, Anualidad, FEMETI
+   - Especificadas herramientas financieras: RegistroPagos, ReporteCaja, DashboardRenovaciones, CobranzaUnificada
+   - Documentada métrica crítica: **80% de renovaciones para fin de febrero 2026**
+   - Especificados reportes mensuales que necesita el director
+
+4. **Mejoras en estructura y claridad**
+   - Reducido de 887 a 869 líneas (eliminadas 400+ líneas de contenido duplicado)
+   - Agregadas tablas de herramientas vs propósito
+   - Incluidos ejemplos específicos de código (patrones de Firebase, listeners con cleanup)
+   - Documentados "Common Gotchas" que cause problemas reales en el codebase
+
+**Archivos modificados**:
+- `.github/copilot-instructions.md` - Reorganizado completamente con enfoque en productividad inmediata
+
+**Impacto**:
+- Los agentes AI ahora entienden las dos operaciones core del club
+- Claro que GeneradorPETA automatiza trabajo manual anterior
+- Documentados requisitos legales (Art. 50 LFAFE, pagos e5cinco, reportes SEDENA)
+- Instrucciones concretas y accionables vs genéricas
+
+**Nota**: Las instrucciones ahora sirven como "brújula de arquitectura" para cualquier AI trabajando en el proyecto - entenderá inmediatamente qué es crítico (datos de armas, finanzas) vs qué es feature secundaria.
+
+---
+
 ### 18 de Enero - v1.30.1 - 🧹 CSS Fix + Database Cleanup
 
 #### Fix CSS Warning en Build
