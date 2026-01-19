@@ -59,7 +59,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   
   // Datos del formulario PETA
   const [tipoPETA, setTipoPETA] = useState('tiro'); // tiro, competencia, caza
-  const [nps, setNps] = useState('');
   const [petaAnterior, setPetaAnterior] = useState('');
   const [esRenovacion, setEsRenovacion] = useState(false);
   
@@ -480,12 +479,12 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
       
-      // NPS y PETA anterior
-      doc.text(`N.P.S.: ${nps}`, margin, y);
-      const petaAnteriorTexto = esRenovacion ? petaAnterior : '';
-      doc.text(`No.P. E.T.A. ANTERIOR: ${petaAnteriorTexto}`, margin + 60, y);
-      doc.setFontSize(7);
-      doc.text('(ÚNICAMENTE PARA RENOVACIONES)', margin + 115, y);
+      // PETA anterior (solo si es renovación)
+      if (esRenovacion) {
+        doc.setFontSize(9);
+        const petaAnteriorTexto = petaAnterior ? `S-1/M-4/${petaAnterior}` : 'S-1/M-4/____';
+        doc.text(`No.P. E.T.A. ANTERIOR: ${petaAnteriorTexto}`, margin, y);
+      }
       y += 5;
 
       doc.setFontSize(9);
@@ -545,17 +544,17 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       doc.setLineWidth(0.4);
       
       // Dibujar línea superior de tabla
-      doc.line(margin, y, pageWidth - margin, y);
+      doc.line(margin, y + 3.5, pageWidth - margin, y + 3.5);
       
       let xPos = margin;
       headers.forEach((header, i) => {
-        doc.text(header, xPos + 1, y + 2);
+        doc.text(header, xPos + 1, y + 4);
         xPos += colWidths[i];
       });
-      y += 5;
+      y += 6;
       
       // Línea debajo de encabezados
-      doc.line(margin, y - 1, pageWidth - margin, y - 1);
+      doc.line(margin, y, pageWidth - margin, y);
 
       // Filas de armas
       console.log('📄 Generando PDF - Estado actual:');
@@ -861,16 +860,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
             <h3>3. Datos del Solicitante</h3>
             
             <div className="form-row">
-              <label>
-                N.P.S. (Número Personal de Socio):
-                <input
-                  type="text"
-                  value={nps}
-                  onChange={(e) => setNps(e.target.value)}
-                  placeholder="Ej: S-1/M-4/86"
-                />
-              </label>
-              
               <label className="renovacion-check">
                 <input
                   type="checkbox"
