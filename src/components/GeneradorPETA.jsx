@@ -461,7 +461,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       // ========== DATOS DEL CLUB ==========
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text('DATOS DEL CLUB.', margin, y);
+      centrarTexto('DATOS DEL CLUB.', y);
       y += 6;
       
       doc.setFont('helvetica', 'normal');
@@ -473,7 +473,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       // ========== DATOS DEL SOLICITANTE ==========
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text('DATOS DEL SOLICITANTE.', margin, y);
+      centrarTexto('DATOS DEL SOLICITANTE.', y);
       y += 6;
 
       doc.setFont('helvetica', 'normal');
@@ -505,7 +505,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       // ========== TIPO DE ACTIVIDAD ==========
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text('TIPO DE ACTIVIDAD.', margin, y);
+      centrarTexto('TIPO DE ACTIVIDAD.', y);
       y += 6;
 
       doc.setFont('helvetica', 'normal');
@@ -528,7 +528,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       // ========== PERIODO ==========
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.text('PERIODO (MÍNIMO A PARTIR DE 15 DÍAS DE LA FECHA DE LA SOLICITUD):', margin, y);
+      centrarTexto('PERIODO (MÍNIMO A PARTIR DE 15 DÍAS DE LA FECHA DE LA SOLICITUD):', y);
       y += 6;
 
       doc.setFont('helvetica', 'normal');
@@ -553,18 +553,12 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       doc.setFont('helvetica', 'bold');
       doc.setLineWidth(0.4);
       
-      // Dibujar línea superior de tabla
-      doc.line(margin, y + 3.5, pageWidth - margin, y + 3.5);
-      
       let xPos = margin;
       headers.forEach((header, i) => {
         doc.text(header, xPos + 1, y + 4);
         xPos += colWidths[i];
       });
       y += 6;
-      
-      // Línea debajo de encabezados
-      doc.line(margin, y, pageWidth - margin, y);
 
       // Filas de armas
       console.log('📄 Generando PDF - Estado actual:');
