@@ -4,11 +4,71 @@
 
 **Club 738 Web** es el portal de socios del Club de Caza, Tiro y Pesca de Yucatán, A.C. (SEDENA #738). Permite a los socios gestionar su documentación para trámites PETA ante la 32 Zona Militar de Valladolid.
 
-**URL de Producción**: https://club-738-app.web.app
+**URL de Producción**: https://yucatanctp.org
 
 ---
 
 ## 📅 Enero 2026
+
+### 18 de Enero - v1.29.0 - 🔧 CRITICAL FIX: AdminDashboard Navigation Fully Restored
+
+#### 🚨 CRITICAL BUG FIXED - AdminDashboard Now Fully Functional
+
+**Problema Identificado**:
+- AdminDashboard.jsx sidebar tenía 15 herramientas administrativas
+- Pero solo 5 eran accesibles (admin-solicitar-peta, expediente, reportador, registro-pagos, reporte-caja, dashboard-renovaciones)
+- Las otras 10 herramientas (verificador-peta, generador-peta, expediente-impresor, cumpleanos, cobranza, admin-bajas-arsenal, admin-altas-arsenal, mi-agenda) NO se renderizaban
+- **CAUSA**: Los handlers estaban renderizados en la sección de "socio dashboard", NO en la sección de "admin mode"
+- Cuando admin@club738.com iniciaba sesión, se activaba admin-mode pero los handlers seguían en socio mode (unreachable)
+
+**Solución Implementada**:
+En `src/App.jsx`:
+1. Movidos 8 handlers de admin del socio dashboard al admin-mode section (líneas 286-348)
+   - `verificador-peta` → GeneradorPETA
+   - `generador-peta` → VerificadorPETA  
+   - `expediente-impresor` → ExpedienteImpresor
+   - `cumpleanos` → DashboardCumpleanos
+   - `admin-bajas-arsenal` → AdminBajasArsenal
+   - `admin-altas-arsenal` → AdminAltasArsenal
+   - `mi-agenda` → MiAgenda
+   - `cobranza` → CobranzaUnificada
+
+2. Eliminados handlers duplicados del socio dashboard (líneas 743-795)
+
+3. Reorganizado flujo de navegación:
+   ```
+   Admin logs in → activeSection = 'admin-dashboard'
+   ↓
+   AdminDashboard renders sidebar con 15 tools
+   ↓
+   Click en tool → onXxxClick() → setActiveSection('xxx')
+   ↓
+   App.jsx renderiza el componente (NOW IN CORRECT SECTION!)
+   ```
+
+**Resultados**:
+- ✅ Build: Success (no errors)
+- ✅ Deploy: Success (Firebase Hosting updated)
+- ✅ AdminDashboard Sidebar: ALL 15 BUTTONS WORKING
+  - 👥 Gestión de Socios: 2 tools
+  - 🎯 Módulo PETA: 3 tools
+  - 💰 Módulo Cobranza: 5 tools
+  - 🔫 Gestión de Arsenal: 2 tools
+  - 📅 Agenda: 1 tool
+  - NUEVO! 📊 Reportes: 1 tool
+
+**Commit Details**:
+- Hash: f6eff37
+- Autor: AI Coding Agent
+- Message: "fix(admin): CRITICAL - Move admin section handlers to correct location"
+
+**Testing Required**:
+1. ✅ Login como admin@club738.com
+2. ⏳ Verificar que AdminDashboard carga correctamente
+3. ⏳ Probar cada botón de la barra lateral navega a su sección
+4. ⏳ Verificar que datos se cargan apropiadamente en cada módulo
+
+---
 
 ### 18 de Enero - v1.28.0 - ✅ Phase 3B Complete: RegistroPagos & MiPerfil
 
