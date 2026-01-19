@@ -19,6 +19,7 @@ npx md-to-pdf file.md  # Convert markdown to PDF (use for docs)
 - **Production URL**: `https://yucatanctp.org` (NUNCA `club-738-app.web.app`)
 - **Spanish 100%**: UI, mensajes, comentarios en español
 - **No weapon emojis**: ❌ 🔫🎯 → ✅ Usar emojis neutros (📋✅⚠️)
+- **🚀 BUILD & DEPLOY**: AFTER EVERY CODE MODIFICATION, ask user: "Should I build and deploy to make changes live?" Then run `npm run build && firebase deploy`
 
 ### Core Architecture Patterns
 
