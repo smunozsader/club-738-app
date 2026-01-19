@@ -479,11 +479,12 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
       
+      // NPS y PETA anterior
+      doc.text(`N.P.S.: `, margin, y);
       // PETA anterior (solo si es renovación)
       if (esRenovacion) {
-        doc.setFontSize(9);
         const petaAnteriorTexto = petaAnterior ? `S-1/M-4/${petaAnterior}` : 'S-1/M-4/____';
-        doc.text(`No.P. E.T.A. ANTERIOR: ${petaAnteriorTexto}`, margin, y);
+        doc.text(`No.P. E.T.A. ANTERIOR: ${petaAnteriorTexto}`, margin + 60, y);
       }
       y += 5;
 
@@ -592,8 +593,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
           }
         }
         y += 5;
-        // Línea divisoria entre filas
-        doc.line(margin, y - 2, pageWidth - margin, y - 2);
       }
       
       y += 3;
