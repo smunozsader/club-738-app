@@ -24,9 +24,12 @@ service firebase.storage {
       return isAuthenticated() && request.auth.token.email.lower() == email.lower();
     }
     
-    // Verificar si es el Secretario
+    // Verificar si es el Secretario/Admin
     function isSecretario() {
-      return isAuthenticated() && request.auth.token.email == 'smunozam@gmail.com';
+      return isAuthenticated() && (
+        request.auth.token.email == 'admin@club738.com' ||
+        request.auth.token.email == 'smunozam@gmail.com'
+      );
     }
     
     // Verificar tipo de archivo permitido
@@ -60,6 +63,9 @@ service firebase.storage {
       // Lectura: el propio socio O el secretario
       allow read: if isOwner(email) || isSecretario();
       
+      // Lista de archivos: el propio socio O el secretario (para expediente impresor)
+      allow list: if isOwner(email) || isSecretario();
+      
       // Escritura: el propio socio O el secretario, con validaciones
       allow write: if (isOwner(email) || isSecretario())
                    && isAllowedFileType() 
@@ -78,6 +84,7 @@ service firebase.storage {
     
     match /documentos/{email}/armas/{armaId}/{fileName} {
       allow read: if isOwner(email) || isSecretario();
+      allow list: if isOwner(email) || isSecretario();
       allow write: if (isOwner(email) || isSecretario())
                    && isAllowedFileType() 
                    && isUnderArmasSizeLimit();  // 10MB para registros de armas
