@@ -10,6 +10,61 @@
 
 ## 📅 Enero 2026
 
+### 18 de Enero - v1.29.1 - 🔥 CRITICAL FIX: Firebase Storage Access Restored
+
+#### 🚨 CRITICAL BUG FIXED - Admin Can Now Access Socios' Documents
+
+**Problema Identificado**:
+- Admin veía expedientes pero al hacer clic en botones de documentos: **403 Forbidden**
+- VerificadorPETA mostraba "Sin Registro" en todos los documentos aunque estaban en Firebase Storage
+- Storage Rules solo reconocían `'smunozam@gmail.com'` como secretario, no `'admin@club738.com'`
+- Faltaban permisos 'list' para listar carpetas de documentos
+
+**Error en Consola**:
+```
+GET https://firebasestorage.googleapis.com/v0/b/club-738-app.firebasestorage.app/o/documentos%2Fjrgardoni%40gmail.com%2Fcurp.pdf 403 (Forbidden)
+```
+
+**Solución Implementada**:
+En `storage.rules`:
+
+1. **Actualizar función `isSecretario()`** para reconocer ambos emails:
+```javascript
+function isSecretario() {
+  return isAuthenticated() && (
+    request.auth.token.email == 'admin@club738.com' ||  ← PRIMARY
+    request.auth.token.email == 'smunozam@gmail.com'    ← FALLBACK
+  );
+}
+```
+
+2. **Agregar permisos 'list'** en dos rutas:
+   - `/documentos/{email}/{fileName}` → para listar documentos principales
+   - `/documentos/{email}/armas/{armaId}/{fileName}` → para listar documentos de armas
+   - Necesario para VerificadorPETA y ExpedienteImpresor
+
+**Resultados**:
+- ✅ Storage Rules compiladas sin errores
+- ✅ Rules deployed a Firebase Storage
+- ✅ Admin ahora puede:
+  - Leer documentos de cualquier socio
+  - Listar carpetas de documentos
+  - Ver estado real de documentos (no "Sin Registro")
+  - Usar VerificadorPETA correctamente
+  - Generar expedientes completos con ExpedienteImpresor
+  
+**Verificación**:
+- Antes: 403 Forbidden en todos los documentos
+- Después: Acceso completo a Storage ✅
+- VerificadorPETA muestra documentos correctamente ✅
+- Oficios PETA se pueden generar normalmente ✅
+
+**Commit Details**:
+- Hash: 8d66abc
+- Message: "fix(storage): CRITICAL - Add admin@club738.com to Storage Rules + list permissions"
+
+---
+
 ### 18 de Enero - v1.29.0 - 🔧 CRITICAL FIX: AdminDashboard Navigation Fully Restored
 
 #### 🚨 CRITICAL BUG FIXED - AdminDashboard Now Fully Functional
