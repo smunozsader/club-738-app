@@ -535,3 +535,133 @@
     width: 100%;
   }
 }
+
+/* ============================================================
+   INFORMACIÓN DE PAGO E5CINCO
+   ============================================================ */
+.info-pago-section {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  padding: 25px;
+  border: 2px solid #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+.info-pago-box {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.monto-destacado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+.monto-destacado .label {
+  font-weight: 500;
+}
+
+.monto-destacado .monto {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.datos-pago {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.dato-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dato-item:last-child {
+  border-bottom: none;
+}
+
+.dato-item strong {
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.dato-item code {
+  background: white;
+  border: 1px solid #dee2e6;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #e74c3c;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.dato-item span {
+  font-size: 0.95rem;
+  color: #495057;
+}
+
+.link-oficial {
+  display: inline-block;
+  margin-top: 15px;
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.link-oficial:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+/* Dark mode para info pago */
+:root.dark-mode .info-pago-section {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  border-color: #3498db;
+}
+
+:root.dark-mode .info-pago-box {
+  background: #2c3e50;
+}
+
+:root.dark-mode .datos-pago {
+  background: #34495e;
+}
+
+:root.dark-mode .dato-item strong {
+  color: #ecf0f1;
+}
+
+:root.dark-mode .dato-item code {
+  background: #1a252f;
+  border-color: #34495e;
+  color: #e74c3c;
+}
+
+:root.dark-mode .dato-item span {
+  color: #bdc3c7;
+}
+
+:root.dark-mode .link-oficial {
+  color: #5dade2;
+}
+
+:root.dark-mode .link-oficial:hover {
+  color: #3498db;
+}

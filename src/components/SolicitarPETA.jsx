@@ -9,6 +9,8 @@
 import { useState, useEffect } from 'react';
 import { collection, addDoc, doc, getDoc, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import { calcularMontoE5cinco, obtenerInfoPagoCompleta } from '../utils/pagosE5cinco';
+import { getCartuchosPorDefecto } from '../utils/limitesCartuchos';
 import './SolicitarPETA.css';
 
 const ESTADOS_MEXICO = [
@@ -248,11 +250,15 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
           marca: arma.marca,
           modelo: arma.modelo || '',
           matricula: arma.matricula,
-          cartuchos: tipoPETA === 'tiro' ? 200 : 1000 // Default según tipo
+          cartuchos: getCartuchosPorDefecto(arma.calibre, arma.clase, tipoPETA)
         };
       });
       
       console.log('🔫 Armas incluidas:', armasIncluidas);
+      
+      // Calcular información de pago e5cinco
+      const infoPago = calcularMontoE5cinco(armasSeleccionadas.length);
+      console.log('💳 Info pago e5cinco:', infoPago);
       
       // Crear documento en Firestore
       const petasRef = collection(db, 'socios', emailSocio.toLowerCase(), 'petas');
@@ -274,6 +280,15 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
         // Armas y estados
         armasIncluidas: armasIncluidas,
         estadosAutorizados: (tipoPETA === 'competencia' || tipoPETA === 'caza') ? estadosSeleccionados : [],
+        
+        // Información de pago e5cinco esperado
+        pagoE5cinco: {
+          montoEsperado: infoPago.monto,
+          claveReferencia: infoPago.claveReferencia,
+          cadenaDependencia: infoPago.cadena,
+          numArmas: infoPago.numArmas,
+          verificado: false // El secretario lo marcará cuando verifique el recibo
+        },
         
         // Renovación
         esRenovacion: esRenovacion,
@@ -500,6 +515,58 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
             </div>
           )}
         </div>
+
+        {/* Información de Pago e5cinco */}
+        {armasSeleccionadas.length > 0 && (
+          <div className="form-section info-pago-section">
+            <h3>💳 Información de Pago e5cinco</h3>
+            {(() => {
+              const infoPago = calcularMontoE5cinco(armasSeleccionadas.length);
+              return (
+                <div className="info-pago-box">
+                  <div className="monto-destacado">
+                    <span className="label">Monto del derecho:</span>
+                    <span className="monto">{infoPago.montoFormateado}</span>
+                  </div>
+                  
+                  <div className="datos-pago">
+                    <div className="dato-item">
+                      <strong>Clave de referencia:</strong>
+                      <code>{infoPago.claveReferencia}</code>
+                    </div>
+                    <div className="dato-item">
+                      <strong>Cadena de dependencia:</strong>
+                      <code>{infoPago.cadena}</code>
+                    </div>
+                    <div className="dato-item">
+                      <strong>Armas en esta PETA:</strong>
+                      <span>{infoPago.numArmas} arma{infoPago.numArmas > 1 ? 's' : ''}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="alert alert-warning" style={{marginTop: '15px'}}>
+                    <strong>⚠️ IMPORTANTE:</strong>
+                    <ul style={{marginTop: '10px', marginBottom: '0'}}>
+                      <li>El pago debe realizarse ANTES de presentar tu solicitud</li>
+                      <li>El recibo e5cinco es un documento OBLIGATORIO</li>
+                      <li>Verifica que el monto y la cadena de dependencia sean correctos</li>
+                      <li>Guarda el recibo original para entregarlo en 32 Zona Militar</li>
+                    </ul>
+                  </div>
+                  
+                  <a 
+                    href="https://www.gob.mx/defensa/acciones-y-programas/formatos-de-pagos-e5-del-2023" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="link-oficial"
+                  >
+                    📄 Ver información oficial de pagos SEDENA
+                  </a>
+                </div>
+              );
+            })()}
+          </div>
+        )}
 
         {/* Estados (solo para competencia/caza) */}
         {(tipoPETA === 'competencia' || tipoPETA === 'caza') && (

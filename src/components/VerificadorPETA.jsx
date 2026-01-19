@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, updateDoc, Timestamp, arrayUnion } from 'firebase/firestore';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { db, storage } from '../firebaseConfig';
+import { calcularMontoE5cinco } from '../utils/pagosE5cinco';
 import './VerificadorPETA.css';
 
 // Mapeo de documentos precargados (subidos via scripts a Storage)
@@ -538,6 +539,37 @@ export default function VerificadorPETA({ userEmail, onBack }) {
                 {/* Documentos físicos */}
                 <div className="docs-section">
                   <h4>📦 Documentos Físicos (verificar presencial)</h4>
+                  
+                  {/* Información de pago e5cinco esperado */}
+                  {petaSeleccionado.armasIncluidas && petaSeleccionado.armasIncluidas.length > 0 && (() => {
+                    const infoPago = calcularMontoE5cinco(petaSeleccionado.armasIncluidas.length);
+                    const pagoGuardado = petaSeleccionado.pagoE5cinco;
+                    
+                    return (
+                      <div className="info-pago-verificador">
+                        <div className="pago-header">
+                          <strong>💳 Pago e5cinco esperado:</strong>
+                          <span className="monto-tag">{infoPago.montoFormateado}</span>
+                        </div>
+                        <div className="pago-details">
+                          <div><strong>Clave ref:</strong> <code>{infoPago.claveReferencia}</code></div>
+                          <div><strong>Cadena dep:</strong> <code>{infoPago.cadena}</code></div>
+                          <div><strong>Armas:</strong> {infoPago.numArmas}</div>
+                        </div>
+                        {pagoGuardado && !pagoGuardado.verificado && (
+                          <div className="pago-warning">
+                            ⚠️ Verificar que el recibo e5cinco coincida con estos datos
+                          </div>
+                        )}
+                        {pagoGuardado && pagoGuardado.verificado && (
+                          <div className="pago-ok">
+                            ✅ Pago verificado correctamente
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+                  
                   <div className="docs-checklist">
                     {documentosFisicos.map(doc => (
                       <label key={doc.id} className="doc-check-item">

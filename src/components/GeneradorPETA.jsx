@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { jsPDF } from 'jspdf';
+import { getLimitesCartuchos, ajustarCartuchos, getCartuchosPorDefecto } from '../utils/limitesCartuchos';
 import './GeneradorPETA.css';
 
 // Datos constantes del Club
@@ -37,30 +38,11 @@ const ESTADOS_MEXICO = [
 const MESES = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 
                'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
 
-// Límites legales de cartuchos por calibre (LFAFE orientativo)
-// .22 LR: 1000; Escopetas (12/20/GA): 500; Resto: 200
-function getCartuchoSpec(calibre, clase) {
-  const c = (calibre || '').toString().toUpperCase();
-  const cl = (clase || '').toString().toUpperCase();
-  // Detectar .22 LR
-  if (c.includes('.22') || c.includes('22 L.R') || c.includes('22LR') || c.includes('LR')) {
-    return { min: 50, max: 1000, step: 50, default: 1000 };
-  }
-  // Detectar escopetas por calibre o clase
-  if (c.includes('12') || c.includes('20') || c.includes('GA') || cl.includes('ESCOPETA')) {
-    return { min: 50, max: 500, step: 50, default: 500 };
-  }
-  // Resto de calibres
-  return { min: 50, max: 200, step: 50, default: 200 };
-}
-
-function clampCartuchos(valor, spec) {
-  let v = Number(valor);
-  if (!Number.isFinite(v)) v = spec.default;
-  // Ajustar al múltiplo de step más cercano dentro de límites
-  const rounded = Math.round(v / spec.step) * spec.step;
-  return Math.min(spec.max, Math.max(spec.min, rounded));
-}
+// NOTA: Las funciones de límites de cartuchos se importan desde /utils/limitesCartuchos.js
+// Ver Artículo 50 de la Ley Federal de Armas de Fuego y Explosivos (LFAFE)
+// - Calibre .22": máximo 500 cartuchos
+// - Escopetas: máximo 1,000 cartuchos
+// - Otras armas: máximo 200 cartuchos
 
 export default function GeneradorPETA({ userEmail, onBack }) {
   // Estados del formulario
@@ -314,9 +296,9 @@ export default function GeneradorPETA({ userEmail, onBack }) {
             console.log(`✅ Match por matrícula: ${armaEnSolicitud.matricula} → ${armaEnFirestore.matricula} (ID: ${armaEnFirestore.id})`);
             armasASeleccionar.push(armaEnFirestore.id);
             {
-              const spec = getCartuchoSpec(armaEnFirestore.calibre, armaEnFirestore.clase);
-              const val = armaEnSolicitud.cartuchos ?? spec.default;
-              cartuchos[armaEnFirestore.id] = clampCartuchos(val, spec);
+              const limites = getLimitesCartuchos(armaEnFirestore.calibre, armaEnFirestore.clase);
+              const val = armaEnSolicitud.cartuchos ?? limites.default;
+              cartuchos[armaEnFirestore.id] = ajustarCartuchos(val, armaEnFirestore.calibre, armaEnFirestore.clase);
             }
           } else {
             // No encontrada en Firestore - agregar con datos de la solicitud
@@ -325,9 +307,9 @@ export default function GeneradorPETA({ userEmail, onBack }) {
             setArmasSocio(prev => [...prev, armaConDatosSolicitud]);
             armasASeleccionar.push(armaEnSolicitud.id);
             {
-              const spec = getCartuchoSpec(armaEnSolicitud.calibre, armaEnSolicitud.clase);
-              const val = armaEnSolicitud.cartuchos ?? spec.default;
-              cartuchos[armaEnSolicitud.id] = clampCartuchos(val, spec);
+              const limites = getLimitesCartuchos(armaEnSolicitud.calibre, armaEnSolicitud.clase);
+              const val = armaEnSolicitud.cartuchos ?? limites.default;
+              cartuchos[armaEnSolicitud.id] = ajustarCartuchos(val, armaEnSolicitud.calibre, armaEnSolicitud.clase);
             }
           }
         });
@@ -387,8 +369,8 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       } else if (prev.length < 10) {
         // Establecer cartuchos por defecto según límites legales
         const arma = armasSocio.find(a => a.id === armaId);
-        const spec = getCartuchoSpec(arma?.calibre, arma?.clase);
-        setCartuchosPorArma(c => ({ ...c, [armaId]: spec.default }));
+        const limites = getLimitesCartuchos(arma?.calibre, arma?.clase);
+        setCartuchosPorArma(c => ({ ...c, [armaId]: limites.default }));
         return [...prev, armaId];
       }
       return prev; // Ya tiene 10
@@ -604,10 +586,10 @@ export default function GeneradorPETA({ userEmail, onBack }) {
           doc.text((arma.matricula || '').toUpperCase(), xPos + 1, y + 2);
           xPos += colWidths[4];
           {
-            const spec = getCartuchoSpec(arma.calibre, arma.clase);
-            const val = cartuchosPorArma[armaId] ?? spec.default;
-            const clamped = clampCartuchos(val, spec);
-            doc.text(String(clamped), xPos + 1, y + 2);
+            const limites = getLimitesCartuchos(arma.calibre, arma.clase);
+            const val = cartuchosPorArma[armaId] ?? limites.default;
+            const ajustado = ajustarCartuchos(val, arma.calibre, arma.clase);
+            doc.text(String(ajustado), xPos + 1, y + 2);
           }
         }
         y += 5;
@@ -1058,9 +1040,9 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                         <label>
                           Cartuchos:
                           {(() => {
-                            const spec = getCartuchoSpec(arma.calibre, arma.clase);
-                            const current = cartuchosPorArma[arma.id] ?? spec.default;
-                            const safeVal = clampCartuchos(current, spec);
+                            const limites = getLimitesCartuchos(arma.calibre, arma.clase);
+                            const current = cartuchosPorArma[arma.id] ?? limites.default;
+                            const safeVal = ajustarCartuchos(current, arma.calibre, arma.clase);
                             return (
                               <input
                                 type="number"
@@ -1069,12 +1051,12 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                                   const raw = parseInt(e.target.value, 10);
                                   setCartuchosPorArma(c => ({
                                     ...c,
-                                    [arma.id]: clampCartuchos(raw, spec)
+                                    [arma.id]: ajustarCartuchos(raw, arma.calibre, arma.clase)
                                   }));
                                 }}
-                                min={spec.min}
-                                max={spec.max}
-                                step={spec.step}
+                                min={limites.min}
+                                max={limites.max}
+                                step={limites.step}
                                 disabled={revisionBloqueada}
                               />
                             );
