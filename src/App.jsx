@@ -298,6 +298,69 @@ function App() {
               <DashboardRenovaciones userEmail={user.email} />
             </div>
           )}
+
+          {activeSection === 'verificador-peta' && user.email === ADMIN_EMAIL && (
+            <div className="section-verificador-peta">
+              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+                ← Volver al Panel Admin
+              </button>
+              <VerificadorPETA userEmail={user.email} onBack={() => setActiveSection('admin-dashboard')} />
+            </div>
+          )}
+
+          {activeSection === 'generador-peta' && user.email === ADMIN_EMAIL && (
+            <div className="section-generador-peta">
+              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+                ← Volver al Panel Admin
+              </button>
+              <GeneradorPETA userEmail={user.email} />
+            </div>
+          )}
+
+          {activeSection === 'expediente-impresor' && user.email === ADMIN_EMAIL && (
+            <div className="section-expediente-impresor">
+              <ExpedienteImpresor userEmail={user.email} onBack={() => setActiveSection('admin-dashboard')} />
+            </div>
+          )}
+
+          {activeSection === 'cumpleanos' && user.email === ADMIN_EMAIL && (
+            <div className="section-cumpleanos">
+              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+                ← Volver al Panel Admin
+              </button>
+              <DashboardCumpleanos userEmail={user.email} />
+            </div>
+          )}
+
+          {activeSection === 'admin-bajas-arsenal' && user.email === ADMIN_EMAIL && (
+            <div className="section-admin-bajas-arsenal">
+              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+                ← Volver al Panel Admin
+              </button>
+              <AdminBajasArsenal />
+            </div>
+          )}
+
+          {activeSection === 'admin-altas-arsenal' && user.email === ADMIN_EMAIL && (
+            <div className="section-admin-altas-arsenal">
+              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+                ← Volver al Panel Admin
+              </button>
+              <AdminAltasArsenal />
+            </div>
+          )}
+
+          {activeSection === 'mi-agenda' && user.email === ADMIN_EMAIL && (
+            <div className="section-mi-agenda">
+              <MiAgenda onBack={() => setActiveSection('admin-dashboard')} />
+            </div>
+          )}
+
+          {activeSection === 'cobranza' && user.email === ADMIN_EMAIL && (
+            <div className="section-cobranza">
+              <CobranzaUnificada onBack={() => setActiveSection('admin-dashboard')} />
+            </div>
+          )}
         </main>
       </div>
     );
@@ -674,63 +737,6 @@ function App() {
           </div>
         )}
 
-        {activeSection === 'cobranza' && user.email === ADMIN_EMAIL && (
-          <div className="section-cobranza">
-            <CobranzaUnificada onBack={() => setActiveSection('admin-dashboard')} />
-          </div>
-        )}
-
-        {activeSection === 'cumpleanos' && user.email === ADMIN_EMAIL && (
-          <div className="section-cumpleanos">
-            <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-              ← Volver al Panel Admin
-            </button>
-            <DashboardCumpleanos userEmail={user.email} />
-          </div>
-        )}
-
-        {activeSection === 'generador-peta' && user.email === ADMIN_EMAIL && (
-          <div className="section-generador-peta">
-            <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-              ← Volver al Panel Admin
-            </button>
-            <GeneradorPETA userEmail={user.email} />
-          </div>
-        )}
-
-        {activeSection === 'verificador-peta' && user.email === ADMIN_EMAIL && (
-          <div className="section-verificador-peta">
-            <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-              ← Volver al Panel Admin
-            </button>
-            <VerificadorPETA userEmail={user.email} onBack={() => setActiveSection('admin-dashboard')} />
-          </div>
-        )}
-
-        {activeSection === 'expediente-impresor' && user.email === ADMIN_EMAIL && (
-          <div className="section-expediente-impresor">
-            <ExpedienteImpresor userEmail={user.email} onBack={() => setActiveSection('admin-dashboard')} />
-          </div>
-        )}
-
-        {activeSection === 'admin-bajas-arsenal' && user.email === ADMIN_EMAIL && (
-          <div className="section-admin-bajas-arsenal">
-            <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-              ← Volver al Panel Admin
-            </button>
-            <AdminBajasArsenal />
-          </div>
-        )}
-
-        {activeSection === 'admin-altas-arsenal' && user.email === ADMIN_EMAIL && (
-          <div className="section-admin-altas-arsenal">
-            <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-              ← Volver al Panel Admin
-            </button>
-            <AdminAltasArsenal />
-          </div>
-        )}
-        
         {activeSection === 'agendar-cita' && (
           <div className="section-agendar-cita">
             <AgendarCita onBack={() => setActiveSection('dashboard')} />
@@ -743,12 +749,6 @@ function App() {
               ← Volver al Portal
             </button>
             <ComunicadosOficiales />
-          </div>
-        )}
-        
-        {activeSection === 'mi-agenda' && user.email === ADMIN_EMAIL && (
-          <div className="section-mi-agenda">
-            <MiAgenda onBack={() => setActiveSection('admin-dashboard')} />
           </div>
         )}
         
