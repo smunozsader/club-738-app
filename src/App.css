@@ -101,8 +101,6 @@
   /* Footer */
   --color-footer-bg: #0f172a;
   --color-footer-text: #cbd5e1;
-  --color-footer-muted: #94a3b8;
-}
   --color-footer-muted: #cbd5e1;      /* Contraste 10.0:1 sobre footer-bg */
   
   /* Sombras */

@@ -10,6 +10,171 @@
 
 ## 📅 Enero 2026
 
+### 18 de Enero - v1.30.1 - 🧹 CSS Fix + Database Cleanup
+
+#### Fix CSS Warning en Build
+
+**Problema**:
+- Warning en build: línea CSS huérfana `--color-footer-muted: #cbd5e1;` fuera del bloque `:root`
+- Causaba errores de sintaxis en minificador
+
+**Solución**:
+- Eliminada línea duplicada en `src/App.css` línea 106
+- Variable `--color-footer-muted` ahora tiene valor correcto dentro de `:root`
+
+**Archivos modificados**:
+- `src/App.css` - Eliminada línea huérfana
+
+#### Limpieza de Solicitudes PETA
+
+**Contexto**:
+- 8 solicitudes PETA generadas con sistema anterior (límites incorrectos de cartuchos)
+- Necesario eliminarlas para regenerarlas con límites legales correctos
+
+**Script creado**: `scripts/eliminar-todas-petas.cjs`
+- Elimina todas las solicitudes PETA de Firestore
+- Reporte detallado de PETAs eliminadas por socio
+
+**PETAs eliminadas**:
+1. Joaquín Gardoni - 1 PETA (Competencia, 5 armas)
+2. Eduardo Denis Herrera - 2 PETAs (Competencia, 3 armas c/u)
+3. Ariel Paredes Cetina - 2 PETAs (Tiro, 3 armas c/u)
+4. Daniel Padilla Robles - 2 PETAs (Tiro, 5 armas c/u)
+5. Sergio Muñoz - 1 PETA (Competencia, 4 armas)
+
+**Total**: 8 solicitudes eliminadas
+
+**Nota**: Las solicitudes se regenerarán manualmente desde módulo admin con límites legales correctos.
+
+---
+
+### 18 de Enero - v1.30.0 - 🔥 CRÍTICO: Validación Pagos e5cinco + Límites Legales Cartuchos LFAFE
+
+#### 💳 Módulo de Pagos e5cinco (SEDENA)
+
+**Nuevo archivo**: `src/utils/pagosE5cinco.js`
+
+**Tabla oficial de montos según número de armas**:
+| Armas | Monto | Cadena Dependencia |
+|-------|-------|--------------------|
+| 1-3 | $1,819.00 | `00276660000000` |
+| 4 | $2,423.00 | `00276670000000` |
+| 5 | $3,027.00 | `00276670000000` |
+| 6 | $3,631.00 | `00276670000000` |
+| 7 | $4,235.00 | `00276670000000` |
+| 8 | $4,839.00 | `00276670000000` |
+| 9 | $5,443.00 | `00276670000000` |
+| 10 | $6,047.00 | `00276670000000` |
+
+**Clave de referencia fija**: `034001132`
+
+**Funciones implementadas**:
+- `calcularMontoE5cinco(numArmas)` - Calcula monto según armas
+- `validarMontoPagado(montoPagado, numArmas)` - Valida si coincide
+- `validarCadenaDependencia(cadena, numArmas)` - Valida cadena correcta
+- `obtenerMensajePago(numArmas)` - Mensaje con instrucciones
+- `obtenerInfoPagoCompleta(numArmas)` - Info completa de pago
+
+**SolicitarPETA.jsx** - Vista del Socio:
+- ✅ Muestra información de pago al seleccionar armas
+- ✅ Monto exacto según número de armas
+- ✅ Clave de referencia y cadena de dependencia
+- ✅ Link oficial SEDENA
+- ✅ Advertencias importantes
+- ✅ Guarda en Firestore el monto esperado para verificación
+
+**VerificadorPETA.jsx** - Vista del Secretario:
+- ✅ Panel destacado con información de pago esperado
+- ✅ Muestra monto, clave y cadena que debe coincidir
+- ✅ Indica si el pago ya fue verificado
+- ✅ Alertas visuales de verificación pendiente
+
+**Estilos CSS**:
+- `SolicitarPETA.css` - Sección info-pago-section
+- `VerificadorPETA.css` - Sección info-pago-verificador
+- Dark mode compatible
+
+#### 🔫 Límites Legales de Cartuchos (Artículo 50 LFAFE)
+
+**🚨 CORRECCIÓN CRÍTICA DE LÍMITES LEGALES**
+
+**Nuevo archivo**: `src/utils/limitesCartuchos.js`
+
+**Antes (INCORRECTO ❌)**:
+- Calibre .22": 1,000 cartuchos ❌
+- Escopetas: 500 cartuchos ❌
+- Otros: 200 cartuchos ✅
+
+**Ahora (CORRECTO según Art. 50 LFAFE ✅)**:
+- Calibre .22": **500 cartuchos** ✅ (Art. 50-a)
+- Escopetas: **1,000 cartuchos** ✅ (Art. 50-b)
+- Otros: **200 cartuchos** ✅ (Art. 50-d)
+
+**Excepciones .22**:
+- .22 Magnum → 200 cartuchos (no 500)
+- .22 Hornet → 200 cartuchos (no 500)
+- .22 TCM → 200 cartuchos (no 500)
+
+**Detección automática**:
+```javascript
+// Escopetas → 1,000
+"12 GA", "20 GA", "ESCOPETA" → 1,000
+
+// .22 regular → 500
+".22 LR", "22 L.R" → 500
+
+// .22 excepciones → 200
+".22 MAGNUM", ".22 HORNET" → 200
+
+// Otros → 200
+"9mm", ".380", ".45 ACP" → 200
+```
+
+**Funciones implementadas**:
+- `getLimitesCartuchos(calibre, clase)` - Obtiene límites por arma
+- `ajustarCartuchos(valor, calibre, clase)` - Ajusta a límites legales
+- `getCartuchosPorDefecto(calibre, clase, tipoPETA)` - Default según tipo
+- `validarCartuchos(cartuchos, calibre, clase)` - Valida si es legal
+- `getDescripcionLimites(calibre, clase)` - Descripción legible
+
+**GeneradorPETA.jsx** - Modificado:
+- ✅ Eliminadas funciones obsoletas `getCartuchoSpec()` y `clampCartuchos()`
+- ✅ Importa y usa funciones de `limitesCartuchos.js`
+- ✅ Límites correctos en generación de oficios PDF
+- ✅ Validación automática de inputs del usuario
+
+**SolicitarPETA.jsx** - Modificado:
+- ✅ Usa `getCartuchosPorDefecto()` en lugar de valores hardcodeados
+- ✅ Asigna cartuchos legales al crear solicitud PETA
+- ✅ Defaults inteligentes según tipo de PETA y calibre
+
+**Documentación**:
+- `docs/LIMITES_CARTUCHOS_LFAFE.md` - Documentación completa del Artículo 50
+  * Tabla de límites por tipo de arma
+  * Períodos de comercialización (anual, trimestral, mensual)
+  * Ejemplos de detección automática
+  * Referencias legales
+
+**Archivos de referencia**:
+- `formatos_E5_ayuda/2026 hojas de ayuda PETAS (1).csv` - Tabla oficial SEDENA
+- `formatos_E5_ayuda/2026 hojas de ayuda PETAS (1).xlsx` - Tabla oficial SEDENA
+
+**Base Legal**:
+- **Artículo 50 LFAFE** (Ley Federal de Armas de Fuego y Explosivos)
+- Períodos de comercialización:
+  * Anual: Protección domicilio/parcela
+  * Trimestral: Caza (aplicable a PETAs de caza)
+  * Mensual: Tiro deportivo (aplicable a PETAs de tiro/competencia)
+
+**Deploy**:
+- ✅ Build completado (9.33s)
+- ✅ Desplegado a https://yucatanctp.org
+- ✅ 51 archivos en producción
+
+**Prioridad**: ALTA - Cumplimiento legal obligatorio
+
+---
+
 ### 18 de Enero - v1.29.1 - 🔥 CRITICAL FIX: Firebase Storage Access Restored
 
 #### 🚨 CRITICAL BUG FIXED - Admin Can Now Access Socios' Documents
