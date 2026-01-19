@@ -442,7 +442,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
 
       // Helper para centrar texto
       const centrarTexto = (texto, yPos, fontSize = 10) => {
-        doc.setFontSize(fontSize);
         const textWidth = doc.getTextWidth(texto);
         doc.text(texto, (pageWidth - textWidth) / 2, yPos);
       };
