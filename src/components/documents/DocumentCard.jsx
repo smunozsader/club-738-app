@@ -216,7 +216,7 @@ export default function DocumentCard({
         />
       )}
 
-      {(!hasDocument && !showUploader) && (
+      {(!hasDocument || showUploader) && (
         <div className="card-uploader">
           {isDocumentoPrecargado && !hasDocument && (
             <div className="mensaje-precargado-pendiente">
@@ -239,6 +239,14 @@ export default function DocumentCard({
             isGovtDoc={isGovtDoc}
             onUploadComplete={handleUploadComplete}
           />
+          {showUploader && (
+            <button 
+              className="btn-cancel"
+              onClick={() => setShowUploader(false)}
+            >
+              Cancelar
+            </button>
+          )}
         </div>
       )}
 
