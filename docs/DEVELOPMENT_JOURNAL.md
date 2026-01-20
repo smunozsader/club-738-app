@@ -1,3 +1,47 @@
+## 2026-01-19 - REGISTRO DE NUEVA ARMA: RICARDO ANTONIO SOBERANIS GAMBOA
+
+### Registro de CZ P-10 C en Sistema
+
+**Objetivo**: Registrar nueva pistola CZ P-10 C para Ricardo Antonio Soberanis Gamboa (email: rsoberanis11@hotmail.com)
+
+**Proceso Ejecutado**:
+
+1. **Verificación del PDF** ✓
+   - Archivo: `armas_socios/2026. nueva arma RICARDO ANTONIO SOBERANIS GAMBOA/CZ P-10 C - EP29710 - A3912487. RICARDO ANTONIO SOBERANIS GAMBOA .pdf`
+   - Tamaño: 2.16 MB
+   - Estado: Accesible
+
+2. **Actualización de Excel** ✓
+   - Archivo: `socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx`
+   - Nueva fila: 283
+   - Datos: CZ P-10 C, .40 S&W, EP29710, A3912487
+   - Credencial: 230 (Ricardo Antonio Soberanis Gamboa)
+
+3. **Registro en Firestore** ✓
+   - Ruta: `socios/rsoberanis11@hotmail.com/armas/8d1f8140`
+   - Documento creado exitosamente
+   - Modalidad: tiro
+
+4. **Subida de PDF a Firebase Storage** ✓
+   - Ruta Storage: `documentos/rsoberanis11@hotmail.com/armas/8d1f8140/registro.pdf`
+   - URL: https://storage.googleapis.com/club-738-app.firebasestorage.app/documentos/rsoberanis11%40hotmail.com/armas/8d1f8140/registro.pdf
+   - Enlazado en documento Firestore
+
+**Validación Final**:
+- ✅ Excel: 4 armas para Ricardo (Fila 283 nueva)
+- ✅ Firestore: Documento registrado con ID 8d1f8140
+- ✅ Storage: PDF accesible en URL pública
+- ✅ Integridad: Datos consistentes en 3 fuentes
+
+**Cambios de Datos**:
+- Excel: +1 fila (283)
+- Firestore: +1 documento en `socios/rsoberanis11@hotmail.com/armas/`
+- Storage: +1 archivo PDF
+
+**Commit**: (pendiente git) - feat(arsenal): Registrar CZ P-10 C para Ricardo Soberanis (Credencial 230)
+
+---
+
 ## 2026-01-18 - NORMALIZACIÓN COMPLETA FUENTE_DE_VERDAD.xlsx
 
 ### Auditoría y Limpieza de Integridad de Datos (COMPLETA)
