@@ -216,12 +216,17 @@ export default function DocumentCard({
         />
       )}
 
-      {(!hasDocument || showUploader) && (
+      {(!hasDocument && !showUploader) && (
         <div className="card-uploader">
           {isDocumentoPrecargado && !hasDocument && (
             <div className="mensaje-precargado-pendiente">
               <span className="icono-atencion">⚠️</span>
               <p><strong>Nota:</strong> Este documento normalmente ya está en el sistema. Si no lo ves, contacta al secretario antes de subirlo.</p>
+            </div>
+          )}
+          {!isDocumentoPrecargado && !hasDocument && (
+            <div className="mensaje-documento-pendiente">
+              <p>Este documento está pendiente de carga. Por favor súbelo para continuar.</p>
             </div>
           )}
           <MultiImageUploader
@@ -234,6 +239,11 @@ export default function DocumentCard({
             isGovtDoc={isGovtDoc}
             onUploadComplete={handleUploadComplete}
           />
+        </div>
+      )}
+
+      {(hasDocument || showUploader) && (
+        <div className="card-actions-bar">
           {showUploader && (
             <button 
               className="btn-cancel"
