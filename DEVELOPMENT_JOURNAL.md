@@ -10,6 +10,38 @@
 
 ## 📅 Enero 2026
 
+### 20 de Enero - Decisión: Placeholders para Socios Sin Armas
+
+#### Estado Final del Arsenal
+
+**Objetivo**: Confirmar estrategia de datos para socios que aún no han registrado armas.
+
+**Decisión Tomada**:
+- **9 socios sin armas registradas** (credenciales: 206, 219, 221, 223, 227, 231, 232, 234, 235) permanecerán en Excel como **placeholders**
+- Estos son socios recientes (últimas adiciones al club)
+- Se mantendrán los registros vacíos hasta que registren sus armas
+- No se eliminarán de la FUENTE_DE_VERDAD
+
+**Inventario Final**:
+- **Total de socios**: 76
+- **Total de armas**: 292
+- **Armas largas**: 149 (80 RIFLES + 69 ESCOPETAS)
+- **Armas cortas**: 110 (99 PISTOLAS + 9 REVOLVERS + 2 KITS)
+- **Especiales**: 1 ESCOPETA RIFLE (dual-calibre)
+- **Socios sin armas**: 9 (placeholders activos)
+
+**Archivos Afectados**:
+- `socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx` - Sin cambios, mantiene 292 filas
+- `Firestore`: No requiere cambios, estos socios no tienen documentos en `socios/{email}/armas/`
+
+**Rationale**:
+- Evita confusión al limpiar Excel
+- Mantiene la secuencia de credenciales (importante para auditoría)
+- Permite importar armas cuando los socios las registren
+- Preserva integridad de "FUENTE_DE_VERDAD"
+
+---
+
 ### 19 de Enero - Actualización de Instrucciones AI para Copilot
 
 #### Análisis y Documentación de Arquitectura
