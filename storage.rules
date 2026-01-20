@@ -54,7 +54,24 @@ service firebase.storage {
     }
     
     // ========================================================================
-    // CARPETA: documentos/{email}/
+    // CARPETA: documentos/{email}/armas/{armaId}/
+    // ========================================================================
+    // Para documentos específicos de armas (registros, etc.)
+    // El secretario puede listar armas de cualquier socio para impresión
+    // LÍMITE AUMENTADO A 10MB para RFA (Registros Federales de Armas)
+    // ⚠️ DEBE IR ANTES DE LA REGLA GENÉRICA documentos/{email}/{fileName}
+    
+    match /documentos/{email}/armas/{armaId}/{fileName} {
+      allow read: if isOwner(email) || isSecretario();
+      allow list: if isOwner(email) || isSecretario();
+      allow write: if (isOwner(email) || isSecretario())
+                   && isAllowedFileType() 
+                   && isUnderArmasSizeLimit();  // 10MB para registros de armas
+      allow delete: if isOwner(email);
+    }
+
+    // ========================================================================
+    // CARPETA: documentos/{email}/ (genérica - va DESPUÉS de armas)
     // ========================================================================
     // Cada socio puede leer sus documentos
     // Solo puede subir PDFs e imágenes de máximo 5MB
@@ -72,22 +89,6 @@ service firebase.storage {
                    && isUnderSizeLimit();
       
       // Eliminar: solo el propio socio (secretario no puede eliminar)
-      allow delete: if isOwner(email);
-    }
-    
-    // ========================================================================
-    // CARPETA: documentos/{email}/armas/{armaId}/
-    // ========================================================================
-    // Para documentos específicos de armas (registros, etc.)
-    // El secretario puede listar armas de cualquier socio para impresión
-    // LÍMITE AUMENTADO A 10MB para RFA (Registros Federales de Armas)
-    
-    match /documentos/{email}/armas/{armaId}/{fileName} {
-      allow read: if isOwner(email) || isSecretario();
-      allow list: if isOwner(email) || isSecretario();
-      allow write: if (isOwner(email) || isSecretario())
-                   && isAllowedFileType() 
-                   && isUnderArmasSizeLimit();  // 10MB para registros de armas
       allow delete: if isOwner(email);
     }
     

@@ -30,12 +30,12 @@ const TAMANIOS_MAX = {
 export const REGLAS_DOCUMENTOS = {
   // Identificación oficial
   ine: {
-    formatos: ['jpg', 'jpeg'],
+    formatos: ['jpg', 'jpeg', 'pdf'],
     tamañoMax: TAMANIOS_MAX.INE,
     requiereAmbasCaras: true,
     descripcion: 'INE (Credencial para Votar)',
-    instrucciones: 'Sube ambas caras de tu INE en formato JPG. Foto ampliada al 200% de tamaño original.',
-    mensaje: 'INE debe ser JPG o JPEG, máximo 5MB. Se requieren ambas caras ampliadas al 200%.'
+    instrucciones: 'Sube ambas caras de tu INE en formato JPG o PDF. Foto ampliada al 200% de tamaño original.',
+    mensaje: 'INE debe ser JPG, JPEG o PDF, máximo 5MB. Se requieren ambas caras ampliadas al 200%.'
   },
   
   // Registros de armas (SEDENA)
