@@ -11,21 +11,11 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, updateDoc, Timestamp, arrayUnion, setDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import { CONCEPTOS_PAGO_2026, METODOS_PAGO, COMBOS_PAGO, calcularTotalPago } from '../utils/conceptosPago';
 import './RegistroPagos.css';
 
-const CONCEPTOS_PAGO = {
-  cuota_anual: { nombre: 'Cuota Anual 2026', monto: 6000 },
-  femeti: { nombre: 'FEMETI Socio', monto: 350 },
-  inscripcion: { nombre: 'Inscripción (solo nuevos)', monto: 2000 },
-  femeti_nuevo: { nombre: 'FEMETI Nuevo Ingreso', monto: 700 }
-};
-
-const METODOS_PAGO = [
-  { id: 'efectivo', nombre: 'Efectivo' },
-  { id: 'transferencia', nombre: 'Transferencia Bancaria' },
-  { id: 'tarjeta', nombre: 'Tarjeta' },
-  { id: 'cheque', nombre: 'Cheque' }
-];
+// Usar la configuración centralizada
+const CONCEPTOS_PAGO = CONCEPTOS_PAGO_2026;
 
 export default function RegistroPagos({ userEmail, onBack }) {
   const [loading, setLoading] = useState(true);
@@ -106,13 +96,7 @@ export default function RegistroPagos({ userEmail, onBack }) {
   };
 
   const calcularTotal = () => {
-    let total = 0;
-    Object.keys(conceptosSeleccionados).forEach(concepto => {
-      if (conceptosSeleccionados[concepto]) {
-        total += CONCEPTOS_PAGO[concepto].monto;
-      }
-    });
-    return total;
+    return calcularTotalPago(conceptosSeleccionados);
   };
 
   const registrarPago = async () => {
