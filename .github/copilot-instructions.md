@@ -591,19 +591,59 @@ Secretary hands physical package to 32 Zona Militar (Valladolid)
 - **SEDENA Compliance**: Bimonthly weapon inventory reports to 32 Zona Militar (Feb, Apr, Jun, Aug, Oct, Dec)
 - **Club Control**: Track ownership changes, new purchases, transfers, sales outside club
 - **Member Management**: Know exactly who owns what and who joined when
+- **Firestore Sync**: ALL socios (with or without weapons) must have documents in Firestore
 
 ### What Must Be Accurate Daily
 
-**Firestore Collection**: `socios/{email}/armas/{armaId}`
+**Firestore Collection**: `socios/{email}` (BASE DOCUMENT)
 ```
-clase: string        # PISTOLA, ESCOPETA, RIFLE
-calibre: string      # .22, 9mm, 12ga, etc.
+nombre: string              # Socio full name
+credencial: string          # Credential number from Excel
+email: string               # Normalized to lowercase
+telefono: string            # Contact phone
+domicilio: string           # Address
+curp: string                # CURP identifier
+fechaAlta: timestamp        # Membership join date
+armasCount: number          # Running count of weapons
+renovacion2026: object      # Renewal status
+membresia2026: object       # Membership status
+```
+
+**Firestore Subcollection**: `socios/{email}/armas/{armaId}` (WEAPONS)
+```
+clase: string        # PISTOLA, ESCOPETA, RIFLE (original verbatim from Excel)
+calibre: string      # .22, 9mm, 12ga, .380" ACP (MUST be SEDENA compliant)
 marca: string        # Manufacturer
 modelo: string       # Model name
 matricula: string    # Serial number (normalized)
 folio: string        # SEDENA registration number
 modalidad: string    # 'caza' | 'tiro' | 'ambas'
 documentoRegistro: string  # URL to RFA (Registro Federal de Armas)
+```
+
+### Socios Sin Armas (Members Without Weapons) ✅ VALID STATE
+
+**Important**: It is NORMAL and EXPECTED for new members to have no weapons registered:
+- **9 socios confirmed** (as of Jan 20, 2026) with empty weapon records
+- Credencials: 206, 219, 221, 223, 227, 231, 232, 234, 235
+- These are recent members awaiting weapon registration
+- Their base documents MUST exist in Firestore (`socios/{email}`)
+- When they add weapons, documents appear in `socios/{email}/armas/`
+
+**Firestore Sync Pattern for Empty Socios**:
+```javascript
+// Base socio document ALWAYS exists, even if armasCount = 0
+const socioRef = doc(db, 'socios', email.toLowerCase());
+await socioRef.set({
+  nombre: '...',
+  credencial: '...',
+  armasCount: 0,      // Zero weapons is valid
+  fechaAlta: now,
+  // ... other fields
+}, { merge: true });
+
+// Empty armas subcollection is OK - will be populated later
+// NO need to create empty placeholder documents in armas/
 ```
 
 ### Bimonthly SEDENA Reporting Workflow
@@ -623,6 +663,36 @@ documentoRegistro: string  # URL to RFA (Registro Federal de Armas)
 3. **Weapons sold outside club** - Member disposals
 4. **New member additions** - Fresh joins
 5. **Member removals** - Departures (bajas)
+
+### Classification Strategy: Excel Verbatim vs Firestore Normalized
+
+**Excel FUENTE_DE_VERDAD**:
+- Preserves EXACT transcriptions from original SEDENA documents
+- Examples: "ESCOPETA SEMIAUTOMATICA", "RIFLE SEMI-AUTOMATICO", "ESCOPETA RIFLE"
+- Purpose: Maintain audit trail and legal compliance (original documents)
+- **DO NOT simplify or "correct"** Excel entries
+
+**Firestore Implementation**:
+- Keep original `clase` field verbatim for audit purposes
+- Add normalized `type_group` field for UI queries: RIFLE, ESCOPETA, PISTOLA, REVOLVER, KIT, ESPECIAL
+- Maps complex names to normalized categories without losing original data
+
+**Example**:
+```javascript
+// Excel: "ESCOPETA SEMIAUTOMATICA"
+// Firestore:
+{
+  clase: "ESCOPETA SEMIAUTOMATICA",        // Original verbatim
+  type_group: "ESCOPETA",                   // Normalized for queries
+  // ... other fields
+}
+```
+
+**Why This Matters**:
+- Legal compliance: SEDENA accepts original classification as submitted
+- Data integrity: Audit trail preserved (original vs normalized)
+- UI usability: Simplified categories for sorting/filtering
+- NEVER delete or modify Excel entries - they are official documents
 
 ### Key Tools for Arsenal Management
 - **MisArmas.jsx** - Socio views their weapons
