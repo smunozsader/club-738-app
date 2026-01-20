@@ -31,6 +31,15 @@ export default function RegistroPagos({ userEmail, onBack }) {
     inscripcion: false,
     femeti_nuevo: false
   });
+  
+  // Montos editables - permiten personalizar por concepto
+  const [montosPersonalizados, setMontosPersonalizados] = useState({
+    cuota_anual: CONCEPTOS_PAGO.cuota_anual.monto,
+    femeti: CONCEPTOS_PAGO.femeti.monto,
+    inscripcion: CONCEPTOS_PAGO.inscripcion.monto,
+    femeti_nuevo: CONCEPTOS_PAGO.femeti_nuevo.monto
+  });
+  
   const [metodoPago, setMetodoPago] = useState('efectivo');
   const [fechaPago, setFechaPago] = useState(new Date().toISOString().split('T')[0]);
   const [numeroRecibo, setNumeroRecibo] = useState('');
@@ -96,7 +105,13 @@ export default function RegistroPagos({ userEmail, onBack }) {
   };
 
   const calcularTotal = () => {
-    return calcularTotalPago(conceptosSeleccionados);
+    let total = 0;
+    Object.keys(conceptosSeleccionados).forEach(concepto => {
+      if (conceptosSeleccionados[concepto]) {
+        total += montosPersonalizados[concepto] || 0;
+      }
+    });
+    return total;
   };
 
   const registrarPago = async () => {
@@ -124,7 +139,7 @@ export default function RegistroPagos({ userEmail, onBack }) {
         .map(c => ({
           concepto: c,
           nombre: CONCEPTOS_PAGO[c].nombre,
-          monto: CONCEPTOS_PAGO[c].monto
+          monto: montosPersonalizados[c]  // Usar monto personalizado, no el por defecto
         }));
       
       const registroPago = {
@@ -141,9 +156,9 @@ export default function RegistroPagos({ userEmail, onBack }) {
       const socioRef = doc(db, 'socios', socioSeleccionado.email);
       
       // Calcular cuotas separadas para sincronizar con DashboardRenovaciones
-      const cuotaClub = conceptosSeleccionados.cuota_anual ? CONCEPTOS_PAGO.cuota_anual.monto : 0;
-      const cuotaFemeti = (conceptosSeleccionados.femeti ? CONCEPTOS_PAGO.femeti.monto : 0) +
-                         (conceptosSeleccionados.femeti_nuevo ? CONCEPTOS_PAGO.femeti_nuevo.monto : 0);
+      const cuotaClub = conceptosSeleccionados.cuota_anual ? montosPersonalizados.cuota_anual : 0;
+      const cuotaFemeti = (conceptosSeleccionados.femeti ? montosPersonalizados.femeti : 0) +
+                         (conceptosSeleccionados.femeti_nuevo ? montosPersonalizados.femeti_nuevo : 0);
       
       // Actualizar documento del socio
       // Sincronizar con renovacion2026 para que DashboardRenovaciones lo reconozca
@@ -277,20 +292,35 @@ export default function RegistroPagos({ userEmail, onBack }) {
                   <h4>Conceptos a pagar</h4>
                   <div className="conceptos-list">
                     {Object.keys(CONCEPTOS_PAGO).map(concepto => (
-                      <label key={concepto} htmlFor={`concepto-${concepto}`} className="concepto-item">
-                        <input
-                          id={`concepto-${concepto}`}
-                          type="checkbox"
-                          name={`concepto-${concepto}`}
-                          checked={conceptosSeleccionados[concepto]}
-                          onChange={() => toggleConcepto(concepto)}
-                          aria-label={`${CONCEPTOS_PAGO[concepto].nombre} - $${CONCEPTOS_PAGO[concepto].monto}`}
-                        />
-                        <span className="concepto-nombre">{CONCEPTOS_PAGO[concepto].nombre}</span>
-                        <span className="concepto-monto">
-                          ${CONCEPTOS_PAGO[concepto].monto.toLocaleString('es-MX')}
-                        </span>
-                      </label>
+                      <div key={concepto} className="concepto-row">
+                        <label htmlFor={`concepto-${concepto}`} className="concepto-item">
+                          <input
+                            id={`concepto-${concepto}`}
+                            type="checkbox"
+                            name={`concepto-${concepto}`}
+                            checked={conceptosSeleccionados[concepto]}
+                            onChange={() => toggleConcepto(concepto)}
+                            aria-label={`${CONCEPTOS_PAGO[concepto].nombre} - $${montosPersonalizados[concepto]}`}
+                          />
+                          <span className="concepto-nombre">{CONCEPTOS_PAGO[concepto].nombre}</span>
+                        </label>
+                        <div className="concepto-monto-editable">
+                          <span className="moneda">$</span>
+                          <input
+                            type="number"
+                            min="0"
+                            step="100"
+                            value={montosPersonalizados[concepto]}
+                            onChange={(e) => setMontosPersonalizados({
+                              ...montosPersonalizados,
+                              [concepto]: parseFloat(e.target.value) || 0
+                            })}
+                            className="monto-input"
+                            placeholder="0"
+                            aria-label={`Monto para ${CONCEPTOS_PAGO[concepto].nombre}`}
+                          />
+                        </div>
+                      </div>
                     ))}
                   </div>
                   

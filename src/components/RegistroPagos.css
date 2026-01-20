@@ -220,6 +220,12 @@
   margin-bottom: 20px;
 }
 
+.concepto-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .concepto-item {
   display: flex;
   align-items: center;
@@ -230,6 +236,7 @@
   border-left: 3px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex: 1;
 }
 
 .concepto-item:hover {
@@ -253,10 +260,41 @@
   color: #2c3e50;
 }
 
-.concepto-monto {
-  font-weight: 700;
-  color: #3498db;
-  font-size: 1.1rem;
+/* Campo editable de monto */
+.concepto-monto-editable {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  min-width: 120px;
+}
+
+.concepto-monto-editable .moneda {
+  color: #27ae60;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.monto-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  text-align: right;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #27ae60;
+  outline: none;
+}
+
+.monto-input:focus {
+  outline: none;
+}
+
+.monto-input::placeholder {
+  color: #bdc3c7;
 }
 
 .total-box {
@@ -273,6 +311,7 @@
   font-size: 1.2rem;
   font-weight: 600;
 }
+
 
 .total-monto {
   font-size: 2rem;
