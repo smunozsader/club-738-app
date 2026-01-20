@@ -162,6 +162,48 @@ uploadTask.on('state_changed',
    - Cuota Anual: $6,000
    - FEMETI: $700 (primer ingreso) o $350 (renovación)
 
+### ⚠️ CRITICAL LESSON: Weapon Caliber Validation
+
+**NUNCA ASUMAS calibres sin verificación física/OCR del PDF** - Error cometido 19 Ene 2026:
+
+**El Problema:**
+- AI registró CZ P-10 C como `.40 S&W` (ILEGAL para civiles en México)
+- NO hice OCR del PDF antes de asumir un calibre
+- Resultado: Dato incorrecto en Excel + Firestore
+
+**La Ley (SEDENA Art. 50 LFAFE):**
+- ✅ **Máximo legal para CIVILES: `.380" ACP`**
+- ❌ Calibres > `.380" ACP` = PROHIBIDOS (Solo fuerzas armadas)
+- Ejemplos permitidos: .22 LR, .380 ACP, 9mm (ALGUNOS modelos), 38 SPL
+- Ejemplos prohibidos: .40 S&W, 10mm, .45 ACP, 357 MAG
+
+**El Proceso Correcto:**
+1. **SIEMPRE hacer OCR del PDF** - `pdfplumber` o similar
+2. **Buscar en texto**: matrícula, folio, marca, modelo, calibre
+3. **Validar calibre contra SEDENA Art. 50** antes de registrar
+4. **SI NO ESTÁ 100% SEGURO**: Pedir confirmación al usuario
+
+**Código de Validación Recomendado:**
+```javascript
+const CALIBRES_PERMITIDOS_CIVILES = [
+  '.22 LR', '.22 Magnum', '.22 TCM',
+  '.380" ACP', 
+  '9mm' // Solo algunos modelos - validar
+];
+
+function validarCalibreSegun(calibre) {
+  if (!CALIBRES_PERMITIDOS_CIVILES.includes(calibre)) {
+    throw new Error(`❌ CALIBRE PROHIBIDO: ${calibre} (Art. 50 LFAFE)`);
+  }
+  return true;
+}
+```
+
+**Lección del Error:**
+- Asunciones ≠ Verificación (especialmente en datos legales)
+- En el club 738, cada dato de arma **AFECTA compliance con SEDENA**
+- Un calibre incorrecto = **solicitud PETA RECHAZADA** en 32 Zona Militar
+
 ---
 
 ## Component Organization & Patterns
