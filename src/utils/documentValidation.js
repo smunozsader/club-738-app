@@ -81,11 +81,11 @@ export const REGLAS_DOCUMENTOS = {
   },
   
   comprobanteDomicilio: {
-    formatos: ['pdf'],
+    formatos: ['pdf', 'jpg', 'jpeg', 'png'],
     tamañoMax: TAMANIOS_MAX.DOCUMENTO_PDF,
     descripcion: 'Comprobante de Domicilio',
-    instrucciones: 'Escanea tu comprobante de domicilio (luz, agua, teléfono) no mayor a 3 meses y guárdalo en PDF.',
-    mensaje: 'Comprobante de Domicilio debe ser PDF, máximo 5MB.'
+    instrucciones: 'Sube tu comprobante de domicilio (luz, agua, teléfono) no mayor a 3 meses. Acepta PDF, JPG o PNG.',
+    mensaje: 'Comprobante de Domicilio debe ser PDF, JPG, JPEG o PNG, máximo 5MB.'
   },
   
   certificadoMedico: {
