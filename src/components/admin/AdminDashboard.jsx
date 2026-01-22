@@ -15,6 +15,7 @@ import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import { DashboardSkeleton } from '../common/LoadingSkeleton';
 import { useToastContext } from '../../contexts/ToastContext';
+import { useDarkMode } from '../../hooks/useDarkMode';
 import AdminToolsNavigation from './AdminToolsNavigation';
 import * as XLSX from 'xlsx';
 import './AdminDashboard.css';
@@ -46,6 +47,7 @@ export default function AdminDashboard({
   const [ordenarPor, setOrdenarPor] = useState('nombre'); // nombre, progreso, armas
   const [exportando, setExportando] = useState(false);
   const toast = useToastContext();
+  const { isDarkMode, setIsDarkMode } = useDarkMode();
 
   // Callback para cambiar sección activa
   const handleSelectTool = (toolId) => {
@@ -266,13 +268,23 @@ export default function AdminDashboard({
               Gestión de expedientes de socios - Club de Caza, Tiro y Pesca de Yucatán, A.C.
             </p>
           </div>
-          <button 
-            className="btn-export-excel"
-            onClick={exportarAExcel}
-            disabled={exportando || sociosFiltrados.length === 0}
-          >
-            {exportando ? '⏳ Exportando...' : '📊 Exportar a Excel'}
-          </button>
+          <div className="header-actions">
+            <button
+              className="btn-dark-mode-toggle"
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              title={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+              aria-label="Toggle dark mode"
+            >
+              {isDarkMode ? '☀️ Luz' : '🌙 Oscuro'}
+            </button>
+            <button 
+              className="btn-export-excel"
+              onClick={exportarAExcel}
+              disabled={exportando || sociosFiltrados.length === 0}
+            >
+              {exportando ? '⏳ Exportando...' : '📊 Exportar a Excel'}
+            </button>
+          </div>
         </div>
 
       {/* Estadísticas rápidas */}

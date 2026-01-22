@@ -160,30 +160,27 @@
   .tool-card {
     background: var(--color-surface, #1e293b);
     border-color: var(--color-border, #334155);
-  }
-  
-  .tool-card {
-    color: var(--text-primary, #f1f5f9);
+    color: #f1f5f9 !important;
   }
   
   .tool-label {
-    color: var(--text-primary, #f1f5f9);
+    color: #f1f5f9 !important;
   }
   
   .tool-description {
-    color: var(--text-secondary, #cbd5e1);
+    color: #cbd5e1 !important;
   }
   
   .tools-group-title {
-    color: var(--text-primary, #f1f5f9);
+    color: #f1f5f9 !important;
   }
   
   .admin-tools-grid-header h2 {
-    color: var(--text-primary, #f1f5f9);
+    color: #f1f5f9 !important;
   }
   
   .admin-tools-grid-header .subtitle {
-    color: var(--text-secondary, #cbd5e1);
+    color: #cbd5e1 !important;
   }
 
   .tool-card.purple:hover {
