@@ -245,6 +245,64 @@
   text-decoration: underline;
 }
 
+/* Constancia Card - Estilos especiales */
+.constancia-card {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid #fcd34d;
+  cursor: pointer;
+}
+
+.constancia-card:hover {
+  border-color: #d97706;
+  box-shadow: 0 8px 20px rgba(217, 119, 6, 0.15);
+}
+
+.constancia-description {
+  font-size: 0.85rem !important;
+  line-height: 1.5;
+  margin-bottom: 16px !important;
+  color: #78350f;
+}
+
+.constancia-fields {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.field-item {
+  color: #78350f;
+  margin: 8px 0;
+  line-height: 1.4;
+}
+
+.field-item strong {
+  color: #92400e;
+  font-weight: 600;
+}
+
+.sedena-cta-button {
+  display: inline-block;
+  background: #d97706;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.sedena-cta-button:hover {
+  background: #b45309;
+  transform: scale(1.05);
+  text-decoration: none;
+}
+
 /* Login Section */
 .login-section {
   max-width: 800px;

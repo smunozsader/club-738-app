@@ -117,6 +117,35 @@ const LandingPage = () => {
         </a>
       </section>
 
+      {/* Constancia Antecedentes Penales */}
+      <section className="sedena-links-section">
+        <h2>⚖️ Requisitos Legales</h2>
+        <p className="sedena-subtitle">Documentos obligatorios para tramitar tu PETA</p>
+        <div className="sedena-links-grid">
+          <div className="sedena-link-card constancia-card">
+            <div className="sedena-icon">📜</div>
+            <h3>Constancia de Antecedentes Penales Federales</h3>
+            <p className="constancia-description">Para tramitar tu PETA requieres tu Constancia de Antecedentes Penales Federales. Captura los siguientes datos en el formulario:</p>
+            <div className="constancia-fields">
+              <div className="field-item">
+                <strong>Institución que solicita:</strong> SEDENA (Secretaría de la Defensa Nacional)
+              </div>
+              <div className="field-item">
+                <strong>Razón de la solicitud:</strong> Transportación de armas de fuego
+              </div>
+            </div>
+            <a 
+              href="https://constancias.oadprs.gob.mx/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="sedena-cta-button"
+            >
+              Obtener Constancia →
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Enlaces SEDENA */}
       <section className="sedena-links-section">
         <h2>🏛️ Enlaces Útiles SEDENA</h2>
