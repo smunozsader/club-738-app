@@ -19,13 +19,13 @@
 
 .admin-tools-grid-header h2 {
   font-size: 2rem;
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #000000);
   margin: 0 0 8px 0;
   font-weight: 700;
 }
 
 .admin-tools-grid-header .subtitle {
-  color: var(--text-muted, #64748b);
+  color: var(--text-secondary, #334155);
   font-size: 1rem;
   margin: 0;
 }
@@ -37,9 +37,9 @@
 
 .tools-group-title {
   font-size: 1.25rem;
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #000000);
   margin: 0 0 20px 0;
-  font-weight: 600;
+  font-weight: 700;
   padding-bottom: 12px;
   border-bottom: 2px solid var(--color-border, #e2e8f0);
 }
@@ -54,7 +54,7 @@
 
 /* Tarjeta de herramienta */
 .tool-card {
-  background: var(--bg-secondary, #ffffff);
+  background: var(--color-surface, #ffffff);
   border: 2px solid var(--color-border, #e2e8f0);
   border-radius: 12px;
   padding: 24px 20px;
@@ -67,7 +67,7 @@
   font-family: inherit;
   
   /* Reset button styles */
-  color: inherit;
+  color: var(--text-primary, #000000);
   font-size: 1rem;
   font-weight: 500;
   outline: none;
@@ -141,8 +141,8 @@
 /* Etiqueta */
 .tool-label {
   font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-primary, #1e293b);
+  font-weight: 700;
+  color: var(--text-primary, #000000);
   margin: 0 0 8px 0;
   line-height: 1.4;
 }
@@ -150,7 +150,7 @@
 /* Descripción */
 .tool-description {
   font-size: 0.85rem;
-  color: var(--text-muted, #64748b);
+  color: var(--text-secondary, #334155);
   margin: 0;
   line-height: 1.4;
 }
@@ -158,8 +158,32 @@
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   .tool-card {
-    background: var(--bg-secondary, #1e293b);
+    background: var(--color-surface, #1e293b);
     border-color: var(--color-border, #334155);
+  }
+  
+  .tool-card {
+    color: var(--text-primary, #f1f5f9);
+  }
+  
+  .tool-label {
+    color: var(--text-primary, #f1f5f9);
+  }
+  
+  .tool-description {
+    color: var(--text-secondary, #cbd5e1);
+  }
+  
+  .tools-group-title {
+    color: var(--text-primary, #f1f5f9);
+  }
+  
+  .admin-tools-grid-header h2 {
+    color: var(--text-primary, #f1f5f9);
+  }
+  
+  .admin-tools-grid-header .subtitle {
+    color: var(--text-secondary, #cbd5e1);
   }
 
   .tool-card.purple:hover {
