@@ -571,7 +571,7 @@ export default function MultiImageUploader({
         </div>
       )}
 
-      {/* Modo PDF: Subir PDF preparado (solo si NO es allowPdf) */}
+      {/* Modo PDF: Subir PDF preparado (para documentos que NO permiten múltiples imágenes) */}
       {!allowPdf && uploadMode === 'pdf' && !uploading && (
         <div className="pdf-upload-section">
           <div className="pdf-requirements">
@@ -600,6 +600,45 @@ export default function MultiImageUploader({
           <button className="btn-back-mode" onClick={() => setUploadMode(null)}>
             ← Cambiar método
           </button>
+        </div>
+      )}
+
+      {/* 🔧 NUEVO: Modo PDF para documentos regulares (permitPdf=true pero NO isGovtDoc) */}
+      {/* Esto incluye: certificados médicos, modo honesto, licencia de caza, etc. */}
+      {allowPdf && !isGovtDoc && !uploadMode && !uploading && images.length === 0 && (
+        <div className="pdf-upload-section-simple">
+          <div className="upload-instructions">
+            <p className="instruction-title">📤 Sube tu documento en PDF o imagen</p>
+            <ul className="instruction-list">
+              <li>✓ Formatos: PDF, JPG, PNG</li>
+              <li>✓ Peso máximo: 5 MB</li>
+              <li>✓ Resolución mínima: 150 DPI</li>
+              <li>✓ Documento legible (no borroso)</li>
+            </ul>
+          </div>
+          
+          <label className="file-select-btn pdf-regular-btn">
+            📄 Seleccionar archivo
+            <input
+              type="file"
+              accept="application/pdf,image/jpeg,image/jpg,image/png"
+              onChange={handlePdfUpload}
+              hidden
+            />
+          </label>
+          
+          <p className="upload-hint-simple">O arrastra tu archivo aquí abajo</p>
+          
+          <div
+            className={`drop-zone-simple ${isDragging ? 'dragging' : ''}`}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <div className="upload-icon-simple">📥</div>
+            <p>Arrastra tu documento aquí</p>
+          </div>
         </div>
       )}
 

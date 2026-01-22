@@ -542,3 +542,134 @@
     padding: 8px;
   }
 }
+
+/* ===================================
+   Sección Simple de PDF (Certificados, Modo Honesto, etc.)
+   Para documentos que aceptan PDF pero NO son documentos de gobierno
+   =================================== */
+.pdf-upload-section-simple {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 2px dashed #0369a1;
+  border-radius: 12px;
+}
+
+.upload-instructions {
+  text-align: center;
+}
+
+.instruction-title {
+  color: var(--color-primary-dark, #1a365d);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.instruction-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary, #334155);
+}
+
+.instruction-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-select-btn.pdf-regular-btn {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  color: white;
+  border: 2px solid #0369a1;
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.file-select-btn.pdf-regular-btn:hover {
+  background: linear-gradient(135deg, #075985 0%, #0c4a6e 100%);
+  border-color: #0c4a6e;
+  box-shadow: 0 4px 12px rgba(3, 105, 161, 0.3);
+}
+
+.upload-hint-simple {
+  text-align: center;
+  color: var(--color-text-muted, #4b5563);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.drop-zone-simple {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  background: white;
+  border: 2px dashed #0369a1;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.drop-zone-simple:hover {
+  background: #f0fdf4;
+  border-color: #075985;
+}
+
+.drop-zone-simple.dragging {
+  background: #bae6fd;
+  border-color: #075985;
+  box-shadow: 0 4px 12px rgba(3, 105, 161, 0.2);
+}
+
+.upload-icon-simple {
+  font-size: 36px;
+}
+
+.drop-zone-simple p {
+  color: var(--color-text-secondary, #334155);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Dark mode para sección simple */
+:root.dark-mode .pdf-upload-section-simple {
+  background: linear-gradient(135deg, #1a3a4a 0%, #0d2a3f 100%);
+  border-color: #0ea5e9;
+}
+
+:root.dark-mode .instruction-title {
+  color: #e0f2fe;
+}
+
+:root.dark-mode .instruction-list li {
+  color: #cbd5e1;
+}
+
+:root.dark-mode .drop-zone-simple {
+  background: #0f172a;
+  border-color: #0369a1;
+}
+
+:root.dark-mode .drop-zone-simple:hover {
+  background: #1a3a4a;
+  border-color: #0ea5e9;
+}
+
+:root.dark-mode .drop-zone-simple p {
+  color: #cbd5e1;
+}
