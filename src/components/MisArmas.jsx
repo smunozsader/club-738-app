@@ -53,24 +53,6 @@ export default function MisArmas({ user }) {
           ...docSnap.data()
         };
         
-        // Verificar si existe documento en Storage
-        if (!armaData.documentoRegistro) {
-          try {
-            // USAR armaId (UUID) para la ruta - es único e inmutable
-            const storageRef = ref(
-              storage, 
-              `documentos/${user.email.toLowerCase()}/armas/${armaData.id}/registro.pdf`
-            );
-            const url = await getDownloadURL(storageRef);
-            armaData.documentoRegistro = url;
-          } catch (err) {
-            // Silenciar error 404 - es normal que algunas armas no tengan RFA
-            if (err.code !== 'storage/object-not-found') {
-              console.warn('Error cargando RFA:', err);
-            }
-          }
-        }
-        
         armasData.push(armaData);
       }
       

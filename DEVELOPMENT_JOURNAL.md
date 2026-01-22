@@ -123,6 +123,35 @@
 - ✅ RFA links funcionan correctamente en Mis Armas
 - ✅ Navegación limpia sin rutas huérfanas
 
+---
+
+#### 🔗 CORRECCIÓN: RFA Links en Mis Armas - Storage Path Fix
+
+**Problema Encontrado**: 
+- MisArmas.jsx mostraba botones "Ver registro" pero fallaban con 404
+- Firestore contenía referencias de URL rotas/desactualizadas
+- Código solo intentaba cargar desde Storage si Firestore estaba vacío (`if (!armaData.documentoRegistro)`)
+
+**Root Cause**:
+- Patrón: "Si Firestore tiene valor, usarlo" → pero esos valores eran viejos
+- ArmasRegistroUploader (Mi Expediente Digital) SIEMPRE reconstruye URLs desde Storage
+- MisArmas tenía lógica diferente → URLs desincronizadas
+
+**Solución Implementada**:
+- **Archivo**: `src/components/MisArmas.jsx` - función `cargarArmas()`
+- **Cambio**: SIEMPRE consultar Storage para obtener URL fresca, ignora Firestore
+- **Ahora**: Código idéntico a ArmasRegistroUploader - construye path `documentos/{email}/armas/{armaId}/registro.pdf` en tiempo real
+
+**Validación**:
+- ✅ Build exitoso
+- ✅ Deploy completado (hosting only, más rápido)
+- ✅ RFA PDFs ahora cargan correctamente en Mis Armas
+- ✅ URLs siempre frescas desde Storage, nunca caché de Firestore
+
+**Cambios Finales de Sesión**:
+1. `src/components/MisArmas.jsx` - Refactor cargarArmas() para Storage-first
+2. Commits: 3 total (upload fix + dashboard + journal + rfa fix)
+
 ### 20 de Enero - Decisión: Placeholders para Socios Sin Armas
 
 #### Estado Final del Arsenal
