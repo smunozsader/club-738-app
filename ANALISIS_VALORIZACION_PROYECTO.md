@@ -76,7 +76,8 @@ Documentation:             ~15,000 líneas
 
 ## 🔍 Funcionalidades Clave Implementadas
 
-### 1. Sistema Completo de PETA (Permiso de Exportación Temporal de Armas)
+### 1. Sistema Completo de PETA (Permiso Extraordinario de Transportación de Armas)
+**Modalidades**: Prácticas de Tiro, Competencia Nacional, Caza
 - **SolicitarPETA.jsx**: Interfaz de solicitud intuitiva
 - **GeneradorPETA.jsx**: Generación automática de oficios PDF para 32 Zona Militar
 - **VerificadorPETA.jsx**: Panel de validación de secretario

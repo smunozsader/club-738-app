@@ -23,7 +23,7 @@
 
 **Una plataforma especializada de gestión de membresía para club de caza con:**
 
-- ✅ Automatización completa de trámites PETA (Permiso de Exportación Temporal de Armas)
+- ✅ Automatización completa de trámites PETA (Permiso Extraordinario de Transportación de Armas: Prácticas de Tiro, Competencia Nacional, Caza)
 - ✅ Sistema de cobranza con validación de pagos SEDENA (e5cinco)
 - ✅ Gestión de 76 socios + 292 armas sincronizadas
 - ✅ Validación estricta de 16 documentos requeridos
