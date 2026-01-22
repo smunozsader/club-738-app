@@ -5,8 +5,6 @@ const OficioTipo1 = ({ socio }) => {
   const [asunto, setAsunto] = useState('');
   const editorRef = useRef(null);
 
-  if (!socio) return null;
-
   const aplicarFormato = (comando, valor = null) => {
     document.execCommand(comando, false, valor);
     editorRef.current?.focus();
@@ -71,9 +69,15 @@ const OficioTipo1 = ({ socio }) => {
       </div>
 
       <div className="info-socio">
-        <p><strong>Socio:</strong> {socio.nombre} {socio.apellidoPaterno} {socio.apellidoMaterno}</p>
-        <p><strong>Credencial:</strong> {socio.credencial}</p>
-        <p><strong>CURP:</strong> {socio.curp}</p>
+        {socio ? (
+          <>
+            <p><strong>Socio:</strong> {socio.nombre} {socio.apellidoPaterno} {socio.apellidoMaterno}</p>
+            <p><strong>Credencial:</strong> {socio.credencial}</p>
+            <p><strong>CURP:</strong> {socio.curp}</p>
+          </>
+        ) : (
+          <p style={{ color: '#999', fontStyle: 'italic' }}>Selecciona un socio arriba para ver sus datos</p>
+        )}
       </div>
     </div>
   );

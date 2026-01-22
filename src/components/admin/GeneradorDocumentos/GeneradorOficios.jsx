@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db } from '../../../firebaseConfig';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, query, onSnapshot } from 'firebase/firestore';
 import { useToastContext } from '../../../contexts/ToastContext';
 import OficioTipo1 from './oficios/OficioTipo1';
 import OficioTipo2 from './oficios/OficioTipo2';
@@ -26,16 +26,29 @@ const GeneradorOficios = ({ userEmail, onBack }) => {
 
   // Cargar socios de Firebase
   useEffect(() => {
-    const q = query(collection(db, 'socios'), where('estado', '==', 'activo'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const sociosList = snapshot.docs.map(doc => ({
-        email: doc.id,
-        ...doc.data()
-      }));
-      setSocios(sociosList);
-    });
-    return () => unsubscribe();
-  }, []);
+    try {
+      // Cargar TODOS los socios sin filtro por estado
+      const q = query(collection(db, 'socios'));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const sociosList = snapshot.docs
+          .map(doc => ({
+            email: doc.id,
+            ...doc.data()
+          }))
+          .filter(s => s.nombre && s.email) // Filtrar socios con datos básicos
+          .sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
+        
+        console.log('Socios cargados:', sociosList.length);
+        setSocios(sociosList);
+      }, (error) => {
+        console.error('Error cargando socios:', error);
+        showToast('Error al cargar socios', 'error', 3000);
+      });
+      return () => unsubscribe();
+    } catch (error) {
+      console.error('Error en useEffect socios:', error);
+    }
+  }, [showToast]);
 
   const handleGenerarPDF = async () => {
     if (!socioSeleccionado && tipoOficio !== 4 && tipoOficio !== 3) {
@@ -186,25 +199,30 @@ const GeneradorOficios = ({ userEmail, onBack }) => {
       <div className="form-panel" ref={formRef}>
         <h3>Datos del Oficio</h3>
 
-        {tipoOficio !== 4 && tipoOficio !== 3 && (
-          <div className="form-group">
-            <label>Socio</label>
-            <select 
-              value={socioSeleccionado?.email || ''}
-              onChange={(e) => {
-                const socio = socios.find(s => s.email === e.target.value);
-                setSocioSeleccionado(socio);
-              }}
-            >
-              <option value="">-- Selecciona un socio --</option>
-              {socios.map(s => (
-                <option key={s.email} value={s.email}>
-                  {s.credencial} - {s.nombre} {s.apellidoPaterno}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+        <div className="form-group">
+          <label>Socio {tipoOficio === 1 || tipoOficio === 2 ? '(Opcional)' : '(No aplica)'}</label>
+          <select 
+            value={socioSeleccionado?.email || ''}
+            onChange={(e) => {
+              const socio = socios.find(s => s.email === e.target.value);
+              setSocioSeleccionado(socio);
+            }}
+          >
+            <option value="">-- Selecciona un socio --</option>
+            {socios.length > 0 ? socios.map(s => (
+              <option key={s.email} value={s.email}>
+                {s.credencial ? `${s.credencial} - ` : ''}{s.nombre} {s.apellidoPaterno || ''}
+              </option>
+            )) : (
+              <option disabled>Cargando socios...</option>
+            )}
+          </select>
+          {socios.length === 0 && (
+            <small style={{ color: '#ff6b6b', marginTop: '5px', display: 'block' }}>
+              ⚠️ No se encontraron socios. Verifica la conexión con Firestore.
+            </small>
+          )}
+        </div>
 
         {renderFormulario()}
 

@@ -4,8 +4,6 @@ const OficioTipo2 = ({ socio }) => {
   const [asunto, setAsunto] = useState('');
   const editorRef = useRef(null);
 
-  if (!socio) return null;
-
   const aplicarFormato = (comando, valor = null) => {
     document.execCommand(comando, false, valor);
     editorRef.current?.focus();
@@ -61,10 +59,16 @@ const OficioTipo2 = ({ socio }) => {
 
       <div className="info-bloque">
         <h4>Relación Actualizada de Armas</h4>
-        <p><strong>Socio:</strong> {socio.nombre} {socio.apellidoPaterno}</p>
-        <p><strong>Credencial:</strong> {socio.credencial}</p>
-        <p><strong>Fecha:</strong> {new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-        <p className="note">Se incluye información actualizada de armas registradas</p>
+        {socio ? (
+          <>
+            <p><strong>Socio:</strong> {socio.nombre} {socio.apellidoPaterno}</p>
+            <p><strong>Credencial:</strong> {socio.credencial}</p>
+            <p><strong>Fecha:</strong> {new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <p className="note">Se incluye información actualizada de armas registradas</p>
+          </>
+        ) : (
+          <p style={{ color: '#999', fontStyle: 'italic' }}>Selecciona un socio arriba para mostrar sus datos</p>
+        )}
       </div>
     </div>
   );
