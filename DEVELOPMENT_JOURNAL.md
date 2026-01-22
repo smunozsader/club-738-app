@@ -10,6 +10,75 @@
 
 ## 📅 Enero 2026
 
+### 22 de Enero - v1.33.5 - House Cleaning & Project Organization ✅
+
+#### 🏗️ Reorganización Completa del Proyecto - Root Limpio
+
+**Objetivo**: Organizar proyecto disperso con 40+ scripts, 25+ docs de decisiones y 12+ carpetas de datos en raíz
+
+**Cambios Realizados**:
+
+📁 **Estructura de Carpetas Creada**:
+```
+scripts/
+  ├── admin-data/        # Gestión de socios y pagos (4 scripts)
+  ├── audit/             # Auditoría y verificación (20+ scripts)
+  ├── armas/             # Gestión de armas PETA (17 scripts)
+  └── reports/           # Reportes y análisis (11 scripts)
+
+docs/
+  └── decisions/         # Decisiones de arquitectura (25+ docs)
+
+data/
+  ├── referencias/       # Datos, ejemplos, referencias
+  └── backups/           # Backups y credenciales sensibles
+
+config/
+  └── cors.json          # Configuración CORS
+```
+
+✅ **Archivos Movidos**:
+- ✅ 40+ scripts Python/Node.js (`.py`, `.mjs`, `.js`) organizados por funcionalidad
+- ✅ 25+ documentos markdown de decisiones a `docs/decisions/`
+- ✅ 12+ carpetas de datos y referencias a `data/referencias/`
+- ✅ Backups y credenciales a `data/backups/`
+- ✅ Configuración a `config/`
+
+📝 **Archivos del Root (Limpios)**:
+```
+ESENCIALES:
+- package.json, vite.config.js
+- firebase.json, .firebaserc
+- firestore.rules, storage.rules
+- DEVELOPMENT_JOURNAL.md, CHANGELOG.md
+- index.html
+
+SOLO 15 archivos en root (down from 80+)
+```
+
+📄 **Nuevo Archivo**:
+- ➕ `PROJECT_STRUCTURE.md` - Documentación completa de estructura y organización
+
+**Git Commit**:
+- ✅ Commit: `8af9587` - chore: house cleaning - organize root, move scripts and docs
+- ✅ 240 files changed, 286 insertions(+), 538 deletions(-)
+- ✅ Pushed to main branch
+
+**Resultado**:
+- ✅ Root 100% más limpio (80+ archivos → 15)
+- ✅ Scripts organizados por funcionalidad (4 categorías)
+- ✅ Decisiones de arquitectura centralizadas
+- ✅ Referencias y datos separados de código
+- ✅ Mejor mantenibilidad y claridad del proyecto
+- ✅ Documentación clara en `PROJECT_STRUCTURE.md`
+
+**Próximos Pasos**:
+- Implementar PDF generation en GeneradorOficios
+- Almacenar oficios en Firestore colección `reportes_bimestrales`
+- Crear índices Firestore para reportes
+
+---
+
 ### 22 de Enero - v1.33.4 - Oficios Text Editor & Logo Fix ✅
 
 #### 📝 Editor de Texto Funcional en TODOS los Oficios + Preview + Fix de Logo
