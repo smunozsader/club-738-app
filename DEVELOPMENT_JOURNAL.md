@@ -10,6 +10,74 @@
 
 ## 📅 Enero 2026
 
+### 22 de Enero - v1.33.4 - Oficios Text Editor & Logo Fix ✅
+
+#### 📝 Editor de Texto Funcional en TODOS los Oficios + Preview + Fix de Logo
+
+**Objetivos**: 
+1. Agregar editor de texto con formateo a TODOS los oficios
+2. Implementar preview funcional del contenido
+3. Reducir tamaño del logo en header
+
+**Cambios Realizados**:
+
+✏️ **OficioTipo1.jsx, OficioTipo2.jsx, OficioTipo3.jsx**:
+- ➕ Agregado editor de texto con toolbar (Negrita, Itálica, Subrayado, Tamaño, Alineación)
+- ➕ Field ASUNTO (opcional) para cada tipo
+- ➕ Campos adicionales: "Notas Adicionales" (Tipo 1), "Observaciones" (Tipo 2, 3)
+- ✅ Uso de `contentEditable` con `document.execCommand()` para formateo en vivo
+
+✏️ **OficioTipo4.jsx** (Formato Libre):
+- ✅ Ya tenía editor - mantenido intacto
+- ✅ Checkboxes para adjuntos (RELACIÓN, ANEXO A, B, C)
+
+✏️ **GeneradorOficios.jsx**:
+- ➕ Función `generarPreview()` que renderiza contenido HTML del oficio
+- ➕ Preview actualiza automáticamente al cambiar campos
+- ➕ Incluye: Logo Club, fecha/hora, datos socio, contenido según tipo
+- ✅ `dangerouslySetInnerHTML` para renderizar preview
+
+🎨 **GeneradorOficios.css**:
+- ➕ Estilos para toolbar (`.editor-toolbar`, `.toolbar-btn`, `.toolbar-select`)
+- ➕ Estilos para editor (`.text-editor` con `contentEditable`)
+- ➕ Estilos responsive para mobile (flex-direction: column en toolbar)
+- ✅ Dark mode compatible con `var(--bg-primary)`, `var(--text-primary)`
+
+🎯 **App.jsx** (Logo Fix):
+- 🔄 Cambio: Logo ahora usa `/assets/icon-192.png` (45KB) en lugar de `logo-club-738.jpg` (125KB)
+
+🎨 **App.css** (Logo Fix):
+- 🔄 Consolidado `.logo-small` e `img` en selector único con `!important`
+- ➕ Dimensiones: 36x36px con `width`, `min-width`, `max-width`, `height`, `min-height`, `max-height`
+- ➕ Restricciones: `display: block !important`, `padding: 0 !important`, `margin: 0 !important`
+- ➕ Flex control: `flex-shrink: 0 !important`
+- ✅ `object-fit: contain` para mantener proporción
+
+**Build & Deploy**:
+- ✅ Build: `✓ built in 8.82s` (post-logo-fix)
+- ✅ Deploy: Hosting upload complete
+- ✅ URL: https://club-738-app.web.app (en vivo)
+- ✅ Commits: 
+  - `f011e85`: "feat(OficioTipo4): agregar editor de texto con formateo..."
+  - `b44fe54`: "feat(oficios): agregar editor de texto a TODOS los oficios y funcionar preview"
+  - `cb8bf4c`: "fix(logo): constreñir tamaño del logo en header admin..."
+  - `bcc35b4`: "fix(logo): reducir a 32x32px con constrains más agresivos..."
+  - `1065d5b`: "fix(logo): cambiar a icon-192.png y CSS consolidado..."
+
+**Resultado**:
+- ✅ Todos los 4 oficios tienen editor de texto con formateo completo
+- ✅ Preview funcional mostrando contenido formateado en vivo
+- ✅ Logo reducido a tamaño proporcional (36x36px)
+- ✅ Usuarios pueden crear oficios con estilos personalizados
+- ✅ Interface limpia sin logo gigante ocupando espacio
+
+**Próximos Pasos**:
+- Implementar generación real de PDFs con contenido formateado
+- Agregar watermark "CONFIDENCIAL" a PDFs generados
+- Implementar almacenamiento de oficios en Firestore
+
+---
+
 ### 22 de Enero - v1.33.2 - GeneradorDocumentos Integration in AdminDashboard ✅
 
 #### ✨ Módulo GeneradorDocumentos Ahora Accesible desde Panel Admin
