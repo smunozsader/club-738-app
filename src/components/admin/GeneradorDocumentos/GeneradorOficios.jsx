@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { db } from '../../../firebaseConfig';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { useToastContext } from '../../../contexts/ToastContext';
@@ -15,6 +15,7 @@ const GeneradorOficios = ({ userEmail, onBack }) => {
   const [socioSeleccionado, setSocioSeleccionado] = useState(null);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(false);
+  const formRef = useRef(null);
 
   const tipos = [
     { id: 1, nombre: 'Solicitud PETA', desc: 'Se remite solicitud de PETA de un socio' },
@@ -37,7 +38,7 @@ const GeneradorOficios = ({ userEmail, onBack }) => {
   }, []);
 
   const handleGenerarPDF = async () => {
-    if (!socioSeleccionado && tipoOficio !== 4) {
+    if (!socioSeleccionado && tipoOficio !== 4 && tipoOficio !== 3) {
       showToast('Selecciona un socio', 'warning', 3000);
       return;
     }
@@ -53,6 +54,94 @@ const GeneradorOficios = ({ userEmail, onBack }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Generar contenido del preview
+  const generarPreview = () => {
+    const fecha = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+    const hora = new Date().toLocaleTimeString('es-MX');
+
+    let contenido = `
+      <div style="font-family: Arial, sans-serif; line-height: 1.5; padding: 20px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+          <img src="/logo.jpg" alt="Club 738" style="width: 80px; height: 80px; margin-bottom: 10px;" />
+          <h2 style="margin: 5px 0;">CLUB DE CAZA, TIRO Y PESCA DE YUCATÁN A.C.</h2>
+          <p style="margin: 0; color: #666;">Afiliación SEDENA #738</p>
+        </div>
+        
+        <div style="border-top: 2px solid #ccc; border-bottom: 2px solid #ccc; padding: 15px 0; margin: 20px 0; text-align: center;">
+          <p style="margin: 0; font-weight: bold;">OFICIO TIPO ${tipoOficio}</p>
+          <p style="margin: 5px 0; color: #666;">Generado: ${fecha} a las ${hora}</p>
+        </div>
+    `;
+
+    if (socioSeleccionado) {
+      contenido += `
+        <div style="margin: 20px 0; padding: 15px; background: #f5f5f5; border-left: 4px solid #007bff;">
+          <p><strong>Socio:</strong> ${socioSeleccionado.nombre} ${socioSeleccionado.apellidoPaterno || ''}</p>
+          <p><strong>Credencial:</strong> ${socioSeleccionado.credencial || 'N/A'}</p>
+          <p><strong>Email:</strong> ${socioSeleccionado.email}</p>
+        </div>
+      `;
+    }
+
+    switch(tipoOficio) {
+      case 1:
+        contenido += `
+          <div style="margin: 20px 0;">
+            <h3>SOLICITUD DE PETA</h3>
+            <p>Se solicita la emisión de una PETA (Permiso Especial para Tenencia de Arma) conforme a lo dispuesto en la Ley Federal de Armas de Fuego y Explosivos.</p>
+            <p><strong>Contexto:</strong> Se realizarán actividades de tiro deportivo.</p>
+          </div>
+        `;
+        break;
+      case 2:
+        contenido += `
+          <div style="margin: 20px 0;">
+            <h3>RELACIÓN ACTUALIZADA DE ARMAS</h3>
+            <p>Se remite relación actualizada de armas registradas a nombre del socio conforme a los registros del Sistema Nacional de Armas.</p>
+            <p style="color: #666; font-size: 13px;"><em>Documento adjunto: RELACIÓN COMPLETA CON DETALLES DE ARMAS</em></p>
+          </div>
+        `;
+        break;
+      case 3:
+        contenido += `
+          <div style="margin: 20px 0;">
+            <h3>REMITE ANEXOS A, B, C - DN27</h3>
+            <p>Se remiten los documentos requeridos por la Dirección Nacional (DN27) de la SEDENA conforme al formato oficial.</p>
+            <ul>
+              <li>Anexo A: Relación de Socios Activos</li>
+              <li>Anexo B: Cédula de Totales y Estadísticas</li>
+              <li>Anexo C: Información del Club con Consolidados</li>
+            </ul>
+          </div>
+        `;
+        break;
+      case 4:
+        const inputAsunto = formRef.current?.querySelector('input[placeholder*="Ej: Solicitud"]')?.value || 'Sin asunto';
+        const editorCuerpo = formRef.current?.querySelector('[contentEditable]')?.innerHTML || 'Sin contenido';
+        contenido += `
+          <div style="margin: 20px 0;">
+            <p><strong>ASUNTO:</strong> ${inputAsunto}</p>
+            <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;" />
+            <div style="margin: 20px 0;">
+              ${editorCuerpo || '<p style="color: #999;"><em>El contenido aparecerá aquí...</em></p>'}
+            </div>
+          </div>
+        `;
+        break;
+    }
+
+    contenido += `
+      <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid #ccc;">
+        <p style="text-align: center; color: #999; font-size: 12px;">
+          Este es un PREVIEW del documento. La versión final incluirá firmas digitales y sellos oficiales.
+        </p>
+      </div>
+    </div>
+    `;
+
+    return contenido;
   };
 
   const renderFormulario = () => {
@@ -94,7 +183,7 @@ const GeneradorOficios = ({ userEmail, onBack }) => {
         </div>
       </div>
 
-      <div className="form-panel">
+      <div className="form-panel" ref={formRef}>
         <h3>Datos del Oficio</h3>
 
         {tipoOficio !== 4 && tipoOficio !== 3 && (
@@ -138,11 +227,8 @@ const GeneradorOficios = ({ userEmail, onBack }) => {
 
       {preview && (
         <div className="preview-panel">
-          <h3>Preview</h3>
-          <div className="preview-content">
-            {/* TODO: mostrar preview del oficio */}
-            <p>Preview se mostrará aquí</p>
-          </div>
+          <h3>Preview del Oficio</h3>
+          <div className="preview-content" dangerouslySetInnerHTML={{ __html: generarPreview() }} />
         </div>
       )}
     </div>
