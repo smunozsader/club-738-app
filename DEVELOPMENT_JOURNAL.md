@@ -149,8 +149,69 @@
 - ✅ URLs siempre frescas desde Storage, nunca caché de Firestore
 
 **Cambios Finales de Sesión**:
-1. `src/components/MisArmas.jsx` - Refactor cargarArmas() para Storage-first
-2. Commits: 3 total (upload fix + dashboard + journal + rfa fix)
+1. `src/components/MisArmas.jsx` - Eliminado (componente redundante)
+2. `src/App.jsx` - Removido dashboard card "Mis Armas" e import
+3. Commits: 5 total
+
+---
+
+#### 🎯 DECISIÓN FINAL: Consolidación Total de Armas
+
+**Problema Fundamental**:
+- **Dos secciones mostraban lo mismo**: MisArmas y ArmasRegistroUploader
+- MisArmas.jsx tenía bugs con URLs y era difícil de mantener
+- ArmasRegistroUploader en Mi Expediente Digital funcionaba perfectamente con RFA links
+- Duplicación = confusión para usuario + mantenimiento doble
+
+**Solución Implementada**:
+- ✅ **Eliminado completamente**: 
+  - Sección "Mis Armas Registradas" del dashboard
+  - MisArmas.jsx component (archivo aún existe pero no usado)
+  - activeSection === 'armas' routing
+  - Import de MisArmas en App.jsx
+
+- ✅ **Mantener**:
+  - ArmasRegistroUploader en "Mi Expediente Digital > Armas y Permisos"
+  - Este componente tiene:
+    - OCR validation para RFAs
+    - Working download links
+    - Upload functionality
+    - Modalidad selector para admin
+
+**Beneficios**:
+- ✅ Single source of truth: 1 lugar para ver/subir armas
+- ✅ No más 404 errors en RFA links
+- ✅ Menos código duplicado
+- ✅ Navegación más intuitiva
+- ✅ Mantenimiento más sencillo
+
+**Archivos Modificados**:
+1. `src/App.jsx` - 20 líneas removidas (import + card + routing)
+2. `src/components/MisArmas.jsx` - Deprecado (no removido del filesystem)
+
+---
+
+## 📊 Resumen Completo de Sesión v1.32.0
+
+**Objetivos Logrados**:
+1. ✅ Fixed missing upload controls for 8 documents 
+2. ✅ Consolidated redundant dashboard pages (Mis Documentos Oficiales)
+3. ✅ Eliminated duplicate Mis Armas section
+4. ✅ Streamlined navigation (fewer cards, clearer paths)
+
+**Problemas Resueltos**:
+- 📋 Upload UI missing for PDFs (certificates, declarations, receipts)
+- 🗂️ Redundant pages confusing users
+- 🔫 Duplicate weapon displays with broken links
+- 🎨 Cluttered dashboard with overlapping functionality
+
+**Final Dashboard Structure**:
+- Dashboard: 14 sections (was 15+)
+- Mi Expediente Digital: 16 documents + weapon upload/view
+- Admin tools: 15 focused functions
+- Single canonical location for each feature
+
+**Deploy Status**: ✅ Live at https://yucatanctp.org
 
 ### 20 de Enero - Decisión: Placeholders para Socios Sin Armas
 
