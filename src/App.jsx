@@ -203,7 +203,7 @@ function App() {
         <header className="app-header admin-header">
           <div className="header-content">
             <a href="/" onClick={(e) => { e.preventDefault(); setActiveSection('admin-dashboard'); }} className="logo-home-link">
-              <img src="/assets/logo-club-738.jpg" alt="Club 738" className="logo-small" />
+              <img src="/assets/icon-192.png" alt="Club 738" className="logo-small" />
               <span className="site-title">Panel de Administración</span>
             </a>
             <div className="header-actions">
