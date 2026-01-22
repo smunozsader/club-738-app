@@ -488,17 +488,10 @@ function App() {
             
             <div className="dashboard-grid">
               {/* Mi Expediente */}
-              <div className="dash-card expediente" onClick={() => setActiveSection('docs-oficiales')}>
-                <div className="dash-card-icon">🆔</div>
-                <h3>Documentos Oficiales</h3>
-                <p>Descarga tu CURP y Constancia de antecedentes penales</p>
-                <span className="dash-card-cta">Ver documentos →</span>
-              </div>
-              
               <div className="dash-card documentos" onClick={() => setActiveSection('documentos')}>
-                <div className="dash-card-icon">�</div>
+                <div className="dash-card-icon">📋</div>
                 <h3>Mi Expediente Digital</h3>
-                <p>Documentos para facilitar tu trámite PETA</p>
+                <p>16 documentos para tu renovación de membresía y trámite PETA</p>
                 <span className="dash-card-cta">Ver expediente →</span>
               </div>
               
@@ -667,15 +660,6 @@ function App() {
               documentosData={documentosData}
               onUploadComplete={handleUploadComplete}
             />
-          </div>
-        )}
-
-        {activeSection === 'docs-oficiales' && (
-          <div className="section-docs-oficiales">
-            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
-              ← Volver al Dashboard
-            </button>
-            <MisDocumentosOficiales user={user} socioData={socioData} />
           </div>
         )}
 
