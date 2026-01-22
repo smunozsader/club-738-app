@@ -10,6 +10,48 @@
 
 ## 📅 Enero 2026
 
+### 22 de Enero - v1.33.2 - GeneradorDocumentos Integration in AdminDashboard ✅
+
+#### ✨ Módulo GeneradorDocumentos Ahora Accesible desde Panel Admin
+
+**Objetivo**: Integrar el módulo GeneradorDocumentos en AdminDashboard para que sea visible y accesible
+
+**Cambios Realizados**:
+
+✏️ **App.jsx**:
+- ➕ Callback agregado a AdminDashboard: `onGeneradorDocumentos={() => setActiveSection('generador-documentos')}`
+- ➕ Sección renderizada: Condicional para `activeSection === 'generador-documentos'`
+- ✅ Componente `<GeneradorDocumentos userEmail={user.email} />` renderizado
+
+📋 **AdminDashboard.jsx**:
+- ➕ Prop agregado: `onGeneradorDocumentos`
+- ➕ Case en switch: `case 'generador-documentos'` que llama callback
+- ✅ Ahora accesible desde herramientas admin
+
+🎯 **AdminToolsNavigation.jsx**:
+- ➕ Nuevo grupo de herramientas: "📑 Generador de Documentos" (color teal)
+- ➕ Botón: "Oficios SEDENA" con descripción
+- ✅ Callback wireado correctamente a `handleSelectTool('generador-documentos')`
+
+🎨 **AdminToolsNavigation.css**:
+- ➕ Nuevas reglas CSS para color `.teal`:
+  - `border-color: #14b8a6`
+  - `hover: #0d9488` con background teal al 5%
+- ➕ Dark mode: `.tool-card.teal:hover` con rgba(20, 184, 166, 0.1)
+
+**Build & Deploy**:
+- ✅ Build: `✓ built in 7.68s`
+- ✅ Deploy: Hosting upload complete, versión finalizada, released
+- ✅ URL: https://club-738-app.web.app (en vivo)
+- ✅ Commit: `9dee0e9` - "feat(GeneradorDocumentos): integrar módulo en AdminDashboard..."
+
+**Resultado**:
+- ✅ GeneradorDocumentos ahora visible en panel admin bajo sección "Generador de Documentos"
+- ✅ Usuarios admin pueden generar reportes bimestrales y oficios SEDENA directamente
+- ✅ Módulo completamente integrado en flujo de navegación del admin
+
+---
+
 ### 22 de Enero - v1.33.1 - Admin Navigation State Logic Fix ✅
 
 #### 🔧 Corregida Lógica de Navegación del Panel Admin
