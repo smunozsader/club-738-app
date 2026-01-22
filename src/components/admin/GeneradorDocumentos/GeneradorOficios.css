@@ -211,6 +211,116 @@
   line-height: 1.6;
 }
 
+/* Editor de Texto con Formateo */
+.editor-toolbar {
+  display: flex;
+  gap: 2px;
+  padding: 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.toolbar-group {
+  display: flex;
+  gap: 2px;
+  padding-right: 10px;
+  border-right: 1px solid var(--border-color);
+}
+
+.toolbar-group:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.toolbar-btn {
+  padding: 6px 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: all 0.2s;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolbar-btn:hover {
+  background: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+.toolbar-btn.btn-danger {
+  color: #d32f2f;
+}
+
+.toolbar-btn.btn-danger:hover {
+  background: #d32f2f;
+  color: white;
+  border-color: #d32f2f;
+}
+
+.toolbar-select {
+  padding: 6px 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-primary);
+  transition: all 0.2s;
+}
+
+.toolbar-select:hover {
+  border-color: var(--accent-color);
+}
+
+.toolbar-select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
+}
+
+.text-editor {
+  width: 100%;
+  min-height: 200px;
+  padding: 12px;
+  background: white;
+  color: black;
+  border: 1px solid var(--border-color);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  font-size: 14px;
+  line-height: 1.6;
+  font-family: Arial, sans-serif;
+  outline: none;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.text-editor:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
+}
+
+/* Para el placeholder si no tiene contenido */
+.text-editor:empty:before {
+  content: attr(placeholder);
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
 @media (max-width: 768px) {
   .tipos-grid {
     grid-template-columns: 1fr;
@@ -224,4 +334,22 @@
     flex-direction: column;
     align-items: flex-start;
   }
-}
+
+  .editor-toolbar {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .toolbar-group {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 0 8px 0;
+  }
+
+  .toolbar-group:last-child {
+    border-bottom: none;
+  }
+
+  .toolbar-btn {
+    flex: 1;
