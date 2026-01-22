@@ -29,6 +29,7 @@ import ReporteCaja from './components/ReporteCaja';
 import CobranzaUnificada from './components/CobranzaUnificada';
 import ReportadorExpedientes from './components/admin/ReportadorExpedientes';
 import VerificadorAntecedentes from './components/admin/VerificadorAntecedentes';
+import GeneradorDocumentos from './components/admin/GeneradorDocumentos/GeneradorDocumentos';
 import MiPerfil from './components/MiPerfil';
 import GestionArsenal from './components/GestionArsenal';
 import AdminBajasArsenal from './components/AdminBajasArsenal';
@@ -237,6 +238,7 @@ function App() {
               onAdminAltas={() => setActiveSection('admin-altas-arsenal')}
               onMiAgenda={() => setActiveSection('mi-agenda')}
               onReportadorExpedientes={() => setActiveSection('reportador-expedientes')}
+              onGeneradorDocumentos={() => setActiveSection('generador-documentos')}
               onBackToTools={() => setActiveSection('admin-dashboard')}
               activeSection={activeSection}
             />
@@ -364,6 +366,15 @@ function App() {
           {activeSection === 'mi-agenda' && user.email === ADMIN_EMAIL && (
             <div className="section-mi-agenda">
               <MiAgenda onBack={() => setActiveSection('admin-dashboard')} />
+            </div>
+          )}
+
+          {activeSection === 'generador-documentos' && user.email === ADMIN_EMAIL && (
+            <div className="section-generador-documentos">
+              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
+                ← Volver al Panel Admin
+              </button>
+              <GeneradorDocumentos userEmail={user.email} />
             </div>
           )}
 

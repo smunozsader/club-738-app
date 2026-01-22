@@ -36,6 +36,7 @@ export default function AdminDashboard({
   onAdminAltas,
   onMiAgenda,
   onReportadorExpedientes,
+  onGeneradorDocumentos,
   activeSection = 'admin-dashboard',
   onBackToTools
 }) {
@@ -91,6 +92,9 @@ export default function AdminDashboard({
         break;
       case 'mi-agenda':
         if (onMiAgenda) onMiAgenda();
+        break;
+      case 'generador-documentos':
+        if (onGeneradorDocumentos) onGeneradorDocumentos();
         break;
       case 'admin-socios':
         if (onAdminSocios) onAdminSocios();

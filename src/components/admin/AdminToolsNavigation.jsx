@@ -145,6 +145,20 @@ export default function AdminToolsNavigation({
           onClick: () => onSelectTool('mi-agenda')
         }
       ]
+    },
+    {
+      id: 'documentos',
+      title: '📑 Generador de Documentos',
+      color: 'teal',
+      tools: [
+        { 
+          id: 'generador-documentos', 
+          label: 'Oficios SEDENA', 
+          icon: '📄',
+          description: 'Genera reportes bimestrales y oficios SEDENA',
+          onClick: () => onSelectTool('generador-documentos')
+        }
+      ]
     }
   ];
 

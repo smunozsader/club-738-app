@@ -130,6 +130,15 @@
   background: rgba(236, 72, 153, 0.05);
 }
 
+.tool-card.teal {
+  border-color: #14b8a6;
+}
+
+.tool-card.teal:hover {
+  border-color: #0d9488;
+  background: rgba(13, 148, 136, 0.05);
+}
+
 /* Icono */
 .tool-icon {
   font-size: 3rem;
@@ -201,6 +210,10 @@
 
   .tool-card.pink:hover {
     background: rgba(236, 72, 153, 0.1);
+  }
+
+  .tool-card.teal:hover {
+    background: rgba(20, 184, 166, 0.1);
   }
 }
 
