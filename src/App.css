@@ -1494,8 +1494,8 @@ main {
   grid-area: main;
   flex: 1;
   padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
   width: 100%;
   overflow-y: auto;
 }
