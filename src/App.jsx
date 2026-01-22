@@ -28,6 +28,7 @@ import RegistroPagos from './components/RegistroPagos';
 import ReporteCaja from './components/ReporteCaja';
 import CobranzaUnificada from './components/CobranzaUnificada';
 import ReportadorExpedientes from './components/admin/ReportadorExpedientes';
+import VerificadorAntecedentes from './components/admin/VerificadorAntecedentes';
 import MiPerfil from './components/MiPerfil';
 import GestionArsenal from './components/GestionArsenal';
 import AdminBajasArsenal from './components/AdminBajasArsenal';
@@ -243,6 +244,13 @@ function App() {
           
           {activeSection === 'reportador-expedientes' && (
             <ReportadorExpedientes />
+          )}
+          
+          {activeSection === 'verificador-antecedentes' && user.email === ADMIN_EMAIL && (
+            <VerificadorAntecedentes 
+              userEmail={user.email} 
+              onBack={() => setActiveSection('admin-dashboard')} 
+            />
           )}
           
           {activeSection === 'expediente' && socioSeleccionado && (

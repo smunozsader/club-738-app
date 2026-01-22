@@ -31,6 +31,13 @@ export default function AdminToolsNavigation({
           icon: '📊',
           description: 'Genera reportes SEDENA por período',
           onClick: () => onSelectTool('reportador-expedientes')
+        },
+        { 
+          id: 'verificador-antecedentes', 
+          label: 'Vigencia Antecedentes', 
+          icon: '📜',
+          description: 'Verifica vigencia de Constancias de Antecedentes Penales',
+          onClick: () => onSelectTool('verificador-antecedentes')
         }
       ]
     },
