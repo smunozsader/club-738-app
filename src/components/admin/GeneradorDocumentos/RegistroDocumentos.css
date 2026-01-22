@@ -1,0 +1,175 @@
+.registro-documentos {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.header-panel {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.header-panel h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.btn-back {
+  padding: 8px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-primary);
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background: var(--accent-color);
+  color: white;
+}
+
+.filtros-panel {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  padding: 15px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.filtro-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 150px;
+}
+
+.filtro-group label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.filtro-group select {
+  padding: 8px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.empty-state p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+.documentos-tabla {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead {
+  background: var(--bg-primary);
+  border-bottom: 2px solid var(--border-color);
+}
+
+th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+td {
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+tbody tr:hover {
+  background: rgba(var(--accent-rgb), 0.05);
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-draft {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.badge-generado {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-enviado {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.descargas-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-download {
+  padding: 6px 10px;
+  background: var(--accent-color);
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-download:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .documentos-tabla {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 600px;
+  }
+
+  th, td {
+    padding: 10px;
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,61 @@
+.generador-documentos-wrapper {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.tabs-navigation {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border-color);
+  background: var(--bg-secondary);
+  overflow-x: auto;
+  padding: 0 20px;
+}
+
+.tab-btn {
+  padding: 15px 25px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  color: var(--accent-color);
+  border-bottom-color: var(--accent-color);
+}
+
+.tabs-content {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .tabs-navigation {
+    padding: 0 10px;
+  }
+
+  .tab-btn {
+    padding: 12px 15px;
+    font-size: 13px;
+  }
+}
