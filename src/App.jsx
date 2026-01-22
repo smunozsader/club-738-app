@@ -11,7 +11,6 @@ import AdminDashboard from './components/admin/AdminDashboard';
 import ExpedienteAdminView from './components/admin/ExpedienteAdminView';
 import Notificaciones from './components/Notificaciones';
 import DocumentList from './components/documents/DocumentList';
-import MisArmas from './components/MisArmas';
 import MisDocumentosOficiales from './components/MisDocumentosOficiales';
 import WelcomeDialog from './components/WelcomeDialog';
 import AvisoPrivacidad from './components/privacidad/AvisoPrivacidad';
@@ -495,16 +494,6 @@ function App() {
                 <span className="dash-card-cta">Ver expediente →</span>
               </div>
               
-              <div className="dash-card armas" onClick={() => setActiveSection('armas')}>
-                <div className="dash-card-icon">📄</div>
-                <h3>Mis Armas</h3>
-                <p>Consulta tus armas registradas en SEDENA</p>
-                {socioData?.totalArmas > 0 && (
-                  <span className="dash-card-badge">{socioData.totalArmas} armas</span>
-                )}
-                <span className="dash-card-cta">Ver armas →</span>
-              </div>
-              
               <div className="dash-card arsenal" onClick={() => setActiveSection('gestion-arsenal')}>
                 <div className="dash-card-icon">📦</div>
                 <h3>Gestión de Arsenal</h3>
@@ -660,15 +649,6 @@ function App() {
               documentosData={documentosData}
               onUploadComplete={handleUploadComplete}
             />
-          </div>
-        )}
-
-        {activeSection === 'armas' && (
-          <div className="section-armas">
-            <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
-              ← Volver al Dashboard
-            </button>
-            <MisArmas user={user} />
           </div>
         )}
 
