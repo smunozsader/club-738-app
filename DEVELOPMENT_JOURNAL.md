@@ -10,6 +10,61 @@
 
 ## 📅 Enero 2026
 
+### 22 de Enero - v1.33.6 - GeneradorOficios Fixes ✅
+
+#### 🔧 Fixes: Dropdown de Socios y Editor de Textos
+
+**Problemas Reportados**:
+1. ❌ Dropdown de socios no cargaba datos (vacío)
+2. ❌ Editor de textos no se mostraba en formulario
+
+**Causas Identificadas**:
+- **Dropdown vacío**: Query usaba `where('estado', '==', 'activo')` pero ese campo no existía en documentos
+- **Editor no visible**: Componentes OficioTipo1-2 retornaban `null` si no había socio seleccionado
+
+**Cambios Realizados**:
+
+✏️ **GeneradorOficios.jsx**:
+- ✅ Remover filtro `estado` que causaba query vacío
+- ✅ Cargar TODOS los socios sin filtro
+- ✅ Agregar ordenamiento alfabético por nombre
+- ✅ Agregar error handling con console.log para debugging
+- ✅ Mostrar mensaje "Cargando socios..." si lista está vacía
+- ✅ Mejorar selector con validación de campos requeridos
+
+✏️ **OficioTipo1.jsx**:
+- ✅ Remover `if (!socio) return null` que ocultaba editor
+- ✅ Permitir que editor se muestre sin socio seleccionado
+- ✅ Mostrar placeholder cuando no hay socio
+
+✏️ **OficioTipo2.jsx**:
+- ✅ Mismo cambio que OficioTipo1
+- ✅ Renderizado condicional de datos del socio
+
+**UX Improvements**:
+- ✅ Dropdown siempre visible (no condicional)
+- ✅ Label indica si socio es opcional/requerido
+- ✅ Mensaje de error si no hay socios disponibles
+- ✅ Editor listo para escribir inmediatamente
+
+**Build & Deploy**:
+- ✅ Build: `✓ built in 9.49s`
+- ✅ Deploy: ✔ Deploy complete! → https://club-738-app.web.app
+- ✅ Commit: `f10a030` - fix(GeneradorOficios): arreglar dropdown y editor
+
+**Resultado**:
+- ✅ Dropdown de socios ahora funciona correctamente
+- ✅ Lista se carga desde Firestore sin filtros restrictivos
+- ✅ Editor de textos visible en todos los tipos de oficios
+- ✅ Mejor feedback visual si hay problemas de carga
+
+**Próximos Pasos**:
+- Implementar captura de contenido del editor para PDF
+- Generar PDF con contenido formateado
+- Almacenar oficios en Firestore
+
+---
+
 ### 22 de Enero - v1.33.5 - House Cleaning & Project Organization ✅
 
 #### 🏗️ Reorganización Completa del Proyecto - Root Limpio
