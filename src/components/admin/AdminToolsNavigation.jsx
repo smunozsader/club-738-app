@@ -23,7 +23,7 @@ export default function AdminToolsNavigation({
           label: 'Ver Expedientes', 
           icon: '📋',
           description: 'Consulta tabla de socios y expedientes',
-          onClick: () => onSelectTool('admin-dashboard')
+          onClick: () => onSelectTool('admin-socios')
         },
         { 
           id: 'reportador-expedientes', 
@@ -141,7 +141,8 @@ export default function AdminToolsNavigation({
     }
   ];
 
-  // Solo mostrar si activeSection es 'admin-dashboard'
+  // Solo mostrar GRID si activeSection es 'admin-dashboard'
+  // Cuando es 'admin-socios' (tabla), la grid se oculta
   if (activeSection !== 'admin-dashboard') {
     return null;
   }

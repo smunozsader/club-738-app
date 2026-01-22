@@ -10,6 +10,51 @@
 
 ## 📅 Enero 2026
 
+### 22 de Enero - v1.33.1 - Admin Navigation State Logic Fix ✅
+
+#### 🔧 Corregida Lógica de Navegación del Panel Admin
+
+**Objetivo**: Resolver problemas de navegación críticos en el panel de administración
+
+**Problemas Identificados**:
+- ❌ Ambas vistas (grid de herramientas + tabla de socios) se mostraban simultáneamente
+- ❌ Clic en "VER EXPEDIENTES" no hacía nada
+- ❌ Botón "Atrás" no conectado a callback
+- ❌ Toggle de dark mode no visible
+
+**Causa Raíz**:
+- `activeSection === 'admin-dashboard'` servía DUAL propósito:
+  - AdminToolsNavigation retornaba grid si activeSection ≠ 'admin-dashboard'
+  - AdminDashboard mostraba tabla si activeSection === 'admin-dashboard'
+  - **Resultado**: Ambas condiciones TRUE → ambas componentes se renderizan
+
+**Solución Implementada**:
+
+✏️ **AdminToolsNavigation.jsx**:
+- Cambio: "Ver Expedientes" ahora llama `onSelectTool('admin-socios')` (era `'admin-dashboard'`)
+- Updated: Comentario aclarando que grid solo se muestra cuando activeSection === 'admin-dashboard'
+
+📋 **AdminDashboard.jsx**:
+- ✨ Nueva prop: `onAdminSocios`
+- 🔄 Cambio: Tabla ahora solo se muestra si `activeSection === 'admin-socios'` (era `'admin-dashboard'`)
+- ➕ Handler: Agregado case 'admin-socios' en switch de `handleSelectTool`
+
+🌐 **App.jsx**:
+- 🔄 Cambio: AdminDashboard ahora renderiza si `activeSection === 'admin-dashboard' OR 'admin-socios'`
+- ➕ Callback: `onAdminSocios={() => setActiveSection('admin-socios')}`
+- ✅ Back button: Correctamente wireado a `onBackToTools={() => setActiveSection('admin-dashboard')}`
+
+**Flujo Esperado (Verificado)**:
+1. Carga inicial → Grid de herramientas visible ✅
+2. Clic "VER EXPEDIENTES" → Grid oculto, tabla visible ✅
+3. Clic "Atrás" → Tabla oculto, grid visible ✅
+4. Toggle dark mode visible en header ✅
+
+**Build**: ✅ Success (8.20s)
+**Deploy**: ✅ Complete - Hosting updated
+
+---
+
 ### 22 de Enero - v1.33.0 - Admin Dashboard Mobile-First Overhaul ✨
 
 #### 🎨 Rediseño Completo del Panel de Administración para Móvil

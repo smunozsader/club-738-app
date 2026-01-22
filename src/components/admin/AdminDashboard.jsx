@@ -21,6 +21,7 @@ import * as XLSX from 'xlsx';
 import './AdminDashboard.css';
 
 export default function AdminDashboard({ 
+  onAdminSocios,
   onVerExpediente, 
   onSolicitarPETA,
   onVerificadorPETA,
@@ -35,7 +36,8 @@ export default function AdminDashboard({
   onAdminAltas,
   onMiAgenda,
   onReportadorExpedientes,
-  activeSection = 'admin-dashboard'
+  activeSection = 'admin-dashboard',
+  onBackToTools
 }) {
   const [socios, setSocios] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -89,6 +91,9 @@ export default function AdminDashboard({
         break;
       case 'mi-agenda':
         if (onMiAgenda) onMiAgenda();
+        break;
+      case 'admin-socios':
+        if (onAdminSocios) onAdminSocios();
         break;
       default:
         console.log(`Unknown tool: ${toolId}`);
@@ -257,12 +262,20 @@ export default function AdminDashboard({
         activeSection={activeSection}
       />
 
-      {/* Contenido principal (tabla de socios) - Solo si activeSection === 'admin-dashboard' */}
-      {activeSection === 'admin-dashboard' && (
+      {/* Contenido principal (tabla de socios) - Solo si activeSection === 'admin-socios' */}
+      {activeSection === 'admin-socios' && (
         <div className="admin-main-content">
         {/* Header */}
         <div className="admin-header">
           <div className="header-title">
+            <button
+              className="btn-back-to-tools"
+              onClick={onBackToTools}
+              title="Volver a herramientas"
+              aria-label="Back to tools"
+            >
+              ← Atrás
+            </button>
             <h1>🔧 Panel de Administración</h1>
             <p className="admin-subtitle">
               Gestión de expedientes de socios - Club de Caza, Tiro y Pesca de Yucatán, A.C.

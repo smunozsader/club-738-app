@@ -47,6 +47,45 @@
   flex: 1;
   text-align: left;
   min-width: 250px;
+  position: relative;
+}
+
+.btn-back-to-tools {
+  background: var(--primary, #10b981);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-block;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+}
+
+.btn-back-to-tools:hover {
+  background: var(--primary-dark, #047857);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
+}
+
+.btn-back-to-tools:active {
+  transform: translateY(0);
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn-back-to-tools {
+    background: var(--primary, #34d399);
+    color: #1e293b;
+    box-shadow: 0 2px 6px rgba(52, 211, 153, 0.2);
+  }
+
+  .btn-back-to-tools:hover {
+    background: var(--primary-light, #6ee7b7);
+    box-shadow: 0 3px 8px rgba(52, 211, 153, 0.3);
+  }
 }
 
 .admin-header h1 {

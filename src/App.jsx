@@ -213,8 +213,9 @@ function App() {
 
         {/* Content Admin - Sidebar ahora está dentro de AdminDashboard */}
         <main className="app-main admin-main">
-          {activeSection === 'admin-dashboard' && (
+          {(activeSection === 'admin-dashboard' || activeSection === 'admin-socios') && (
             <AdminDashboard 
+              onAdminSocios={() => setActiveSection('admin-socios')}
               onVerExpediente={(email) => {
                 setSocioSeleccionado(email);
                 setActiveSection('expediente');
@@ -235,6 +236,8 @@ function App() {
               onAdminAltas={() => setActiveSection('admin-altas-arsenal')}
               onMiAgenda={() => setActiveSection('mi-agenda')}
               onReportadorExpedientes={() => setActiveSection('reportador-expedientes')}
+              onBackToTools={() => setActiveSection('admin-dashboard')}
+              activeSection={activeSection}
             />
           )}
           
