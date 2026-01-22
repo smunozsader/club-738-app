@@ -1,7 +1,10 @@
 /**
  * AdminDashboard - Panel de administración para ver todos los socios
  * 
+ * REDISEÑO 2026: Mobile-first con grid de tarjetas accionables
+ * 
  * Funcionalidades:
+ * - Grid de herramientas (AdminToolsNavigation)
  * - Lista completa de socios con búsqueda
  * - Filtros por estado de documentos
  * - Acceso rápido a expediente de cada socio
@@ -12,6 +15,7 @@ import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import { DashboardSkeleton } from '../common/LoadingSkeleton';
 import { useToastContext } from '../../contexts/ToastContext';
+import AdminToolsNavigation from './AdminToolsNavigation';
 import * as XLSX from 'xlsx';
 import './AdminDashboard.css';
 
@@ -29,7 +33,8 @@ export default function AdminDashboard({
   onAdminBajas,
   onAdminAltas,
   onMiAgenda,
-  onReportadorExpedientes
+  onReportadorExpedientes,
+  activeSection = 'admin-dashboard'
 }) {
   const [socios, setSocios] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,14 +47,52 @@ export default function AdminDashboard({
   const [exportando, setExportando] = useState(false);
   const toast = useToastContext();
 
-  // DEBUG: Verificar que los props se reciben correctamente
-  useEffect(() => {
-    console.log('🔍 AdminDashboard Props Debug:');
-    console.log('  ✓ onVerificadorPETA:', typeof onVerificadorPETA === 'function' ? '✅ Function' : '❌ ' + typeof onVerificadorPETA);
-    console.log('  ✓ onGeneradorPETA:', typeof onGeneradorPETA === 'function' ? '✅ Function' : '❌ ' + typeof onGeneradorPETA);
-    console.log('  ✓ onRegistroPagos:', typeof onRegistroPagos === 'function' ? '✅ Function' : '❌ ' + typeof onRegistroPagos);
-    console.log('  ✓ onCobranza:', typeof onCobranza === 'function' ? '✅ Function' : '❌ ' + typeof onCobranza);
-  }, [onVerificadorPETA, onGeneradorPETA, onRegistroPagos, onCobranza]);
+  // Callback para cambiar sección activa
+  const handleSelectTool = (toolId) => {
+    console.log(`Tool selected: ${toolId}`);
+    // Mapeo simple de herramientas a callbacks
+    switch(toolId) {
+      case 'reportador-expedientes':
+        if (onReportadorExpedientes) onReportadorExpedientes();
+        break;
+      case 'verificador-peta':
+        if (onVerificadorPETA) onVerificadorPETA();
+        break;
+      case 'generador-peta':
+        if (onGeneradorPETA) onGeneradorPETA();
+        break;
+      case 'expediente-impresor':
+        if (onExpedienteImpresor) onExpedienteImpresor();
+        break;
+      case 'registro-pagos':
+        if (onRegistroPagos) onRegistroPagos();
+        break;
+      case 'reporte-caja':
+        if (onReporteCaja) onReporteCaja();
+        break;
+      case 'cobranza-unificada':
+        if (onCobranza) onCobranza();
+        break;
+      case 'renovaciones-2026':
+        if (onDashboardRenovaciones) onDashboardRenovaciones();
+        break;
+      case 'cumpleanos':
+        if (onDashboardCumpleanos) onDashboardCumpleanos();
+        break;
+      case 'altas-arsenal':
+        if (onAdminAltas) onAdminAltas();
+        break;
+      case 'bajas-arsenal':
+        if (onAdminBajas) onAdminBajas();
+        break;
+      case 'mi-agenda':
+        if (onMiAgenda) onMiAgenda();
+        break;
+      default:
+        console.log(`Unknown tool: ${toolId}`);
+    }
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearchTerm(searchInput);
@@ -206,246 +249,15 @@ export default function AdminDashboard({
 
   return (
     <div className="admin-dashboard">
-      {/* Sidebar con herramientas admin */}
-      <aside className="admin-tools-sidebar">
-        <h3 className="sidebar-title">🛠️ Herramientas Administrativas</h3>
-        
-        {/* MÓDULO: GESTIÓN DE SOCIOS */}
-        <div className="sidebar-section">
-          <h4 className="sidebar-section-title">👥 Gestión de Socios</h4>
-          <nav className="admin-tools-nav">
-            <button 
-              className="admin-tool-btn socios active"
-              title="Vista activa: Tabla de socios"
-            >
-              <span className="tool-icon">📋</span>
-              <span className="tool-text">Gestión de Socios</span>
-            </button>
-            
-            <button 
-              className="admin-tool-btn socios"
-              onClick={() => {
-                console.log('📊 Reportador Expedientes clicked!');
-                if (typeof onReportadorExpedientes === 'function') {
-                  onReportadorExpedientes();
-                } else {
-                  console.error('❌ onReportadorExpedientes is not a function:', typeof onReportadorExpedientes);
-                }
-              }}
-              title="Reportador de expedientes"
-            >
-              <span className="tool-icon">📊</span>
-              <span className="tool-text">Reportador Expedientes</span>
-            </button>
-          </nav>
-        </div>
+      {/* Componente de navegación de herramientas (Grid de tarjetas) */}
+      <AdminToolsNavigation 
+        onSelectTool={handleSelectTool}
+        activeSection={activeSection}
+      />
 
-        {/* MÓDULO: PETA */}
-        <div className="sidebar-section">
-          <h4 className="sidebar-section-title">🎯 Módulo PETA</h4>
-          <nav className="admin-tools-nav">
-            <button 
-              className="admin-tool-btn peta"
-              onClick={() => {
-                console.log('🔍 Verificador PETA clicked!');
-                console.log('  onVerificadorPETA exists:', !!onVerificadorPETA);
-                console.log('  onVerificadorPETA type:', typeof onVerificadorPETA);
-                if (onVerificadorPETA) {
-                  console.log('  Calling onVerificadorPETA...');
-                  onVerificadorPETA();
-                } else {
-                  console.error('  ❌ onVerificadorPETA is undefined!');
-                }
-              }}
-              title="Verificar documentos de PETAs solicitadas"
-            >
-              <span className="tool-icon">✅</span>
-              <span className="tool-text">Verificador PETA</span>
-            </button>
-            
-            <button 
-              className="admin-tool-btn peta"
-              onClick={() => {
-                console.log('📄 Generador PETA clicked!');
-                if (typeof onGeneradorPETA === 'function') {
-                  onGeneradorPETA();
-                } else {
-                  console.error('❌ onGeneradorPETA is not a function:', typeof onGeneradorPETA);
-                }
-              }}
-              title="Generar oficios PETA en PDF"
-            >
-              <span className="tool-icon">📄</span>
-              <span className="tool-text">Generador PETA</span>
-            </button>
-            
-            <button 
-              className="admin-tool-btn peta"
-              onClick={() => {
-                console.log('🖨️ Expediente Impresor clicked!');
-                if (typeof onExpedienteImpresor === 'function') {
-                  onExpedienteImpresor();
-                } else {
-                  console.error('❌ onExpedienteImpresor is not a function:', typeof onExpedienteImpresor);
-                }
-              }}
-              title="Preparar expedientes para impresión"
-            >
-              <span className="tool-icon">🖨️</span>
-              <span className="tool-text">Expediente Impresor</span>
-            </button>
-          </nav>
-        </div>
-
-        {/* MÓDULO: COBRANZA */}
-        <div className="sidebar-section">
-          <h4 className="sidebar-section-title">💰 Módulo Cobranza</h4>
-          <nav className="admin-tools-nav">
-            <button 
-              className="admin-tool-btn pagos"
-              onClick={() => {
-                console.log('💵 Panel Cobranza clicked!');
-                if (typeof onCobranza === 'function') {
-                  onCobranza();
-                } else {
-                  console.error('❌ onCobranza is not a function:', typeof onCobranza);
-                }
-              }}
-              title="Panel de cobranza unificado"
-            >
-              <span className="tool-icon">💵</span>
-              <span className="tool-text">Panel Cobranza</span>
-            </button>
-            
-            <button 
-              className="admin-tool-btn pagos"
-              onClick={() => {
-                console.log('💳 Registro de Pagos clicked!');
-                if (typeof onRegistroPagos === 'function') {
-                  onRegistroPagos();
-                } else {
-                  console.error('❌ onRegistroPagos is not a function:', typeof onRegistroPagos);
-                }
-              }}
-              title="Registrar pagos de membresías"
-            >
-              <span className="tool-icon">💳</span>
-              <span className="tool-text">Registro de Pagos</span>
-            </button>
-            
-            <button 
-              className="admin-tool-btn pagos"
-              onClick={() => {
-                console.log('📊 Reporte de Caja clicked!');
-                if (typeof onReporteCaja === 'function') {
-                  onReporteCaja();
-                } else {
-                  console.error('❌ onReporteCaja is not a function:', typeof onReporteCaja);
-                }
-              }}
-              title="Reporte de caja y corte"
-            >
-              <span className="tool-icon">📊</span>
-              <span className="tool-text">Reporte de Caja</span>
-            </button>
-
-            <button 
-              className="admin-tool-btn pagos"
-              onClick={() => {
-                console.log('📈 Renovaciones 2026 clicked!');
-                if (typeof onDashboardRenovaciones === 'function') {
-                  onDashboardRenovaciones();
-                } else {
-                  console.error('❌ onDashboardRenovaciones is not a function:', typeof onDashboardRenovaciones);
-                }
-              }}
-              title="Dashboard de renovaciones 2026"
-            >
-              <span className="tool-icon">📈</span>
-              <span className="tool-text">Renovaciones 2026</span>
-            </button>
-            
-            <button 
-              className="admin-tool-btn pagos"
-              onClick={() => {
-                console.log('🎂 Cumpleaños clicked!');
-                if (typeof onDashboardCumpleanos === 'function') {
-                  onDashboardCumpleanos();
-                } else {
-                  console.error('❌ onDashboardCumpleanos is not a function:', typeof onDashboardCumpleanos);
-                }
-              }}
-              title="Cumpleaños y demografía de socios"
-            >
-              <span className="tool-icon">🎂</span>
-              <span className="tool-text">Cumpleaños</span>
-            </button>
-          </nav>
-        </div>
-
-        {/* MÓDULO: ARSENAL */}
-        <div className="sidebar-section">
-          <h4 className="sidebar-section-title">🔫 Gestión de Arsenal</h4>
-          <nav className="admin-tools-nav">
-            <button 
-              className="admin-tool-btn arsenal"
-              onClick={() => {
-                console.log('📦 Bajas de Arsenal clicked!');
-                if (typeof onAdminBajas === 'function') {
-                  onAdminBajas();
-                } else {
-                  console.error('❌ onAdminBajas is not a function:', typeof onAdminBajas);
-                }
-              }}
-              title="Administrar solicitudes de baja de armas"
-            >
-              <span className="tool-icon">📦</span>
-              <span className="tool-text">Bajas de Arsenal</span>
-            </button>
-            
-            <button 
-              className="admin-tool-btn arsenal"
-              onClick={() => {
-                console.log('📝 Altas de Arsenal clicked!');
-                if (typeof onAdminAltas === 'function') {
-                  onAdminAltas();
-                } else {
-                  console.error('❌ onAdminAltas is not a function:', typeof onAdminAltas);
-                }
-              }}
-              title="Administrar solicitudes de alta de armas"
-            >
-              <span className="tool-icon">📝</span>
-              <span className="tool-text">Altas de Arsenal</span>
-            </button>
-          </nav>
-        </div>
-
-        {/* MÓDULO: AGENDA */}
-        <div className="sidebar-section">
-          <h4 className="sidebar-section-title">📅 Agenda & Citas</h4>
-          <nav className="admin-tools-nav">
-            <button 
-              className="admin-tool-btn agenda"
-              onClick={() => {
-                console.log('📅 Mi Agenda clicked!');
-                if (typeof onMiAgenda === 'function') {
-                  onMiAgenda();
-                } else {
-                  console.error('❌ onMiAgenda is not a function:', typeof onMiAgenda);
-                }
-              }}
-              title="Gestionar citas de socios"
-            >
-              <span className="tool-icon">📅</span>
-              <span className="tool-text">Mi Agenda</span>
-            </button>
-          </nav>
-        </div>
-      </aside>
-
-      {/* Contenido principal con grid layout */}
-      <div className="admin-main-content">
+      {/* Contenido principal (tabla de socios) - Solo si activeSection === 'admin-dashboard' */}
+      {activeSection === 'admin-dashboard' && (
+        <div className="admin-main-content">
         {/* Header */}
         <div className="admin-header">
           <div className="header-title">
@@ -618,7 +430,8 @@ export default function AdminDashboard({
           Mostrando {sociosFiltrados.length} de {socios.length} socios
         </p>
       </div>
-      </div> {/* Cierre de admin-main-content */}
+        </div>
+      )}
     </div>
   );
 }

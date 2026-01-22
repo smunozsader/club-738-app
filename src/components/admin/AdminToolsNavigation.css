@@ -1,0 +1,332 @@
+/**
+ * AdminToolsNavigation.css - Estilos responsivos para grid de herramientas admin
+ * 
+ * Basado en LandingPage pattern con media queries para mobile-first
+ */
+
+.admin-tools-grid-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-tools-grid-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.admin-tools-grid-header h2 {
+  font-size: 2rem;
+  color: var(--text-primary, #1e293b);
+  margin: 0 0 8px 0;
+  font-weight: 700;
+}
+
+.admin-tools-grid-header .subtitle {
+  color: var(--text-muted, #64748b);
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Grupo de herramientas */
+.tools-group {
+  margin-bottom: 48px;
+}
+
+.tools-group-title {
+  font-size: 1.25rem;
+  color: var(--text-primary, #1e293b);
+  margin: 0 0 20px 0;
+  font-weight: 600;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--color-border, #e2e8f0);
+}
+
+/* Grid de tarjetas */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+/* Tarjeta de herramienta */
+.tool-card {
+  background: var(--bg-secondary, #ffffff);
+  border: 2px solid var(--color-border, #e2e8f0);
+  border-radius: 12px;
+  padding: 24px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: inherit;
+  
+  /* Reset button styles */
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+  min-height: 160px;
+  justify-content: center;
+}
+
+.tool-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg, 0 10px 30px rgba(0, 0, 0, 0.12));
+}
+
+.tool-card:active {
+  transform: translateY(-2px);
+}
+
+/* Colores por categoría */
+.tool-card.purple {
+  border-color: #a78bfa;
+}
+
+.tool-card.purple:hover {
+  border-color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.tool-card.blue {
+  border-color: #60a5fa;
+}
+
+.tool-card.blue:hover {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.tool-card.green {
+  border-color: #4ade80;
+}
+
+.tool-card.green:hover {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.tool-card.orange {
+  border-color: #fbbf24;
+}
+
+.tool-card.orange:hover {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.tool-card.pink {
+  border-color: #f472b6;
+}
+
+.tool-card.pink:hover {
+  border-color: #ec4899;
+  background: rgba(236, 72, 153, 0.05);
+}
+
+/* Icono */
+.tool-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  display: block;
+  line-height: 1;
+}
+
+/* Etiqueta */
+.tool-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+/* Descripción */
+.tool-description {
+  font-size: 0.85rem;
+  color: var(--text-muted, #64748b);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .tool-card {
+    background: var(--bg-secondary, #1e293b);
+    border-color: var(--color-border, #334155);
+  }
+
+  .tool-card.purple:hover {
+    background: rgba(139, 92, 246, 0.1);
+  }
+
+  .tool-card.blue:hover {
+    background: rgba(59, 130, 246, 0.1);
+  }
+
+  .tool-card.green:hover {
+    background: rgba(34, 197, 94, 0.1);
+  }
+
+  .tool-card.orange:hover {
+    background: rgba(245, 158, 11, 0.1);
+  }
+
+  .tool-card.pink:hover {
+    background: rgba(236, 72, 153, 0.1);
+  }
+}
+
+/* RESPONSIVE: Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  .admin-tools-grid-container {
+    padding: 32px 20px;
+  }
+
+  .admin-tools-grid-header h2 {
+    font-size: 1.75rem;
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .tool-card {
+    padding: 20px 16px;
+    min-height: 140px;
+  }
+
+  .tool-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+
+  .tool-label {
+    font-size: 1rem;
+  }
+
+  .tool-description {
+    font-size: 0.8rem;
+  }
+}
+
+/* RESPONSIVE: Mobile pequeño (480px - 768px) */
+@media (max-width: 768px) {
+  .admin-tools-grid-container {
+    padding: 24px 16px;
+  }
+
+  .admin-tools-grid-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .tools-group {
+    margin-bottom: 32px;
+  }
+
+  .tools-group-title {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .tool-card {
+    padding: 16px 12px;
+    min-height: 130px;
+  }
+
+  .tool-icon {
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+  }
+
+  .tool-label {
+    font-size: 0.95rem;
+  }
+
+  .tool-description {
+    font-size: 0.75rem;
+    display: none; /* Ocultar en mobile para ahorrar espacio */
+  }
+}
+
+/* RESPONSIVE: Mobile muy pequeño (< 480px) */
+@media (max-width: 480px) {
+  .admin-tools-grid-container {
+    padding: 16px 12px;
+  }
+
+  .admin-tools-grid-header {
+    margin-bottom: 32px;
+  }
+
+  .admin-tools-grid-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .admin-tools-grid-header .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .tools-group {
+    margin-bottom: 24px;
+  }
+
+  .tools-group-title {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  /* Single column en móvil muy pequeño */
+  .tools-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .tool-card {
+    padding: 14px 10px;
+    min-height: 120px;
+  }
+
+  .tool-icon {
+    font-size: 2rem;
+    margin-bottom: 6px;
+  }
+
+  .tool-label {
+    font-size: 0.9rem;
+  }
+
+  .tool-description {
+    display: none;
+  }
+}
+
+/* Focus visible para accesibilidad */
+.tool-card:focus-visible {
+  outline: 3px solid var(--color-primary, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Tap target mínimo: 44x44px para touch */
+@media (hover: none) and (pointer: coarse) {
+  .tool-card {
+    min-height: 44px;
+    padding: 16px;
+  }
+
+  .tool-card:active {
+    background: var(--bg-active, rgba(0, 0, 0, 0.05));
+  }
+}
