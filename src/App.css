@@ -4,16 +4,16 @@
    WCAG 2.1 AA Compliant (4.5:1 ratio)
    =================================== */
 :root {
-  /* Colores Principales (Brand) */
-  --color-primary-dark: #1a365d;
-  --color-primary: #2563eb;
-  --color-primary-light: #3b82f6;
+  /* Colores Principales (Brand) - VERDE MODERNO CLUB 738 */
+  --color-primary-dark: #047857;     /* Verde oscuro - WCAG AAA */
+  --color-primary: #10b981;          /* Verde esmeralda - WCAG AA+ */
+  --color-primary-light: #34d399;    /* Verde claro */
   
-  /* Colores Neutros (UI) - WCAG AA Compliant */
+  /* Colores Neutros (UI) - WCAG AAA Compliant (7:1+) */
   --color-text-primary: #1e293b;      /* Contraste 12.6:1 sobre blanco */
-  --color-text-secondary: #334155;    /* Contraste 8.3:1 sobre blanco (mejorado de #475569) */
-  --color-text-muted: #4b5563;        /* Contraste 6.0:1 sobre blanco (mejorado de #64748b) */
-  --color-text-light: #6b7280;        /* Contraste 4.6:1 sobre blanco */
+  --color-text-secondary: #334155;    /* Contraste 8.3:1 sobre blanco */
+  --color-text-muted: #4b5563;        /* Contraste 6.0:1 sobre blanco */
+  --color-text-light: #64748b;        /* Contraste 5.0:1 sobre blanco */
   --color-border: #e2e8f0;
   --color-border-dark: #cbd5e1;
   --color-background: #f8fafc;
@@ -41,25 +41,32 @@
   --color-info-text: #0c4a6e;         /* Para texto sobre fondos claros */
   
   /* Colores Especiales */
-  --color-gold: #92400e;              /* Contraste 6.0:1 sobre blanco */
+  --color-secondary: #06b6d4;        /* Cian - complementario */
+  --color-accent: #ec4899;           /* Magenta - alertas importantes */
+  --color-gold: #92400e;             /* Contraste 6.0:1 sobre blanco */
   --color-gold-light: #fef3c7;
-  --color-gold-text: #78350f;         /* Para texto sobre fondos claros */
+  --color-gold-text: #78350f;        /* Para texto sobre fondos claros */
   
   /* Footer (fondo oscuro) */
   --color-footer-bg: #1e293b;
-  --color-footer-text: #f1f5f9;       /* Contraste 14.6:1 sobre footer-bg */
+  --color-footer-text: #f1f5f9;      /* Contraste 14.6:1 sobre footer-bg */
   
   /* Transiciones suaves para tema */
   --transition-theme: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-/* ===================================
-   DARK MODE - Variables Premium
-   =================================== */
-:root.dark-mode {
-  /* Colores principales - tonos vibrantes pero profesionales */
-  --color-primary-dark: #38bdf8;
-  --color-primary: #0ea5e9;
+  
+  /* Responsive y Accesibilidad */
+  --touch-target: 48px;              /* Mínimo para móviles (WCAG) */
+  --focus-outline: 2px solid var(--color-primary);
+  --focus-outline-offset: 2VERDE VIBRANTE PARA DARK MODE */
+  --color-primary-dark: #059669;     /* Verde oscuro más oscuro para dark */
+  --color-primary: #34d399;          /* Verde claro para mejor contraste en dark */
+  --color-primary-light: #6ee7b7;    /* Verde más claro */
+  
+  /* Colores neutros - alto contraste WCAG AAA */
+  --color-text-primary: #f1f5f9;     /* Títulos - blanco casi puro */
+  --color-text-secondary: #e2e8f0;   /* Texto normal - muy claro */
+  --color-text-muted: #cbd5e1;       /* Texto secundario */
+  --color-text-light: #94a3b8;
   --color-primary-light: #7dd3fc;
   
   /* Colores neutros - alto contraste */
@@ -127,6 +134,47 @@ body {
   background: var(--color-background);
   color: var(--color-text-primary);
   transition: var(--transition-theme);
+  font-size: 16px;         /* Prevenir zoom automático en iOS */
+  line-height: 1.6;        /* Mejor legibilidad */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Accesibilidad: Focus visible para navegación por teclado */
+:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* Botones y controles táctiles - Mínimo 48x48px (WCAG) */
+button, a, input[type="checkbox"], input[type="radio"],
+.btn, [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:focus-visible, .btn:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+/* Inputs más accesibles */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+  font-size: 16px;         /* Prevenir zoom iOS */
+  min-height: 44px;
+  padding: 12px 16px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
 }
 
 .loading {
@@ -1455,8 +1503,238 @@ main {
 /* Footer Admin */
 .app-footer.admin-footer {
   background: #1a202c;
-  border-top: 2px solid #667eea;
+  border-top: 2px solid var(--color-primary);
   color: #cbd5e1;
+}
+
+/* ===================================
+   OPTIMIZACIONES PARA MÓVILES
+   Mobile-first responsive design
+   =================================== */
+
+/* Tipografía responsiva */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  p, span, li, td {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+/* Dashboard Header responsivo */
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px;
+    align-items: flex-start;
+  }
+
+  .header-brand {
+    gap: 12px;
+  }
+
+  .header-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .user-info {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .user-email {
+    font-size: 12px;
+  }
+}
+
+/* Grid responsivo */
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .dashboard-container {
+    padding: 16px 12px;
+  }
+
+  /* Cards responsivas */
+  .card, .info-card, .stats-card {
+    padding: 16px;
+    margin: 8px 0;
+    border-radius: 12px;
+  }
+
+  /* Botones responsive */
+  button, .btn {
+    width: 100%;
+    min-height: 48px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  /* Inputs responsive */
+  input, textarea, select {
+    width: 100%;
+    min-height: 48px;
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+
+  /* Tablas responsive */
+  table {
+    font-size: 13px;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th, td {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 12px 8px;
+  }
+
+  .dashboard-welcome h2 {
+    font-size: 1.5rem;
+  }
+
+  .dashboard-welcome p {
+    font-size: 0.95rem;
+  }
+
+  .card, .info-card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  button, .btn {
+    font-size: 15px;
+    padding: 12px 14px;
+  }
+
+  /* Espaciado agresivo en móvil */
+  .dashboard-section {
+    margin-top: 24px;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+}
+
+/* Navegación sticky responsiva */
+@media (max-width: 768px) {
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 8px 12px;
+  }
+
+  nav button, nav a {
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Overlay/Modal responsivo */
+@media (max-width: 768px) {
+  .modal-content,
+  .dialog-box {
+    width: 95%;
+    max-height: 90vh;
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .modal-header {
+    padding: 16px;
+    font-size: 18px;
+  }
+
+  .modal-body {
+    padding: 16px;
+    font-size: 14px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  .modal-footer {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .modal-footer button {
+    width: 100%;
+    margin: 4px 0;
+  }
+}
+
+/* Prevent horizontal scroll en móvil */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Mejorar scroll en móvil */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-dark);
 }
 
 /* Sección Comunicados Oficiales */

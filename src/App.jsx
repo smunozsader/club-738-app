@@ -5,6 +5,7 @@ import { doc, getDoc, onSnapshot, collection, getDocs, query, where, collectionG
 import useRole from './hooks/useRole';
 import { useDarkMode } from './hooks/useDarkMode';
 import { ToastProvider } from './contexts/ToastContext';
+import './color-theory-wcag.css';  /* ✅ Color Theory + A11y + UI Patterns */
 import './dark-mode-premium.css';
 import LandingPage from './components/LandingPage';
 import AdminDashboard from './components/admin/AdminDashboard';
