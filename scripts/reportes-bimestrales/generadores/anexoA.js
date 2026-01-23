@@ -22,8 +22,10 @@ async function generarAnexoA(db, mes, año) {
     }
 
     const headers = [
+      'Credencial',
       'Socio (Email)',
       'Nombre Completo',
+      'Teléfono',
       'Total Armas',
       'Rifles',
       'Escopetas',
@@ -40,6 +42,8 @@ async function generarAnexoA(db, mes, año) {
     for (const docSnap of snapshot.docs) {
       const socio = docSnap.data();
       const email = docSnap.id;
+      const credencial = socio.credencial || socio.numero_socio || 'N/A';
+      const telefono = socio.telefono || 'N/A';
 
       // Contar armas por tipo
       const armasRef = db.collection('socios').doc(email).collection('armas');
@@ -65,8 +69,10 @@ async function generarAnexoA(db, mes, año) {
       }
 
       rows.push([
+        credencial,
         email,
         socio.nombre || 'N/A',
+        telefono,
         contadores.total,
         contadores.rifles,
         contadores.escopetas,
@@ -80,15 +86,21 @@ async function generarAnexoA(db, mes, año) {
       totalArmas += contadores.total;
     }
 
-    // Ordenar por nombre
-    rows.sort((a, b) => a[1].localeCompare(b[1]));
+    // Ordenar por credencial (columna 0) en forma ascendente
+    rows.sort((a, b) => {
+      const credA = String(a[0]).toLowerCase();
+      const credB = String(b[0]).toLowerCase();
+      return credA.localeCompare(credB);
+    });
 
     // Crear worksheet
     const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
 
     ws['!cols'] = [
+      { wch: 12 }, // Credencial
       { wch: 20 }, // Email
       { wch: 25 }, // Nombre
+      { wch: 15 }, // Teléfono
       { wch: 12 }, // Total
       { wch: 10 }, // Rifles
       { wch: 12 }, // Escopetas

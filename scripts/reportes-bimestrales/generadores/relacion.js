@@ -23,8 +23,10 @@ async function generarRelacion(db, mes, año) {
 
     // Headers de la RELACIÓN
     const headers = [
+      'Credencial',
       'Socio (Email)',
       'Nombre',
+      'Teléfono',
       'Clase Arma',
       'Calibre',
       'Marca',
@@ -43,6 +45,8 @@ async function generarRelacion(db, mes, año) {
       const socio = docSnap.data();
       const email = docSnap.id;
       const nombre = socio.nombre || 'N/A';
+      const credencial = socio.credencial || socio.numero_socio || 'N/A';
+      const telefono = socio.telefono || 'N/A';
 
       // Obtener armas del socio
       const armasRef = db.collection('socios').doc(email).collection('armas');
@@ -51,8 +55,10 @@ async function generarRelacion(db, mes, año) {
       if (armasSnapshot.empty) {
         // Si no tiene armas, agregar fila vacía
         rows.push([
+          credencial,
           email,
           nombre,
+          telefono,
           '-',
           '-',
           '-',
@@ -67,8 +73,10 @@ async function generarRelacion(db, mes, año) {
         for (const armaSnap of armasSnapshot.docs) {
           const arma = armaSnap.data();
           rows.push([
+            credencial,
             email,
             nombre,
+            telefono,
             arma.clase || 'N/A',
             arma.calibre || 'N/A',
             arma.marca || 'N/A',
@@ -83,13 +91,22 @@ async function generarRelacion(db, mes, año) {
       }
     }
 
+    // Ordenar por credencial (columna 0) en forma ascendente
+    rows.sort((a, b) => {
+      const credA = String(a[0]).toLowerCase();
+      const credB = String(b[0]).toLowerCase();
+      return credA.localeCompare(credB);
+    });
+
     // Crear worksheet
     const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
 
     // Configurar ancho de columnas
     ws['!cols'] = [
+      { wch: 12 }, // Credencial
       { wch: 20 }, // Socio
       { wch: 25 }, // Nombre
+      { wch: 15 }, // Teléfono
       { wch: 25 }, // Clase
       { wch: 12 }, // Calibre
       { wch: 15 }, // Marca
