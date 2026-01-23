@@ -169,26 +169,71 @@ export default function RegistroPagos({ userEmail, onBack }) {
   const subirComprobantes = async () => {
     if (comprobanteFiles.length === 0) return [];
 
+    // Validación previo a subir
+    if (!socioSeleccionado?.email) {
+      alert('Error: No hay socio seleccionado');
+      return [];
+    }
+
     try {
       setSubiendoComprobantes(true);
       const urls = [];
+      const email = socioSeleccionado.email.toLowerCase();
 
       for (let i = 0; i < comprobanteFiles.length; i++) {
         const file = comprobanteFiles[i];
+        
+        // Validar que es un File válido
+        if (!file || !(file instanceof File)) {
+          console.error(`Archivo ${i} no es válido:`, file);
+          alert(`Archivo ${i + 1} no es válido. Por favor recarga.`);
+          return [];
+        }
+
         const timestamp = Date.now();
         const extension = file.name.split('.').pop();
         const nombreArchivo = `transferencia-${timestamp}-${i}.${extension}`;
 
-        const storageRef = ref(storage, `documentos/${socioSeleccionado.email}/transferencias/${nombreArchivo}`);
-        await uploadBytes(storageRef, file);
-        const urlDescarga = await getDownloadURL(storageRef);
-        urls.push(urlDescarga);
+        console.log(`Subiendo archivo ${i + 1}/${comprobanteFiles.length}: ${nombreArchivo}`);
+
+        const storageRef = ref(storage, `documentos/${email}/transferencias/${nombreArchivo}`);
+        
+        // Subir con reintento
+        let intento = 0;
+        let uploadExitoso = false;
+        let urlDescarga = null;
+
+        while (intento < 3 && !uploadExitoso) {
+          try {
+            intento++;
+            console.log(`Intento ${intento}/3 para ${nombreArchivo}`);
+            
+            await uploadBytes(storageRef, file);
+            urlDescarga = await getDownloadURL(storageRef);
+            uploadExitoso = true;
+            
+            console.log(`✅ Subido exitosamente: ${nombreArchivo}`);
+            urls.push(urlDescarga);
+          } catch (uploadError) {
+            console.error(`Intento ${intento} fallido:`, uploadError);
+            if (intento === 3) {
+              throw new Error(`No se pudo subir ${file.name} después de 3 intentos: ${uploadError.message}`);
+            }
+            // Esperar 1 segundo antes de reintentar
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        }
       }
 
+      if (urls.length !== comprobanteFiles.length) {
+        throw new Error(`Solo se subieron ${urls.length}/${comprobanteFiles.length} archivos`);
+      }
+
+      console.log(`✅ Todos los archivos subidos exitosamente:`, urls);
       return urls;
     } catch (error) {
-      console.error('Error subiendo comprobantes:', error);
-      alert('Error al subir comprobantes. Por favor intenta de nuevo.');
+      console.error('Error completo al subir comprobantes:', error);
+      alert(`Error al subir comprobantes: ${error.message}\n\nIntenta de nuevo o contacta soporte.`);
       return [];
     } finally {
       setSubiendoComprobantes(false);
@@ -234,11 +279,16 @@ export default function RegistroPagos({ userEmail, onBack }) {
       // Subir comprobantes si es transferencia
       let comprobantesURLs = [];
       if (metodoPago === 'transferencia') {
+        console.log(`Iniciando subida de ${comprobanteFiles.length} comprobante(s)...`);
         comprobantesURLs = await subirComprobantes();
+        
         if (comprobantesURLs.length === 0) {
+          console.error('Error: No se subieron comprobantes');
           setGuardando(false);
           return;
         }
+        
+        console.log(`✅ Subidos ${comprobantesURLs.length} comprobante(s)`);
       }
       
       const conceptosPagados = Object.keys(conceptosSeleccionados)

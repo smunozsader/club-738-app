@@ -71,7 +71,21 @@ service firebase.storage {
     }
 
     // ========================================================================
-    // CARPETA: documentos/{email}/ (genérica - va DESPUÉS de armas)
+    // CARPETA: documentos/{email}/transferencias/
+    // ========================================================================
+    // Comprobantes de transferencia para pagos de socios
+    // El secretario (admin) sube comprobantes en nombre del socio
+    
+    match /documentos/{email}/transferencias/{fileName} {
+      allow read: if isOwner(email) || isSecretario();
+      allow list: if isOwner(email) || isSecretario();
+      // IMPORTANTE: El secretario puede escribir en CUALQUIER carpeta de socios
+      allow write: if isSecretario() && isAllowedFileType() && isUnderSizeLimit();
+      allow delete: if isSecretario();  // Solo secretario puede eliminar
+    }
+
+    // ========================================================================
+    // CARPETA: documentos/{email}/ (genérica - va DESPUÉS de armas y transferencias)
     // ========================================================================
     // Cada socio puede leer sus documentos
     // Solo puede subir PDFs e imágenes de máximo 5MB
