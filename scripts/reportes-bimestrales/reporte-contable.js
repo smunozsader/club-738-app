@@ -114,12 +114,23 @@ async function generarReporteContable() {
       }
     }
 
-    // Ordenar socios por credencial
-    datos.socios.sort((a, b) => {
+    // Ordenar socios pagados por fecha de pago (más antiguos primero)
+    const sociosPagadosOrdenados = datos.socios.filter(s => s.estado === 'pagado').sort((a, b) => {
+      if (!a.fechaPago || !b.fechaPago) return 0;
+      const fechaA = new Date(a.fechaPago.split('/').reverse().join('-'));
+      const fechaB = new Date(b.fechaPago.split('/').reverse().join('-'));
+      return fechaA - fechaB;
+    });
+    
+    // Ordenar socios pendientes por credencial
+    const sociosPendientesOrdenados = datos.socios.filter(s => s.estado === 'pendiente').sort((a, b) => {
       const aNum = parseInt(a.credencial) || 999999;
       const bNum = parseInt(b.credencial) || 999999;
       return aNum - bNum;
     });
+    
+    // Combinar: pagados por fecha, luego pendientes por credencial
+    datos.socios = [...sociosPagadosOrdenados, ...sociosPendientesOrdenados];
 
     // Generar markdown
     const markdown = generarMarkdown(datos);
@@ -182,30 +193,35 @@ function generarMarkdown(datos) {
 
 ---
 
-## 💰 INGRESOS POR CONCEPTO
+## 💰 INGRESOS DEL CLUB
 
-### Cuotas de Inscripción
+### ✅ Cuotas de Inscripción
 - **Cantidad de Pagos:** ${datos.resumen.inscripciones.cantidad}
-- **Total Recaudado:** $${datos.resumen.inscripciones.monto.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+- **Total Recaudado:** **$${datos.resumen.inscripciones.monto.toLocaleString('es-MX', { minimumFractionDigits: 2 })}**
 
-### Cuotas Anuales 2026
+### ✅ Cuotas Anuales 2026
 - **Cantidad de Pagos:** ${datos.resumen.anuales.cantidad}
-- **Total Recaudado:** $${datos.resumen.anuales.monto.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-
-### Pago FEMETI
-- **Cantidad de Pagos:** ${datos.resumen.femeti.cantidad}
-- **Total Recaudado:** $${datos.resumen.femeti.monto.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+- **Total Recaudado:** **$${datos.resumen.anuales.monto.toLocaleString('es-MX', { minimumFractionDigits: 2 })}**
 
 ---
 
-## 📈 RESUMEN FINANCIERO
+## 📊 INGRESOS NETOS PARA EL CLUB
 
 | Concepto | Monto |
 |----------|-------|
 | Inscripciones | $${datos.resumen.inscripciones.monto.toLocaleString('es-MX', { minimumFractionDigits: 2 })} |
-| Cuotas Anuales | $${datos.resumen.anuales.monto.toLocaleString('es-MX', { minimumFractionDigits: 2 })} |
-| FEMETI | $${datos.resumen.femeti.monto.toLocaleString('es-MX', { minimumFractionDigits: 2 })} |
-| **TOTAL INGRESOS** | **$${datos.resumen.pagos_totales.toLocaleString('es-MX', { minimumFractionDigits: 2 })}** |
+| Cuotas Anuales 2026 | $${datos.resumen.anuales.monto.toLocaleString('es-MX', { minimumFractionDigits: 2 })} |
+| **INGRESO NETO CLUB** | **$${(datos.resumen.inscripciones.monto + datos.resumen.anuales.monto).toLocaleString('es-MX', { minimumFractionDigits: 2 })}** |
+
+---
+
+## 🇲🇽 PAGO A FEDERACIÓN MEXICANA DE TIRO (FEMETI)
+
+⚠️ **NOTA IMPORTANTE:** El pago de FEMETI es un pase-through. El club recauda, pero remite directamente a la Federación Mexicana de Tiro. No es ingreso neto del club.
+
+### Pago FEMETI a Federación
+- **Cantidad de Pagos:** ${datos.resumen.femeti.cantidad}
+- **Total a Remitir:** **$${datos.resumen.femeti.monto.toLocaleString('es-MX', { minimumFractionDigits: 2 })}**
 
 ---
 

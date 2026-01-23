@@ -16,30 +16,35 @@
 
 ---
 
-## 💰 INGRESOS POR CONCEPTO
+## 💰 INGRESOS DEL CLUB
 
-### Cuotas de Inscripción
+### ✅ Cuotas de Inscripción
 - **Cantidad de Pagos:** 1
-- **Total Recaudado:** $2,000.00
+- **Total Recaudado:** **$2,000.00**
 
-### Cuotas Anuales 2026
+### ✅ Cuotas Anuales 2026
 - **Cantidad de Pagos:** 8
-- **Total Recaudado:** $48,500.00
-
-### Pago FEMETI
-- **Cantidad de Pagos:** 8
-- **Total Recaudado:** $3,150.00
+- **Total Recaudado:** **$48,500.00**
 
 ---
 
-## 📈 RESUMEN FINANCIERO
+## 📊 INGRESOS NETOS PARA EL CLUB
 
 | Concepto | Monto |
 |----------|-------|
 | Inscripciones | $2,000.00 |
-| Cuotas Anuales | $48,500.00 |
-| FEMETI | $3,150.00 |
-| **TOTAL INGRESOS** | **$59,650.00** |
+| Cuotas Anuales 2026 | $48,500.00 |
+| **INGRESO NETO CLUB** | **$50,500.00** |
+
+---
+
+## 🇲🇽 PAGO A FEDERACIÓN MEXICANA DE TIRO (FEMETI)
+
+⚠️ **NOTA IMPORTANTE:** El pago de FEMETI es un pase-through. El club recauda, pero remite directamente a la Federación Mexicana de Tiro. No es ingreso neto del club.
+
+### Pago FEMETI a Federación
+- **Cantidad de Pagos:** 8
+- **Total a Remitir:** **$3,150.00**
 
 ---
 
@@ -49,15 +54,15 @@
 
 | Cred. | Socio | Inscripción | Anual 2026 | FEMETI | Total | Fecha |
 |-------|-------|-------------|-----------|--------|-------|-------|
-| 186 | EDUARDO DENIS HERRERA | — | $6,000.00 | $350.00 | **$6,350.00** | 17/1/2026 |
-| 188 | EDUARDO JOSE ARZAMENDI MONTEJO | — | $6,000.00 | — | **$6,000.00** | 12/1/2026 |
-| 204 | ARIEL ANTONIO PAREDES CETINA | — | $6,500.00 | $350.00 | **$6,850.00** | 18/1/2026 |
-| 215 | RICARDO ALBERTO DESQUENS BONILLA | — | $6,000.00 | $350.00 | **$6,350.00** | 15/1/2026 |
-| 222 | IVAN TSUIS CABO TORRES | — | $6,000.00 | $350.00 | **$6,350.00** | 14/1/2026 |
 | 225 | SANTIAGO ALEJANDRO QUINTAL PAREDES | — | $6,000.00 | $350.00 | **$6,350.00** | 30/12/2025 |
+| 188 | EDUARDO JOSE ARZAMENDI MONTEJO | — | $6,000.00 | — | **$6,000.00** | 12/1/2026 |
+| 222 | IVAN TSUIS CABO TORRES | — | $6,000.00 | $350.00 | **$6,350.00** | 14/1/2026 |
+| 215 | RICARDO ALBERTO DESQUENS BONILLA | — | $6,000.00 | $350.00 | **$6,350.00** | 15/1/2026 |
+| 186 | EDUARDO DENIS HERRERA | — | $6,000.00 | $350.00 | **$6,350.00** | 17/1/2026 |
+| 204 | ARIEL ANTONIO PAREDES CETINA | — | $6,500.00 | $350.00 | **$6,850.00** | 18/1/2026 |
+| 236 | LUIS FERNANDO GUILLERMO GAMBOA | $2,000.00 | — | $700.00 | **$8,700.00** | — |
 | 229 | DANIEL DE JESUS PADILLA ROBLES | — | $6,000.00 | $350.00 | **$6,350.00** | 17/1/2026 |
 | 230 | RICARDO ANTONIO SOBERANIS GAMBOA | — | $6,000.00 | $350.00 | **$6,350.00** | 17/1/2026 |
-| 236 | LUIS FERNANDO GUILLERMO GAMBOA | $2,000.00 | — | $700.00 | **$8,700.00** | — |
 
 ### Socios Pendientes de Pago (60)
 
