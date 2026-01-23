@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import ReportesBimestrales from './ReportesBimestrales';
-import GeneradorOficios from './GeneradorOficios';
 import RegistroDocumentos from './RegistroDocumentos';
 import './GeneradorDocumentos.css';
 
 const GeneradorDocumentos = ({ userEmail, onBack }) => {
-  const [activeTab, setActiveTab] = useState('reportes'); // reportes | oficios | historico
+  const [activeTab, setActiveTab] = useState('reportes'); // reportes | historico
 
   return (
     <div className="generador-documentos-wrapper">
@@ -15,12 +14,6 @@ const GeneradorDocumentos = ({ userEmail, onBack }) => {
           onClick={() => setActiveTab('reportes')}
         >
           📊 Reportes Bimestrales
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'oficios' ? 'active' : ''}`}
-          onClick={() => setActiveTab('oficios')}
-        >
-          📮 Generador de Oficios
         </button>
         <button 
           className={`tab-btn ${activeTab === 'historico' ? 'active' : ''}`}
@@ -33,9 +26,6 @@ const GeneradorDocumentos = ({ userEmail, onBack }) => {
       <div className="tabs-content">
         {activeTab === 'reportes' && (
           <ReportesBimestrales userEmail={userEmail} onBack={onBack} />
-        )}
-        {activeTab === 'oficios' && (
-          <GeneradorOficios userEmail={userEmail} onBack={() => setActiveTab('reportes')} />
         )}
         {activeTab === 'historico' && (
           <RegistroDocumentos userEmail={userEmail} onBack={onBack} />

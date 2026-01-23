@@ -10,6 +10,115 @@
 
 ## 📅 Enero 2026
 
+### 23 de Enero - v1.34.0 - Generador Reportes Bimestrales SEDENA ✅
+
+#### 🎯 Objetivo Completado: Eliminar Generador de Oficios + Crear Sistema Node.js
+
+**Lo que se hizo**:
+
+1. ✅ **Eliminó módulo "Generador de Oficios"** de la app web
+   - Removido tab de GeneradorOficios de [GeneradorDocumentos.jsx](src/components/admin/GeneradorDocumentos/GeneradorDocumentos.jsx)
+   - Removido import innecesario
+
+2. ✅ **Creó nuevo sistema de generación de reportes** en Node.js
+   - `scripts/reportes-bimestrales/generar-reportes.js` - Script principal
+   - `generadores/relacion.js` - RELACIÓN (detalle por arma)
+   - `generadores/anexoA.js` - ANEXO A (resumen por socio)
+   - `generadores/anexoB.js` - ANEXO B (cédula totales)
+   - `generadores/anexoC.js` - ANEXO C (info club)
+
+3. ✅ **Primeros reportes generados exitosamente** con corte a 23 de Enero 2026
+   - RELACION_2026_02.xlsx (143 KB - 292 armas detalladas)
+   - ANEXO_A_2026_02.xlsx (42 KB - resumen por socio)
+   - ANEXO_B_2026_02.xlsx (19 KB - cédula totales)
+   - ANEXO_C_2026_02.xlsx (19 KB - info club)
+
+**Ubicación**: `/data/reportes-bimestrales/2026/02/`
+
+#### 📊 Contenido de Reportes Bimestrales
+
+| Tipo | Formato | Contenido | Uso |
+|------|---------|----------|-----|
+| **RELACIÓN** | Excel | Una fila por arma (292 filas) | Inventario detallado para SEDENA |
+| **ANEXO A** | Excel | Resumen por socio con conteos | Análisis por miembro |
+| **ANEXO B** | Excel | Cédula con fórmulas de totales | Validación de integridad |
+| **ANEXO C** | Excel | Datos del club + directiva | Información institucional |
+
+**Ejemplo de ejecución**:
+```bash
+node scripts/reportes-bimestrales/generar-reportes.js --mes 2 --año 2026 --tipo todos
+```
+
+#### 🏗️ Estructura Creada
+
+```
+scripts/reportes-bimestrales/
+├── generar-reportes.js          (Script principal)
+├── generadores/
+│   ├── relacion.js              (RELACIÓN)
+│   ├── anexoA.js                (ANEXO A)
+│   ├── anexoB.js                (ANEXO B)
+│   └── anexoC.js                (ANEXO C)
+├── utils/
+│   ├── validaciones.js          (Art. 50 SEDENA)
+│   └── pdf-generator.js         (PDF utilities)
+├── test-generador.js            (Prueba instalación)
+├── ejemplos.js                  (Ejemplos de uso)
+├── guia-rapida.js              (Guía visual)
+└── README.md                    (Documentación)
+```
+
+#### ✨ Características Implementadas
+
+- ✅ Lee directamente de Firestore (socios + armas)
+- ✅ Genera 4 reportes distintos en Excel
+- ✅ Normaliza emails a minúsculas (Firestore)
+- ✅ Valida Art. 50 SEDENA (calibres permitidos)
+- ✅ Estructura automática de directorios
+- ✅ Hojas de resumen en cada reporte
+- ✅ Módulos ES6 (import/export)
+
+#### 🎓 Calendarios de Reportes
+
+Los reportes bimestrales se deben generar antes de:
+- **28 de Febrero** (Enero-Febrero)
+- **30 de Abril** (Marzo-Abril)
+- **30 de Junio** (Mayo-Junio)
+- **31 de Agosto** (Julio-Agosto)
+- **31 de Octubre** (Septiembre-Octubre)
+- **31 de Diciembre** (Noviembre-Diciembre)
+
+#### 📝 Notas Importantes
+
+- Los archivos se generan desde VS Code (no en la web app)
+- Cada reporte es independiente y personalizable
+- Se pueden generar reportes retroactivos de años anteriores
+- Los datos son leídos directamente de Firestore en tiempo real
+
+---
+
+### 22 de Enero - v1.33.6 - GeneradorOficios Fixes ✅
+
+#### 🔧 Fixes: Dropdown de Socios y Editor de Textos
+
+**Problemas Reportados**:
+1. ❌ Dropdown de socios no cargaba datos (vacío)
+2. ❌ Editor de textos no se mostraba en formulario
+
+**Causas Identificadas**:
+- **Dropdown vacío**: Query usaba `where('estado', '==', 'activo')` pero ese campo no existía en documentos
+- **Editor no visible**: Componentes OficioTipo1-2 retornaban `null` si no había socio seleccionado
+
+**Cambios Realizados**:
+
+✏️ **GeneradorOficios.jsx**:
+- ✅ Remover filtro `estado` que causaba query vacío
+- ✅ Cargar TODOS los socios sin filtro
+- ✅ Agregar ordenamiento alfabético por nombre
+---
+
+## 📅 Enero 2026
+
 ### 22 de Enero - v1.33.6 - GeneradorOficios Fixes ✅
 
 #### 🔧 Fixes: Dropdown de Socios y Editor de Textos
