@@ -265,19 +265,7 @@ function generarMarkdown(datos) {
     md += '\n';
   }
 
-  // Socios pendientes
-  const sociosPendientes = datos.socios.filter(s => s.estado === 'pendiente');
-  if (sociosPendientes.length > 0) {
-    md += `### Socios Pendientes de Pago (${sociosPendientes.length})\n\n`;
-    md += `| Cred. | Socio | Teléfono | Correo |
-|-------|-------|----------|--------|
-`;
-    sociosPendientes.forEach(s => {
-      md += `| ${s.credencial} | ${s.nombre} | ${s.telefono || '—'} | ${s.email} |
-`;
-    });
-    md += '\n';
-  }
+
 
   md += `---
 
