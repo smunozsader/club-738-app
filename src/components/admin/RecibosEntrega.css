@@ -1,0 +1,410 @@
+/* RecibosEntrega.css - Reporte de Socios Pagados 2026 */
+
+.recibos-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #333);
+}
+
+.recibos-header {
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--accent-color, #007bff);
+  padding-bottom: 15px;
+  position: relative;
+}
+
+.recibos-header h2 {
+  margin: 0 0 5px 0;
+  font-size: 28px;
+  color: var(--text-primary, #333);
+}
+
+.recibos-header p {
+  margin: 0;
+  color: var(--text-secondary, #666);
+  font-size: 14px;
+}
+
+.btn-volver {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px 15px;
+  background: var(--bg-secondary, #f0f0f0);
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+  background: var(--accent-color, #007bff);
+  color: white;
+}
+
+/* RESUMEN GENERAL */
+.resumen-entregas {
+  margin-bottom: 30px;
+}
+
+.resumen-entregas h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--text-primary, #333);
+  border-left: 4px solid var(--accent-color, #007bff);
+  padding-left: 10px;
+}
+
+.resumen-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.resumen-card {
+  padding: 20px;
+  background: var(--bg-secondary, #f9f9f9);
+  border-radius: 8px;
+  border-left: 4px solid var(--border-color, #ddd);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.resumen-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.resumen-card.highlight {
+  border-left-color: #e74c3c;
+  background: rgba(231, 76, 60, 0.05);
+}
+
+.resumen-card .numero {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--accent-color, #007bff);
+  margin-bottom: 8px;
+}
+
+.resumen-card.highlight .numero {
+  color: #e74c3c;
+}
+
+.resumen-card .label {
+  font-size: 13px;
+  color: var(--text-secondary, #666);
+  font-weight: 600;
+}
+
+/* TABLA DE PAGOS */
+.tabla-seccion {
+  margin: 30px 0;
+}
+
+.tabla-seccion h3 {
+  margin-top: 0;
+  font-size: 18px;
+  color: var(--text-primary, #333);
+  border-left: 4px solid var(--accent-color, #007bff);
+  padding-left: 10px;
+  margin-bottom: 15px;
+}
+
+.tabla-responsive {
+  overflow-x: auto;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 4px;
+  background: var(--bg-secondary, #f9f9f9);
+  margin-bottom: 20px;
+}
+
+.tabla-pagos {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-primary, #ffffff);
+}
+
+.tabla-pagos thead {
+  background: var(--accent-color, #007bff);
+  color: white;
+  font-weight: bold;
+}
+
+.tabla-pagos th {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid var(--border-color, #ddd);
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.tabla-pagos th.monto {
+  text-align: right;
+  width: 110px;
+}
+
+.tabla-pagos td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-color, #eee);
+  font-size: 13px;
+}
+
+.tabla-pagos td.nombre {
+  font-weight: 500;
+  color: var(--text-primary, #333);
+}
+
+.tabla-pagos td.email {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--text-secondary, #666);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tabla-pagos td.monto {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  color: var(--text-primary, #333);
+}
+
+.tabla-pagos td.total-cell {
+  font-weight: bold;
+  background: var(--bg-secondary, #f9f9f9);
+  color: #e74c3c;
+}
+
+/* Filas alternas */
+.tabla-pagos tbody tr:nth-child(odd) {
+  background: var(--bg-primary, #ffffff);
+}
+
+.tabla-pagos tbody tr:nth-child(even) {
+  background: var(--bg-secondary, #f9f9f9);
+}
+
+.tabla-pagos tbody tr:hover {
+  background: var(--hover-color, #f0f7ff);
+}
+
+/* Fila de totales */
+.tabla-pagos tfoot {
+  background: var(--bg-secondary, #f0f0f0);
+  font-weight: bold;
+}
+
+.tabla-pagos tfoot tr {
+  border-top: 2px solid var(--accent-color, #007bff);
+  border-bottom: 2px solid var(--accent-color, #007bff);
+}
+
+.tabla-pagos tfoot td {
+  padding: 12px;
+  color: var(--text-primary, #333);
+}
+
+.tabla-pagos tfoot td.monto {
+  background: var(--bg-primary, #ffffff);
+  text-align: right;
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.sin-entregas {
+  padding: 20px;
+  background: rgba(39, 174, 96, 0.1);
+  border-left: 4px solid #27ae60;
+  color: #27ae60;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* ACCIONES */
+.acciones-tabla {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn-imprimir {
+  padding: 12px 20px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-imprimir:hover {
+  background: #2980b9;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.btn-imprimir:active {
+  transform: scale(0.98);
+}
+
+/* NOTAS */
+.notas-entregas {
+  margin-top: 30px;
+  padding: 20px;
+  background: var(--bg-secondary, #f9f9f9);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-color, #007bff);
+}
+
+.notas-entregas h3 {
+  margin-top: 0;
+  color: var(--text-primary, #333);
+  font-size: 16px;
+}
+
+.notas-entregas ul {
+  margin: 0;
+  padding: 0 0 0 20px;
+  list-style: none;
+}
+
+.notas-entregas li {
+  margin: 10px 0;
+  color: var(--text-secondary, #666);
+  font-size: 14px;
+  padding-left: 8px;
+}
+
+.notas-entregas li:before {
+  content: "▸ ";
+  color: var(--accent-color, #007bff);
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .recibos-container {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+  }
+
+  .tabla-responsive {
+    background: var(--bg-secondary);
+  }
+
+  .tabla-pagos {
+    background: var(--bg-primary);
+  }
+
+  .tabla-pagos tbody tr:nth-child(even) {
+    background: var(--bg-secondary);
+  }
+
+  .tabla-pagos tbody tr:hover {
+    background: var(--bg-secondary);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .tabla-pagos th,
+  .tabla-pagos td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .tabla-pagos th.monto {
+    width: 90px;
+  }
+}
+
+@media (max-width: 768px) {
+  .recibos-container {
+    padding: 15px;
+  }
+
+  .recibos-header {
+    margin-bottom: 20px;
+  }
+
+  .recibos-header h2 {
+    font-size: 22px;
+  }
+
+  .btn-volver {
+    position: static;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .resumen-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tabla-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabla-pagos {
+    font-size: 11px;
+  }
+
+  .tabla-pagos th,
+  .tabla-pagos td {
+    padding: 6px;
+  }
+
+  .tabla-pagos th.monto {
+    width: 70px;
+  }
+
+  .tabla-pagos td.email {
+    max-width: 80px;
+  }
+
+  .notas-entregas li {
+    font-size: 13px;
+  }
+
+  .acciones-tabla {
+    flex-direction: column;
+  }
+
+  .btn-imprimir {
+    width: 100%;
+  }
+}
+
+@media print {
+  .recibos-container {
+    padding: 0;
+  }
+
+  .recibos-header,
+  .btn-volver,
+  .acciones-tabla,
+  .btn-imprimir {
+    display: none;
+  }
+
+  .tabla-responsive {
+    page-break-inside: avoid;
+    border: none;
+    box-shadow: none;
+  }
+
+  .tabla-pagos {
+    page-break-inside: avoid;
+  }
+
+  .tabla-pagos tbody tr:hover {
+    background: transparent;
+  }
+}

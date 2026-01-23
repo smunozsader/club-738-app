@@ -30,6 +30,8 @@ import CobranzaUnificada from './components/CobranzaUnificada';
 import ReportadorExpedientes from './components/admin/ReportadorExpedientes';
 import VerificadorAntecedentes from './components/admin/VerificadorAntecedentes';
 import GeneradorDocumentos from './components/admin/GeneradorDocumentos/GeneradorDocumentos';
+import ReporteContable from './components/admin/ReporteContable';
+import RecibosEntrega from './components/admin/RecibosEntrega';
 import MiPerfil from './components/MiPerfil';
 import GestionArsenal from './components/GestionArsenal';
 import AdminBajasArsenal from './components/AdminBajasArsenal';
@@ -239,6 +241,8 @@ function App() {
               onMiAgenda={() => setActiveSection('mi-agenda')}
               onReportadorExpedientes={() => setActiveSection('reportador-expedientes')}
               onGeneradorDocumentos={() => setActiveSection('generador-documentos')}
+              onReporteContable={() => setActiveSection('reporte-contable')}
+              onRecibosEntrega={() => setActiveSection('recibos-entrega')}
               onBackToTools={() => setActiveSection('admin-dashboard')}
               activeSection={activeSection}
             />
@@ -376,6 +380,20 @@ function App() {
               </button>
               <GeneradorDocumentos userEmail={user.email} />
             </div>
+          )}
+
+          {activeSection === 'reporte-contable' && user.email === ADMIN_EMAIL && (
+            <ReporteContable 
+              userEmail={user.email} 
+              onBack={() => setActiveSection('admin-dashboard')} 
+            />
+          )}
+
+          {activeSection === 'recibos-entrega' && user.email === ADMIN_EMAIL && (
+            <RecibosEntrega 
+              userEmail={user.email} 
+              onBack={() => setActiveSection('admin-dashboard')} 
+            />
           )}
 
           {activeSection === 'cobranza' && user.email === ADMIN_EMAIL && (

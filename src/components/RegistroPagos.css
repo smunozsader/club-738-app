@@ -560,3 +560,249 @@
     flex-direction: column;
   }
 }
+
+/* Estilos para "Recibido por" */
+.recibido-por-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.recibido-option {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.recibido-option:hover {
+  border-color: #3498db;
+  background-color: rgba(52, 152, 219, 0.05);
+}
+
+.recibido-option input[type="radio"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.recibido-option.active {
+  border-color: #27ae60;
+  background-color: rgba(39, 174, 96, 0.1);
+  font-weight: 600;
+}
+
+.recibido-option span {
+  font-size: 0.95rem;
+}
+
+.otra-persona-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.otra-persona-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 4px rgba(52, 152, 219, 0.3);
+}
+
+/* Comprobante de transferencia */
+.comprobante-section {
+  background: #f8f9fa;
+  border: 2px dashed #3498db;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 15px;
+}
+
+.comprobante-section h4 {
+  margin-top: 0;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.comprobante-help {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin: 0 0 15px 0;
+}
+
+.comprobante-upload,
+.comprobante-upload-adicional {
+  cursor: pointer;
+  display: block;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  border: 2px dashed #bdc3c7;
+  border-radius: 6px;
+  background: white;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.comprobante-upload:hover .upload-area {
+  background: #ecf0f1;
+  border-color: #3498db;
+}
+
+.upload-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.upload-text {
+  color: #2c3e50;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.upload-hint {
+  font-size: 0.8rem;
+  color: #95a5a6;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.upload-count {
+  font-size: 0.75rem;
+  background: #3498db;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+/* Lista de comprobantes cargados */
+.comprobantes-list {
+  margin-top: 15px;
+}
+
+.comprobantes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.comprobante-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.comprobante-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: #3498db;
+}
+
+.preview-container-mini {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  overflow: hidden;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.preview-image-mini {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.preview-pdf-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: #ecf0f1;
+}
+
+.pdf-icon-mini {
+  font-size: 32px;
+}
+
+.comprobante-info {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.comprobante-nombre {
+  font-size: 0.75rem;
+  color: #2c3e50;
+  word-break: break-all;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  flex: 1;
+}
+
+.btn-remove-individual {
+  padding: 2px 6px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: bold;
+  min-width: 24px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.btn-remove-individual:hover {
+  background: #c0392b;
+}
+
+.comprobante-upload-adicional {
+  padding: 12px;
+  background: white;
+  border: 2px dashed #3498db;
+  border-radius: 6px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.comprobante-upload-adicional:hover {
+  background: #ecf0f1;
+  border-color: #2980b9;
+}
+
+.add-more-text {
+  color: #3498db;
+  font-weight: 600;
+  cursor: pointer;
+  display: block;
+}
+

@@ -103,6 +103,20 @@ export default function AdminToolsNavigation({
           onClick: () => onSelectTool('renovaciones-2026')
         },
         { 
+          id: 'reporte-contable', 
+          label: 'Reporte Contable', 
+          icon: '📊',
+          description: 'Reporte consolidado de ingresos y recordatorios',
+          onClick: () => onSelectTool('reporte-contable')
+        },
+        { 
+          id: 'recibos-entrega', 
+          label: 'Recibos de Entrega', 
+          icon: '💵',
+          description: 'Recibos de efectivo y entregas a presidencia',
+          onClick: () => onSelectTool('recibos-entrega')
+        },
+        { 
           id: 'cumpleanos', 
           label: 'Cumpleaños', 
           icon: '🎂',

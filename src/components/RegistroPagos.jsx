@@ -10,7 +10,8 @@
  */
 import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, updateDoc, Timestamp, arrayUnion, setDoc } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../firebaseConfig';
 import { CONCEPTOS_PAGO_2026, METODOS_PAGO, COMBOS_PAGO, calcularTotalPago } from '../utils/conceptosPago';
 import './RegistroPagos.css';
 
@@ -44,6 +45,13 @@ export default function RegistroPagos({ userEmail, onBack }) {
   const [fechaPago, setFechaPago] = useState(new Date().toISOString().split('T')[0]);
   const [numeroRecibo, setNumeroRecibo] = useState('');
   const [notas, setNotas] = useState('');
+  const [recibidoPor, setRecibidoPor] = useState('secretario'); // secretario, presidente, elena_torres, otro
+  const [recibidoPorOtro, setRecibidoPorOtro] = useState('');
+  
+  // Manejo de comprobantes de transferencia (hasta 3 archivos)
+  const [comprobanteFiles, setComprobanteFiles] = useState([]);
+  const [comprobantePreviews, setComprobantePreviews] = useState([]);
+  const [subiendoComprobantes, setSubiendoComprobantes] = useState(false);
 
   useEffect(() => {
     cargarSocios();
@@ -104,6 +112,89 @@ export default function RegistroPagos({ userEmail, onBack }) {
     });
   };
 
+  const manejarComprobanteChange = (e) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    // Permitir hasta 3 archivos
+    const nuevosArchivos = Array.from(files).slice(0, 3 - comprobanteFiles.length);
+    
+    if (comprobanteFiles.length + nuevosArchivos.length > 3) {
+      alert('Máximo 3 archivos permitidos');
+      return;
+    }
+
+    const archivosValidos = [];
+    const nuevosPreviews = [];
+
+    nuevosArchivos.forEach(file => {
+      // Validar tipo de archivo
+      const tiposPermitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
+      if (!tiposPermitidos.includes(file.type)) {
+        alert(`"${file.name}" no es un formato válido. Solo JPG, PNG, GIF, WebP o PDF`);
+        return;
+      }
+
+      // Validar tamaño (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert(`"${file.name}" supera 5MB`);
+        return;
+      }
+
+      archivosValidos.push(file);
+
+      // Crear preview
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        nuevosPreviews.push({
+          url: evt.target?.result,
+          tipo: file.type,
+          nombre: file.name
+        });
+
+        if (nuevosPreviews.length === archivosValidos.length) {
+          setComprobanteFiles([...comprobanteFiles, ...archivosValidos]);
+          setComprobantePreviews([...comprobantePreviews, ...nuevosPreviews]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removerComprobante = (index) => {
+    setComprobanteFiles(comprobanteFiles.filter((_, i) => i !== index));
+    setComprobantePreviews(comprobantePreviews.filter((_, i) => i !== index));
+  };
+
+  const subirComprobantes = async () => {
+    if (comprobanteFiles.length === 0) return [];
+
+    try {
+      setSubiendoComprobantes(true);
+      const urls = [];
+
+      for (let i = 0; i < comprobanteFiles.length; i++) {
+        const file = comprobanteFiles[i];
+        const timestamp = Date.now();
+        const extension = file.name.split('.').pop();
+        const nombreArchivo = `transferencia-${timestamp}-${i}.${extension}`;
+
+        const storageRef = ref(storage, `documentos/${socioSeleccionado.email}/transferencias/${nombreArchivo}`);
+        await uploadBytes(storageRef, file);
+        const urlDescarga = await getDownloadURL(storageRef);
+        urls.push(urlDescarga);
+      }
+
+      return urls;
+    } catch (error) {
+      console.error('Error subiendo comprobantes:', error);
+      alert('Error al subir comprobantes. Por favor intenta de nuevo.');
+      return [];
+    } finally {
+      setSubiendoComprobantes(false);
+    }
+  };
+
   const calcularTotal = () => {
     let total = 0;
     Object.keys(conceptosSeleccionados).forEach(concepto => {
@@ -124,6 +215,12 @@ export default function RegistroPagos({ userEmail, onBack }) {
       alert('Por favor ingresa el número de recibo');
       return;
     }
+
+    // Validar que si es transferencia, debe haber comprobante(s)
+    if (metodoPago === 'transferencia' && comprobanteFiles.length === 0) {
+      alert('Por favor carga al menos un comprobante de transferencia');
+      return;
+    }
     
     const total = calcularTotal();
     if (total === 0) {
@@ -134,6 +231,16 @@ export default function RegistroPagos({ userEmail, onBack }) {
     try {
       setGuardando(true);
       
+      // Subir comprobantes si es transferencia
+      let comprobantesURLs = [];
+      if (metodoPago === 'transferencia') {
+        comprobantesURLs = await subirComprobantes();
+        if (comprobantesURLs.length === 0) {
+          setGuardando(false);
+          return;
+        }
+      }
+      
       const conceptosPagados = Object.keys(conceptosSeleccionados)
         .filter(c => conceptosSeleccionados[c])
         .map(c => ({
@@ -142,6 +249,12 @@ export default function RegistroPagos({ userEmail, onBack }) {
           monto: montosPersonalizados[c]  // Usar monto personalizado, no el por defecto
         }));
       
+      const nombreRecibidoPor = recibidoPor === 'otro' ? recibidoPorOtro : {
+        'secretario': 'Secretario (Admin)',
+        'presidente': 'Presidente del Club',
+        'elena_torres': 'Lic. Elena Torres',
+      }[recibidoPor] || recibidoPorOtro;
+
       const registroPago = {
         fecha: Timestamp.fromDate(new Date(fechaPago)),
         conceptos: conceptosPagados,
@@ -150,7 +263,10 @@ export default function RegistroPagos({ userEmail, onBack }) {
         numeroRecibo: numeroRecibo,
         notas: notas,
         registradoPor: userEmail,
-        fechaRegistro: Timestamp.now()
+        recibidoPor: recibidoPor,
+        recibidoPorNombre: nombreRecibidoPor,
+        fechaRegistro: Timestamp.now(),
+        comprobantesTransferencia: comprobantesURLs.length > 0 ? comprobantesURLs : null
       };
       
       const socioRef = doc(db, 'socios', socioSeleccionado.email);
@@ -169,7 +285,8 @@ export default function RegistroPagos({ userEmail, onBack }) {
           fechaPago: Timestamp.fromDate(new Date(fechaPago)),
           monto: total,
           metodoPago: metodoPago,
-          numeroRecibo: numeroRecibo
+          numeroRecibo: numeroRecibo,
+          comprobantesTransferencia: comprobantesURLs.length > 0 ? comprobantesURLs : null
         },
         // Sincronizar con renovacion2026 para el panel de cobranza
         'renovacion2026.estado': 'pagado',
@@ -179,7 +296,10 @@ export default function RegistroPagos({ userEmail, onBack }) {
         'renovacion2026.montoTotal': total,
         'renovacion2026.metodoPago': metodoPago,
         'renovacion2026.comprobante': numeroRecibo,
+        'renovacion2026.comprobantesTransferencia': comprobantesURLs.length > 0 ? comprobantesURLs : null,
         'renovacion2026.registradoPor': userEmail,
+        'renovacion2026.recibidoPor': recibidoPor,
+        'renovacion2026.recibidoPorNombre': nombreRecibidoPor,
         ultimaActualizacion: Timestamp.now()
       });
       
@@ -190,6 +310,10 @@ export default function RegistroPagos({ userEmail, onBack }) {
       setNumeroRecibo('');
       setNotas('');
       setFechaPago(new Date().toISOString().split('T')[0]);
+      setRecibidoPor('secretario');
+      setRecibidoPorOtro('');
+      setComprobanteFiles([]);
+      setComprobantePreviews([]);
       
       // Recargar datos
       await cargarSocios();
@@ -330,6 +454,66 @@ export default function RegistroPagos({ userEmail, onBack }) {
                   </div>
                 </div>
 
+                {/* Recibido por */}
+                <div className="form-section">
+                  <h4>¿Quién recibió el pago?</h4>
+                  <div className="recibido-por-grid">
+                    <label htmlFor="recibido-secretario" className={`recibido-option ${recibidoPor === 'secretario' ? 'active' : ''}`}>
+                      <input
+                        id="recibido-secretario"
+                        type="radio"
+                        name="recibidoPor"
+                        value="secretario"
+                        checked={recibidoPor === 'secretario'}
+                        onChange={(e) => setRecibidoPor(e.target.value)}
+                      />
+                      <span>🔐 Secretario (Admin)</span>
+                    </label>
+                    <label htmlFor="recibido-presidente" className={`recibido-option ${recibidoPor === 'presidente' ? 'active' : ''}`}>
+                      <input
+                        id="recibido-presidente"
+                        type="radio"
+                        name="recibidoPor"
+                        value="presidente"
+                        checked={recibidoPor === 'presidente'}
+                        onChange={(e) => setRecibidoPor(e.target.value)}
+                      />
+                      <span>👔 Presidente</span>
+                    </label>
+                    <label htmlFor="recibido-elena" className={`recibido-option ${recibidoPor === 'elena_torres' ? 'active' : ''}`}>
+                      <input
+                        id="recibido-elena"
+                        type="radio"
+                        name="recibidoPor"
+                        value="elena_torres"
+                        checked={recibidoPor === 'elena_torres'}
+                        onChange={(e) => setRecibidoPor(e.target.value)}
+                      />
+                      <span>👩 Lic. Elena Torres</span>
+                    </label>
+                    <label htmlFor="recibido-otro" className={`recibido-option ${recibidoPor === 'otro' ? 'active' : ''}`}>
+                      <input
+                        id="recibido-otro"
+                        type="radio"
+                        name="recibidoPor"
+                        value="otro"
+                        checked={recibidoPor === 'otro'}
+                        onChange={(e) => setRecibidoPor(e.target.value)}
+                      />
+                      <span>❓ Otro</span>
+                    </label>
+                  </div>
+                  {recibidoPor === 'otro' && (
+                    <input
+                      type="text"
+                      placeholder="Especificar nombre de quién recibió"
+                      value={recibidoPorOtro}
+                      onChange={(e) => setRecibidoPorOtro(e.target.value)}
+                      className="otra-persona-input"
+                    />
+                  )}
+                </div>
+
                 {/* Método de pago */}
                 <div className="form-section">
                   <h4>Método de pago</h4>
@@ -350,6 +534,84 @@ export default function RegistroPagos({ userEmail, onBack }) {
                     ))}
                   </div>
                 </div>
+
+                {/* Comprobante de transferencia */}
+                {metodoPago === 'transferencia' && (
+                  <div className="form-section comprobante-section">
+                    <h4>📸 Comprobantes de transferencia (hasta 3)</h4>
+                    <p className="comprobante-help">Carga screenshots de WhatsApp, confirmación bancaria o PDFs de transferencia</p>
+                    
+                    {comprobantePreviews.length < 3 && (
+                      <label htmlFor="comprobante-input" className="comprobante-upload">
+                        <input
+                          id="comprobante-input"
+                          type="file"
+                          multiple
+                          accept="image/jpeg,image/png,image/gif,image/webp,application/pdf"
+                          onChange={manejarComprobanteChange}
+                          className="file-input-hidden"
+                          aria-label="Cargar comprobante de transferencia"
+                        />
+                        <div className="upload-area">
+                          <span className="upload-icon">📤</span>
+                          <span className="upload-text">
+                            Haz clic para cargar o arrastra los archivos
+                          </span>
+                          <span className="upload-hint">JPG, PNG, GIF, WebP o PDF (máx. 5MB c/u)</span>
+                          <span className="upload-count">
+                            {comprobantePreviews.length}/3 archivos
+                          </span>
+                        </div>
+                      </label>
+                    )}
+
+                    {comprobantePreviews.length > 0 && (
+                      <div className="comprobantes-list">
+                        <div className="comprobantes-grid">
+                          {comprobantePreviews.map((preview, idx) => (
+                            <div key={idx} className="comprobante-item">
+                              <div className="preview-container-mini">
+                                {preview.tipo.startsWith('image/') ? (
+                                  <img src={preview.url} alt={`Comprobante ${idx + 1}`} className="preview-image-mini" />
+                                ) : (
+                                  <div className="preview-pdf-mini">
+                                    <span className="pdf-icon-mini">📄</span>
+                                  </div>
+                                )}
+                              </div>
+                              <div className="comprobante-info">
+                                <span className="comprobante-nombre">{preview.nombre}</span>
+                                <button
+                                  type="button"
+                                  className="btn-remove-individual"
+                                  onClick={() => removerComprobante(idx)}
+                                  title="Remover archivo"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {comprobantePreviews.length < 3 && (
+                          <label htmlFor="comprobante-input-adicional" className="comprobante-upload-adicional">
+                            <input
+                              id="comprobante-input-adicional"
+                              type="file"
+                              multiple
+                              accept="image/jpeg,image/png,image/gif,image/webp,application/pdf"
+                              onChange={manejarComprobanteChange}
+                              className="file-input-hidden"
+                              aria-label="Cargar más comprobantes"
+                            />
+                            <span className="add-more-text">+ Agregar más</span>
+                          </label>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Fecha y recibo */}
                 <div className="form-section">

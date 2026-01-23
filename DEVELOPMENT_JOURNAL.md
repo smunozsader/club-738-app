@@ -10,6 +10,99 @@
 
 ## 📅 Enero 2026
 
+### 23 de Enero - v1.35.0 - Sistema de Cobranza y Comprobantes de Transferencia ✅
+
+#### 🎯 Objetivo Completado: Registro de Pagos + Comprobantes de Transferencia
+
+**Lo que se hizo**:
+
+1. ✅ **Tabla de Socios Pagados 2026**
+   - Creó [RecibosEntrega.jsx](src/components/admin/RecibosEntrega.jsx) - Reporte en tabla
+   - Columnas: Nombre, Teléfono, Email, No. Socio, No. Consecutivo, Fecha Pago, Inscripción, Cuota 2026, FEMETI 2026, Total
+   - Fila de totales al final con sumas por concepto
+   - Resumen visual en tarjetas (cantidad de socios, totales por concepto)
+   - Botón para imprimir/guardar como PDF
+   - Solo incluye pagos 2026 (excluye Santiago 2025)
+
+2. ✅ **Campo "Quién Recibió el Pago"** en [RegistroPagos.jsx](src/components/RegistroPagos.jsx)
+   - 4 opciones: Secretario (Admin), Presidente, Lic. Elena Torres, Otro
+   - Campo de texto cuando se selecciona "Otro" para especificar nombre
+   - Se guarda en Firestore como `recibidoPor` y `recibidoPorNombre`
+   - Aparece en ReporteContable como columna adicional
+
+3. ✅ **Sistema de Comprobantes de Transferencia**
+   - Carga de hasta 3 archivos por transferencia
+   - Soporta: JPG, PNG, GIF, WebP, PDF (máx. 5MB c/u)
+   - Validación de tipo y tamaño
+   - Preview visual con miniaturas
+   - Botón individual ✕ para remover cada archivo
+   - Opción "+ Agregar más" cuando hay <3 archivos
+   - Se guarda array de URLs en Firestore: `comprobantesTransferencia: [URL1, URL2, URL3]`
+   - Almacenamiento en Firebase: `documentos/{email}/transferencias/`
+   - Mínimo 1 comprobante obligatorio para transferencias
+
+4. ✅ **Integración en Registro de Pagos**
+   - Campo aparece solo cuando se selecciona "Transferencia" como método
+   - Validación: no permite registrar sin comprobantes
+   - Carga archivos antes de guardar pago
+   - Limpia estado después de registrar exitosamente
+
+#### 📊 Estructura de Datos Guardada
+
+```javascript
+// En socios/{email}/renovacion2026:
+{
+  estado: 'pagado',
+  metodoPago: 'transferencia',
+  recibidoPor: 'elena_torres',          // quién recibió
+  recibidoPorNombre: 'Lic. Elena Torres', // nombre completo
+  comprobantesTransferencia: [           // URLs de comprobantes
+    'https://storage.googleapis.com/...',
+    'https://storage.googleapis.com/...',
+    'https://storage.googleapis.com/...'
+  ],
+  montoTotal: 6850,
+  fechaPago: Timestamp,
+  cuotaClub: 6000,
+  cuotaFemeti: 350
+}
+```
+
+#### ✨ Características Implementadas
+
+- ✅ Reporte tabular de socios pagados
+- ✅ Totales por concepto (Inscripción, Cuota, FEMETI)
+- ✅ Seguimiento de quién recibió cada pago
+- ✅ Múltiples comprobantes por transferencia (hasta 3)
+- ✅ Validación de archivos (tipo y tamaño)
+- ✅ Preview visual en galería
+- ✅ Almacenamiento seguro en Firebase Storage
+- ✅ URLs persistentes en Firestore
+- ✅ Interfaz responsive y user-friendly
+- ✅ Dark mode compatible
+- ✅ Print-friendly CSS
+
+#### 🔄 Archivos Modificados
+
+- `src/components/RegistroPagos.jsx` - Agregó comprobantes múltiples
+- `src/components/RegistroPagos.css` - Estilos para galería de comprobantes
+- `src/components/admin/RecibosEntrega.jsx` - NEW: Reporte en tabla
+- `src/components/admin/RecibosEntrega.css` - NEW: Estilos de tabla
+- `src/components/admin/ReporteContable.jsx` - Agregó columna "Recibido por"
+- `src/App.jsx` - Integró RecibosEntrega
+- `src/components/admin/AdminToolsNavigation.jsx` - Nuevo menú item
+- `src/components/admin/AdminDashboard.jsx` - Nuevo router
+
+#### 🧪 Testing
+
+- ✅ Build sin errores
+- ✅ Deploy exitoso a Firebase
+- ✅ Almacenamiento de archivos funcionando
+- ✅ Validaciones de archivo funcionando
+- ✅ Tabla de socios pagados con totales correctos
+
+---
+
 ### 23 de Enero - v1.34.0 - Generador Reportes Bimestrales SEDENA ✅
 
 #### 🎯 Objetivo Completado: Eliminar Generador de Oficios + Crear Sistema Node.js

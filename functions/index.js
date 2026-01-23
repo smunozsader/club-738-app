@@ -597,6 +597,147 @@ exports.onNotificacionCreated = onDocumentCreated(
 // exports.crearEventoCalendar = calendarFunctions.crearEventoCalendar;
 // exports.actualizarEvent = calendarFunctions.actualizarEventoCalendar;
 
+/**
+ * HTTP Function: Enviar recordatorios por email o WhatsApp
+ * 
+ * POST /enviarRecordatorios
+ * Body: {
+ *   tipo: 'email' | 'whatsapp',
+ *   socios: [{email, nombre, telefono, monto}]
+ * }
+ */
+const {onRequest} = require("firebase-functions/v2/https");
+
+exports.enviarRecordatorios = onRequest(
+    {cors: true, region: "us-central1"},
+    async (req, res) => {
+      // Validar método
+      if (req.method !== "POST") {
+        return res.status(405).json({error: "Solo POST permitido"});
+      }
+
+      const {tipo, socios} = req.body;
+
+      if (!tipo || !Array.isArray(socios) || socios.length === 0) {
+        return res.status(400).json(
+            {error: "Parámetros inválidos: tipo y socios requeridos"},
+        );
+      }
+
+      console.log(`📢 Enviar recordatorios por ${tipo} a ${socios.length} socios`);
+
+      try {
+        if (tipo === "email") {
+          return await enviarRecordatoriosEmail(socios, res);
+        } else if (tipo === "whatsapp") {
+          return await enviarRecordatoriosWhatsApp(socios, res);
+        } else {
+          return res.status(400).json({error: "Tipo no soportado"});
+        }
+      } catch (error) {
+        console.error("Error enviando recordatorios:", error);
+        return res.status(500).json({error: error.message});
+      }
+    },
+);
+
+/**
+ * Enviar recordatorios por email
+ */
+async function enviarRecordatoriosEmail(socios, res) {
+  const transporter = nodemailer.createTransport(EMAIL_CONFIG.smtp);
+  let enviados = 0;
+  let errores = 0;
+  const resultados = [];
+
+  for (const socio of socios) {
+    try {
+      const cuerpo = `
+Estimado(a) ${socio.nombre},
+
+Le recordamos que debe realizar su pago de renovación de membresía antes del 
+28 de febrero de 2026.
+
+MONTO A PAGAR: $${socio.monto} MXN
+CONCEPTO: Cuota de Renovación 2026
+
+Para realizar su pago, favor de contactar directamente con la tesorería del club.
+
+Agradecemos su puntualidad.
+
+---
+Club de Caza, Tiro y Pesca de Yucatán, A.C.
+Calle 50 No. 531-E x 69 y 71, Col. Centro, 97000 Mérida, Yucatán
+Tel: +52 56 6582 4667
+      `;
+
+      const emailMessage = {
+        from: "smunozam@gmail.com",
+        to: socio.email,
+        subject: "📢 Recordatorio: Renovación de Membresía Club 738 - Antes del 28 de Febrero",
+        text: cuerpo,
+        html: `<pre style="font-family: Arial, sans-serif; white-space: pre-wrap;">${cuerpo}</pre>`,
+      };
+
+      const info = await transporter.sendMail(emailMessage);
+      console.log(`✅ Email enviado a ${socio.email} (${info.messageId})`);
+      enviados++;
+      resultados.push({socio: socio.email, estado: "enviado"});
+    } catch (error) {
+      console.error(`❌ Error enviando email a ${socio.email}:`, error);
+      errores++;
+      resultados.push({socio: socio.email, estado: "error", error: error.message});
+    }
+  }
+
+  return res.json({
+    tipo: "email",
+    enviados,
+    errores,
+    total: socios.length,
+    resultados,
+    mensaje: `${enviados} recordatorios enviados por email`,
+  });
+}
+
+/**
+ * Enviar recordatorios por WhatsApp
+ * (Requiere integración con Twilio o similar)
+ */
+async function enviarRecordatoriosWhatsApp(socios, res) {
+  // Por ahora, solo retornar que se necesita configurar
+  // En producción, usar Twilio API
+  console.log("📱 WhatsApp enviado a:", socios.map(s => s.telefono).join(", "));
+
+  let enviados = 0;
+  const resultados = [];
+
+  for (const socio of socios) {
+    try {
+      // TODO: Implementar envío real de WhatsApp con Twilio
+      // const mensaje = `Hola ${socio.nombre}, recordatorio de pago: $${socio.monto}...`;
+      // await twilioClient.messages.create(...);
+
+      enviados++;
+      resultados.push({socio: socio.telefono, estado: "enviado"});
+    } catch (error) {
+      console.error(`❌ Error enviando WhatsApp a ${socio.telefono}:`, error);
+      resultados.push(
+          {socio: socio.telefono, estado: "error", error: error.message},
+      );
+    }
+  }
+
+  return res.json({
+    tipo: "whatsapp",
+    enviados,
+    total: socios.length,
+    resultados,
+    mensaje: `${enviados} recordatorios enviados por WhatsApp (SIMULADO)`,
+    nota: "Requiere configuración real de Twilio en producción",
+  });
+}
+
 // Exportar funciones de Backup
 const backupFunctions = require("./backupFirestore");
 exports.scheduledFirestoreBackup = backupFunctions.scheduledFirestoreBackup;

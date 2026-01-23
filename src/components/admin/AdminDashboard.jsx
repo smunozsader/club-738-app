@@ -37,6 +37,8 @@ export default function AdminDashboard({
   onMiAgenda,
   onReportadorExpedientes,
   onGeneradorDocumentos,
+  onReporteContable,
+  onRecibosEntrega,
   activeSection = 'admin-dashboard',
   onBackToTools
 }) {
@@ -98,6 +100,12 @@ export default function AdminDashboard({
         break;
       case 'admin-socios':
         if (onAdminSocios) onAdminSocios();
+        break;
+      case 'reporte-contable':
+        if (onReporteContable) onReporteContable();
+        break;
+      case 'recibos-entrega':
+        if (onRecibosEntrega) onRecibosEntrega();
         break;
       default:
         console.log(`Unknown tool: ${toolId}`);
