@@ -57,7 +57,8 @@ async function generarReporteContable() {
         // Extraer montos del desglose si existe
         if (pago.desglose) {
           detallesPago.inscripcion = pago.desglose.inscripcion || 0;
-          detallesPago.anualidad = pago.desglose.cuota_anual || 0;
+          // Buscar anualidad con diferentes nombres posibles
+          detallesPago.anualidad = pago.desglose.anualidad || pago.desglose.cuota_anual || 0;
           detallesPago.femeti = pago.desglose.femeti || 0;
           detallesPago.total = pago.montoTotal || pago.monto || 0;
         } else if (pago.monto && pago.monto > 0) {

@@ -23,8 +23,8 @@
 - **Total Recaudado:** **$2,000.00**
 
 ### ✅ Cuotas Anuales 2026
-- **Cantidad de Pagos:** 8
-- **Total Recaudado:** **$48,500.00**
+- **Cantidad de Pagos:** 9
+- **Total Recaudado:** **$54,500.00**
 
 ---
 
@@ -33,8 +33,8 @@
 | Concepto | Monto |
 |----------|-------|
 | Inscripciones | $2,000.00 |
-| Cuotas Anuales 2026 | $48,500.00 |
-| **INGRESO NETO CLUB** | **$50,500.00** |
+| Cuotas Anuales 2026 | $54,500.00 |
+| **INGRESO NETO CLUB** | **$56,500.00** |
 
 ---
 
@@ -60,7 +60,7 @@
 | 215 | RICARDO ALBERTO DESQUENS BONILLA | — | $6,000.00 | $350.00 | **$6,350.00** | 15/1/2026 |
 | 186 | EDUARDO DENIS HERRERA | — | $6,000.00 | $350.00 | **$6,350.00** | 17/1/2026 |
 | 204 | ARIEL ANTONIO PAREDES CETINA | — | $6,500.00 | $350.00 | **$6,850.00** | 18/1/2026 |
-| 236 | LUIS FERNANDO GUILLERMO GAMBOA | $2,000.00 | — | $700.00 | **$8,700.00** | — |
+| 236 | LUIS FERNANDO GUILLERMO GAMBOA | $2,000.00 | $6,000.00 | $700.00 | **$8,700.00** | — |
 | 229 | DANIEL DE JESUS PADILLA ROBLES | — | $6,000.00 | $350.00 | **$6,350.00** | 17/1/2026 |
 | 230 | RICARDO ANTONIO SOBERANIS GAMBOA | — | $6,000.00 | $350.00 | **$6,350.00** | 17/1/2026 |
 
