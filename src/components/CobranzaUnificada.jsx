@@ -15,7 +15,7 @@ import './CobranzaUnificada.css';
  */
 
 const CONCEPTO_PAGO = {
-  cuota_anual: 6000,
+  cuota_anual: 6500,
   femeti_socio: 350,
   femeti_nuevo: 700,
   inscripcion: 2000

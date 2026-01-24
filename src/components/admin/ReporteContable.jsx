@@ -19,6 +19,10 @@ export default function ReporteContable({ userEmail, onBack }) {
   const [socios, setSocios] = useState([]);
   const [resumen, setResumen] = useState(null);
   const [enviandoRecordatorios, setEnviandoRecordatorios] = useState(false);
+  const [mostrarPreview, setMostrarPreview] = useState(false);
+  const [tipoRecordatorio, setTipoRecordatorio] = useState(null);
+  const [mensajesEditables, setMensajesEditables] = useState([]);
+  const [indiceActual, setIndiceActual] = useState(0);
   const toast = useToastContext();
 
   useEffect(() => {
@@ -132,7 +136,6 @@ export default function ReporteContable({ userEmail, onBack }) {
 
   async function enviarRecordatoriosPendientes(tipo) {
     try {
-      setEnviandoRecordatorios(true);
       const sociosPendientes = socios.filter(s => s.estado === 'pendiente');
 
       if (sociosPendientes.length === 0) {
@@ -140,20 +143,81 @@ export default function ReporteContable({ userEmail, onBack }) {
         return;
       }
 
-      // Llamar a Cloud Function para enviar recordatorios
+      // Generar mensajes personalizados
+      const mensajes = generarMensajesPersonalizados(sociosPendientes, tipo);
+      setMensajesEditables(mensajes);
+      setTipoRecordatorio(tipo);
+      setIndiceActual(0);
+      setMostrarPreview(true);
+    } catch (error) {
+      console.error('Error:', error);
+      toast?.showToast('Error al preparar recordatorios', 'error');
+    }
+  }
+
+  function generarMensajesPersonalizados(sociosPendientes, tipo) {
+    return sociosPendientes.map(socio => {
+      let mensaje = '';
+      
+      if (tipo === 'email') {
+        mensaje = `Estimado(a) ${socio.nombre},
+
+Le recordamos que debe realizar su pago de renovación de membresía antes del 28 de febrero de 2026.
+
+MONTO A PAGAR: $${6500} MXN
+CONCEPTO: Cuota de Renovación 2026
+
+Para realizar su pago, favor de contactar directamente con la tesorería del club.
+
+Agradecemos su puntualidad.
+
+---
+Club de Caza, Tiro y Pesca de Yucatán, A.C.
+Calle 50 No. 531-E x 69 y 71, Col. Centro, 97000 Mérida, Yucatán
+Tel: +52 56 6582 4667`;
+      } else if (tipo === 'whatsapp') {
+        mensaje = `¡Hola ${socio.nombre}! 👋
+
+Recordatorio importante: Tu renovación de membresía vence el 28 de febrero de 2026.
+
+💰 Monto: $6,500 MXN
+📋 Concepto: Cuota Anual 2026
+
+Favor contactar al club para procesar tu pago.
+
+🏹 Club de Caza, Tiro y Pesca de Yucatán
+Teléfono: +52 56 6582 4667`;
+      }
+
+      return {
+        email: socio.email,
+        nombre: socio.nombre,
+        telefono: socio.telefono,
+        mensaje,
+        original: mensaje
+      };
+    });
+  }
+
+  function actualizarMensaje(nuevoMensaje) {
+    const actualizados = [...mensajesEditables];
+    actualizados[indiceActual].mensaje = nuevoMensaje;
+    setMensajesEditables(actualizados);
+  }
+
+  async function confirmarEnvio() {
+    try {
+      setEnviandoRecordatorios(true);
+
+      // Llamar a Cloud Function con mensajes personalizados
       const response = await fetch(
         'https://us-central1-club-738-app.cloudfunctions.net/enviarRecordatorios',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            tipo, // 'email' o 'whatsapp'
-            socios: sociosPendientes.map(s => ({
-              email: s.email,
-              nombre: s.nombre,
-              telefono: s.telefono,
-              monto: 6000 // Cuota anual
-            }))
+            tipo: tipoRecordatorio,
+            mensajes: mensajesEditables
           })
         }
       );
@@ -162,10 +226,14 @@ export default function ReporteContable({ userEmail, onBack }) {
 
       const data = await response.json();
       toast?.showToast(
-        `${data.enviados} recordatorios por ${tipo} ✓`,
+        `${data.enviados} recordatorios por ${tipoRecordatorio} ✓`,
         'success',
         3000
       );
+      
+      setMostrarPreview(false);
+      setMensajesEditables([]);
+      setTipoRecordatorio(null);
     } catch (error) {
       console.error('Error:', error);
       toast?.showToast('Error al enviar recordatorios', 'error');
@@ -174,11 +242,94 @@ export default function ReporteContable({ userEmail, onBack }) {
     }
   }
 
+  function cancelarEnvio() {
+    setMostrarPreview(false);
+    setMensajesEditables([]);
+    setTipoRecordatorio(null);
+    setIndiceActual(0);
+  }
+
   if (loading) {
     return <div className="reporte-contable-container"><p>Generando reporte...</p></div>;
   }
 
   const porcentajePagados = ((resumen.sociosPagados / resumen.totalSocios) * 100).toFixed(1);
+
+  // MODAL DE PREVIEW
+  if (mostrarPreview && mensajesEditables.length > 0) {
+    const mensajeActual = mensajesEditables[indiceActual];
+    const esEmail = tipoRecordatorio === 'email';
+    
+    return (
+      <div className="reporte-contable-container">
+        <div className="modal-overlay">
+          <div className="modal-preview-recordatorios">
+            <div className="modal-header">
+              <h2>🔍 Revisar Mensajes - {tipoRecordatorio.toUpperCase()}</h2>
+              <p className="contador">Mensaje {indiceActual + 1} de {mensajesEditables.length}</p>
+              <button className="btn-cerrar-modal" onClick={cancelarEnvio}>✕</button>
+            </div>
+
+            <div className="preview-contenido">
+              <div className="destinatario-info">
+                <h3>{mensajeActual.nombre}</h3>
+                <p className="detalle">{esEmail ? '📧 ' : '💬 '}{esEmail ? mensajeActual.email : mensajeActual.telefono}</p>
+              </div>
+
+              <div className="editor-mensaje">
+                <label>📝 Mensaje (Editable):</label>
+                <textarea
+                  value={mensajeActual.mensaje}
+                  onChange={(e) => actualizarMensaje(e.target.value)}
+                  rows="12"
+                  className="textarea-mensaje"
+                />
+                <div className="contador-caracteres">
+                  {mensajeActual.mensaje.length} caracteres
+                </div>
+              </div>
+
+              <div className="botones-preview">
+                <button
+                  className="btn-anterior"
+                  onClick={() => setIndiceActual(Math.max(0, indiceActual - 1))}
+                  disabled={indiceActual === 0}
+                >
+                  ← Anterior
+                </button>
+                
+                <button
+                  className="btn-siguiente"
+                  onClick={() => setIndiceActual(Math.min(mensajesEditables.length - 1, indiceActual + 1))}
+                  disabled={indiceActual === mensajesEditables.length - 1}
+                >
+                  Siguiente →
+                </button>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="btn-cancelar"
+                onClick={cancelarEnvio}
+                disabled={enviandoRecordatorios}
+              >
+                ❌ Cancelar
+              </button>
+              
+              <button
+                className="btn-confirmar-envio"
+                onClick={confirmarEnvio}
+                disabled={enviandoRecordatorios}
+              >
+                {enviandoRecordatorios ? '⏳ Enviando...' : `✅ Enviar ${mensajesEditables.length} Recordatorios`}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="reporte-contable-container">

@@ -7,7 +7,7 @@
 export const CONCEPTOS_PAGO_2026 = {
   cuota_anual: {
     nombre: 'Cuota Anual 2026',
-    monto: 6000,  // Configurable por secretario
+    monto: 6500,  // Configurable por secretario
     descripcion: 'Membresía anual del club'
   },
   

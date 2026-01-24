@@ -603,7 +603,8 @@ exports.onNotificacionCreated = onDocumentCreated(
  * POST /enviarRecordatorios
  * Body: {
  *   tipo: 'email' | 'whatsapp',
- *   socios: [{email, nombre, telefono, monto}]
+ *   mensajes: [{email, nombre, telefono, mensaje}] | 
+ *   socios: [{email, nombre, telefono, monto}] (formato antiguo)
  * }
  */
 const {onRequest} = require("firebase-functions/v2/https");
@@ -616,21 +617,24 @@ exports.enviarRecordatorios = onRequest(
         return res.status(405).json({error: "Solo POST permitido"});
       }
 
-      const {tipo, socios} = req.body;
+      const {tipo, mensajes, socios} = req.body;
+      
+      // Aceptar ambos formatos: mensajes (nuevo) o socios (antiguo)
+      const destinatarios = mensajes || socios;
 
-      if (!tipo || !Array.isArray(socios) || socios.length === 0) {
+      if (!tipo || !Array.isArray(destinatarios) || destinatarios.length === 0) {
         return res.status(400).json(
-            {error: "Parámetros inválidos: tipo y socios requeridos"},
+            {error: "Parámetros inválidos: tipo y mensajes/socios requeridos"},
         );
       }
 
-      console.log(`📢 Enviar recordatorios por ${tipo} a ${socios.length} socios`);
+      console.log(`📢 Enviar recordatorios por ${tipo} a ${destinatarios.length} personas`);
 
       try {
         if (tipo === "email") {
-          return await enviarRecordatoriosEmail(socios, res);
+          return await enviarRecordatoriosEmail(destinatarios, res);
         } else if (tipo === "whatsapp") {
-          return await enviarRecordatoriosWhatsApp(socios, res);
+          return await enviarRecordatoriosWhatsApp(destinatarios, res);
         } else {
           return res.status(400).json({error: "Tipo no soportado"});
         }
@@ -644,21 +648,22 @@ exports.enviarRecordatorios = onRequest(
 /**
  * Enviar recordatorios por email
  */
-async function enviarRecordatoriosEmail(socios, res) {
+async function enviarRecordatoriosEmail(destinatarios, res) {
   const transporter = nodemailer.createTransport(EMAIL_CONFIG.smtp);
   let enviados = 0;
   let errores = 0;
   const resultados = [];
 
-  for (const socio of socios) {
+  for (const destinatario of destinatarios) {
     try {
-      const cuerpo = `
-Estimado(a) ${socio.nombre},
+      // Usar mensaje personalizado si existe, si no generar uno por defecto
+      const cuerpo = destinatario.mensaje || `
+Estimado(a) ${destinatario.nombre},
 
 Le recordamos que debe realizar su pago de renovación de membresía antes del 
 28 de febrero de 2026.
 
-MONTO A PAGAR: $${socio.monto} MXN
+MONTO A PAGAR: $${destinatario.monto} MXN
 CONCEPTO: Cuota de Renovación 2026
 
 Para realizar su pago, favor de contactar directamente con la tesorería del club.
@@ -668,25 +673,24 @@ Agradecemos su puntualidad.
 ---
 Club de Caza, Tiro y Pesca de Yucatán, A.C.
 Calle 50 No. 531-E x 69 y 71, Col. Centro, 97000 Mérida, Yucatán
-Tel: +52 56 6582 4667
-      `;
+Tel: +52 56 6582 4667`;
 
       const emailMessage = {
         from: "smunozam@gmail.com",
-        to: socio.email,
+        to: destinatario.email,
         subject: "📢 Recordatorio: Renovación de Membresía Club 738 - Antes del 28 de Febrero",
         text: cuerpo,
         html: `<pre style="font-family: Arial, sans-serif; white-space: pre-wrap;">${cuerpo}</pre>`,
       };
 
       const info = await transporter.sendMail(emailMessage);
-      console.log(`✅ Email enviado a ${socio.email} (${info.messageId})`);
+      console.log(`✅ Email enviado a ${destinatario.email} (${info.messageId})`);
       enviados++;
-      resultados.push({socio: socio.email, estado: "enviado"});
+      resultados.push({socio: destinatario.email, estado: "enviado"});
     } catch (error) {
-      console.error(`❌ Error enviando email a ${socio.email}:`, error);
+      console.error(`❌ Error enviando email a ${destinatario.email}:`, error);
       errores++;
-      resultados.push({socio: socio.email, estado: "error", error: error.message});
+      resultados.push({socio: destinatario.email, estado: "error", error: error.message});
     }
   }
 
@@ -694,7 +698,7 @@ Tel: +52 56 6582 4667
     tipo: "email",
     enviados,
     errores,
-    total: socios.length,
+    total: destinatarios.length,
     resultados,
     mensaje: `${enviados} recordatorios enviados por email`,
   });
@@ -704,26 +708,26 @@ Tel: +52 56 6582 4667
  * Enviar recordatorios por WhatsApp
  * (Requiere integración con Twilio o similar)
  */
-async function enviarRecordatoriosWhatsApp(socios, res) {
+async function enviarRecordatoriosWhatsApp(destinatarios, res) {
   // Por ahora, solo retornar que se necesita configurar
   // En producción, usar Twilio API
-  console.log("📱 WhatsApp enviado a:", socios.map(s => s.telefono).join(", "));
+  console.log("📱 WhatsApp enviado a:", destinatarios.map(d => d.telefono).join(", "));
 
   let enviados = 0;
   const resultados = [];
 
-  for (const socio of socios) {
+  for (const destinatario of destinatarios) {
     try {
       // TODO: Implementar envío real de WhatsApp con Twilio
-      // const mensaje = `Hola ${socio.nombre}, recordatorio de pago: $${socio.monto}...`;
+      // const mensaje = destinatario.mensaje || `Hola ${destinatario.nombre}...`;
       // await twilioClient.messages.create(...);
 
       enviados++;
-      resultados.push({socio: socio.telefono, estado: "enviado"});
+      resultados.push({socio: destinatario.telefono, estado: "enviado"});
     } catch (error) {
-      console.error(`❌ Error enviando WhatsApp a ${socio.telefono}:`, error);
+      console.error(`❌ Error enviando WhatsApp a ${destinatario.telefono}:`, error);
       resultados.push(
-          {socio: socio.telefono, estado: "error", error: error.message},
+          {socio: destinatario.telefono, estado: "error", error: error.message},
       );
     }
   }
@@ -731,7 +735,7 @@ async function enviarRecordatoriosWhatsApp(socios, res) {
   return res.json({
     tipo: "whatsapp",
     enviados,
-    total: socios.length,
+    total: destinatarios.length,
     resultados,
     mensaje: `${enviados} recordatorios enviados por WhatsApp (SIMULADO)`,
     nota: "Requiere configuración real de Twilio en producción",

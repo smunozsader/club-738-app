@@ -13,7 +13,7 @@ import { db } from '../firebaseConfig';
 import './ReporteCaja.css';
 
 // Configuración de cuotas (igual que otros módulos)
-const CUOTA_CLUB = 6000;
+const CUOTA_CLUB = 6500;
 const CUOTA_FEMETI = 350;
 const INSCRIPCION = 2000; // Solo socios nuevos
 const FEMETI_NUEVO = 700; // FEMETI para socios nuevos
