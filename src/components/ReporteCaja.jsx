@@ -140,11 +140,12 @@ export default function ReporteCaja({ userEmail, onBack }) {
       }
     });
 
-  // Calcular totales
+  // Calcular totales (basado en sociosFiltrados para que sean subtotales)
   const calcularTotales = () => {
-    const pagados = socios.filter(s => s.pagado);
-    const pendientes = socios.filter(s => !s.pagado && !s.exento);
-    const exentos = socios.filter(s => s.exento);
+    // Usar sociosFiltrados para que los totales sean subtotales de lo mostrado
+    const pagados = sociosFiltrados.filter(s => s.pagado);
+    const pendientes = sociosFiltrados.filter(s => !s.pagado && !s.exento);
+    const exentos = sociosFiltrados.filter(s => s.exento);
     
     const totalRecaudado = pagados.reduce((sum, s) => sum + (s.montoTotal || 0), 0);
     const totalInscripcion = pagados.reduce((sum, s) => sum + (s.inscripcion || 0), 0);
@@ -153,7 +154,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
     
     const porRecaudar = pendientes.length * (CUOTA_CLUB + CUOTA_FEMETI);
     
-    // Agrupar por método de pago
+    // Agrupar por método de pago (usando datos filtrados)
     const porMetodo = {};
     pagados.forEach(s => {
       const metodo = s.metodoPago || 'sin especificar';
@@ -165,7 +166,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
     });
     
     return {
-      totalSocios: socios.length,
+      totalSocios: sociosFiltrados.length,
       pagados: pagados.length,
       pendientes: pendientes.length,
       exentos: exentos.length,
