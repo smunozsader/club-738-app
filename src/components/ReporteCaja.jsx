@@ -22,7 +22,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
   const [loading, setLoading] = useState(true);
   const [socios, setSocios] = useState([]);
   const [filtro, setFiltro] = useState('todos'); // todos, pagados, pendientes
-  const [ordenarPor, setOrdenarPor] = useState('nombre');
+  const [ordenarPor, setOrdenarPor] = useState('fecha'); // Default: ordenar por fecha (antiguo a nuevo)
   const [busqueda, setBusqueda] = useState('');
   const [rangoFechas, setRangoFechas] = useState({
     desde: '2026-01-01',
@@ -132,11 +132,16 @@ export default function ReporteCaja({ userEmail, onBack }) {
           if (!a.fechaPago && !b.fechaPago) return 0;
           if (!a.fechaPago) return 1;
           if (!b.fechaPago) return -1;
-          return b.fechaPago - a.fechaPago;
+          // Ordenar de más antiguo a más nuevo (ascendente)
+          return a.fechaPago - b.fechaPago;
         case 'monto':
           return b.montoTotal - a.montoTotal;
         default:
-          return 0;
+          // Default: ordenar por fecha (más antiguo a más nuevo)
+          if (!a.fechaPago && !b.fechaPago) return 0;
+          if (!a.fechaPago) return 1;
+          if (!b.fechaPago) return -1;
+          return a.fechaPago - b.fechaPago;
       }
     });
 
