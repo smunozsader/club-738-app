@@ -10,6 +10,97 @@
 
 ## 📅 Enero 2026
 
+### 24 de Enero - v1.35.4 - Modal de Review y Edición de Recordatorios ✅
+
+#### 🎯 Feature: Prevención de Spam + Personalización de Mensajes
+
+**El Problema**:
+- Los recordatorios de pago se enviaban automáticamente sin review
+- Riesgo de caer en SPAM o tener mensajes genéricos/impersonales
+- Sin capacidad de editar o personalizar cada mensaje
+
+**La Solución - Nuevo Flujo**:
+
+1. **Click en "Enviar por Email/WhatsApp"** → Se abre modal de preview
+2. **Modal muestra**:
+   - ✅ Destinatario (nombre, email/teléfono)
+   - ✅ Mensaje editable (textarea)
+   - ✅ Contador de caracteres (para evitar exceso)
+   - ✅ Navegación: Anterior/Siguiente para revisar todos
+   
+3. **Personalización**:
+   - Puedes editar el mensaje de CADA socio individualmente
+   - Ver cuántos caracteres usa (evita spam filters)
+   - Navegación intuitiva: Anterior/Siguiente
+
+4. **Confirmación Final**:
+   - Botón "✅ Enviar X Recordatorios" al pie
+   - Muestra cantidad total que se enviará
+   - Botón "❌ Cancelar" para abortar
+
+**Mensajes Predefinidos**:
+
+📧 **Email** (Profesional, formal):
+```
+Estimado(a) [NOMBRE],
+
+Le recordamos que debe realizar su pago de renovación de membresía antes del 28 de febrero de 2026.
+
+MONTO A PAGAR: $6,500 MXN
+CONCEPTO: Cuota de Renovación 2026
+
+Para realizar su pago, favor de contactar directamente con la tesorería del club.
+
+Agradecemos su puntualidad.
+
+---
+Club de Caza, Tiro y Pesca de Yucatán, A.C.
+...
+```
+
+💬 **WhatsApp** (Informal, amigable):
+```
+¡Hola [NOMBRE]! 👋
+
+Recordatorio importante: Tu renovación de membresía vence el 28 de febrero de 2026.
+
+💰 Monto: $6,500 MXN
+📋 Concepto: Cuota Anual 2026
+
+Favor contactar al club para procesar tu pago.
+
+🏹 Club de Caza, Tiro y Pesca de Yucatán
+...
+```
+
+**Cambios Técnicos**:
+- ✅ CSP en firebase.json: Agregado `https://us-central1-*.cloudfunctions.net` a `connect-src`
+- ✅ Cloud Function: Ahora acepta `mensajes: [{email, nombre, telefono, mensaje}]` O `socios: [{email, nombre, telefono, monto}]` (legacy)
+- ✅ ReporteContable: 5 nuevos state handlers + 3 funciones nuevas
+- ✅ ReporteContable.css: 220+ líneas de estilos para modal + responsivos
+- ✅ ANUALIDAD actualizada a $6,500 en ReporteContable.jsx
+
+**Archivos Modificados**:
+- [src/components/admin/ReporteContable.jsx](src/components/admin/ReporteContable.jsx) - Modal + funciones
+- [src/components/admin/ReporteContable.css](src/components/admin/ReporteContable.css) - Estilos modal (220 líneas)
+- [firebase.json](firebase.json) - CSP ahora permite Cloud Functions
+- [functions/index.js](functions/index.js) - enviarRecordatorios aceptar ambos formatos
+
+**Responsive Design**:
+- ✅ Desktop: Modal 700px ancho, completo
+- ✅ Tablet: 90% ancho con padding
+- ✅ Mobile: Textarea reducido, botones full-width
+
+**Testing Manual**:
+- [ ] Click "Enviar por Email" → Abre modal
+- [ ] Ver primer socio, editar mensaje
+- [ ] Anterior/Siguiente navegan correctamente
+- [ ] Contador caracteres actualiza en vivo
+- [ ] Cancelar cierra modal sin enviar
+- [ ] "Enviar" con X recordatorios dispara Cloud Function
+
+---
+
 ### 24 de Enero - v1.35.3 - Nuevas Tarjetas: Socios por Período vs Acumulados ✅
 
 #### 🎯 Feature: Mejor distinción entre pagos de período vs históricos
