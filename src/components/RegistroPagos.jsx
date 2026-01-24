@@ -325,6 +325,10 @@ export default function RegistroPagos({ userEmail, onBack }) {
       const cuotaClub = conceptosSeleccionados.cuota_anual ? montosPersonalizados.cuota_anual : 0;
       const cuotaFemeti = (conceptosSeleccionados.femeti ? montosPersonalizados.femeti : 0) +
                          (conceptosSeleccionados.femeti_nuevo ? montosPersonalizados.femeti_nuevo : 0);
+      const inscripcionMonto = conceptosSeleccionados.inscripcion ? montosPersonalizados.inscripcion : 0;
+      
+      // Determinar si es socio nuevo
+      const esNuevo = conceptosSeleccionados.inscripcion || conceptosSeleccionados.femeti_nuevo;
       
       // Actualizar documento del socio
       // Sincronizar con renovacion2026 para que DashboardRenovaciones lo reconozca
@@ -336,7 +340,17 @@ export default function RegistroPagos({ userEmail, onBack }) {
           monto: total,
           metodoPago: metodoPago,
           numeroRecibo: numeroRecibo,
-          comprobantesTransferencia: comprobantesURLs.length > 0 ? comprobantesURLs : null
+          comprobantesTransferencia: comprobantesURLs.length > 0 ? comprobantesURLs : null,
+          // Agregar desglose para que ReporteCaja pueda leer correctamente
+          inscripcion: inscripcionMonto,
+          cuotaClub: cuotaClub,
+          cuotaFemeti: cuotaFemeti,
+          esNuevo: esNuevo,
+          desglose: {
+            inscripcion: inscripcionMonto,
+            anualidad: cuotaClub,
+            femeti: cuotaFemeti
+          }
         },
         // Sincronizar con renovacion2026 para el panel de cobranza
         'renovacion2026.estado': 'pagado',

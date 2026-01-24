@@ -56,13 +56,17 @@ export default function ReporteCaja({ userEmail, onBack }) {
         const fechaPago = data.renovacion2026?.fechaPago?.toDate() || 
                          data.membresia2026?.fechaPago?.toDate() || null;
         
-        const cuotaClub = data.renovacion2026?.cuotaClub || 
-                         (data.membresia2026?.activa ? CUOTA_CLUB : 0);
-        const cuotaFemeti = data.renovacion2026?.cuotaFemeti || 
-                          (data.membresia2026?.activa ? CUOTA_FEMETI : 0);
-        const inscripcion = data.membresia2026?.esNuevo ? INSCRIPCION : 0;
-        const montoTotal = data.renovacion2026?.montoTotal || 
-                          data.membresia2026?.monto || 0;
+        // Priorizar membresia2026 sobre renovacion2026 (membresia2026 es más confiable)
+        const cuotaClub = data.membresia2026?.cuotaClub !== undefined ? data.membresia2026.cuotaClub :
+                         (data.renovacion2026?.cuotaClub || 
+                         (data.membresia2026?.activa ? CUOTA_CLUB : 0));
+        const cuotaFemeti = data.membresia2026?.cuotaFemeti !== undefined ? data.membresia2026.cuotaFemeti :
+                          (data.renovacion2026?.cuotaFemeti || 
+                          (data.membresia2026?.activa ? CUOTA_FEMETI : 0));
+        const inscripcion = data.membresia2026?.inscripcion !== undefined ? data.membresia2026.inscripcion :
+                           (data.membresia2026?.esNuevo ? INSCRIPCION : 0);
+        const montoTotal = data.membresia2026?.monto !== undefined ? data.membresia2026.monto :
+                          (data.renovacion2026?.montoTotal || 0);
         
         sociosData.push({
           email: doc.id,
