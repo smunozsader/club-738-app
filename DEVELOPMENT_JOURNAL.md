@@ -10,6 +10,61 @@
 
 ## 📅 Enero 2026
 
+### 24 de Enero - v1.35.1 - Fix: Desglose de Pagos en Reporte de Caja ✅
+
+#### 🎯 Problema Resuelto: Luis Fernando Guillermo Gamboa - Suma Incompleta
+
+**El Bug**: 
+- Socio Luis Fernando (#236) pagó: **$2,000 inscripción + $6,000 anualidad + $700 FEMETI = $8,700**
+- Reporte mostraba: **$2,000 inscripción + $0 cuota club + $0 FEMETI = $8,700** ❌
+- Total correcto pero desglose incompleto
+
+**Causa Raíz**:
+1. [ReporteCaja.jsx](src/components/ReporteCaja.jsx) solo leía `renovacion2026.cuotaClub/cuotaFemeti`
+2. Datos estaban en `membresia2026` pero no se leían correctamente
+3. [RegistroPagos.jsx](src/components/RegistroPagos.jsx) no guardaba desglose en `membresia2026`
+
+**Lo que se Corrigió**:
+
+1. ✅ **[ReporteCaja.jsx](src/components/ReporteCaja.jsx)** - Función `cargarDatos()`
+   - Prioriza `membresia2026.cuotaClub/inscripcion/cuotaFemeti` sobre `renovacion2026`
+   - Verifica existencia de campos antes de usar fallback
+   ```javascript
+   const cuotaClub = data.membresia2026?.cuotaClub !== undefined ? 
+     data.membresia2026.cuotaClub : (data.renovacion2026?.cuotaClub || CUOTA_CLUB);
+   ```
+
+2. ✅ **[RegistroPagos.jsx](src/components/RegistroPagos.jsx)** - Función `guardarPago()`
+   - Ahora guarda desglose completo en `membresia2026`:
+   ```javascript
+   membresia2026: {
+     activa: true,
+     monto: total,
+     inscripcion: inscripcionMonto,    // NUEVO
+     cuotaClub: cuotaClub,              // NUEVO
+     cuotaFemeti: cuotaFemeti,          // NUEVO
+     esNuevo: esNuevo,                  // NUEVO
+     desglose: { inscripcion, anualidad, femeti }  // NUEVO
+   }
+   ```
+
+3. ✅ **Firestore Actualizado** via [scripts/corregir-luis-fernando-2026.cjs](scripts/corregir-luis-fernando-2026.cjs)
+   - Agregó campos a `renovacion2026`: `inscripcion`, `cuotaClub`, `cuotaFemeti`, `desglose`
+   - Marcó `membresia2026.esNuevo: true`
+
+**Verificación Post-Fix**: ✅ Suma correcta $2000 + $6000 + $700 = $8700
+
+**Impacto**: Todos los pagos nuevos mostrarán desglose correcto. Totales en pie de tabla calcularán bien.
+
+**Archivos Modificados**:
+- [src/components/ReporteCaja.jsx](src/components/ReporteCaja.jsx)
+- [src/components/RegistroPagos.jsx](src/components/RegistroPagos.jsx)
+- [scripts/corregir-luis-fernando-2026.cjs](scripts/corregir-luis-fernando-2026.cjs) (NEW)
+
+**Deploy**: ✅ Completado 24 enero 14:30 MX
+
+---
+
 ### 23 de Enero - v1.35.0 - Sistema de Cobranza y Comprobantes de Transferencia ✅
 
 #### 🎯 Objetivo Completado: Registro de Pagos + Comprobantes de Transferencia
