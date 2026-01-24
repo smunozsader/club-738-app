@@ -10,6 +10,47 @@
 
 ## 📅 Enero 2026
 
+### 24 de Enero - v1.35.2 - Fix: Subtotales Dinámicos en Reporte de Caja ✅
+
+#### 🎯 Problema Resuelto: Totales no cambian al filtrar por fechas
+
+**El Bug**: 
+- Al filtrar el ReporteCaja por rango de fechas (ej: 17-20 enero), los totales en tarjetas y pie de tabla **NO cambiaban**
+- Seguía mostrando totales generales de TODO el mes
+- CSV export sí respetaba el filtro (data correcta, totales incorrectos)
+- Impresión también mostraba totales globales en lugar de subtotales
+
+**Causa Raíz**:
+- Función `calcularTotales()` usaba `socios` (todos los datos) en lugar de `sociosFiltrados`
+- Los totales se calculaban antes de aplicar filtros por fecha/búsqueda/estado
+
+**La Solución**:
+- [ReporteCaja.jsx](src/components/ReporteCaja.jsx) - Función `calcularTotales()`
+  - Cambió de usar `socios.filter(...)` a `sociosFiltrados.filter(...)`
+  - Ahora los totales son **subtotales** de lo mostrado en tabla
+  - Se recalculan automáticamente al cambiar filtros
+
+**Comportamiento Nuevo**:
+| Filtro | Antes | Ahora |
+|--------|-------|-------|
+| Sin filtro | Total general | Subtotal: 77 pagados = $87,050 |
+| Desde 20/1 | Mismo: $87,050 | Subtotal: 3 pagados = $20,550 |
+| Estado "Pagados" | Mismo: $87,050 | Subtotal: solo pagados mostrados |
+| Búsqueda "EDGAR" | Mismo: $87,050 | Subtotal: $6,850 |
+
+**Impacto en UX**:
+✅ Subtotales ahora **coinciden exactamente** con datos mostrados en tabla  
+✅ Impresión muestra lo correcto al filtrar  
+✅ CSV + Subtotales = Información coherente  
+✅ Totales en tarjetas se actualizan en tiempo real  
+
+**Archivos Modificados**:
+- [src/components/ReporteCaja.jsx](src/components/ReporteCaja.jsx)
+
+**Deploy**: ✅ Completado (24 enero 14:45 MX)
+
+---
+
 ### 24 de Enero - v1.35.1 - Fix: Desglose de Pagos en Reporte de Caja ✅
 
 #### 🎯 Problema Resuelto: Luis Fernando Guillermo Gamboa - Suma Incompleta
