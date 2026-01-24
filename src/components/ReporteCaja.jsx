@@ -147,6 +147,9 @@ export default function ReporteCaja({ userEmail, onBack }) {
     const pendientes = sociosFiltrados.filter(s => !s.pagado && !s.exento);
     const exentos = sociosFiltrados.filter(s => s.exento);
     
+    // Calcular socios pagados ACUMULADOS (sin filtro de fechas) para tracking histórico
+    const pagadosAcumulados = socios.filter(s => s.pagado);
+    
     const totalRecaudado = pagados.reduce((sum, s) => sum + (s.montoTotal || 0), 0);
     const totalInscripcion = pagados.reduce((sum, s) => sum + (s.inscripcion || 0), 0);
     const totalCuotaClub = pagados.reduce((sum, s) => sum + (s.cuotaClub || 0), 0);
@@ -168,6 +171,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
     return {
       totalSocios: sociosFiltrados.length,
       pagados: pagados.length,
+      pagadosAcumulados: pagadosAcumulados.length,
       pendientes: pendientes.length,
       exentos: exentos.length,
       totalRecaudado,
@@ -255,9 +259,18 @@ export default function ReporteCaja({ userEmail, onBack }) {
         <div className="card card-pagados">
           <div className="card-icon">✅</div>
           <div className="card-content">
-            <div className="card-label">Socios Pagados</div>
-            <div className="card-value">{totales.pagados} / {totales.totalSocios}</div>
-            <div className="card-percent">{Math.round(totales.pagados / totales.totalSocios * 100)}%</div>
+            <div className="card-label">Socios Pagados (Período)</div>
+            <div className="card-value">{totales.pagados}</div>
+            <div className="card-subtext">En el filtro actual</div>
+          </div>
+        </div>
+        
+        <div className="card card-pagados-acumulados">
+          <div className="card-icon">📊</div>
+          <div className="card-content">
+            <div className="card-label">Socios Pagados (Acumulado)</div>
+            <div className="card-value">{totales.pagadosAcumulados} / {socios.length}</div>
+            <div className="card-percent">{Math.round(totales.pagadosAcumulados / socios.length * 100)}%</div>
           </div>
         </div>
         
@@ -273,7 +286,7 @@ export default function ReporteCaja({ userEmail, onBack }) {
         <div className="card card-desglose">
           <div className="card-icon">📋</div>
           <div className="card-content">
-            <div className="card-label">Desglose</div>
+            <div className="card-label">Desglose (Período)</div>
             {totales.totalInscripcion > 0 && <div className="card-detail">Inscripciones: ${totales.totalInscripcion.toLocaleString('es-MX')}</div>}
             <div className="card-detail">Cuota Club: ${totales.totalCuotaClub.toLocaleString('es-MX')}</div>
             <div className="card-detail">FEMETI: ${totales.totalFemeti.toLocaleString('es-MX')}</div>

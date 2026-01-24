@@ -144,6 +144,10 @@
   border-left: 4px solid var(--color-success, #2d7a2d);
 }
 
+.card-pagados-acumulados {
+  border-left: 4px solid var(--color-secondary, #9b59b6);
+}
+
 .card-pendientes {
   border-left: 4px solid var(--color-warning, #f0a020);
 }
