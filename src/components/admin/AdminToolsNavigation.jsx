@@ -5,12 +5,14 @@
  * Funciona bien en mobile, tablet y desktop
  */
 import React from 'react';
+import { useDarkMode } from '../../hooks/useDarkMode';
 import './AdminToolsNavigation.css';
 
 export default function AdminToolsNavigation({ 
   onSelectTool,
   activeSection 
 }) {
+  const { isDarkMode, setIsDarkMode } = useDarkMode();
   // Definición de grupos de herramientas
   const toolGroups = [
     {
@@ -185,8 +187,18 @@ export default function AdminToolsNavigation({
   return (
     <section className="admin-tools-grid-container">
       <div className="admin-tools-grid-header">
-        <h2>🛠️ Herramientas Administrativas</h2>
-        <p className="subtitle">Selecciona una herramienta para comenzar</p>
+        <div className="header-title-section">
+          <h2>🛠️ Herramientas Administrativas</h2>
+          <p className="subtitle">Selecciona una herramienta para comenzar</p>
+        </div>
+        <button
+          className="btn-dark-mode-toggle-header"
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          title={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+          aria-label="Toggle dark mode"
+        >
+          {isDarkMode ? '☀️' : '🌙'}
+        </button>
       </div>
 
       {toolGroups.map(group => (
