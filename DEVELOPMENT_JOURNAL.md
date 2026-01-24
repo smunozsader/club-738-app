@@ -10,6 +10,48 @@
 
 ## 📅 Enero 2026
 
+### 24 de Enero - v1.35.3 - Nuevas Tarjetas: Socios por Período vs Acumulados ✅
+
+#### 🎯 Feature: Mejor distinción entre pagos de período vs históricos
+
+**Lo que se agregó**:
+
+Se añadieron 2 tarjetas nuevas al ReporteCaja para permitir un control más fino de liquidaciones:
+
+1. ✅ **Tarjeta: Socios Pagados (Período)**
+   - Muestra cuántos socios pagaron **dentro del período filtrado**
+   - Ej: Si filtras 17-20 enero, mostrará solo los 3 socios de esos días
+   - Útil para liquidaciones periódicas
+
+2. ✅ **Tarjeta: Socios Pagados (Acumulado)**
+   - Muestra cuántos socios han pagado **en total desde inicio**
+   - Formato: `X / Y` (pagados / total socios)
+   - Con porcentaje de cumplimiento
+   - Ej: `12 / 77` = 15.5% de membresía 2026 completada
+
+**Uso Real**:
+- Admin hace corte de caja cada semana
+- Semana 1 (1-10 enero): 5 socios pagados → Entrega liquidación 1
+- Semana 2 (11-20 enero): 8 socios pagados → Entrega liquidación 2
+- Total acumulado: 13 pagados (sin duplicar los 5 anteriores)
+
+**Tarjetas Ahora Disponibles**:
+| Icono | Nombre | Muestra |
+|-------|--------|---------|
+| 💰 | Total Recaudado | $ del período |
+| ✅ | Socios Pagados (Período) | Cantidad en el filtro |
+| 📊 | Socios Pagados (Acumulado) | Total histórico + % |
+| ⏳ | Pendientes | Socios sin pagar |
+| 📋 | Desglose | Inscripción, Cuota, FEMETI |
+
+**Archivos Modificados**:
+- [src/components/ReporteCaja.jsx](src/components/ReporteCaja.jsx) - Agregó `pagadosAcumulados` a `calcularTotales()`
+- [src/components/ReporteCaja.css](src/components/ReporteCaja.css) - Estilo `.card-pagados-acumulados`
+
+**Deploy**: ✅ Completado (24 enero 14:50 MX)
+
+---
+
 ### 24 de Enero - v1.35.2 - Fix: Subtotales Dinámicos en Reporte de Caja ✅
 
 #### 🎯 Problema Resuelto: Totales no cambian al filtrar por fechas
