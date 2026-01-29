@@ -10,7 +10,83 @@
 
 ## 📅 Enero 2026
 
-### 24 de Enero - v1.35.4 - Modal de Review y Edición de Recordatorios ✅
+### 31 de Enero - v1.36.1 - Google Calendar Integration + Real-time Meeting Alerts ✅
+
+#### 🎯 Features: Sincronización de Citas con Google Calendar + Notificaciones en Tiempo Real
+
+**Componentes Nuevos**:
+
+1. **NotificacionesCitas.jsx** - Banner Sticky de Alertas
+   - Real-time Firestore listener para citas con estado='pendiente'
+   - Banner sticky en top del AdminDashboard (z-index: 100)
+   - Expandible con lista de socios y citas pendientes
+   - Quick-confirm buttons para confirmar en un click
+   - Pulse animation para llamar atención
+   - Toast notifications en confirmación
+
+2. **Google Calendar Sync** - Firebase Cloud Functions v2
+   - ✅ **crearEventoCalendar**: Trigger al crear cita
+     - Crea evento en smunozam@gmail.com (secretario)
+     - Duración: 30 minutos
+     - Recordatorios: 24h, 1h, 15min
+     - Color azul (#9)
+     - Invita automáticamente al socio por email
+   - ✅ **actualizarEventoCalendar**: Trigger al cambiar estado
+     - Confirmada → Cambio título a "✅ CONFIRMADA" + color verde (#10)
+     - Completada → Cambio título a "✔️ COMPLETADA" + color gris (#8)
+     - Cancelada → Elimina evento del calendario
+     - Notifica cambios por email
+
+**Mejoras UX/Accesibilidad**:
+- Dark mode CSS variables completamente implementado
+- Toast notifications reemplazando alert() dialogs
+- ARIA labels en todos los botones
+- Keyboard navigation (ESC para cerrar modal)
+- Enfoque y gestión de estado mejorada
+- Tipografía: h1 2.2rem, buttons 0.95rem
+- Espaciado: 25px padding, 20px gaps
+
+**Deploy Details**:
+- Firebase Functions v1 → v2 API conversion (crearEventoCalendar, actualizarEventoCalendar)
+- Service account: firebase-adminsdk-fbsvc@club-738-appgit-50256612-450b8.iam.gserviceaccount.com
+- Calendario: smunozam@gmail.com (compartido con service account)
+- Región: us-central1, 10 max instances
+
+**Tecnología**:
+- onDocumentCreated + onDocumentUpdated (Firebase Functions v2)
+- Google Calendar API v3
+- JWT authentication via service account
+- Real-time Firestore listeners con cleanup
+
+**Test Status**:
+- ✅ Build: npm run build → OK
+- ✅ Deploy: firebase deploy --only functions → SUCCESS
+  - crearEventoCalendar: Node.js 22 (2nd Gen) ✓
+  - actualizarEventoCalendar: Node.js 22 (2nd Gen) ✓
+- ⏳ Pending: Test cita creation → verify calendar event
+- ⏳ Pending: Test status changes → verify color updates
+
+**Files Modified**:
+- functions/calendar-integration.js (v1 → v2 API)
+- functions/index.js (uncommented calendar imports)
+- src/components/MiAgenda.jsx (toast notifications)
+- src/components/MiAgenda.css (dark mode, a11y)
+- src/components/AgendarCita.jsx (toast integration)
+- src/components/admin/NotificacionesCitas.jsx (NEW)
+- src/components/admin/NotificacionesCitas.css (NEW)
+- src/components/admin/AdminDashboard.jsx (integrated alerts)
+- .gitignore (secured service account credentials)
+
+**Next Steps**:
+1. Create test cita to trigger calendar event creation
+2. Verify socio receives email invitation
+3. Test status change flows (confirm → completada → cancelada)
+4. Monitor Cloud Function logs for any errors
+5. Document calendar integration in user manual
+
+---
+
+### 29 de Enero - v1.36.0 - Agenda UX/UI Overhaul + Accessibility ✅
 
 #### 🎯 Feature: Prevención de Spam + Personalización de Mensajes
 
