@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db } from '../firebaseConfig';
 import { collection, addDoc, query, where, getDocs, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import { useToastContext } from '../contexts/ToastContext';
 import './AgendarCita.css';
 
 /**
@@ -9,6 +10,7 @@ import './AgendarCita.css';
  * Se integra con Google Calendar del secretario
  */
 function AgendarCita({ onBack }) {
+  const { showToast } = useToastContext();
   const [loading, setLoading] = useState(false);
   const [socioData, setSocioData] = useState(null);
   const [misCitas, setMisCitas] = useState([]);
@@ -147,7 +149,7 @@ function AgendarCita({ onBack }) {
         calendarEventId: null // Se llenará por la Function
       });
 
-      alert('✅ Cita agendada exitosamente.\n\nRecibirás una invitación de Google Calendar al correo electrónico.');
+      showToast('✅ Cita agendada exitosamente. Recibirás invitación de Google Calendar.', 'success', 5000);
 
       // Resetear formulario
       setFormCita({
@@ -163,7 +165,7 @@ function AgendarCita({ onBack }) {
 
     } catch (error) {
       console.error('Error agendando cita:', error);
-      alert('Error al agendar la cita. Intenta nuevamente.');
+      showToast('❌ Error al agendar la cita. Intenta nuevamente.', 'error', 4000);
     } finally {
       setLoading(false);
     }

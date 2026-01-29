@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { auth, db } from '../firebaseConfig';
 import { collection, query, getDocs, doc, updateDoc, where, orderBy } from 'firebase/firestore';
+import { useToastContext } from '../contexts/ToastContext';
 import './MiAgenda.css';
 
 /**
@@ -9,6 +10,8 @@ import './MiAgenda.css';
  * Gestionar bloques de disponibilidad
  */
 function MiAgenda({ onBack }) {
+  const { showToast } = useToastContext();
+  const modalRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [citas, setCitas] = useState([]);
   const [filtroEstado, setFiltroEstado] = useState('todas'); // todas, pendiente, confirmada, completada
@@ -31,6 +34,24 @@ function MiAgenda({ onBack }) {
   useEffect(() => {
     calcularContadores();
   }, [citas]);
+
+  // Keyboard navigation: ESC to close modal
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && mostrarModal) {
+        cerrarModal();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mostrarModal]);
+
+  // Focus management for modal
+  useEffect(() => {
+    if (mostrarModal && modalRef.current) {
+      modalRef.current.focus();
+    }
+  }, [mostrarModal]);
 
   const cargarCitas = async () => {
     try {
@@ -78,15 +99,16 @@ function MiAgenda({ onBack }) {
     try {
       const citaRef = doc(db, 'citas', citaId);
       await updateDoc(citaRef, {
-        estado: 'confirmada'
+        estado: 'confirmada',
+        fechaConfirmacion: new Date().toISOString()
       });
       
-      alert('✅ Cita confirmada. El socio recibirá una notificación.');
+      showToast('✅ Cita confirmada. El socio recibirá notificación por email.', 'success', 4000);
       await cargarCitas();
       setMostrarModal(false);
     } catch (error) {
       console.error('Error confirmando cita:', error);
-      alert('Error al confirmar la cita');
+      showToast('❌ Error al confirmar la cita', 'error', 3000);
     }
   };
 
@@ -97,15 +119,16 @@ function MiAgenda({ onBack }) {
       const citaRef = doc(db, 'citas', citaId);
       await updateDoc(citaRef, {
         estado: 'cancelada',
-        motivoCancelacion: motivo || 'Sin especificar'
+        motivoCancelacion: motivo || 'Sin especificar',
+        fechaCancelacion: new Date().toISOString()
       });
       
-      alert('❌ Cita cancelada. El socio recibirá una notificación.');
+      showToast('❌ Cita cancelada. El socio recibirá notificación por email.', 'info', 4000);
       await cargarCitas();
       setMostrarModal(false);
     } catch (error) {
       console.error('Error cancelando cita:', error);
-      alert('Error al cancelar la cita');
+      showToast('❌ Error al cancelar la cita', 'error', 3000);
     }
   };
 
@@ -119,12 +142,12 @@ function MiAgenda({ onBack }) {
         fechaCompletada: new Date().toISOString()
       });
       
-      alert('✔️ Cita marcada como completada.');
+      showToast('✔️ Cita marcada como completada.', 'success', 3000);
       await cargarCitas();
       setMostrarModal(false);
     } catch (error) {
       console.error('Error marcando cita:', error);
-      alert('Error al marcar la cita como completada');
+      showToast('❌ Error al marcar la cita como completada', 'error', 3000);
     }
   };
 
@@ -232,29 +255,42 @@ function MiAgenda({ onBack }) {
       {/* FILTROS */}
       <div className="filtros-container">
         <div className="filtro-grupo">
-          <label>Estado:</label>
-          <div className="filtro-tabs">
+          <label htmlFor="estado-filter" id="estado-filter-label">Estado:</label>
+          <div className="filtro-tabs" role="tablist" aria-labelledby="estado-filter-label">
             <button
+              id="estado-filter"
               className={`tab-btn ${filtroEstado === 'todas' ? 'active' : ''}`}
               onClick={() => setFiltroEstado('todas')}
+              role="tab"
+              aria-selected={filtroEstado === 'todas'}
+              aria-label="Mostrar todas las citas"
             >
               Todas
             </button>
             <button
               className={`tab-btn ${filtroEstado === 'pendiente' ? 'active' : ''}`}
               onClick={() => setFiltroEstado('pendiente')}
+              role="tab"
+              aria-selected={filtroEstado === 'pendiente'}
+              aria-label="Mostrar citas pendientes de confirmación"
             >
               Pendientes
             </button>
             <button
               className={`tab-btn ${filtroEstado === 'confirmada' ? 'active' : ''}`}
               onClick={() => setFiltroEstado('confirmada')}
+              role="tab"
+              aria-selected={filtroEstado === 'confirmada'}
+              aria-label="Mostrar citas confirmadas"
             >
               Confirmadas
             </button>
             <button
               className={`tab-btn ${filtroEstado === 'completada' ? 'active' : ''}`}
               onClick={() => setFiltroEstado('completada')}
+              role="tab"
+              aria-selected={filtroEstado === 'completada'}
+              aria-label="Mostrar citas completadas"
             >
               Completadas
             </button>
@@ -262,23 +298,33 @@ function MiAgenda({ onBack }) {
         </div>
 
         <div className="filtro-grupo">
-          <label>Período:</label>
-          <div className="filtro-tabs">
+          <label htmlFor="fecha-filter" id="fecha-filter-label">Período:</label>
+          <div className="filtro-tabs" role="tablist" aria-labelledby="fecha-filter-label">
             <button
+              id="fecha-filter"
               className={`tab-btn ${filtroFecha === 'hoy' ? 'active' : ''}`}
               onClick={() => setFiltroFecha('hoy')}
+              role="tab"
+              aria-selected={filtroFecha === 'hoy'}
+              aria-label="Mostrar citas de hoy"
             >
               Hoy
             </button>
             <button
               className={`tab-btn ${filtroFecha === 'proximas' ? 'active' : ''}`}
               onClick={() => setFiltroFecha('proximas')}
+              role="tab"
+              aria-selected={filtroFecha === 'proximas'}
+              aria-label="Mostrar próximas citas"
             >
               Próximas
             </button>
             <button
               className={`tab-btn ${filtroFecha === 'pasadas' ? 'active' : ''}`}
               onClick={() => setFiltroFecha('pasadas')}
+              role="tab"
+              aria-selected={filtroFecha === 'pasadas'}
+              aria-label="Mostrar citas pasadas"
             >
               Pasadas
             </button>
@@ -350,11 +396,31 @@ function MiAgenda({ onBack }) {
 
       {/* MODAL DETALLE */}
       {mostrarModal && citaSeleccionada && (
-        <div className="modal-overlay" onClick={cerrarModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div 
+          className="modal-overlay" 
+          onClick={cerrarModal}
+          role="presentation"
+          aria-hidden={!mostrarModal}
+        >
+          <div 
+            ref={modalRef}
+            className="modal-content" 
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-labelledby="modal-title"
+            aria-modal="true"
+            tabIndex={-1}
+          >
             <div className="modal-header">
-              <h2>Detalle de Cita</h2>
-              <button className="btn-close" onClick={cerrarModal}>✕</button>
+              <h2 id="modal-title">Detalle de Cita</h2>
+              <button 
+                className="btn-close" 
+                onClick={cerrarModal}
+                aria-label="Cerrar detalle de cita (presiona ESC)"
+                title="Cerrar detalle de cita"
+              >
+                ✕
+              </button>
             </div>
 
             <div className="modal-body">

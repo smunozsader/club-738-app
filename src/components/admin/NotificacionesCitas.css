@@ -1,0 +1,269 @@
+/* NotificacionesCitas.css - Sistema de alertas para citas pendientes */
+
+.notificaciones-citas-container {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.citas-alert-banner {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  color: white;
+  border-bottom: 3px solid #d68910;
+  padding: 15px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.alert-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.alert-icon {
+  font-size: 1.4rem;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.alert-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-toggle-alert,
+.btn-close-alert {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-toggle-alert:hover,
+.btn-close-alert:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-toggle-alert:focus,
+.btn-close-alert:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+.citas-list-alert {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.cita-item-alert {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.cita-item-alert:hover {
+  background: white;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.cita-info-alert {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #2c3e50;
+}
+
+.cita-header-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+}
+
+.cita-socio-alert {
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.cita-proposito-alert {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cita-footer-alert {
+  display: flex;
+  gap: 15px;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+
+.cita-fecha-alert,
+.cita-hora-alert {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-confirmar-rapido {
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-confirmar-rapido:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+}
+
+.btn-confirmar-rapido:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* Dark Mode Support */
+:root.dark-mode .cita-item-alert {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+:root.dark-mode .cita-item-alert:hover {
+  background: var(--bg-hover);
+}
+
+:root.dark-mode .cita-socio-alert,
+:root.dark-mode .cita-info-alert {
+  color: var(--text-primary);
+}
+
+:root.dark-mode .cita-footer-alert {
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .banner-header {
+    flex-wrap: wrap;
+  }
+
+  .cita-item-alert {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cita-header-alert {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .cita-proposito-alert {
+    order: 3;
+    width: 100%;
+  }
+
+  .btn-confirmar-rapido {
+    width: 100%;
+    order: 4;
+  }
+
+  .alert-info {
+    font-size: 0.9rem;
+  }
+
+  .alert-icon {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .citas-alert-banner {
+    padding: 12px 15px;
+  }
+
+  .banner-header {
+    gap: 10px;
+  }
+
+  .alert-info {
+    font-size: 0.85rem;
+  }
+
+  .btn-toggle-alert,
+  .btn-close-alert {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  .citas-list-alert {
+    gap: 8px;
+  }
+
+  .cita-item-alert {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+}
