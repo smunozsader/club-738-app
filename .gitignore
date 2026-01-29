@@ -29,6 +29,8 @@ scripts/serviceAccountKey.json
 # Sensitive data - NEVER commit these
 serviceAccountKey.json
 **/serviceAccountKey.json
+calendar_service_account.json
+**/calendar_service_account.json
 
 # Credentials and passwords
 CREDENTIALS*.txt
