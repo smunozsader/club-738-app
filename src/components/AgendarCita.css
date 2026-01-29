@@ -150,6 +150,26 @@
   margin-top: 10px;
 }
 
+.loading-slots {
+  padding: 20px;
+  text-align: center;
+  color: #3498db;
+  background: #ebf5fb;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-weight: 600;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
 /* Info box */
 .info-box {
   background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);

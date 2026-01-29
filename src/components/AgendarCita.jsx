@@ -65,7 +65,7 @@ function AgendarCita({ onBack }) {
     }
   };
 
-  const generarSlotsDisponibles = (fecha) => {
+  const generarSlotsDisponibles = async (fecha) => {
     // Horario de atención: Lunes a Viernes, 17:00 - 20:00 (5 PM - 8 PM)
     // Citas de 45 minutos + 15 minutos de descanso = slots cada 60 minutos
     const slots = [];
@@ -77,19 +77,44 @@ function AgendarCita({ onBack }) {
       return [];
     }
 
-    // Generar slots cada 60 minutos de 17:00 a 20:00
-    // 17:00, 18:00, 19:00
-    for (let hora = 17; hora < 20; hora++) {
-      slots.push(`${hora.toString().padStart(2, '0')}:00`);
+    // Horarios base posibles: 17:00, 18:00, 19:00
+    const horasBase = ['17:00', '18:00', '19:00'];
+
+    // Verificar cuáles están ocupados
+    try {
+      const citasRef = collection(db, 'citas');
+      const citasOcupadas = [];
+
+      // Verificar cada hora
+      for (const hora of horasBase) {
+        const q = query(
+          citasRef,
+          where('fecha', '==', fecha),
+          where('hora', '==', hora),
+          where('estado', '!=', 'cancelada')
+        );
+        const snapshot = await getDocs(q);
+        
+        if (snapshot.empty) {
+          // Slot disponible
+          slots.push(hora);
+        }
+      }
+    } catch (error) {
+      console.error('Error verificando disponibilidad:', error);
+      // Si hay error, mostrar todos los slots (mejor no dejar vacío)
+      return horasBase;
     }
 
     return slots;
   };
 
-  const handleFechaChange = (fecha) => {
+  const handleFechaChange = async (fecha) => {
     setFormCita({ ...formCita, fecha, hora: '' });
-    const slots = generarSlotsDisponibles(fecha);
+    setLoading(true);
+    const slots = await generarSlotsDisponibles(fecha);
     setSlotsDisponibles(slots);
+    setLoading(false);
   };
 
   const handleSubmit = async (e) => {
@@ -249,7 +274,9 @@ function AgendarCita({ onBack }) {
                 <label htmlFor="hora">
                   🕐 Horario <span className="required">*</span>
                 </label>
-                {slotsDisponibles.length > 0 ? (
+                {loading ? (
+                  <p className="loading-slots">⏳ Verificando disponibilidad...</p>
+                ) : slotsDisponibles.length > 0 ? (
                   <div className="slots-grid">
                     {slotsDisponibles.map((slot) => (
                       <button
@@ -266,8 +293,8 @@ function AgendarCita({ onBack }) {
                   <p className="no-slots">
                     {new Date(formCita.fecha + 'T00:00:00').getDay() === 0 || 
                      new Date(formCita.fecha + 'T00:00:00').getDay() === 6
-                      ? 'No hay horarios disponibles en fines de semana'
-                      : 'Selecciona una fecha válida'}
+                      ? '❌ No hay horarios disponibles en fines de semana'
+                      : '❌ Todos los horarios están ocupados en esta fecha. Selecciona otra fecha.'}
                   </p>
                 )}
                 <small className="help-text">
