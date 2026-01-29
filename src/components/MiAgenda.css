@@ -581,6 +581,29 @@
   outline-offset: 2px;
 }
 
+.btn-reprogramar {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.btn-reprogramar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4);
+}
+
+.btn-reprogramar:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
 .btn-cerrar {
   background: #95a5a6;
   color: white;
@@ -1305,17 +1328,87 @@
     grid-template-columns: 1fr;
   }
 
-  .filtro-tabs {
-    flex-direction: column;
-  }
+/* Modal Reprogramar */
+.modal-reprogramar {
+  max-width: 600px;
+}
 
-  .info-grid {
+.horario-anterior {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  padding: 15px;
+  background: var(--bg-primary, #f8f9fa);
+  border-radius: 8px;
+  border-left: 4px solid #e74c3c;
+}
+
+.horario-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.horario-item label {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #7f8c8d);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.horario-item span {
+  font-size: 1rem;
+  color: var(--text-primary, #2c3e50);
+  font-weight: 600;
+}
+
+/* Formulario */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: var(--text-primary, #2c3e50);
+  font-weight: 700;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid var(--border-color, #ecf0f1);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--text-primary, #2c3e50);
+  background: var(--bg-primary, white);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent-color, #3498db);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.form-input:hover {
+  border-color: var(--accent-color, #3498db);
+}
+
+.text-muted {
+  font-size: 0.9rem;
+  color: var(--text-secondary, #95a5a6);
+  margin: 8px 0 0 0;
+}
+
+@media (max-width: 768px) {
+  .horario-anterior {
     grid-template-columns: 1fr;
   }
-
-  .modal-footer {
-    flex-direction: column;
-  }
+}
 
   .modal-footer button {
     width: 100%;

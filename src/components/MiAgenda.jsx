@@ -18,6 +18,9 @@ function MiAgenda({ onBack }) {
   const [filtroFecha, setFiltroFecha] = useState('proximas'); // proximas, pasadas, hoy
   const [citaSeleccionada, setCitaSeleccionada] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarReprogramar, setMostrarReprogramar] = useState(false);
+  const [nuevaFecha, setNuevaFecha] = useState('');
+  const [nuevaHora, setNuevaHora] = useState('');
 
   // Contadores
   const [contadores, setContadores] = useState({
@@ -148,6 +151,52 @@ function MiAgenda({ onBack }) {
     } catch (error) {
       console.error('Error marcando cita:', error);
       showToast('❌ Error al marcar la cita como completada', 'error', 3000);
+    }
+  };
+
+  const abrirReprogramar = () => {
+    if (citaSeleccionada) {
+      setNuevaFecha(citaSeleccionada.fecha);
+      setNuevaHora(citaSeleccionada.hora);
+      setMostrarReprogramar(true);
+    }
+  };
+
+  const cerrarReprogramar = () => {
+    setMostrarReprogramar(false);
+    setNuevaFecha('');
+    setNuevaHora('');
+  };
+
+  const reprogramarCita = async () => {
+    if (!nuevaFecha || !nuevaHora) {
+      showToast('⚠️ Por favor completa fecha y hora', 'warning', 3000);
+      return;
+    }
+
+    try {
+      const citaRef = doc(db, 'citas', citaSeleccionada.id);
+      const fechaAntigua = citaSeleccionada.fecha;
+      const horaAntigua = citaSeleccionada.hora;
+
+      await updateDoc(citaRef, {
+        fecha: nuevaFecha,
+        hora: nuevaHora,
+        estado: 'pendiente', // Vuelve a pendiente al reprogramar
+        fechaReprogramacion: new Date().toISOString(),
+        horarioAnterior: {
+          fecha: fechaAntigua,
+          hora: horaAntigua
+        }
+      });
+
+      showToast('🔄 Cita reprogramada. El socio recibirá notificación por email.', 'success', 4000);
+      await cargarCitas();
+      cerrarReprogramar();
+      setMostrarModal(false);
+    } catch (error) {
+      console.error('Error reprogramando cita:', error);
+      showToast('❌ Error al reprogramar la cita', 'error', 3000);
     }
   };
 
@@ -512,6 +561,12 @@ function MiAgenda({ onBack }) {
                     ✅ Confirmar Cita
                   </button>
                   <button
+                    className="btn-reprogramar"
+                    onClick={abrirReprogramar}
+                  >
+                    🔄 Reprogramar
+                  </button>
+                  <button
                     className="btn-cancelar"
                     onClick={() => cancelarCita(citaSeleccionada.id)}
                   >
@@ -529,6 +584,12 @@ function MiAgenda({ onBack }) {
                     ✔️ Marcar Completada
                   </button>
                   <button
+                    className="btn-reprogramar"
+                    onClick={abrirReprogramar}
+                  >
+                    🔄 Reprogramar
+                  </button>
+                  <button
                     className="btn-cancelar"
                     onClick={() => cancelarCita(citaSeleccionada.id)}
                   >
@@ -539,6 +600,104 @@ function MiAgenda({ onBack }) {
 
               <button className="btn-cerrar" onClick={cerrarModal}>
                 Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL REPROGRAMAR */}
+      {mostrarReprogramar && citaSeleccionada && (
+        <div 
+          className="modal-overlay" 
+          onClick={cerrarReprogramar}
+          role="presentation"
+          aria-hidden={!mostrarReprogramar}
+        >
+          <div 
+            className="modal-content modal-reprogramar" 
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-labelledby="modal-reprogramar-title"
+            aria-modal="true"
+            tabIndex={-1}
+          >
+            <div className="modal-header">
+              <h2 id="modal-reprogramar-title">🔄 Reprogramar Cita</h2>
+              <button 
+                className="btn-close" 
+                onClick={cerrarReprogramar}
+                aria-label="Cerrar modal de reprogramación"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="info-section">
+                <h3>Socio: {citaSeleccionada.socioNombre}</h3>
+                <p className="text-muted">Propósito: {getPropositoNombre(citaSeleccionada.proposito)}</p>
+              </div>
+
+              <div className="info-section">
+                <h3>Horario Anterior:</h3>
+                <div className="horario-anterior">
+                  <div className="horario-item">
+                    <label>Fecha:</label>
+                    <span>
+                      {new Date(citaSeleccionada.fecha + 'T00:00:00').toLocaleDateString('es-MX', {
+                        weekday: 'short',
+                        day: 'numeric',
+                        month: 'short'
+                      })}
+                    </span>
+                  </div>
+                  <div className="horario-item">
+                    <label>Hora:</label>
+                    <span>{citaSeleccionada.hora} hrs</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="info-section">
+                <h3>Nuevo Horario:</h3>
+                <div className="form-group">
+                  <label htmlFor="nueva-fecha">Fecha Nueva: *</label>
+                  <input
+                    id="nueva-fecha"
+                    type="date"
+                    value={nuevaFecha}
+                    onChange={(e) => setNuevaFecha(e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                    className="form-input"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="nueva-hora">Hora Nueva: *</label>
+                  <input
+                    id="nueva-hora"
+                    type="time"
+                    value={nuevaHora}
+                    onChange={(e) => setNuevaHora(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="btn-confirmar"
+                onClick={reprogramarCita}
+              >
+                ✅ Confirmar Nueva Fecha
+              </button>
+              <button
+                className="btn-cerrar"
+                onClick={cerrarReprogramar}
+              >
+                ❌ Cancelar
               </button>
             </div>
           </div>
