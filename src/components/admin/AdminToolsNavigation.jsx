@@ -12,7 +12,7 @@ export default function AdminToolsNavigation({
   onSelectTool,
   activeSection 
 }) {
-  const { isDarkMode, setIsDarkMode } = useDarkMode();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   // Definición de grupos de herramientas
   const toolGroups = [
     {
@@ -193,7 +193,7 @@ export default function AdminToolsNavigation({
         </div>
         <button
           className="btn-dark-mode-toggle-header"
-          onClick={() => setIsDarkMode(!isDarkMode)}
+          onClick={toggleDarkMode}
           title={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
           aria-label="Toggle dark mode"
         >
