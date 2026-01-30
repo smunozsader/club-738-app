@@ -47,7 +47,7 @@
   --color-gold-light: #fef3c7;
   --color-gold-text: #78350f;        /* Para texto sobre fondos claros */
   
-  /* Footer (fondo oscuro) */
+  /* Footer */
   --color-footer-bg: #1e293b;
   --color-footer-text: #f1f5f9;      /* Contraste 14.6:1 sobre footer-bg */
   
@@ -57,45 +57,48 @@
   /* Responsive y Accesibilidad */
   --touch-target: 48px;              /* Mínimo para móviles (WCAG) */
   --focus-outline: 2px solid var(--color-primary);
-  --focus-outline-offset: 2VERDE VIBRANTE PARA DARK MODE */
+  --focus-outline-offset: 2px;
+  
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Sombras para dark mode */
+:root.dark-mode {
+  /* Colores Principales (Brand) - Verde ajustado para dark */
   --color-primary-dark: #059669;     /* Verde oscuro más oscuro para dark */
   --color-primary: #34d399;          /* Verde claro para mejor contraste en dark */
   --color-primary-light: #6ee7b7;    /* Verde más claro */
   
-  /* Colores neutros - alto contraste WCAG AAA */
+  /* Colores Neutros - Alto contraste WCAG AAA */
   --color-text-primary: #f1f5f9;     /* Títulos - blanco casi puro */
   --color-text-secondary: #e2e8f0;   /* Texto normal - muy claro */
   --color-text-muted: #cbd5e1;       /* Texto secundario */
-  --color-text-light: #94a3b8;
-  --color-primary-light: #7dd3fc;
+  --color-text-light: #94a3b8;       /* Texto terciario */
+  --color-border: #475569;           /* Bordes principales */
+  --color-border-dark: #334155;      /* Bordes sutiles */
+  --color-background: #0f172a;       /* Fondo más oscuro */
+  --color-surface: #1e293b;          /* Superficies/tarjetas */
   
-  /* Colores neutros - alto contraste */
-  --color-text-primary: #e0f2fe;      /* Títulos principales */
-  --color-text-secondary: #cbd5e1;    /* Texto normal */
-  --color-text-muted: #94a3b8;        /* Texto secundario */
-  --color-text-light: #64748b;        /* Texto terciario */
-  --color-border: #475569;            /* Bordes principales */
-  --color-border-dark: #334155;       /* Bordes sutiles */
-  --color-background: #0f172a;        /* Fondo más oscuro */
-  --color-surface: #1e293b;           /* Superficies/tarjetas */
-  
-  /* Colores semánticos vibrantes */
-  --color-success: #4ade80;           /* Verde brillante */
+  /* Colores Semánticos Vibrantes */
+  --color-success: #4ade80;          /* Verde brillante */
   --color-success-dark: #22c55e;
   --color-success-light: #14532d;
-  --color-success-bg: #1e293b;        /* Fondo para badges success */
+  --color-success-bg: #1e293b;
   
-  --color-warning: #fbbf24;           /* Amarillo dorado */
+  --color-warning: #fbbf24;          /* Amarillo dorado */
   --color-warning-dark: #f59e0b;
   --color-warning-light: #78350f;
   --color-warning-bg: #1e293b;
   
-  --color-error: #f87171;             /* Rojo suave */
+  --color-error: #f87171;            /* Rojo suave */
   --color-error-dark: #ef4444;
   --color-error-light: #7f1d1d;
   --color-error-bg: #1e293b;
   
-  --color-info: #38bdf8;              /* Azul cielo */
+  --color-info: #38bdf8;             /* Azul cielo */
   --color-info-dark: #0ea5e9;
   --color-info-light: #1e3a8a;
   --color-info-bg: #1e293b;
@@ -108,16 +111,9 @@
   /* Footer */
   --color-footer-bg: #0f172a;
   --color-footer-text: #cbd5e1;
-  --color-footer-muted: #cbd5e1;      /* Contraste 10.0:1 sobre footer-bg */
+  --color-footer-muted: #cbd5e1;
   
-  /* Sombras */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Sombras para dark mode */
-:root.dark-mode {
+  /* Sombras Dark Mode */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
