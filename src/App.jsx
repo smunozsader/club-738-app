@@ -291,51 +291,72 @@ function App() {
           {/* NUEVAS SECCIONES ADMIN */}
           {activeSection === 'registro-pagos' && user.email === ADMIN_EMAIL && (
             <div className="section-registro-pagos">
-              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-                ← Volver a Panel Admin
-              </button>
+              <AdminHeader
+                title="💰 Registro de Pagos"
+                subtitle="Gestiona cuotas, FEMETI y membresía de socios"
+                showBackButton={true}
+                onBack={() => setActiveSection('admin-dashboard')}
+              />
               <RegistroPagos userEmail={user.email} />
             </div>
           )}
 
           {activeSection === 'reporte-caja' && user.email === ADMIN_EMAIL && (
             <div className="section-reporte-caja">
-              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-                ← Volver a Panel Admin
-              </button>
+              <AdminHeader
+                title="📊 Reporte de Caja"
+                subtitle="Corte diario de pagos y cobros"
+                showBackButton={true}
+                onBack={() => setActiveSection('admin-dashboard')}
+              />
               <ReporteCaja userEmail={user.email} />
             </div>
           )}
 
           {activeSection === 'dashboard-renovaciones' && user.email === ADMIN_EMAIL && (
             <div className="section-dashboard-renovaciones">
-              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-                ← Volver a Panel Admin
-              </button>
+              <AdminHeader
+                title="📈 Renovaciones 2026"
+                subtitle="Seguimiento de membresías y pagos anuales"
+                showBackButton={true}
+                onBack={() => setActiveSection('admin-dashboard')}
+              />
               <DashboardRenovaciones userEmail={user.email} />
             </div>
           )}
 
           {activeSection === 'verificador-peta' && user.email === ADMIN_EMAIL && (
             <div className="section-verificador-peta">
-              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-                ← Volver al Panel Admin
-              </button>
+              <AdminHeader
+                title="✅ Verificador PETA"
+                subtitle="Valida documentos e información de PETAs"
+                showBackButton={true}
+                onBack={() => setActiveSection('admin-dashboard')}
+              />
               <VerificadorPETA userEmail={user.email} onBack={() => setActiveSection('admin-dashboard')} />
             </div>
           )}
 
           {activeSection === 'generador-peta' && user.email === ADMIN_EMAIL && (
             <div className="section-generador-peta">
-              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-                ← Volver al Panel Admin
-              </button>
+              <AdminHeader
+                title="📝 Generador PETA"
+                subtitle="Crea y gestiona solicitudes de autorización de armas"
+                showBackButton={true}
+                onBack={() => setActiveSection('admin-dashboard')}
+              />
               <GeneradorPETA userEmail={user.email} />
             </div>
           )}
 
           {activeSection === 'expediente-impresor' && user.email === ADMIN_EMAIL && (
             <div className="section-expediente-impresor">
+              <AdminHeader
+                title="🖨️ Impresor de Expedientes"
+                subtitle="Genera y descarga expedientes completos para entrega"
+                showBackButton={true}
+                onBack={() => setActiveSection('admin-dashboard')}
+              />
               <ExpedienteImpresor userEmail={user.email} onBack={() => setActiveSection('admin-dashboard')} />
             </div>
           )}
@@ -351,18 +372,24 @@ function App() {
 
           {activeSection === 'admin-bajas-arsenal' && user.email === ADMIN_EMAIL && (
             <div className="section-admin-bajas-arsenal">
-              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-                ← Volver al Panel Admin
-              </button>
+              <AdminHeader
+                title="➖ Bajas de Armas"
+                subtitle="Desregistra armas del arsenal de socios"
+                showBackButton={true}
+                onBack={() => setActiveSection('admin-dashboard')}
+              />
               <AdminBajasArsenal />
             </div>
           )}
 
           {activeSection === 'admin-altas-arsenal' && user.email === ADMIN_EMAIL && (
             <div className="section-admin-altas-arsenal">
-              <button className="btn-back" onClick={() => setActiveSection('admin-dashboard')}>
-                ← Volver al Panel Admin
-              </button>
+              <AdminHeader
+                title="➕ Altas de Armas"
+                subtitle="Registra nuevas armas en el arsenal de socios"
+                showBackButton={true}
+                onBack={() => setActiveSection('admin-dashboard')}
+              />
               <AdminAltasArsenal />
             </div>
           )}
