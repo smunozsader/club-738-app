@@ -15,6 +15,7 @@ import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import { DashboardSkeleton } from '../common/LoadingSkeleton';
 import { useToastContext } from '../../contexts/ToastContext';
+import AdminHeader from './AdminHeader';
 import AdminToolsNavigation from './AdminToolsNavigation';
 import NotificacionesCitas from './NotificacionesCitas';
 import * as XLSX from 'xlsx';
@@ -269,6 +270,12 @@ export default function AdminDashboard({
     <div className="admin-dashboard">
       {/* Notificaciones de Citas Pendientes */}
       <NotificacionesCitas />
+
+      {/* Encabezado Unificado */}
+      <AdminHeader 
+        title="🛠️ Panel de Administración"
+        subtitle="Gestiona socios, documentos, PETAs y más"
+      />
 
       {/* Componente de navegación de herramientas (Grid de tarjetas) */}
       <AdminToolsNavigation 
