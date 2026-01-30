@@ -492,3 +492,137 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== DARK MODE OVERRIDES ===== */
+.dark-mode .bajas-container {
+  background: var(--dm-bg-primary);
+}
+
+.dark-mode .bajas-header {
+  background: var(--dm-surface-primary);
+  border-bottom-color: var(--dm-border);
+}
+
+.dark-mode .bajas-header h2 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .bajas-header p {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .solicitud-card {
+  background: var(--dm-surface-primary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .solicitud-card:hover {
+  background: var(--dm-surface-secondary);
+  border-color: var(--dm-border-focus);
+}
+
+.dark-mode .solicitud-header {
+  border-bottom-color: var(--dm-border);
+}
+
+.dark-mode .solicitud-header h3 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .solicitud-info {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode .modal-content {
+  background: var(--dm-surface-primary);
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .modal-header {
+  border-bottom-color: var(--dm-border);
+}
+
+.dark-mode .modal-header h3 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .form-section {
+  background: var(--dm-surface-secondary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .form-section h3 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .form-group label {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode select,
+.dark-mode textarea,
+.dark-mode input[type="text"],
+.dark-mode input[type="date"] {
+  background: var(--dm-surface-secondary);
+  color: var(--dm-text-primary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode select:focus,
+.dark-mode textarea:focus,
+.dark-mode input:focus {
+  border-color: var(--dm-border-focus);
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2);
+}
+
+.dark-mode .detail-grid {
+  background: var(--dm-surface-secondary);
+}
+
+.dark-mode .detail-item-label {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .detail-item-value {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .btn-submit {
+  background: var(--dm-error);
+  color: white;
+}
+
+.dark-mode .btn-submit:hover {
+  background: var(--dm-error-dark);
+}
+
+.dark-mode .btn-cancel {
+  background: var(--dm-surface-secondary);
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .btn-cancel:hover {
+  background: var(--dm-surface-tertiary);
+}
+
+.dark-mode .error-message {
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--dm-error-light);
+  border-color: var(--dm-error);
+}
+
+.dark-mode .success-message {
+  background: rgba(74, 222, 128, 0.1);
+  color: var(--dm-success-light);
+  border-color: var(--dm-success);
+}
+
+.dark-mode .info-message {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--dm-info);
+  border-color: var(--dm-info);
+}

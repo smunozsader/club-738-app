@@ -514,3 +514,147 @@
   gap: 8px;
   flex-wrap: wrap;
 }
+
+/* ===== DARK MODE OVERRIDES ===== */
+.dark-mode .mis-armas {
+  background: var(--dm-bg-primary);
+}
+
+.dark-mode .mis-armas-header h2 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .mis-armas-subtitle {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .mis-armas-loading {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .progreso-armas {
+  background: var(--dm-surface-primary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .progreso-info {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .progreso-porcentaje {
+  color: var(--dm-primary);
+}
+
+.dark-mode .armas-grid {
+  /* Grid layout stays same */
+}
+
+.dark-mode .arma-card {
+  background: var(--dm-surface-primary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .arma-card:hover {
+  background: var(--dm-surface-secondary);
+  border-color: var(--dm-border-focus);
+}
+
+.dark-mode .arma-card-header {
+  border-bottom-color: var(--dm-border);
+}
+
+.dark-mode .arma-card-header h3 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .calibre-badge {
+  background: var(--dm-primary);
+  color: #000;
+}
+
+.dark-mode .arma-details-row {
+  border-bottom-color: var(--dm-border-light);
+}
+
+.dark-mode .arma-details-row .label {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .arma-details-row .value {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .modalidad-badge {
+  background: var(--dm-info);
+  color: #000;
+}
+
+.dark-mode .btn-deregistrar {
+  background: var(--dm-error);
+  color: white;
+}
+
+.dark-mode .btn-deregistrar:hover {
+  background: var(--dm-error-dark);
+  box-shadow: 0 4px 8px rgba(248, 113, 113, 0.3);
+}
+
+.dark-mode .empty-state {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .empty-state-icon {
+  color: var(--dm-text-tertiary);
+}
+
+.dark-mode .tips-section {
+  background: var(--dm-surface-primary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .tips-section h3 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .tips-content {
+  border-top-color: var(--dm-border);
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .tips-content h4 {
+  color: var(--dm-primary);
+}
+
+.dark-mode .form-group label {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .form-group input,
+.dark-mode .form-group select,
+.dark-mode .form-group textarea {
+  background: var(--dm-surface-secondary);
+  color: var(--dm-text-primary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .form-group input:focus,
+.dark-mode .form-group select:focus,
+.dark-mode .form-group textarea:focus {
+  border-color: var(--dm-border-focus);
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2);
+}
+
+.dark-mode .btn-primary {
+  background: var(--dm-primary);
+  color: #000;
+}
+
+.dark-mode .btn-primary:hover {
+  background: var(--dm-primary-light);
+}
+
+.dark-mode .modalidad-select {
+  background: var(--dm-surface-secondary);
+  color: var(--dm-text-primary);
+  border-color: var(--dm-border);
+}

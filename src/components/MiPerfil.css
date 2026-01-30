@@ -275,3 +275,126 @@
     width: 100%;
   }
 }
+
+/* ===== DARK MODE OVERRIDES ===== */
+.dark-mode .perfil-header {
+  border-bottom-color: var(--dm-border-focus);
+}
+
+.dark-mode .perfil-header h2 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .perfil-info-section {
+  background: var(--dm-surface-primary);
+  border-left-color: var(--dm-border-focus);
+}
+
+.dark-mode .perfil-info-section h3 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .info-field {
+  border-bottom-color: var(--dm-border-light);
+}
+
+.dark-mode .info-field label {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .info-field span {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .perfil-password-section {
+  background: var(--dm-surface-primary);
+  border-color: var(--dm-border);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .perfil-password-section h3 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .security-notice {
+  background-color: rgba(251, 191, 36, 0.1);
+  border-left-color: var(--dm-warning);
+  color: var(--dm-warning-light);
+}
+
+.dark-mode .security-notice strong {
+  color: var(--dm-warning);
+}
+
+.dark-mode .form-group label {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .password-input-wrapper input,
+.dark-mode .form-group input {
+  padding: 12px;
+  border-color: var(--dm-border);
+  background: var(--dm-surface-secondary);
+  color: var(--dm-text-primary);
+  font-family: inherit;
+}
+
+.dark-mode .form-group input:focus {
+  border-color: var(--dm-border-focus);
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2);
+}
+
+.dark-mode .form-group input:disabled {
+  background-color: var(--dm-surface-tertiary);
+}
+
+.dark-mode .toggle-password {
+  color: var(--dm-text-secondary);
+  opacity: 0.7;
+}
+
+.dark-mode .toggle-password:hover {
+  opacity: 1;
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .password-hint {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .error-message {
+  background-color: rgba(248, 113, 113, 0.1);
+  color: var(--dm-error-light);
+  border-left-color: var(--dm-error);
+}
+
+.dark-mode .success-message {
+  background-color: rgba(74, 222, 128, 0.1);
+  color: var(--dm-success-light);
+  border-left-color: var(--dm-success);
+}
+
+.dark-mode .form-actions {
+  border-top-color: var(--dm-border);
+}
+
+.dark-mode .btn-cancel {
+  background-color: var(--dm-surface-secondary);
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .btn-cancel:hover:not(:disabled) {
+  background-color: var(--dm-surface-tertiary);
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .btn-submit {
+  background-color: var(--dm-primary);
+  color: #000;
+}
+
+.dark-mode .btn-submit:hover:not(:disabled) {
+  background-color: var(--dm-primary-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}

@@ -470,3 +470,110 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== DARK MODE OVERRIDES ===== */
+.dark-mode .altas-container {
+  background: var(--dm-bg-primary);
+}
+
+.dark-mode .altas-header {
+  background: var(--dm-surface-primary);
+  border-bottom-color: var(--dm-border);
+}
+
+.dark-mode .altas-header h2 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .altas-header p {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .form-section {
+  background: var(--dm-surface-primary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .form-section h3 {
+  color: var(--dm-text-primary);
+  border-bottom-color: var(--dm-border);
+}
+
+.dark-mode .form-group label {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode input[type="text"],
+.dark-mode input[type="number"],
+.dark-mode input[type="email"],
+.dark-mode input[type="date"],
+.dark-mode select,
+.dark-mode textarea {
+  background: var(--dm-surface-secondary);
+  color: var(--dm-text-primary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode input:focus,
+.dark-mode select:focus,
+.dark-mode textarea:focus {
+  border-color: var(--dm-border-focus);
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2);
+}
+
+.dark-mode .preview-section {
+  background: var(--dm-surface-primary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .preview-section h3 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .preview-item {
+  border-bottom-color: var(--dm-border-light);
+}
+
+.dark-mode .preview-item-label {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode .preview-item-value {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .btn-submit {
+  background: var(--dm-primary);
+  color: #000;
+}
+
+.dark-mode .btn-submit:hover {
+  background: var(--dm-primary-light);
+}
+
+.dark-mode .btn-cancel {
+  background: var(--dm-surface-secondary);
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .btn-cancel:hover {
+  background: var(--dm-surface-tertiary);
+}
+
+.dark-mode .error-message {
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--dm-error-light);
+  border-color: var(--dm-error);
+}
+
+.dark-mode .success-message {
+  background: rgba(74, 222, 128, 0.1);
+  color: var(--dm-success-light);
+  border-color: var(--dm-success);
+}
+
+.dark-mode .warning-message {
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--dm-warning-light);
+  border-color: var(--dm-warning);
+}

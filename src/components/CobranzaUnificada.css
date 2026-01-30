@@ -1008,3 +1008,219 @@
   }
 }
 
+/* ===== DARK MODE OVERRIDES ===== */
+.dark-mode .cobranza-container {
+  background: var(--dm-bg-primary);
+}
+
+.dark-mode .cobranza-header {
+  background: var(--dm-surface-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .cobranza-header h1 {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .cobranza-header p {
+  color: var(--dm-text-muted);
+}
+
+.dark-mode .btn-back {
+  background: var(--dm-surface-secondary);
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .btn-back:hover {
+  background: var(--dm-surface-tertiary);
+}
+
+/* Tabs dark mode */
+.dark-mode .cobranza-tabs {
+  background: var(--dm-surface-primary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode .cobranza-tab {
+  color: var(--dm-text-secondary);
+  border-bottom-color: transparent;
+}
+
+.dark-mode .cobranza-tab.active {
+  color: var(--dm-primary);
+  border-bottom-color: var(--dm-primary);
+}
+
+.dark-mode .cobranza-tab:hover {
+  color: var(--dm-text-primary);
+}
+
+/* Cards dark mode */
+.dark-mode .cobranza-card,
+.dark-mode .registro-card {
+  background: var(--dm-surface-primary);
+  border-color: var(--dm-border);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .cobranza-card:hover {
+  background: var(--dm-surface-secondary);
+  border-color: var(--dm-border-focus);
+}
+
+.dark-mode .card-header,
+.dark-mode .registro-header {
+  border-bottom-color: var(--dm-border);
+}
+
+.dark-mode .card-title,
+.dark-mode .registro-title {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .card-subtitle {
+  color: var(--dm-text-muted);
+}
+
+/* Form elements dark mode */
+.dark-mode .form-group label {
+  color: var(--dm-text-secondary);
+}
+
+.dark-mode input[type="text"],
+.dark-mode input[type="number"],
+.dark-mode input[type="email"],
+.dark-mode input[type="date"],
+.dark-mode select,
+.dark-mode textarea {
+  background: var(--dm-surface-secondary);
+  color: var(--dm-text-primary);
+  border-color: var(--dm-border);
+}
+
+.dark-mode input[type="text"]:focus,
+.dark-mode input[type="number"]:focus,
+.dark-mode input[type="email"]:focus,
+.dark-mode input[type="date"]:focus,
+.dark-mode select:focus,
+.dark-mode textarea:focus {
+  border-color: var(--dm-border-focus);
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2);
+}
+
+/* Buttons dark mode */
+.dark-mode .btn-primary {
+  background: var(--dm-primary);
+  color: #000;
+}
+
+.dark-mode .btn-primary:hover {
+  background: var(--dm-primary-light);
+}
+
+.dark-mode .btn-secondary {
+  background: var(--dm-surface-secondary);
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .btn-secondary:hover {
+  background: var(--dm-surface-tertiary);
+}
+
+.dark-mode .btn-danger {
+  background: var(--dm-error);
+  color: white;
+}
+
+.dark-mode .btn-danger:hover {
+  background: var(--dm-error-dark);
+}
+
+.dark-mode .btn-success {
+  background: var(--dm-success);
+  color: #000;
+}
+
+.dark-mode .btn-success:hover {
+  background: var(--dm-success-light);
+}
+
+/* Tables dark mode */
+.dark-mode .data-table {
+  border-color: var(--dm-border);
+}
+
+.dark-mode .data-table thead {
+  background: var(--dm-surface-secondary);
+  border-bottom-color: var(--dm-border);
+}
+
+.dark-mode .data-table thead th {
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .data-table tbody tr {
+  border-bottom-color: var(--dm-border-light);
+}
+
+.dark-mode .data-table tbody tr:hover {
+  background: var(--dm-surface-secondary);
+}
+
+.dark-mode .data-table tbody td {
+  color: var(--dm-text-primary);
+}
+
+/* Status badges dark mode */
+.dark-mode .badge-success {
+  background: rgba(74, 222, 128, 0.2);
+  color: var(--dm-success-light);
+}
+
+.dark-mode .badge-pending {
+  background: rgba(251, 191, 36, 0.2);
+  color: var(--dm-warning-light);
+}
+
+.dark-mode .badge-error {
+  background: rgba(248, 113, 113, 0.2);
+  color: var(--dm-error-light);
+}
+
+.dark-mode .badge-info {
+  background: rgba(56, 189, 248, 0.2);
+  color: var(--dm-info);
+}
+
+/* Modals dark mode */
+.dark-mode .modal-content {
+  background: var(--dm-surface-primary);
+  color: var(--dm-text-primary);
+}
+
+.dark-mode .modal-header {
+  border-bottom-color: var(--dm-border);
+}
+
+.dark-mode .modal-footer {
+  border-top-color: var(--dm-border);
+}
+
+/* Messages dark mode */
+.dark-mode .success-message {
+  background: rgba(74, 222, 128, 0.1);
+  color: var(--dm-success-light);
+  border-color: var(--dm-success);
+}
+
+.dark-mode .error-message {
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--dm-error-light);
+  border-color: var(--dm-error);
+}
+
+.dark-mode .warning-message {
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--dm-warning-light);
+  border-color: var(--dm-warning);
+}
