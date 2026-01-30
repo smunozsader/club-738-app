@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, updateDoc, Timestamp, arrayUnion, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebaseConfig';
+import { useToastContext } from '../contexts/ToastContext';
 import { CONCEPTOS_PAGO_2026, METODOS_PAGO, COMBOS_PAGO, calcularTotalPago } from '../utils/conceptosPago';
 import './RegistroPagos.css';
 
@@ -19,6 +20,8 @@ import './RegistroPagos.css';
 const CONCEPTOS_PAGO = CONCEPTOS_PAGO_2026;
 
 export default function RegistroPagos({ userEmail, onBack }) {
+  const { showToast } = useToastContext();
+  
   const [loading, setLoading] = useState(true);
   const [guardando, setGuardando] = useState(false);
   const [socios, setSocios] = useState([]);
@@ -79,7 +82,7 @@ export default function RegistroPagos({ userEmail, onBack }) {
       setSocios(sociosList);
     } catch (error) {
       console.error('Error cargando socios:', error);
-      alert('Error al cargar datos. Por favor intenta de nuevo.');
+      showToast('Error al cargar datos. Por favor intenta de nuevo.', 'error', 4000);
     } finally {
       setLoading(false);
     }
@@ -120,7 +123,7 @@ export default function RegistroPagos({ userEmail, onBack }) {
     const nuevosArchivos = Array.from(files).slice(0, 3 - comprobanteFiles.length);
     
     if (comprobanteFiles.length + nuevosArchivos.length > 3) {
-      alert('Máximo 3 archivos permitidos');
+      showToast('Máximo 3 archivos permitidos', 'warning', 3000);
       return;
     }
 
@@ -131,13 +134,13 @@ export default function RegistroPagos({ userEmail, onBack }) {
       // Validar tipo de archivo
       const tiposPermitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
       if (!tiposPermitidos.includes(file.type)) {
-        alert(`"${file.name}" no es un formato válido. Solo JPG, PNG, GIF, WebP o PDF`);
+        showToast(`"${file.name}" no es un formato válido. Solo JPG, PNG, GIF, WebP o PDF`, 'warning', 3000);
         return;
       }
 
       // Validar tamaño (máximo 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert(`"${file.name}" supera 5MB`);
+        showToast(`"${file.name}" supera 5MB`, 'warning', 3000);
         return;
       }
 
@@ -171,7 +174,7 @@ export default function RegistroPagos({ userEmail, onBack }) {
 
     // Validación previo a subir
     if (!socioSeleccionado?.email) {
-      alert('Error: No hay socio seleccionado');
+      showToast('Error: No hay socio seleccionado', 'error', 4000);
       return [];
     }
 
@@ -186,7 +189,7 @@ export default function RegistroPagos({ userEmail, onBack }) {
         // Validar que es un File válido
         if (!file || !(file instanceof File)) {
           console.error(`Archivo ${i} no es válido:`, file);
-          alert(`Archivo ${i + 1} no es válido. Por favor recarga.`);
+          showToast(`Archivo ${i + 1} no es válido. Por favor recarga.`, 'error', 4000);
           return [];
         }
 
@@ -233,7 +236,7 @@ export default function RegistroPagos({ userEmail, onBack }) {
       return urls;
     } catch (error) {
       console.error('Error completo al subir comprobantes:', error);
-      alert(`Error al subir comprobantes: ${error.message}\n\nIntenta de nuevo o contacta soporte.`);
+      showToast(`Error al subir comprobantes. Intenta de nuevo o contacta soporte.`, 'error', 5000);
       return [];
     } finally {
       setSubiendoComprobantes(false);
@@ -252,24 +255,24 @@ export default function RegistroPagos({ userEmail, onBack }) {
 
   const registrarPago = async () => {
     if (!socioSeleccionado) {
-      alert('Por favor selecciona un socio');
+      showToast('Por favor selecciona un socio', 'warning', 3000);
       return;
     }
     
     if (!numeroRecibo.trim()) {
-      alert('Por favor ingresa el número de recibo');
+      showToast('Por favor ingresa el número de recibo', 'warning', 3000);
       return;
     }
 
     // Validar que si es transferencia, debe haber comprobante(s)
     if (metodoPago === 'transferencia' && comprobanteFiles.length === 0) {
-      alert('Por favor carga al menos un comprobante de transferencia');
+      showToast('Por favor carga al menos un comprobante de transferencia', 'warning', 3000);
       return;
     }
     
     const total = calcularTotal();
     if (total === 0) {
-      alert('Por favor selecciona al menos un concepto de pago');
+      showToast('Por favor selecciona al menos un concepto de pago', 'warning', 3000);
       return;
     }
     
@@ -367,7 +370,7 @@ export default function RegistroPagos({ userEmail, onBack }) {
         ultimaActualizacion: Timestamp.now()
       });
       
-      alert(`✅ Pago registrado exitosamente\n\nTotal: $${total.toLocaleString('es-MX')}\nRecibo: ${numeroRecibo}`);
+      showToast(`✅ Pago registrado: $${total.toLocaleString('es-MX')} (Rec: ${numeroRecibo})`, 'success', 5000);
       
       // Limpiar form
       setSocioSeleccionado(null);
@@ -384,7 +387,7 @@ export default function RegistroPagos({ userEmail, onBack }) {
       
     } catch (error) {
       console.error('Error registrando pago:', error);
-      alert('Error al registrar pago. Por favor intenta de nuevo.');
+      showToast('Error al registrar pago. Por favor intenta de nuevo.', 'error', 4000);
     } finally {
       setGuardando(false);
     }

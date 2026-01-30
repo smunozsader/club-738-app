@@ -9,6 +9,7 @@
 import { useState, useEffect } from 'react';
 import { collection, addDoc, doc, getDoc, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import { useToastContext } from '../contexts/ToastContext';
 import { calcularMontoE5cinco, obtenerInfoPagoCompleta } from '../utils/pagosE5cinco';
 import { getCartuchosPorDefecto } from '../utils/limitesCartuchos';
 import './SolicitarPETA.css';
@@ -54,6 +55,7 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
   // targetEmail: email del socio para quien se solicita (admin puede solicitarlo para otros)
   // userEmail: email del usuario autenticado (quien hace la solicitud)
   const emailSocio = targetEmail || userEmail; // Si es admin solicitando para otro, usa targetEmail
+  const { showToast } = useToastContext();
   
   const [loading, setLoading] = useState(true);
   const [enviando, setEnviando] = useState(false);
@@ -113,7 +115,7 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
       }
     } catch (error) {
       console.error('Error cargando datos del socio:', error);
-      alert('Error al cargar tus datos. Por favor intenta de nuevo.');
+      showToast('Error al cargar datos. Por favor intenta de nuevo.', 'error', 4000);
     } finally {
       setLoading(false);
     }
@@ -124,7 +126,7 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
       setArmasSeleccionadas(armasSeleccionadas.filter(id => id !== armaId));
     } else {
       if (armasSeleccionadas.length >= 10) {
-        alert('Máximo 10 armas por PETA');
+        showToast('Máximo 10 armas por PETA', 'warning', 3000);
         return;
       }
       setArmasSeleccionadas([...armasSeleccionadas, armaId]);
@@ -136,7 +138,7 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
       setEstadosSeleccionados(estadosSeleccionados.filter(e => e !== estado));
     } else {
       if (estadosSeleccionados.length >= 10) {
-        alert('Máximo 10 estados por PETA');
+        showToast('Máximo 10 estados por PETA', 'warning', 3000);
         return;
       }
       setEstadosSeleccionados([...estadosSeleccionados, estado]);
@@ -165,7 +167,7 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
   const validarFormulario = () => {
     // Validar armas seleccionadas
     if (armasSeleccionadas.length === 0) {
-      alert('Debes seleccionar al menos 1 arma');
+      showToast('Debes seleccionar al menos 1 arma', 'warning', 3000);
       return false;
     }
     
@@ -201,19 +203,19 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
     
     // Validar estados (solo para competencia/caza)
     if ((tipoPETA === 'competencia' || tipoPETA === 'caza') && estadosSeleccionados.length === 0) {
-      alert('Debes seleccionar al menos 1 estado');
+      showToast('Debes seleccionar al menos 1 estado', 'warning', 3000);
       return false;
     }
     
     // Validar domicilio
     if (!domicilio.calle || !domicilio.colonia || !domicilio.municipio || !domicilio.estado || !domicilio.cp) {
-      alert('Por favor completa todos los campos de tu domicilio');
+      showToast('Por favor completa todos los campos de tu domicilio', 'warning', 3000);
       return false;
     }
     
     // Validar PETA anterior si es renovación
     if (esRenovacion && !petaAnterior.trim()) {
-      alert('Por favor ingresa el número de tu PETA anterior');
+      showToast('Por favor ingresa el número de tu PETA anterior', 'warning', 3000);
       return false;
     }
     
@@ -321,12 +323,7 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
       
       console.log('✅ PETA creada exitosamente');
       
-      alert('✅ Solicitud de PETA enviada exitosamente.\n\n' +
-            '📋 Próximos pasos:\n' +
-            '1. Verifica que todos tus documentos estén subidos\n' +
-            '2. Agenda cita con el Secretario para entregar originales\n' +
-            '3. Lleva físicamente: foto infantil y recibo e5cinco\n' +
-            '4. Realiza el pago de tu cuota anual');
+      showToast('✅ ¡Solicitud de PETA enviada exitosamente! Próximos pasos: 1) Verifica documentos, 2) Agenda cita, 3) Lleva foto e5cinco, 4) Realiza pago anual', 'success', 5000);
       
       onBack();
       
@@ -337,7 +334,7 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
         code: error.code,
         stack: error.stack
       });
-      alert(`Error al enviar la solicitud: ${error.message}\n\nPor favor intenta de nuevo o contacta al administrador.`);
+      showToast(`Error al enviar: ${error.message}. Intenta de nuevo o contacta al administrador.`, 'error', 5000);
     } finally {
       setEnviando(false);
     }

@@ -9,6 +9,7 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import { useToastContext } from '../contexts/ToastContext';
 import { jsPDF } from 'jspdf';
 import { getLimitesCartuchos, ajustarCartuchos, getCartuchosPorDefecto } from '../utils/limitesCartuchos';
 import './GeneradorPETA.css';
@@ -71,6 +72,8 @@ const MESES = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO',
 // - Otras armas: máximo 200 cartuchos
 
 export default function GeneradorPETA({ userEmail, onBack }) {
+  const { showToast } = useToastContext();
+  
   // Estados del formulario
   const [socios, setSocios] = useState([]);
   const [socioSeleccionado, setSocioSeleccionado] = useState(null);
@@ -254,7 +257,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       const socio = socios.find(s => s.email === solicitud.socioEmail);
       if (!socio) {
         console.error('❌ Socio no encontrado:', solicitud.socioEmail);
-        alert('Error: No se encontró el socio en la base de datos');
+        showToast('Error: Socio no encontrado en la base de datos', 'error', 4000);
         return;
       }
       
@@ -356,7 +359,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       
     } catch (error) {
       console.error('❌ Error cargando solicitud:', error);
-      alert('Error al cargar la solicitud. Por favor intenta de nuevo.');
+      showToast('Error al cargar la solicitud. Por favor intenta de nuevo.', 'error', 4000);
     }
   };
 
@@ -436,17 +439,17 @@ export default function GeneradorPETA({ userEmail, onBack }) {
 
   const generarPDF = () => {
     if (!socioSeleccionado || armasSeleccionadas.length === 0) {
-      alert('Selecciona un socio y al menos un arma');
+      showToast('Selecciona un socio y al menos un arma', 'warning', 3000);
       return;
     }
 
     if (!fechaInicio || !fechaFin) {
-      alert('Especifica las fechas de vigencia');
+      showToast('Especifica las fechas de vigencia', 'warning', 3000);
       return;
     }
 
     if ((tipoPETA === 'competencia' || tipoPETA === 'caza') && estadosSeleccionados.length === 0) {
-      alert('Selecciona al menos un estado');
+      showToast('Selecciona al menos un estado', 'warning', 3000);
       return;
     }
 
