@@ -286,31 +286,22 @@ export default function AdminDashboard({
       {/* Contenido principal (tabla de socios) - Solo si activeSection === 'admin-socios' */}
       {activeSection === 'admin-socios' && (
         <div className="admin-main-content">
-        {/* Header */}
-        <div className="admin-header">
-          <div className="header-title">
-            <button
-              className="btn-back-to-tools"
-              onClick={onBackToTools}
-              title="Volver a herramientas"
-              aria-label="Back to tools"
-            >
-              ← Atrás
-            </button>
-            <h1>🔧 Panel de Administración</h1>
-            <p className="admin-subtitle">
-              Gestión de expedientes de socios - Club de Caza, Tiro y Pesca de Yucatán, A.C.
-            </p>
-          </div>
-          <div className="header-actions">
-            <button 
-              className="btn-export-excel"
-              onClick={exportarAExcel}
-              disabled={exportando || sociosFiltrados.length === 0}
-            >
-              {exportando ? '⏳ Exportando...' : '📊 Exportar a Excel'}
-            </button>
-          </div>
+        <AdminHeader 
+          title="🔧 Gestión de Socios"
+          subtitle="Panel de control para expedientes y documentos"
+          onBack={onBackToTools}
+          showBackButton={true}
+        />
+
+        {/* Header actions - Export button */}
+        <div className="admin-section-actions">
+          <button 
+            className="btn-export-excel"
+            onClick={exportarAExcel}
+            disabled={exportando || sociosFiltrados.length === 0}
+          >
+            {exportando ? '⏳ Exportando...' : '📊 Exportar a Excel'}
+          </button>
         </div>
 
       {/* Estadísticas rápidas */}

@@ -127,6 +127,15 @@
   box-shadow: none;
 }
 
+/* Section Actions - Below AdminHeader */
+.admin-section-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 0 24px;
+}
+
 /* Header Actions Container */
 .header-actions {
   display: flex;

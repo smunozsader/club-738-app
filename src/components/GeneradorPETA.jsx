@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { useToastContext } from '../contexts/ToastContext';
+import AdminHeader from './admin/AdminHeader';
 import { jsPDF } from 'jspdf';
 import { getLimitesCartuchos, ajustarCartuchos, getCartuchosPorDefecto } from '../utils/limitesCartuchos';
 import './GeneradorPETA.css';
@@ -725,10 +726,12 @@ export default function GeneradorPETA({ userEmail, onBack }) {
 
   return (
     <div className="generador-peta">
-      <div className="peta-header">
-        <h2>Generador de Oficios PETA</h2>
-        <p>Permiso Extraordinario para la Transportación de Armas</p>
-      </div>
+      <AdminHeader 
+        title="📋 Generador de Oficios PETA"
+        subtitle="Permiso Extraordinario para la Transportación de Armas"
+        onBack={onBack}
+        showBackButton={true}
+      />
 
       {/* Modo de Trabajo */}
       <div className="modo-trabajo">

@@ -10,6 +10,7 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import AdminHeader from './admin/AdminHeader';
 import './ReporteCaja.css';
 
 // Configuración de cuotas (igual que otros módulos)
@@ -232,23 +233,23 @@ export default function ReporteCaja({ userEmail, onBack }) {
 
   return (
     <div className="reporte-caja-container">
-      {/* Header */}
-      <div className="reporte-header">
-        <div className="header-title">
-          <button className="btn-back" onClick={onBack}>← Volver</button>
-          <h2>📊 Corte de Caja</h2>
-        </div>
-        <div className="header-actions">
-          <button className="btn-secondary" onClick={exportarCSV}>
-            📥 Exportar CSV
-          </button>
-          <button className="btn-secondary" onClick={imprimirReporte}>
-            🖨️ Imprimir
-          </button>
-          <button className="btn-primary" onClick={cargarDatos}>
-            🔄 Actualizar
-          </button>
-        </div>
+      <AdminHeader 
+        title="📊 Corte de Caja"
+        subtitle="Reporte de pagos y recaudación 2026"
+        onBack={onBack}
+        showBackButton={true}
+      />
+
+      <div className="reporte-header-actions">
+        <button className="btn-secondary" onClick={exportarCSV}>
+          📥 Exportar CSV
+        </button>
+        <button className="btn-secondary" onClick={imprimirReporte}>
+          🖨️ Imprimir
+        </button>
+        <button className="btn-primary" onClick={cargarDatos}>
+          🔄 Actualizar
+        </button>
       </div>
 
       {/* Tarjetas de resumen */}

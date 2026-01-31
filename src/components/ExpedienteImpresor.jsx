@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { db, storage } from '../firebaseConfig';
+import AdminHeader from './admin/AdminHeader';
 import './ExpedienteImpresor.css';
 
 // Mapeo de documentos precargados (subidos via scripts a Storage)
@@ -295,12 +296,12 @@ export default function ExpedienteImpresor({ userEmail, onBack }) {
 
   return (
     <div className="expediente-impresor">
-      <header className="expediente-header">
-        <button onClick={onBack} className="btn-volver">
-          ← Volver
-        </button>
-        <h2>🖨️ Expediente Digital - Preparar Impresión</h2>
-      </header>
+      <AdminHeader 
+        title="🖨️ Expediente Digital"
+        subtitle="Preparar expedientes para impresión"
+        onBack={onBack}
+        showBackButton={true}
+      />
 
       <div className="expediente-content">
         {/* Panel izquierdo: Búsqueda de socio */}

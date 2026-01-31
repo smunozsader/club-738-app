@@ -15,25 +15,6 @@
   color: #666;
 }
 
-.peta-header {
-  text-align: center;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #2e7d32;
-}
-
-.peta-header h2 {
-  margin: 0 0 8px 0;
-  color: #1b5e20;
-  font-size: 1.8rem;
-}
-
-.peta-header p {
-  margin: 0;
-  color: #666;
-  font-size: 0.95rem;
-}
-
 /* Modo de Trabajo */
 .modo-trabajo {
   display: flex;

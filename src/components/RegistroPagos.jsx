@@ -13,6 +13,7 @@ import { collection, getDocs, doc, updateDoc, Timestamp, arrayUnion, setDoc } fr
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebaseConfig';
 import { useToastContext } from '../contexts/ToastContext';
+import AdminHeader from './admin/AdminHeader';
 import { CONCEPTOS_PAGO_2026, METODOS_PAGO, COMBOS_PAGO, calcularTotalPago } from '../utils/conceptosPago';
 import './RegistroPagos.css';
 
@@ -406,10 +407,12 @@ export default function RegistroPagos({ userEmail, onBack }) {
 
   return (
     <div className="registro-pagos-container">
-      <div className="registro-pagos-header">
-        <h2>💰 Registro de Pagos</h2>
-        <p className="subtitle">Módulo de cobranza y activación de membresías</p>
-      </div>
+      <AdminHeader 
+        title="💰 Registro de Pagos"
+        subtitle="Módulo de cobranza y activación de membresías 2026"
+        onBack={onBack}
+        showBackButton={true}
+      />
 
       <div className="pagos-layout">
         {/* Lista de socios */}
