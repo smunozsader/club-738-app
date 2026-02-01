@@ -192,6 +192,7 @@ export default function AdminToolsNavigation({
           <p className="subtitle">Selecciona una herramienta para comenzar</p>
         </div>
         <button
+          type="button"
           className="btn-dark-mode-toggle-header"
           onClick={toggleDarkMode}
           title={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
@@ -208,6 +209,7 @@ export default function AdminToolsNavigation({
             {group.tools.map(tool => (
               <button
                 key={tool.id}
+                type="button"
                 className={`tool-card ${group.color}`}
                 onClick={tool.onClick}
                 title={tool.description}

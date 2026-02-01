@@ -15,6 +15,8 @@ import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import { DashboardSkeleton } from '../common/LoadingSkeleton';
 import { useToastContext } from '../../contexts/ToastContext';
+import SharedHeader from '../common/SharedHeader';
+import SharedFooter from '../common/SharedFooter';
 import AdminHeader from './AdminHeader';
 import AdminToolsNavigation from './AdminToolsNavigation';
 import NotificacionesCitas from './NotificacionesCitas';
@@ -22,6 +24,7 @@ import * as XLSX from 'xlsx';
 import './AdminDashboard.css';
 
 export default function AdminDashboard({ 
+  userEmail,
   onAdminSocios,
   onVerExpediente, 
   onSolicitarPETA,
@@ -268,14 +271,11 @@ export default function AdminDashboard({
 
   return (
     <div className="admin-dashboard">
+      {/* Header Unificado */}
+      <SharedHeader userEmail={userEmail} />
+
       {/* Notificaciones de Citas Pendientes */}
       <NotificacionesCitas />
-
-      {/* Encabezado Unificado */}
-      <AdminHeader 
-        title="🛠️ Panel de Administración"
-        subtitle="Gestiona socios, documentos, PETAs y más"
-      />
 
       {/* Componente de navegación de herramientas (Grid de tarjetas) */}
       <AdminToolsNavigation 
@@ -296,6 +296,7 @@ export default function AdminDashboard({
         {/* Header actions - Export button */}
         <div className="admin-section-actions">
           <button 
+            type="button"
             className="btn-export-excel"
             onClick={exportarAExcel}
             disabled={exportando || sociosFiltrados.length === 0}
@@ -433,12 +434,14 @@ export default function AdminDashboard({
                   </td>
                   <td className="socio-acciones">
                     <button
+                      type="button"
                       className="btn-ver-expediente"
                       onClick={() => onVerExpediente && onVerExpediente(socio.email)}
                     >
                       📋 Ver Expediente
                     </button>
                     <button
+                      type="button"
                       className="btn-solicitar-peta"
                       onClick={() => onSolicitarPETA && onSolicitarPETA(socio.email)}
                       title="Solicitar PETA para este socio"
@@ -461,6 +464,9 @@ export default function AdminDashboard({
       </div>
         </div>
       )}
+
+      {/* Footer Unificado */}
+      <SharedFooter />
     </div>
   );
 }

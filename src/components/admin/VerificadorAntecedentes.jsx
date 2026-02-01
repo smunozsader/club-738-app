@@ -113,7 +113,7 @@ export default function VerificadorAntecedentes({ userEmail, onBack }) {
         </div>
         <div className="stat-card expired">
           <div className="stat-number">{stats.expired}</div>
-          <div className="stat-label">Vencidos (>90 días)</div>
+          <div className="stat-label">Vencidos (&gt;90 días)</div>
         </div>
         <div className="stat-card warning">
           <div className="stat-number">{stats.warning}</div>

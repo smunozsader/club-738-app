@@ -219,6 +219,7 @@ function App() {
         <main className="app-main admin-main">
           {(activeSection === 'admin-dashboard' || activeSection === 'admin-socios') && (
             <AdminDashboard 
+              userEmail={user.email}
               onAdminSocios={() => setActiveSection('admin-socios')}
               onVerExpediente={(email) => {
                 setSocioSeleccionado(email);

@@ -95,12 +95,16 @@ const LandingPage = () => {
 
       {/* Tarjetas principales */}
       <section className="cards-section">
-        <div className="feature-card requisitos-card" onClick={() => setShowRequisitos(true)}>
+        <button 
+          type="button"
+          className="feature-card requisitos-card" 
+          onClick={() => setShowRequisitos(true)}
+        >
           <div className="card-icon">📋</div>
           <h3>Hazte Socio</h3>
           <p>Conoce los requisitos y cuotas para formar parte del Club de Caza, Tiro y Pesca de Yucatán, A.C.</p>
           <span className="card-cta">Ver requisitos →</span>
-        </div>
+        </button>
 
         <a href="/calendario" className="feature-card calendario-card">
           <div className="card-icon">📅</div>
@@ -316,7 +320,7 @@ const LandingPage = () => {
       {showRequisitos && (
         <div className="modal-overlay" onClick={() => setShowRequisitos(false)}>
           <div className="modal-requisitos" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setShowRequisitos(false)}>×</button>
+            <button type="button" className="modal-close" onClick={() => setShowRequisitos(false)}>×</button>
             
             <h2>📋 Requisitos para Hacerse Socio</h2>
             

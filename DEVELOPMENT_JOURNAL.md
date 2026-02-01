@@ -10,6 +10,77 @@
 
 ## 📅 Enero 2026
 
+### 31 de Enero - v1.37.0 - Diseño Uniforme con SharedHeader y SharedFooter en Toda la App ✅
+
+#### 🎨 Objetivo: Header y Footer Unificados en Todas las Páginas
+
+**Problema Identificado**:
+- AdminDashboard tenía header/footer diferentes a LandingPage
+- Texto blanco sobre fondo blanco en light mode (contraste WCAG fail)
+- Falta de consistencia visual entre secciones públicas y privadas
+- No había botón de "Salir" visible en panel de administración
+
+**Solución Implementada**:
+
+1. **SharedHeader Component** (`src/components/common/SharedHeader.jsx`)
+   - Header unificado con diseño de LandingPage
+   - Logo + título del club
+   - Email del usuario visible
+   - Botón ThemeToggle integrado
+   - Botón "Salir" con signOut de Firebase Auth
+   - Sticky positioning (z-index: 100)
+   - Gradiente azul marino (#1a365d → #2d5a87)
+   - Responsive mobile-first
+
+2. **SharedFooter Component** (`src/components/common/SharedFooter.jsx`)
+   - Footer unificado con info del club
+   - Ubicación: Calle 50 #531-E, Mérida
+   - Contacto: WhatsApp +52 56 6582 4667
+   - Registros oficiales: SEDENA 738, FEMETI YUC-05/2020
+   - Redes sociales: Facebook, Instagram, Google Maps, FEMETI
+   - Copyright © 2026
+   - Dark mode adaptativo
+
+3. **AdminDashboard Integration**
+   - Reemplazado header propio con SharedHeader
+   - Agregado SharedFooter al final
+   - Prop `userEmail` pasado desde App.jsx
+   - onLogout callback para cerrar sesión
+
+4. **Contraste en Light Mode - Arreglado**
+   - AdminToolsNavigation: h2 color fallback #1e293b (antes #000000)
+   - tools-group-title: color fallback #1e293b
+   - Asegura legibilidad en todos los modos (light/dark)
+   - CSS variables correctamente aplicadas
+
+**Archivos Modificados**:
+- `src/components/common/SharedHeader.jsx` (NUEVO)
+- `src/components/common/SharedHeader.css` (NUEVO)
+- `src/components/common/SharedFooter.jsx` (NUEVO)
+- `src/components/common/SharedFooter.css` (NUEVO)
+- `src/components/admin/AdminDashboard.jsx` - Import SharedHeader/Footer
+- `src/components/admin/AdminToolsNavigation.css` - Contraste arreglado
+- `src/components/admin/VerificadorAntecedentes.jsx` - Fixed JSX syntax error (>90 días)
+- `src/App.jsx` - Prop userEmail pasado a AdminDashboard
+
+**Mejoras UX/UI**:
+- ✅ MISMO header en LandingPage, AdminDashboard, SocioDashboard
+- ✅ MISMO footer en todas las páginas (ubicación, contacto, redes)
+- ✅ Contraste WCAG AA (4.5:1) en light mode y dark mode
+- ✅ Botón de salir visible y accesible
+- ✅ Navegación consistente (logo clickable, theme toggle, email visible)
+- ✅ Responsive mobile (logo 50px, texto 1.1rem en <768px)
+
+**Deploy Details**:
+- Build time: 14.16s, 609 modules transformed
+- Bundle size: index.js 1,873.47 kB (gzip: 462.21 kB)
+- Deployment: https://club-738-app.web.app
+- Production URL: https://yucatanctp.org
+
+**Versión**: 1.37.0
+
+---
+
 ### 31 de Enero - v1.36.1 - Google Calendar Integration + Real-time Meeting Alerts ✅
 
 #### 🎯 Features: Sincronización de Citas con Google Calendar + Notificaciones en Tiempo Real
