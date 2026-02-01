@@ -12,7 +12,6 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, updateDoc, Timestamp, arrayUnion } from 'firebase/firestore';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { db, storage } from '../firebaseConfig';
-import AdminHeader from './admin/AdminHeader';
 import { calcularMontoE5cinco } from '../utils/pagosE5cinco';
 import './VerificadorPETA.css';
 
@@ -427,13 +426,6 @@ export default function VerificadorPETA({ userEmail, onBack }) {
 
   return (
     <div className="verificador-peta-container">
-      <AdminHeader 
-        title="✅ Verificador de PETAs"
-        subtitle="Panel de verificación de documentación y aprobación"
-        onBack={onBack}
-        showBackButton={true}
-      />
-
       <div className="verificador-layout">
         {/* Lista de socios con PETAs */}
         <div className="socios-panel">

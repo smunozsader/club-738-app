@@ -10,7 +10,6 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { useToastContext } from '../contexts/ToastContext';
-import AdminHeader from './admin/AdminHeader';
 import { jsPDF } from 'jspdf';
 import { getLimitesCartuchos, ajustarCartuchos, getCartuchosPorDefecto } from '../utils/limitesCartuchos';
 import './GeneradorPETA.css';
@@ -42,10 +41,10 @@ const ESTADOS_SUGERIDOS_TIRO = [
   'Baja California',   // Sede FEMETI
   'Coahuila',          // Sede FEMETI
   'Estado de México',  // Sede FEMETI
-  'Guanajuato',        // Sede FEMETI
   'Hidalgo',           // Sede FEMETI
   'Jalisco',           // Sede FEMETI
   'Michoacán',         // Sede FEMETI
+  'Quintana Roo',      // Región Sureste
   'San Luis Potosí',   // Sede FEMETI
   'Tabasco'            // Sede FEMETI (región Sureste)
 ];
@@ -726,13 +725,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
 
   return (
     <div className="generador-peta">
-      <AdminHeader 
-        title="📋 Generador de Oficios PETA"
-        subtitle="Permiso Extraordinario para la Transportación de Armas"
-        onBack={onBack}
-        showBackButton={true}
-      />
-
       {/* Modo de Trabajo */}
       <div className="modo-trabajo">
         <button 

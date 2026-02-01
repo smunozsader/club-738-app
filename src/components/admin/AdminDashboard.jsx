@@ -15,9 +15,6 @@ import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import { DashboardSkeleton } from '../common/LoadingSkeleton';
 import { useToastContext } from '../../contexts/ToastContext';
-import SharedHeader from '../common/SharedHeader';
-import SharedFooter from '../common/SharedFooter';
-import AdminHeader from './AdminHeader';
 import AdminToolsNavigation from './AdminToolsNavigation';
 import NotificacionesCitas from './NotificacionesCitas';
 import * as XLSX from 'xlsx';
@@ -271,9 +268,6 @@ export default function AdminDashboard({
 
   return (
     <div className="admin-dashboard">
-      {/* Header Unificado */}
-      <SharedHeader userEmail={userEmail} />
-
       {/* Notificaciones de Citas Pendientes */}
       <NotificacionesCitas />
 
@@ -286,13 +280,6 @@ export default function AdminDashboard({
       {/* Contenido principal (tabla de socios) - Solo si activeSection === 'admin-socios' */}
       {activeSection === 'admin-socios' && (
         <div className="admin-main-content">
-        <AdminHeader 
-          title="🔧 Gestión de Socios"
-          subtitle="Panel de control para expedientes y documentos"
-          onBack={onBackToTools}
-          showBackButton={true}
-        />
-
         {/* Header actions - Export button */}
         <div className="admin-section-actions">
           <button 
@@ -464,9 +451,6 @@ export default function AdminDashboard({
       </div>
         </div>
       )}
-
-      {/* Footer Unificado */}
-      <SharedFooter />
     </div>
   );
 }

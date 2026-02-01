@@ -8,6 +8,82 @@
 
 ---
 
+## 📅 Febrero 2026
+
+### 1 de Febrero - v1.37.1 - Fix Header Duplicado + FEMETI Estados Actualizados ✅
+
+#### 🎯 Objetivos Completados
+
+**1. Eliminación de Headers Duplicados**
+- **Problema**: AdminHeader component estaba duplicado en cada subsección admin, causando:
+  - Error `ReferenceError: AdminHeader is not defined` en producción
+  - Múltiples headers apilados cuando navegabas entre secciones
+  - Diseño inconsistente y poco profesional
+- **Solución**:
+  - ✅ Eliminado `AdminHeader` component de TODOS los archivos:
+    - `src/App.jsx` (import + 8 usos)
+    - `src/components/GeneradorPETA.jsx`
+    - `src/components/ExpedienteImpresor.jsx`
+    - `src/components/RegistroPagos.jsx`
+    - `src/components/ReporteCaja.jsx`
+    - `src/components/VerificadorPETA.jsx`
+    - `src/components/admin/AdminDashboard.jsx`
+  - ✅ Eliminado `SharedHeader` redundante de AdminDashboard
+  - ✅ Eliminado `SharedFooter` redundante de AdminDashboard
+  - ✅ UN SOLO header a nivel App.jsx (línea 205) visible en TODAS las secciones admin
+  - ✅ Diseño uniforme "across the board" en todo el módulo de administrador
+
+**2. Actualización Estados FEMETI para PETAs**
+- **Archivo**: `src/components/GeneradorPETA.jsx`
+- **Cambio**: Lista `ESTADOS_SUGERIDOS_TIRO` (10 estados para competencias nacionales FEMETI 2026)
+- **Eliminado**: Guanajuato
+- **Agregado**: Quintana Roo (Región Sureste)
+- **Lista Final** (10 estados):
+  1. Yucatán (Base del club)
+  2. Baja California (Sede FEMETI)
+  3. Coahuila (Sede FEMETI)
+  4. Estado de México (Sede FEMETI)
+  5. Hidalgo (Sede FEMETI)
+  6. Jalisco (Sede FEMETI)
+  7. Michoacán (Sede FEMETI)
+  8. **Quintana Roo** (Región Sureste) ← NUEVO
+  9. San Luis Potosí (Sede FEMETI)
+  10. Tabasco (Sede FEMETI - Región Sureste)
+
+**3. Sincronización con GitHub**
+- Pull exitoso desde GitHub (207 commits nuevos)
+- 678 archivos actualizados con 93,202 inserciones
+- Nota: 4 archivos PDF incompatibles con Windows (caracteres `:` en nombres)
+
+#### 📦 Archivos Modificados
+```
+src/App.jsx
+src/components/GeneradorPETA.jsx
+src/components/ExpedienteImpresor.jsx
+src/components/RegistroPagos.jsx
+src/components/ReporteCaja.jsx
+src/components/VerificadorPETA.jsx
+src/components/admin/AdminDashboard.jsx
+```
+
+#### 🚀 Deploy
+- Build: ✅ Exitoso (22.74s)
+- Bundle sizes:
+  - index-OGdoQDZz.js: 1,864.67 KB (gzip: 461.14 KB)
+  - pdf-vendor-By-iiWMw.js: 831.87 KB (gzip: 250.97 KB)
+  - firebase-vendor-BtFAAyGx.js: 519.26 KB (gzip: 120.63 KB)
+- Firebase Deploy: ✅ Exitoso
+- Functions actualizadas: 9 Cloud Functions v2
+- URL: https://yucatanctp.org
+
+#### 🎨 Mejoras UX/UI
+- Header consistente en todo el módulo admin
+- Sin duplicación visual
+- Navegación más limpia y profesional
+- Mejor experiencia de usuario
+
+---
+
 ## 📅 Enero 2026
 
 ### 31 de Enero - v1.37.0 - Diseño Uniforme con SharedHeader y SharedFooter en Toda la App ✅

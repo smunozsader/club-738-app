@@ -10,7 +10,6 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
-import AdminHeader from './admin/AdminHeader';
 import './ReporteCaja.css';
 
 // Configuración de cuotas (igual que otros módulos)
@@ -233,13 +232,6 @@ export default function ReporteCaja({ userEmail, onBack }) {
 
   return (
     <div className="reporte-caja-container">
-      <AdminHeader 
-        title="📊 Corte de Caja"
-        subtitle="Reporte de pagos y recaudación 2026"
-        onBack={onBack}
-        showBackButton={true}
-      />
-
       <div className="reporte-header-actions">
         <button className="btn-secondary" onClick={exportarCSV}>
           📥 Exportar CSV
