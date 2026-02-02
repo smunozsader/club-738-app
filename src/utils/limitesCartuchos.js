@@ -2,17 +2,23 @@
  * Límites legales de cartuchos según Artículo 50 de la 
  * Ley Federal de Armas de Fuego y Explosivos (LFAFE)
  * 
+ * Reforma DOF 29-05-2025 - Incisos a) y b) reformados
+ * 
  * Artículo 50.- La Secretaría, así como las personas físicas y morales 
  * con permiso general vigente, pueden vender únicamente en total por persona:
  * 
  * a) Hasta 500 cartuchos calibre .22", con excepción de Magnum, Hornet y TCM.
+ *    NOTA: Las excepciones (.22 Magnum, .22 Hornet, .22 TCM) quedaron PROHIBIDAS
+ *    en esta última reforma. Límite de 200 para esos calibres.
  * b) Hasta 1,000 cartuchos para escopeta de las permitidas por esta Ley.
  * c) Se deroga.
  * d) Hasta 200 cartuchos como máximo, para las otras armas permitidas.
+ *    NOTA: Incluye rifles de alto poder (.223, .22-250, .222, 5.56 NATO, etc.)
+ *    NO confundir calibre .223 con .22 LR.
  * 
  * Los periodos para comercialización de las cantidades de municiones son:
  * a) Anualmente, para la protección de domicilio y parcela;
- * b) Trimestralmente, para actividades cinegéticas, y
+ * b) Trimestralmente, para actividades cinegéticas (caza), y
  * c) Mensualmente, para tiro deportivo.
  * 
  * NOTA: Para PETAs se aplican los límites de compra trimestral (caza) 
@@ -74,15 +80,30 @@ export function getLimitesCartuchos(calibre, clase) {
     return LIMITES_LEGALES_CARTUCHOS.ESCOPETA;
   }
   
-  // 2. CALIBRE .22 (excepto Magnum, Hornet, TCM)
-  if (
-    (c.includes('.22') || c.includes('22 L') || c.includes('22L')) &&
-    !c.includes('MAGNUM') && !c.includes('HORNET') && !c.includes('TCM')
-  ) {
+  // 2. CALIBRE .22 LR ÚNICAMENTE (excepto Magnum, Hornet, TCM y rifles de alto poder)
+  // IMPORTANTE: Excluir calibres que CONTIENEN ".22" pero NO son .22 LR:
+  // - .223 Remington (rifle alto poder)
+  // - .22-250 (rifle alto poder)  
+  // - .222 Remington (rifle alto poder)
+  // Estos rifles tienen límite de 200 cartuchos (Art. 50-d)
+  const es22LR = (
+    (c.includes('.22') || c.includes('22 L') || c.includes('22LR')) &&
+    !c.includes('MAGNUM') && 
+    !c.includes('HORNET') && 
+    !c.includes('TCM') &&
+    !c.includes('.223') &&      // .223 Remington - rifle alto poder
+    !c.includes('223') &&       // 223 REM sin punto
+    !c.includes('.22-250') &&   // .22-250 - rifle alto poder
+    !c.includes('22-250') &&    // 22-250 sin punto
+    !c.includes('.222') &&      // .222 Remington - rifle alto poder
+    !c.includes('5.56')         // 5.56 NATO (equivalente a .223)
+  );
+  
+  if (es22LR) {
     return LIMITES_LEGALES_CARTUCHOS['.22'];
   }
   
-  // 3. TODOS LOS DEMÁS (pistolas, rifles, .22 Magnum, etc.)
+  // 3. TODOS LOS DEMÁS (pistolas, rifles de alto poder, .22 Magnum, etc.)
   return LIMITES_LEGALES_CARTUCHOS.OTROS;
 }
 

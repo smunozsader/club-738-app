@@ -10,6 +10,48 @@
 
 ## 📅 Febrero 2026
 
+### 1 de Febrero - v1.37.2 - Fix Límites Cartuchos + Fecha de Oficio PETA ✅
+
+#### 🎯 Objetivos Completados
+
+**1. Corrección Crítica: Límites de Cartuchos Art. 50 LFAFE (Reforma DOF 29-05-2025)**
+- **Archivo**: `src/utils/limitesCartuchos.js`
+- **Problema Detectado**: La lógica detectaba incorrectamente rifles de alto poder como calibre .22:
+  - `.223 Remington` → Se detectaba como .22 (500 cartuchos) ❌
+  - `.22-250` → Se detectaba como .22 (500 cartuchos) ❌
+  - `.222 Remington` → Se detectaba como .22 (500 cartuchos) ❌
+  - Todos estos debían tener límite de 200 cartuchos (Art. 50-d)
+- **Solución**: Exclusión explícita de calibres de alto poder que contienen ".22":
+  - `.223`, `223` (sin punto)
+  - `.22-250`, `22-250`
+  - `.222`
+  - `5.56` (equivalente NATO a .223)
+- **Documentación actualizada** con referencia a reforma DOF 29-05-2025:
+  - Excepciones .22 Magnum, .22 Hornet, .22 TCM → PROHIBIDAS (límite 200)
+  - Rifles alto poder → 200 cartuchos máximo
+
+**2. Nueva Funcionalidad: Fecha de Oficio en PETAs**
+- **Archivo**: `src/components/GeneradorPETA.jsx`
+- **Característica**: Campo de fecha para el oficio (post-fecha / pre-fecha)
+- **Ubicación**: Sección 4 "Fechas del Oficio y Vigencia"
+- **Comportamiento**:
+  - Por defecto muestra la fecha actual
+  - Usuario puede cambiarla a cualquier fecha pasada o futura
+  - La fecha seleccionada aparece en el PDF generado
+- **CSS**: Estilos destacados en `GeneradorPETA.css` (fondo azul, soporte dark mode)
+
+#### 📁 Archivos Modificados
+- `src/utils/limitesCartuchos.js` - Lógica de límites corregida + documentación
+- `src/components/GeneradorPETA.jsx` - Nuevo estado `fechaOficio` + campo en formulario
+- `src/components/GeneradorPETA.css` - Estilos para campo fecha de oficio
+
+#### ✅ Verificaciones Realizadas
+- Test de detección de calibres: 16 casos verificados
+- Build exitoso
+- Deploy a producción
+
+---
+
 ### 1 de Febrero - v1.37.1 - Fix Header Duplicado + FEMETI Estados Actualizados ✅
 
 #### 🎯 Objetivos Completados

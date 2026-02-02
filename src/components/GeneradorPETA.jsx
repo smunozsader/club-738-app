@@ -102,6 +102,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   // Fechas
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
+  const [fechaOficio, setFechaOficio] = useState(new Date().toISOString().split('T')[0]); // Fecha del oficio (post/pre fecha)
   
   // Armas seleccionadas (máx 10)
   const [armasSeleccionadas, setArmasSeleccionadas] = useState([]);
@@ -671,8 +672,9 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       // ========== FIRMA ==========
       y = Math.max(y + 15, 220); // Asegurar espacio para firma
       
-      const hoy = new Date();
-      const firmaLinea1 = `LUGAR Y FECHA DE LA SOLICITUD      Mérida, Yucatán a ${formatearFechaLarga(hoy)}`;
+      // Usar fechaOficio si está definida, sino usar fecha actual
+      const fechaDelOficio = fechaOficio ? new Date(fechaOficio + 'T12:00:00') : new Date();
+      const firmaLinea1 = `LUGAR Y FECHA DE LA SOLICITUD      Mérida, Yucatán a ${formatearFechaLarga(fechaDelOficio)}`;
       doc.text(firmaLinea1, pageWidth / 2, y, { align: 'center' });
       y += 15;
 
@@ -988,8 +990,25 @@ export default function GeneradorPETA({ userEmail, onBack }) {
         {/* Paso 4: Fechas */}
         {socioSeleccionado && (
           <div className="peta-section">
-            <h3>4. Periodo de Vigencia</h3>
-            <p className="nota">Mínimo 15 días después de la fecha de solicitud</p>
+            <h3>4. Fechas del Oficio y Vigencia</h3>
+            
+            {/* Fecha del oficio (puede ser post/pre fecha) */}
+            <div className="form-row fecha-oficio">
+              <label htmlFor="gen-fecha-oficio">
+                📅 Fecha del Oficio:
+                <input
+                  id="gen-fecha-oficio"
+                  type="date"
+                  name="fechaOficio"
+                  value={fechaOficio}
+                  onChange={(e) => setFechaOficio(e.target.value)}
+                  aria-label="Fecha que aparecerá en el oficio PETA"
+                />
+                <span className="fecha-hint">Puede ser anterior o posterior a la fecha actual (post/pre fecha)</span>
+              </label>
+            </div>
+            
+            <p className="nota">Periodo de vigencia: Mínimo 15 días después de la fecha de solicitud</p>
             
             <div className="form-row fechas">
               <label htmlFor="gen-fecha-inicio">
