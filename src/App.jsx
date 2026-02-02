@@ -201,15 +201,22 @@ function App() {
   if (role === 'administrator') {
     return (
       <div className="app-container admin-mode">
-        {/* Header Admin */}
-        <header className="app-header admin-header">
+        {/* Header Admin - Mismo diseño que LandingPage */}
+        <header className="landing-header">
           <div className="header-content">
-            <a href="/" onClick={(e) => { e.preventDefault(); setActiveSection('admin-dashboard'); }} className="logo-home-link">
-              <img src="/assets/icon-192.png" alt="Club 738" className="logo-small" />
-              <span className="site-title">Panel de Administración</span>
-            </a>
-            <div className="header-actions">
-              <span className="user-email admin-badge">🔧 {user.email}</span>
+            <div className="logo-section">
+              <a href="/" onClick={(e) => { e.preventDefault(); setActiveSection('admin-dashboard'); }} className="logo-home-link">
+                <img src="/assets/logo-club-738.jpg" alt="Club de Caza, Tiro y Pesca de Yucatán" className="logo-img" />
+              </a>
+              <div>
+                <h1>Club de Caza, Tiro y Pesca de Yucatán, A.C.</h1>
+              </div>
+            </div>
+            <div className="header-badges">
+              <span className="badge">SEDENA 738</span>
+              <span className="badge">FEMETI YUC 05/2020</span>
+              <span className="badge admin-badge">🔧 Admin</span>
+              <ThemeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
               <button onClick={handleLogout} className="btn-logout">🚪 Salir</button>
             </div>
           </div>
