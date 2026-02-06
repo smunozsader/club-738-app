@@ -87,6 +87,9 @@ function App() {
   
   // Modal de estado de pagos
   const [showPagosModal, setShowPagosModal] = useState(false);
+  
+  // Modal de guía de pago e5cinco PETA
+  const [showE5cincoModal, setShowE5cincoModal] = useState(false);
 
   useEffect(() => {
     // Escuchar cambios en autenticación
@@ -481,6 +484,102 @@ function App() {
         </div>
       )}
 
+      {/* Modal Guía de Pago e5cinco PETA */}
+      {showE5cincoModal && (
+        <div className="modal-overlay" onClick={() => setShowE5cincoModal(false)}>
+          <div className="modal-e5cinco" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setShowE5cincoModal(false)}>×</button>
+            <h2>💳 Guía de Pago e5cinco - PETA</h2>
+            
+            <div className="e5cinco-content">
+              <div className="e5cinco-aviso">
+                <p>
+                  El pago deberá ser efectuado ante cualquier Institución Bancaria mediante el esquema 
+                  electrónico denominado <strong>"e5cinco"</strong>, asentando la clave de referencia 
+                  <strong> 034001132</strong> y la cadena de la dependencia correspondiente según el 
+                  número de armas.
+                </p>
+                <p className="e5cinco-warning">
+                  ⚠️ <strong>IMPORTANTE:</strong> No se acepta transferencia electrónica, ni comprobante 
+                  original de pago (voucher) que contenga mal el nombre del solicitante, la clave de 
+                  referencia y/o la cadena de la Dependencia.
+                </p>
+              </div>
+              
+              <div className="e5cinco-referencia">
+                <span className="e5cinco-label">CLAVE DE REFERENCIA:</span>
+                <span className="e5cinco-valor">034001132</span>
+              </div>
+              
+              <p className="e5cinco-click-hint">
+                📥 Haz clic en cualquier fila para descargar la Hoja de Ayuda correspondiente
+              </p>
+              
+              <table className="e5cinco-tabla">
+                <thead>
+                  <tr>
+                    <th>Número de Armas</th>
+                    <th>Monto Derecho</th>
+                    <th>Cadena Dependencia</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="clickable" onClick={() => window.open('/oficios/e5cinco/hoja-ayuda-1-3-armas.pdf', '_blank')}>
+                    <td>1 a 3 armas</td>
+                    <td className="monto">$1,819.00</td>
+                    <td className="cadena">00276660000000</td>
+                    <td className="download-icon">📥</td>
+                  </tr>
+                  <tr className="clickable" onClick={() => window.open('/oficios/e5cinco/hoja-ayuda-4-armas.pdf', '_blank')}>
+                    <td>4 armas</td>
+                    <td className="monto">$2,423.00</td>
+                    <td className="cadena">00276670000000</td>
+                    <td className="download-icon">📥</td>
+                  </tr>
+                  <tr className="clickable" onClick={() => window.open('/oficios/e5cinco/hoja-ayuda-5-armas.pdf', '_blank')}>
+                    <td>5 armas</td>
+                    <td className="monto">$3,027.00</td>
+                    <td className="cadena">00276670000000</td>
+                    <td className="download-icon">📥</td>
+                  </tr>
+                  <tr className="clickable" onClick={() => window.open('/oficios/e5cinco/hoja-ayuda-6-armas.pdf', '_blank')}>
+                    <td>6 armas</td>
+                    <td className="monto">$3,631.00</td>
+                    <td className="cadena">00276670000000</td>
+                    <td className="download-icon">📥</td>
+                  </tr>
+                  <tr className="clickable" onClick={() => window.open('/oficios/e5cinco/hoja-ayuda-7-armas.pdf', '_blank')}>
+                    <td>7 armas</td>
+                    <td className="monto">$4,235.00</td>
+                    <td className="cadena">00276670000000</td>
+                    <td className="download-icon">📥</td>
+                  </tr>
+                  <tr className="clickable" onClick={() => window.open('/oficios/e5cinco/hoja-ayuda-8-armas.pdf', '_blank')}>
+                    <td>8 armas</td>
+                    <td className="monto">$4,839.00</td>
+                    <td className="cadena">00276670000000</td>
+                    <td className="download-icon">📥</td>
+                  </tr>
+                  <tr className="clickable" onClick={() => window.open('/oficios/e5cinco/hoja-ayuda-9-armas.pdf', '_blank')}>
+                    <td>9 armas</td>
+                    <td className="monto">$5,443.00</td>
+                    <td className="cadena">00276670000000</td>
+                    <td className="download-icon">📥</td>
+                  </tr>
+                  <tr className="clickable" onClick={() => window.open('/oficios/e5cinco/hoja-ayuda-10-armas.pdf', '_blank')}>
+                    <td>10 armas</td>
+                    <td className="monto">$6,047.00</td>
+                    <td className="cadena">00276670000000</td>
+                    <td className="download-icon">📥</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="dashboard-header">
         {/* Banner de Notificaciones */}
         <Notificaciones />
@@ -587,6 +686,13 @@ function App() {
                   <h3>Calculadora PCP</h3>
                   <p>Verifica si tu rifle de aire requiere registro</p>
                   <span className="dash-card-cta">Calcular →</span>
+                </div>
+                
+                <div className="dash-card e5cinco" onClick={() => setShowE5cincoModal(true)}>
+                  <div className="dash-card-icon">💳</div>
+                  <h3>Pago e5cinco PETA</h3>
+                  <p>Guía de pago para trámite de autorización SEDENA</p>
+                  <span className="dash-card-cta">Ver tarifas →</span>
                 </div>
                 
                 <div className="dash-card ayuda" onClick={() => setActiveSection('manual-usuario')}>

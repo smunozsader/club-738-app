@@ -7,16 +7,115 @@
  * - actualizarEventoCalendar: Actualiza evento al cambiar estado de cita
  */
 
-const {onDocumentCreated} = require("firebase-functions/v2/firestore");
+const {onDocumentCreated, onDocumentUpdated} = require("firebase-functions/v2/firestore");
 const {setGlobalOptions} = require("firebase-functions/v2");
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
+const {google} = require("googleapis");
+const fs = require("fs");
+const path = require("path");
 
 // Inicializar Firebase Admin
 admin.initializeApp();
 
-// Importar funciones de Google Calendar
-// const calendarFunctions = require("./calendar-integration");
+// Email del calendario del secretario
+const CALENDAR_ID = "smunozam@gmail.com";
+
+/**
+ * Cargar credenciales de Google Service Account
+ * @return {Object} Credenciales del service account
+ */
+function loadCredentials() {
+  const keyPath = path.join(__dirname, "calendar_service_account.json");
+  if (!fs.existsSync(keyPath)) {
+    console.error("❌ No se encontró calendar_service_account.json");
+    throw new Error("Service account credentials not found");
+  }
+  return JSON.parse(fs.readFileSync(keyPath, "utf8"));
+}
+
+/**
+ * Crear cliente de Google Calendar API autenticado
+ * @return {Object} Cliente de Google Calendar API
+ */
+async function getCalendarClient() {
+  const credentials = loadCredentials();
+  const auth = new google.auth.GoogleAuth({
+    credentials: credentials,
+    scopes: ["https://www.googleapis.com/auth/calendar"],
+  });
+  return google.calendar({version: "v3", auth});
+}
+
+/**
+ * Obtener nombre del propósito de cita
+ */
+function getPropositoNombre(proposito) {
+  const nombres = {
+    "peta": "Trámite PETA",
+    "pago": "Pago de membresía",
+    "documentos": "Entrega de documentos",
+    "consulta": "Consulta general",
+    "otro": "Otro",
+  };
+  return nombres[proposito] || "Cita";
+}
+
+/**
+ * Enviar email de confirmación de cita al socio
+ */
+async function enviarEmailConfirmacionCita(citaData, calendarLink, smtp) {
+  const transporter = nodemailer.createTransport(smtp);
+
+  const fechaFormateada = new Date(`${citaData.fecha}T${citaData.hora}:00`)
+      .toLocaleDateString("es-MX", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "America/Merida",
+      });
+
+  const asunto = `📅 Cita Confirmada - Club 738 - ${fechaFormateada}`;
+  const cuerpoHTML = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: linear-gradient(135deg, #1a365d 0%, #2d5a87 100%); padding: 20px; text-align: center;">
+        <h1 style="color: white; margin: 0;">📅 Cita Confirmada</h1>
+        <p style="color: #e2e8f0; margin: 10px 0 0 0;">Club de Caza, Tiro y Pesca de Yucatán, A.C.</p>
+      </div>
+      <div style="padding: 30px; background: #f8fafc;">
+        <p style="font-size: 16px; color: #334155;">Hola <strong>${citaData.socioNombre}</strong>,</p>
+        <p style="font-size: 16px; color: #334155;">Tu cita ha sido registrada exitosamente:</p>
+        <div style="background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #2563eb;">
+          <p style="margin: 8px 0;"><strong>📋 Motivo:</strong> ${getPropositoNombre(citaData.proposito)}</p>
+          <p style="margin: 8px 0;"><strong>📅 Fecha y Hora:</strong> ${fechaFormateada}</p>
+          <p style="margin: 8px 0;"><strong>📍 Lugar:</strong> Club 738 - Calle 50 No. 531-E x 69 y 71, Col. Centro, Mérida</p>
+          ${citaData.notas ? `<p style="margin: 8px 0;"><strong>📝 Notas:</strong> ${citaData.notas}</p>` : ""}
+        </div>
+        <p style="font-size: 14px; color: #64748b;">Te esperamos puntualmente. Si necesitas cambiar tu cita, contacta al secretario.</p>
+      </div>
+      <div style="background: #1e293b; padding: 15px; text-align: center;">
+        <p style="color: #94a3b8; font-size: 12px; margin: 0;">Club de Caza, Tiro y Pesca de Yucatán, A.C. (Club 738)</p>
+        <p style="color: #64748b; font-size: 11px; margin: 5px 0 0 0;">Este es un mensaje automático, no responder.</p>
+      </div>
+    </div>`;
+
+  try {
+    await transporter.sendMail({
+      from: '"Club 738" <smunozam@gmail.com>',
+      to: citaData.socioEmail,
+      subject: asunto,
+      html: cuerpoHTML,
+    });
+    console.log(`📧 Email de confirmación enviado a ${citaData.socioEmail}`);
+    return true;
+  } catch (error) {
+    console.error("❌ Error enviando email de confirmación:", error.message);
+    return false;
+  }
+}
 
 // Configuración global
 setGlobalOptions({
@@ -27,9 +126,9 @@ setGlobalOptions({
 // Configuración de email (usar variables de entorno en producción)
 // Para configurar: firebase functions:secrets:set EMAIL_PASS
 const EMAIL_CONFIG = {
-  // Emails de notificación
+  // Emails de notificación para ADMINISTRADOR
   destinatarios: [
-    "smunozam@gmail.com", // Secretario
+    "subp.yct@gmail.com", // Administrador principal
   ],
 
   // Configuración SMTP (Gmail)
@@ -51,7 +150,10 @@ const EMAIL_CONFIG = {
  * Acción: Enviar email de notificación al secretario y al club
  */
 exports.onPetaCreated = onDocumentCreated(
-    "socios/{email}/petas/{petaId}",
+    {
+      document: "socios/{email}/petas/{petaId}",
+      secrets: ["EMAIL_PASS"],
+    },
     async (event) => {
       const snapshot = event.data;
       if (!snapshot) {
@@ -217,7 +319,10 @@ SEDENA 738 | FEMETI YUC 05/2020
  * Acción: Enviar email de notificación al secretario sobre la nueva cita
  */
 exports.onCitaCreated = onDocumentCreated(
-    "citas/{citaId}",
+    {
+      document: "citas/{citaId}",
+      secrets: ["EMAIL_PASS"],
+    },
     async (event) => {
       const snapshot = event.data;
       if (!snapshot) {
@@ -344,11 +449,189 @@ SEDENA 738 | FEMETI YUC 05/2020
         const info = await transporter.sendMail(mailOptions);
         console.log("✅ Email de cita enviado:", info.messageId);
 
-        return {success: true, messageId: info.messageId};
+        // ===== GOOGLE CALENDAR INTEGRATION =====
+        let calendarEventId = null;
+        let calendarEventLink = null;
+        try {
+          console.log("📅 Creando evento en Google Calendar...");
+          const calendar = await getCalendarClient();
+
+          // Construir fecha/hora del evento
+          const fechaHora = `${citaData.fecha}T${citaData.hora}:00`;
+          const startDateTime = new Date(fechaHora);
+          const endDateTime = new Date(startDateTime);
+          endDateTime.setMinutes(endDateTime.getMinutes() + 30);
+
+          // Descripción del evento
+          const descripcionEvento = `
+🎯 Propósito: ${proposito}
+
+👤 Socio: ${nombreSocio}
+📧 Email: ${citaData.socioEmail}
+📞 Teléfono: ${telefonoSocio}
+${citaData.notas ? `\n📝 Notas:\n${citaData.notas}` : ""}
+
+---
+📌 Cita generada automáticamente desde Portal Club 738
+🔗 ID: ${citaId}
+          `.trim();
+
+          const calendarEvent = {
+            summary: `📅 ${proposito} - ${nombreSocio}`,
+            description: descripcionEvento,
+            start: {
+              dateTime: startDateTime.toISOString(),
+              timeZone: "America/Merida",
+            },
+            end: {
+              dateTime: endDateTime.toISOString(),
+              timeZone: "America/Merida",
+            },
+            reminders: {
+              useDefault: false,
+              overrides: [
+                {method: "email", minutes: 24 * 60},
+                {method: "popup", minutes: 60},
+                {method: "popup", minutes: 15},
+              ],
+            },
+            colorId: "9",
+            location: "Club de Caza, Tiro y Pesca de Yucatán, A.C.\nCalle 50 No. 531-E x 69 y 71\nCol. Centro, 97000 Mérida, Yucatán",
+          };
+
+          const response = await calendar.events.insert({
+            calendarId: CALENDAR_ID,
+            resource: calendarEvent,
+            sendUpdates: "none",
+          });
+
+          calendarEventId = response.data.id;
+          calendarEventLink = response.data.htmlLink;
+          console.log(`✅ Evento creado: ${calendarEventId}`);
+
+          // Actualizar Firestore con el Event ID
+          await snapshot.ref.update({
+            calendarEventId: calendarEventId,
+            calendarEventLink: calendarEventLink,
+            calendarEventCreated: admin.firestore.FieldValue.serverTimestamp(),
+          });
+          console.log("💾 Firestore actualizado con Event ID");
+
+          // NOTA: El email de confirmación al socio se envía CUANDO EL ADMIN CONFIRMA la cita
+          // NO automáticamente al crear - eso lo maneja el trigger onUpdate
+        } catch (calendarError) {
+          console.error("❌ Error con Google Calendar:", calendarError.message);
+          // Guardar error pero no fallar la función completa
+          await snapshot.ref.update({
+            calendarError: calendarError.message,
+            calendarErrorTimestamp: admin.firestore.FieldValue.serverTimestamp(),
+          });
+        }
+
+        return {
+          success: true,
+          messageId: info.messageId,
+          calendarEventId: calendarEventId,
+        };
       } catch (error) {
         console.error("❌ Error enviando email de cita:", error);
         return {success: false, error: error.message};
       }
+    },
+);
+
+/**
+ * Trigger: Cuando se actualiza un documento en citas/{citaId}
+ * Acción: Enviar email de confirmación al socio cuando el admin confirma
+ */
+exports.onCitaUpdated = onDocumentUpdated(
+    {
+      document: "citas/{citaId}",
+      secrets: ["EMAIL_PASS"],
+    },
+    async (event) => {
+      const before = event.data.before.data();
+      const after = event.data.after.data();
+      const citaId = event.params.citaId;
+
+      // Solo actuar si el estado cambió a "confirmada"
+      if (before.estado === after.estado) {
+        console.log("⏭️  Estado no cambió, skip");
+        return null;
+      }
+
+      console.log(`📝 Cita ${citaId} cambió de ${before.estado} a ${after.estado}`);
+
+      // Si se confirmó la cita, enviar email al socio
+      if (after.estado === "confirmada" && before.estado !== "confirmada") {
+        console.log("✅ Cita confirmada - enviando email al socio");
+
+        try {
+          // Enviar email de confirmación al socio
+          await enviarEmailConfirmacionCita(after, after.calendarEventLink || "",
+              EMAIL_CONFIG.smtp);
+          console.log(`📧 Email de confirmación enviado a ${after.socioEmail}`);
+
+          // Actualizar documento con timestamp de confirmación
+          await event.data.after.ref.update({
+            emailConfirmacionEnviado: admin.firestore.FieldValue.serverTimestamp(),
+          });
+
+          return {success: true, action: "confirmacion_enviada"};
+        } catch (error) {
+          console.error("❌ Error enviando email de confirmación:", error);
+          return {success: false, error: error.message};
+        }
+      }
+
+      // Si se canceló la cita, notificar al socio
+      if (after.estado === "cancelada" && before.estado !== "cancelada") {
+        console.log("❌ Cita cancelada - notificando al socio");
+
+        try {
+          const transporter = nodemailer.createTransport(EMAIL_CONFIG.smtp);
+
+          const fechaFormateada = new Date(`${after.fecha}T${after.hora}:00`)
+              .toLocaleDateString("es-MX", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone: "America/Merida",
+              });
+
+          await transporter.sendMail({
+            from: '"Club 738" <smunozam@gmail.com>',
+            to: after.socioEmail,
+            subject: `❌ Cita Cancelada - Club 738`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background: #dc3545; padding: 20px; text-align: center;">
+                  <h1 style="color: white; margin: 0;">❌ Cita Cancelada</h1>
+                </div>
+                <div style="padding: 30px; background: #f8f9fa;">
+                  <p>Hola <strong>${after.socioNombre}</strong>,</p>
+                  <p>Tu cita programada para el <strong>${fechaFormateada}</strong> ha sido cancelada.</p>
+                  <p>Si necesitas reagendar, ingresa al portal: <a href="https://yucatanctp.org">yucatanctp.org</a></p>
+                </div>
+                <div style="background: #1e293b; padding: 15px; text-align: center;">
+                  <p style="color: #94a3b8; font-size: 12px; margin: 0;">Club de Caza, Tiro y Pesca de Yucatán, A.C.</p>
+                </div>
+              </div>
+            `,
+          });
+
+          console.log(`📧 Email de cancelación enviado a ${after.socioEmail}`);
+          return {success: true, action: "cancelacion_enviada"};
+        } catch (error) {
+          console.error("❌ Error enviando email de cancelación:", error);
+          return {success: false, error: error.message};
+        }
+      }
+
+      return null;
     },
 );
 
@@ -407,7 +690,10 @@ Fecha: ${fechaTest}
  * Envía email al socio destinatario
  */
 exports.onNotificacionCreated = onDocumentCreated(
-    "notificaciones/{notifId}",
+    {
+      document: "notificaciones/{notifId}",
+      secrets: ["EMAIL_PASS"],
+    },
     async (event) => {
       const notificacion = event.data.data();
       const notifId = event.params.notifId;

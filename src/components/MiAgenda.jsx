@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { auth, db } from '../firebaseConfig';
-import { collection, query, getDocs, doc, updateDoc, where, orderBy } from 'firebase/firestore';
+import { collection, query, getDocs, doc, updateDoc, deleteDoc, onSnapshot, where, orderBy } from 'firebase/firestore';
 import { useToastContext } from '../contexts/ToastContext';
 import './MiAgenda.css';
 
@@ -30,8 +30,32 @@ function MiAgenda({ onBack }) {
     totales: 0
   });
 
+  // Suscripción en tiempo real a las citas
   useEffect(() => {
-    cargarCitas();
+    setLoading(true);
+    const citasRef = collection(db, 'citas');
+    
+    const unsubscribe = onSnapshot(citasRef, (snapshot) => {
+      const citasData = [];
+      snapshot.forEach((doc) => {
+        citasData.push({ id: doc.id, ...doc.data() });
+      });
+
+      // Ordenar por fecha y hora (más recientes primero)
+      citasData.sort((a, b) => {
+        const fechaA = new Date(`${a.fecha}T${a.hora}`);
+        const fechaB = new Date(`${b.fecha}T${b.hora}`);
+        return fechaB - fechaA;
+      });
+
+      setCitas(citasData);
+      setLoading(false);
+    }, (error) => {
+      console.error('Error en suscripción de citas:', error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -56,31 +80,11 @@ function MiAgenda({ onBack }) {
     }
   }, [mostrarModal]);
 
-  const cargarCitas = async () => {
-    try {
-      setLoading(true);
-      const citasRef = collection(db, 'citas');
-      const citasSnap = await getDocs(citasRef);
-      
-      const citasData = [];
-      citasSnap.forEach((doc) => {
-        citasData.push({ id: doc.id, ...doc.data() });
-      });
-
-      // Ordenar por fecha y hora
-      citasData.sort((a, b) => {
-        const fechaA = new Date(`${a.fecha}T${a.hora}`);
-        const fechaB = new Date(`${b.fecha}T${b.hora}`);
-        return fechaB - fechaA; // Más recientes primero
-      });
-
-      setCitas(citasData);
-    } catch (error) {
-      console.error('Error cargando citas:', error);
-      alert('Error al cargar las citas');
-    } finally {
-      setLoading(false);
-    }
+  // Mantener cargarCitas para refrescar manual (el onSnapshot ya actualiza automáticamente)
+  const cargarCitas = () => {
+    // Ya no es necesario porque onSnapshot actualiza en tiempo real
+    // pero mantenemos para el botón de refresco
+    showToast('🔄 Datos actualizados automáticamente', 'info', 2000);
   };
 
   const calcularContadores = () => {
@@ -151,6 +155,22 @@ function MiAgenda({ onBack }) {
     } catch (error) {
       console.error('Error marcando cita:', error);
       showToast('❌ Error al marcar la cita como completada', 'error', 3000);
+    }
+  };
+
+  const eliminarCita = async (citaId) => {
+    if (!window.confirm('¿Eliminar esta cita permanentemente?\n\nEsta acción no se puede deshacer.')) return;
+
+    try {
+      const citaRef = doc(db, 'citas', citaId);
+      await deleteDoc(citaRef);
+      
+      showToast('🗑️ Cita eliminada correctamente.', 'success', 3000);
+      await cargarCitas();
+      setMostrarModal(false);
+    } catch (error) {
+      console.error('Error eliminando cita:', error);
+      showToast('❌ Error al eliminar la cita', 'error', 3000);
     }
   };
 
@@ -597,6 +617,15 @@ function MiAgenda({ onBack }) {
                   </button>
                 </>
               )}
+
+              {/* Botón eliminar siempre visible - útil para citas pasadas, canceladas o de prueba */}
+              <button
+                className="btn-eliminar"
+                onClick={() => eliminarCita(citaSeleccionada.id)}
+                title="Eliminar cita permanentemente"
+              >
+                🗑️ Eliminar
+              </button>
 
               <button className="btn-cerrar" onClick={cerrarModal}>
                 Cerrar

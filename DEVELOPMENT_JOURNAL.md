@@ -10,6 +10,59 @@
 
 ## 📅 Febrero 2026
 
+### 6 de Febrero - v1.37.3 - Sistema Citas en Tiempo Real + Guía e5cinco PETA
+
+#### 🎯 Objetivos Completados
+
+**1. Sistema de Citas - Funcionalidad Eliminar**
+- **Archivo**: `src/components/MiAgenda.jsx`
+- **Característica**: Botón "🗑️ Eliminar" en el modal de detalle de cada cita
+- **Comportamiento**: Doble confirmación antes de eliminar permanentemente
+- **CSS**: Botón gris que cambia a rojo al hover (indica acción destructiva)
+
+**2. Mi Agenda - Actualización en Tiempo Real**
+- **Archivo**: `src/components/MiAgenda.jsx`
+- **Problema**: Los contadores y lista no se actualizaban cuando se borraban citas en Firebase
+- **Solución**: Cambio de `getDocs` (carga única) a `onSnapshot` (listener en tiempo real)
+- **Importación añadida**: `onSnapshot` de Firestore
+- **Beneficio**: Los datos se actualizan automáticamente sin necesidad de refresh manual
+
+**3. Nueva Tarjeta: Pago e5cinco PETA**
+- **Archivo**: `src/App.jsx`
+- **Ubicación**: Portal del Socio > Sección Herramientas
+- **Característica**: Nueva tarjeta "💳 Pago e5cinco PETA" con fondo verde
+- **Modal**: Guía completa de pago SEDENA con:
+  - Instrucciones de pago mediante esquema e5cinco
+  - Aviso importante (no transferencias electrónicas)
+  - Clave de referencia: `034001132`
+  - Tabla de tarifas por número de armas (1-10)
+
+**4. Tabla Clickeable con Descarga de PDFs**
+- **Archivos**: `src/App.jsx`, `src/App.css`
+- **Característica**: Cada fila de la tabla descarga el PDF correspondiente
+- **PDFs copiados a** `public/oficios/e5cinco/`:
+  - `hoja-ayuda-1-3-armas.pdf`
+  - `hoja-ayuda-4-armas.pdf` a `hoja-ayuda-10-armas.pdf`
+- **UX**: 
+  - Texto de ayuda: "📥 Haz clic para descargar"
+  - Icono 📥 en cada fila que se ilumina al hover
+  - Efecto visual de hover (fondo dorado + escala)
+
+#### 📁 Archivos Modificados
+- `src/components/MiAgenda.jsx` - Función eliminar + onSnapshot tiempo real
+- `src/components/MiAgenda.css` - Estilos botón eliminar
+- `src/App.jsx` - Modal e5cinco + tabla clickeable + estado showE5cincoModal
+- `src/App.css` - Estilos modal e5cinco + filas clickeables + tarjeta e5cinco
+
+#### 📁 Archivos Añadidos
+- `public/oficios/e5cinco/` - 8 PDFs de Hojas de Ayuda SEDENA
+
+#### ✅ Deploy
+- Build exitoso
+- Desplegado a https://yucatanctp.org
+
+---
+
 ### 1 de Febrero - v1.37.2 - Fix Límites Cartuchos + Fecha de Oficio PETA ✅
 
 #### 🎯 Objetivos Completados

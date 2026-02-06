@@ -488,6 +488,21 @@ main {
   color: #d97706;
 }
 
+/* Tarjeta e5cinco PETA */
+.dash-card.e5cinco {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border-color: #10b981;
+}
+
+.dash-card.e5cinco:hover {
+  border-color: #059669;
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+.dash-card.e5cinco .dash-card-cta {
+  color: #059669;
+}
+
 /* Admin Cards */
 .dash-card.admin {
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
@@ -1341,6 +1356,195 @@ main {
 .btn-agendar-pago:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+}
+
+/* ===================================
+   MODAL E5CINCO PETA
+   Guía de pago SEDENA para PETAs
+   =================================== */
+.modal-e5cinco {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 16px;
+  padding: 30px;
+  max-width: 700px;
+  width: 100%;
+  position: relative;
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-e5cinco h2 {
+  color: #c9a227;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.e5cinco-content {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.e5cinco-aviso {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.e5cinco-aviso p {
+  margin-bottom: 10px;
+}
+
+.e5cinco-aviso p:last-child {
+  margin-bottom: 0;
+}
+
+.e5cinco-warning {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  color: #fca5a5;
+  margin-top: 10px;
+}
+
+.e5cinco-referencia {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.2) 0%, rgba(201, 162, 39, 0.1) 100%);
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.e5cinco-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.e5cinco-valor {
+  color: #c9a227;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Monaco', 'Menlo', monospace;
+  letter-spacing: 2px;
+}
+
+.e5cinco-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.e5cinco-tabla thead {
+  background: rgba(201, 162, 39, 0.2);
+}
+
+.e5cinco-tabla th {
+  padding: 12px 15px;
+  text-align: left;
+  color: #c9a227;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+}
+
+.e5cinco-tabla td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+}
+
+.e5cinco-tabla tbody tr:hover {
+  background: rgba(201, 162, 39, 0.1);
+}
+
+.e5cinco-tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.e5cinco-tabla td.monto {
+  color: #4ade80;
+  font-weight: 600;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.e5cinco-tabla td.cadena {
+  color: #60a5fa;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+/* Filas clickeables para descargar PDFs */
+.e5cinco-click-hint {
+  text-align: center;
+  color: rgba(201, 162, 39, 0.8);
+  font-size: 13px;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.e5cinco-tabla tbody tr.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.e5cinco-tabla tbody tr.clickable:hover {
+  background: rgba(201, 162, 39, 0.2);
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(201, 162, 39, 0.2);
+}
+
+.e5cinco-tabla tbody tr.clickable:active {
+  transform: scale(0.99);
+}
+
+.e5cinco-tabla td.download-icon {
+  text-align: center;
+  font-size: 16px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.e5cinco-tabla tbody tr.clickable:hover td.download-icon {
+  opacity: 1;
+}
+
+/* Responsive modal e5cinco */
+@media (max-width: 768px) {
+  .modal-e5cinco {
+    padding: 20px;
+    max-width: 95%;
+  }
+  
+  .e5cinco-referencia {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .e5cinco-tabla th,
+  .e5cinco-tabla td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  
+  .e5cinco-valor {
+    font-size: 1.2rem;
+  }
 }
 
 /* Badge pagado/pendiente en dashboard */

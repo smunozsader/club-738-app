@@ -421,3 +421,151 @@
     padding: 14px 24px;
   }
 }
+
+/* ===== DATE PICKER IMPROVEMENTS ===== */
+.form-group input[type="date"] {
+  cursor: pointer;
+  position: relative;
+  min-height: 48px;
+  font-size: 1rem;
+  color-scheme: light;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #3498db;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z'/%3E%3C/svg%3E");
+  filter: none;
+  opacity: 1;
+  width: 28px;
+  height: 28px;
+  transition: all 0.2s ease;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  background-color: #2980b9;
+  transform: scale(1.1);
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+:root.dark-mode .agendar-cita-container,
+.dark-mode .agendar-cita-container {
+  color: var(--text-primary);
+}
+
+:root.dark-mode .form-section,
+.dark-mode .form-section,
+:root.dark-mode .mis-citas-section,
+.dark-mode .mis-citas-section {
+  background: var(--bg-secondary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+:root.dark-mode .form-section h2,
+.dark-mode .form-section h2,
+:root.dark-mode .mis-citas-section h2,
+.dark-mode .mis-citas-section h2 {
+  color: var(--text-primary);
+}
+
+:root.dark-mode .cita-header h1,
+.dark-mode .cita-header h1 {
+  color: var(--text-primary);
+}
+
+:root.dark-mode .cita-header .subtitle,
+.dark-mode .cita-header .subtitle {
+  color: var(--text-secondary);
+}
+
+:root.dark-mode .form-group label,
+.dark-mode .form-group label {
+  color: var(--text-primary);
+}
+
+:root.dark-mode .form-group input,
+:root.dark-mode .form-group select,
+:root.dark-mode .form-group textarea,
+.dark-mode .form-group input,
+.dark-mode .form-group select,
+.dark-mode .form-group textarea {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+:root.dark-mode .form-group input[type="date"],
+.dark-mode .form-group input[type="date"] {
+  color-scheme: dark;
+}
+
+:root.dark-mode .form-group input[type="date"]::-webkit-calendar-picker-indicator,
+.dark-mode .form-group input[type="date"]::-webkit-calendar-picker-indicator {
+  background-color: #4a90d9;
+  filter: none;
+}
+
+:root.dark-mode .help-text,
+.dark-mode .help-text {
+  color: var(--text-muted);
+}
+
+:root.dark-mode .slot-btn,
+.dark-mode .slot-btn {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+:root.dark-mode .slot-btn:hover,
+.dark-mode .slot-btn:hover {
+  background: rgba(52, 152, 219, 0.2);
+  border-color: #3498db;
+}
+
+:root.dark-mode .cita-card,
+.dark-mode .cita-card {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+:root.dark-mode .cita-detalle-item,
+.dark-mode .cita-detalle-item {
+  color: var(--text-primary);
+}
+
+:root.dark-mode .info-box,
+.dark-mode .info-box {
+  background: linear-gradient(135deg, rgba(243, 156, 18, 0.2) 0%, rgba(241, 196, 15, 0.15) 100%);
+  border-left-color: #f39c12;
+}
+
+:root.dark-mode .info-box h4,
+.dark-mode .info-box h4 {
+  color: #f39c12;
+}
+
+:root.dark-mode .info-box li,
+.dark-mode .info-box li {
+  color: #fad390;
+}
+
+:root.dark-mode .no-slots,
+.dark-mode .no-slots {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+:root.dark-mode .loading-slots,
+.dark-mode .loading-slots {
+  background: rgba(52, 152, 219, 0.15);
+  color: #5dade2;
+}
+
+:root.dark-mode .empty-state,
+.dark-mode .empty-state {
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+}

@@ -604,6 +604,30 @@
   outline-offset: 2px;
 }
 
+.btn-eliminar {
+  background: linear-gradient(135deg, #7f8c8d 0%, #5d6d7e 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  flex: 0 0 auto;
+}
+
+.btn-eliminar:hover {
+  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(192, 57, 43, 0.4);
+}
+
+.btn-eliminar:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
 .btn-cerrar {
   background: #95a5a6;
   color: white;
