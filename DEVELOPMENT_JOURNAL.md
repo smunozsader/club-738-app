@@ -10,6 +10,30 @@
 
 ## 📅 Febrero 2026
 
+### 6 de Febrero - Alta Arsenal Briceño (2 pistolas nuevas)
+
+#### 🎯 Objetivo
+Alta de 2 pistolas nuevas para JUAN CARLOS BRICEÑO GONZÁLEZ (jcb197624@hotmail.com)
+
+#### 🔫 Armas Registradas
+| Arma | Calibre | Matrícula | Folio |
+|------|---------|-----------|-------|
+| SIG SAUER P365 | .380" ACP | 6F407226 | B619498 |
+| CESKA ZBROJOVKA CZ SHADOW 2 | .380" | EP34131 | B630577 |
+
+#### 📁 Cambios Realizados
+1. **Firestore**: Documentos creados en `socios/jcb197624@hotmail.com/armas/`
+2. **Storage**: RFAs subidos a `documentos/jcb197624@hotmail.com/armas/`
+3. **Excel**: Fuente de verdad actualizada (`FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx`)
+
+#### 📁 Archivos
+- `scripts/alta-armas-briceno.cjs` - Script de alta
+- `data/LIC. BRICEÑO PISTOLAS NUEVAS/` - RFAs originales
+
+**Total armas Briceño**: 6 (4 anteriores + 2 nuevas)
+
+---
+
 ### 6 de Febrero - v1.37.3 - Sistema Citas en Tiempo Real + Guía e5cinco PETA
 
 #### 🎯 Objetivos Completados
