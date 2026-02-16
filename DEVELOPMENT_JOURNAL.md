@@ -60,6 +60,32 @@ Auditoría completa del estado de pagos 2026, identificación de morosos 2025+20
 - Añadida tabla de Socios Exentos 2026 con emails y motivos
 - Corregidos montos de cuotas (Anualidad: $6,500, no $6,000)
 
+#### 📧 Listas de Correo Generadas (en SOCIOS_PENDIENTES_2026.md)
+3 listas separadas para diferentes campañas de comunicación:
+| Lista | Cantidad | Propósito |
+|-------|----------|-----------|
+| Morosos Dobles (2025+2026) | 17 | Comunicado URGENTE - deben 2 años |
+| Solo 2026 CON armas | 24 | Alta prioridad - pueden perder modalidad |
+| Sin armas registradas | 5 | Menor prioridad - algunos posibles placeholder |
+
+#### 📁 Reorganización Estructura de Carpetas
+Root muy cluttered - movidos 19 archivos a ubicaciones apropiadas:
+
+**Auditorías → `docs/audits/` (6 archivos):**
+- AUDIT_INDEX.md, AUDIT_QUICK_SUMMARY.md, AUDIT_README.md
+- AUDIT_EXECUTIVE_BRIEFING.md, COMPREHENSIVE_CODE_AUDIT_2026.md
+- ACTIONABLE_FIXES_GUIDE.md
+
+**Documentación técnica → `docs/` (3 archivos):**
+- PROJECT_STRUCTURE.md, CODE_LOCATIONS_REFERENCE.md
+- INSTRUCCIONES_PWA.md
+
+**Formatos PETA → `data/formatos/` (10 archivos):**
+- Todos los PDFs de formatos SEDENA (SEDENA-02-045-*.pdf, SEDENA-02-046-*.pdf)
+- Plantillas Excel y Word de permisos PETA
+
+**Resultado:** Root más limpio con solo archivos esenciales del proyecto.
+
 ---
 
 ### 6 de Febrero - Alta Arsenal Briceño (2 pistolas nuevas)
