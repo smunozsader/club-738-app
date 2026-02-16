@@ -359,8 +359,20 @@ Official authorization package **physically submitted** to 32 Zona Militar (Vall
 ## 💰 Financial Operations (2026 Drive)
 
 ### Payment Structure
-**New Members**: Inscripción ($2,000) + Anualidad ($6,000) + FEMETI ($700) = **$8,700**
-**Renewals**: Anualidad ($6,000) + FEMETI ($350) = **$6,350**
+**New Members**: Inscripción ($2,000) + Anualidad ($6,500) + FEMETI ($700) = **$8,700**
+**Renewals**: Anualidad ($6,500) + FEMETI ($350) = **$6,850**
+
+### Socios Exentos 2026 (8 total)
+| Nombre | Email | Motivo |
+|--------|-------|--------|
+| Sergio Muñoz de Alba Medrano | smunozam@gmail.com | Secretario del Club |
+| Joaquín Rodolfo Gardoni Nuñez | jrgardoni@gmail.com | Tesorero del Club |
+| Ma. Fernanda Guadalupe Arechiga Ramos | arechiga@jogarplastics.com | Placeholder armas extras Tesorero |
+| Ricardo Jesús Fernández y Gasque | richfegas@icloud.com | Familia del Presidente |
+| Gerardo Antonio Fernández Quijano | gfernandez63@gmail.com | Familia del Presidente |
+| Ricardo Manuel Fernández Quijano | richfer1020@gmail.com | Familia del Presidente |
+| Ricardo Daniel Fernández Pérez | richfer0304@gmail.com | Familia del Presidente |
+| Aimee Gómez Mendoza | aimeegomez615@gmail.com | Inscripción dic 2025 cubre 2026 |
 
 ### Tracking in Firestore
 ```javascript

@@ -10,6 +10,58 @@
 
 ## 📅 Febrero 2026
 
+### 16 de Febrero - Análisis Cobranza 2026 + Sincronización Excel-Firestore
+
+#### 🎯 Objetivo
+Auditoría completa del estado de pagos 2026, identificación de morosos 2025+2026, y sincronización de datos entre Excel y Firestore.
+
+#### 📊 Estado de Cobranza al 16/Feb/2026
+
+| Métrica | Valor |
+|---------|-------|
+| **Pagados 2026** | 23 socios |
+| **Exentos** | 8 socios |
+| **Total al corriente** | 31 socios |
+| **Recaudado** | $155,200 MXN |
+| **Pendientes** | 46 socios |
+
+**Desglose Pendientes:**
+- 🔴 Morosos Dobles (2025+2026): 17 socios
+- 🟡 Solo falta 2026: 29 socios
+
+#### 👥 Socios Exentos 2026 (8)
+| Nombre | Motivo |
+|--------|--------|
+| Sergio Muñoz de Alba Medrano | Secretario del Club |
+| Joaquín Rodolfo Gardoni Nuñez | Tesorero del Club |
+| Ma. Fernanda Guadalupe Arechiga Ramos | Placeholder armas Tesorero |
+| Ricardo Jesús Fernández y Gasque | Familia del Presidente |
+| Gerardo Antonio Fernández Quijano | Familia del Presidente |
+| Ricardo Manuel Fernández Quijano | Familia del Presidente |
+| Ricardo Daniel Fernández Pérez | Familia del Presidente |
+| Aimee Gómez Mendoza | Inscripción dic 2025 cubre 2026 |
+
+#### 🔧 Scripts Creados
+- `scripts/generar-listados-morosos.js` - Genera markdowns con desglose de pagos y morosos
+- `scripts/comparar-excel-firestore.js` - Compara Excel vs Firestore para detectar discrepancias
+- `scripts/registrar-pagos-faltantes.js` - Registra pagos que estaban en Excel pero no en Firestore
+- `scripts/analizar-excel-2026.py` - Análisis Python del Excel de pagos 2026
+
+#### 📄 Documentos Generados
+- `docs/SOCIOS_PAGADOS_2026.md` - Lista completa con fecha, inscripción, cuota, FEMETI, total
+- `docs/SOCIOS_PENDIENTES_2026.md` - Morosos categorizados + emails para comunicados
+
+#### ✅ Correcciones Aplicadas
+1. **LUIS FERNANDO GUILLERMO GAMBOA** - Registrado pago $8,700 (socio nuevo, 08-ene-2026)
+2. **ARIEL ANTONIO PAREDES CETINA** - Registrado pago $6,850 (19-ene-2026)
+3. **SANTIAGO ALEJANDRO QUINTAL PAREDES** - Detectado como pago anticipado dic 2025 para 2026
+
+#### 📝 Actualización copilot-instructions.md
+- Añadida tabla de Socios Exentos 2026 con emails y motivos
+- Corregidos montos de cuotas (Anualidad: $6,500, no $6,000)
+
+---
+
 ### 6 de Febrero - Alta Arsenal Briceño (2 pistolas nuevas)
 
 #### 🎯 Objetivo
