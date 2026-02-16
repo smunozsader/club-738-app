@@ -295,25 +295,44 @@ Socios sin registro de pago en 2025 (pueden ser nuevos o sin datos migrados).
     });
   }
 
+  // Separar listas por tipo de comunicado
+  const morososDoblesEmails = morososDobles.map(s => s.email);
+  const soloFalta2026ConArmas = soloFalta2026.filter(s => s.totalArmas > 0);
+  const soloFalta2026SinArmas = soloFalta2026.filter(s => s.totalArmas === 0);
+  // También incluir sin historial que no tienen armas
+  const sinArmasTotal = [...soloFalta2026SinArmas, ...sinHistorial.filter(s => s.totalArmas === 0)];
+
   mdPendientes += `
 ---
 
-## 📋 Lista de Emails para Comunicado Especial (Morosos Dobles - 17)
+## 📋 LISTAS DE EMAILS PARA COMUNICADOS
+
+### 1️⃣ Morosos Dobles 2025+2026 (${morososDobles.length})
 
 ⚠️ **COMUNICADO URGENTE** - No pagaron 2025 NI 2026
 
 \`\`\`
-${morososDobles.map(s => s.email).join(',\n')}
+${morososDoblesEmails.join(',\n')}
 \`\`\`
 
 ---
 
-## 📋 Lista de Emails - Solo Adeudan 2026 (${soloFalta2026.length})
+### 2️⃣ Solo Adeudan 2026 - CON ARMAS (${soloFalta2026ConArmas.length})
 
 📧 **RECORDATORIO** - Pagaron 2025, solo falta renovación 2026
 
 \`\`\`
-${soloFalta2026.map(s => s.email).join(',\n')}
+${soloFalta2026ConArmas.map(s => s.email).join(',\n')}
+\`\`\`
+
+---
+
+### 3️⃣ Morosos 2026 - SIN ARMAS (${sinArmasTotal.length})
+
+🤝 **APOYO EN GESTIÓN** - No tienen armas registradas, ofrecer apoyo en solicitud de compra
+
+\`\`\`
+${sinArmasTotal.map(s => s.email).join(',\n')}
 \`\`\`
 
 ---

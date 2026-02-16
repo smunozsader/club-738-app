@@ -80,7 +80,9 @@ Estos socios SÍ pagaron en 2025, solo falta su renovación 2026.
 
 ---
 
-## 📋 Lista de Emails para Comunicado Especial (Morosos Dobles - 17)
+## 📋 LISTAS DE EMAILS PARA COMUNICADOS
+
+### 1️⃣ Morosos Dobles 2025+2026 (17)
 
 ⚠️ **COMUNICADO URGENTE** - No pagaron 2025 NI 2026
 
@@ -106,7 +108,7 @@ tonysantacruz@hotmail.com
 
 ---
 
-## 📋 Lista de Emails - Solo Adeudan 2026 (29)
+### 2️⃣ Solo Adeudan 2026 - CON ARMAS (24)
 
 📧 **RECORDATORIO** - Pagaron 2025, solo falta renovación 2026
 
@@ -134,7 +136,16 @@ alejandrapintado@yahoo.com.mx,
 chafi70@hotmail.com,
 olga.garcia@mayaseguridad.mx,
 quiquis77@hotmail.com,
-tinosanchezf@yahoo.com.mx,
+tinosanchezf@yahoo.com.mx
+```
+
+---
+
+### 3️⃣ Morosos 2026 - SIN ARMAS (5)
+
+🤝 **APOYO EN GESTIÓN** - No tienen armas registradas, ofrecer apoyo en solicitud de compra
+
+```
 alejandro18sosa@gmail.com,
 cpedgardo_gomez@hotmail.com,
 licyaelromero@gmail.com,
