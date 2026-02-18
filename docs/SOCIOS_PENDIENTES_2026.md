@@ -1,7 +1,7 @@
 # ❌ Socios con Pago Pendiente 2026 - Club 738
 
-**Fecha de corte:** lunes, 16 de febrero de 2026  
-**Total pendientes:** 46 socios  
+**Fecha de corte:** miércoles, 18 de febrero de 2026  
+**Total pendientes:** 44 socios  
 
 ---
 
@@ -10,7 +10,7 @@
 | Categoría | Cantidad | Descripción |
 |-----------|----------|-------------|
 | 🔴 **MOROSOS DOBLES** | 17 | No pagaron 2025 NI 2026 |
-| 🟡 Falta solo 2026 | 29 | Pagaron 2025, falta 2026 |
+| 🟡 Falta solo 2026 | 27 | Pagaron 2025, falta 2026 |
 | ⚪ Sin historial | 0 | Socios nuevos o sin registro previo |
 
 ---
@@ -42,15 +42,14 @@
 
 ---
 
-## 🟡 Pagaron 2025, falta 2026 (29)
+## 🟡 Pagaron 2025, falta 2026 (27)
 
 Estos socios SÍ pagaron en 2025, solo falta su renovación 2026.
 
 | # | Nombre | Armas | Pagó 2025 | Teléfono | Email |
 |---|--------|-------|-----------|----------|-------|
 | 1 | CARLOS ANTONIO GRANJA PEREZ | 10 | $6,000 | 9999431556 | carlosgranja@gmail.com |
-| 2 | JAVIER RUZ PERAZA | 9 | $6,350 | 9992429052 | javier_ruzperaza@hotmail.com |
-| 3 | CLAUDIO MAURICIO CANAVATI FARAH | 8 | $6,350 | 5554536965 | cc@secure.mx |
+| 2 | CLAUDIO MAURICIO CANAVATI FARAH | 8 | $6,350 | 5554536965 | cc@secure.mx |
 | 4 | SERGIO SANTINELLI GRAJALES | 8 | $6,000 | 5554388308 | ssg@santinelli.com.mx |
 | 5 | JUAN CARLOS MAÑE ORTIZ | 7 | $6,350 | 9991229424 | jcmaneo@hotmail.com |
 | 6 | ALEJANDRO GOMORY MARTINEZ | 6 | $6,000 | 9999490494 | agm@galletasdonde.com |
@@ -69,14 +68,13 @@ Estos socios SÍ pagaron en 2025, solo falta su renovación 2026.
 | 19 | ROBERTO JOSE MADAHUAR BOEHM | 2 | $6,000 | 9999473478 | rmadahuar@cotexsa.com.mx |
 | 20 | ALEJANDRA GEORGINA PINTADO VILLAFAÑA | 1 | $6,350 | 9999479199 | alejandrapintado@yahoo.com.mx |
 | 21 | CHAFI XACUR RIVERA | 1 | $2,000 | 9999477957 | chafi70@hotmail.com |
-| 22 | JUAN CARLOS RAMIREZ GOMEZ | 1 | $6,000 | 5543426160 | olga.garcia@mayaseguridad.mx |
-| 23 | ENRIQUE GAONA CASTAÑEDA | 1 | $6,350 | 5520985073 | quiquis77@hotmail.com |
-| 24 | CELESTINO SÁNCHEZ FERNÁNDEZ | 1 | $6,350 | 9992403110 | tinosanchezf@yahoo.com.mx |
-| 25 | JESUS ALEJANDRO PUC SOSA | 0 | $6,000 | 9993778311 | alejandro18sosa@gmail.com |
-| 26 | EDGARDO RAUL GÓMEZ ARZAMENDI | 0 | $6,000 | 9991450399 | cpedgardo_gomez@hotmail.com |
-| 27 | YAEL ROMERO DE DIOS | 0 | $6,000 | 9995287779 | licyaelromero@gmail.com |
-| 28 | RAÚL CERVANTES CEBALLOS | 0 | $6,000 | 9993382222 | rcervantes@live.com.mx |
-| 29 | KRISZTIAN GOR | 0 | $6,000 | +13213470270 | ttok09136@gmail.com |
+| 22 | ENRIQUE GAONA CASTAÑEDA | 1 | $6,350 | 5520985073 | quiquis77@hotmail.com |
+| 23 | CELESTINO SÁNCHEZ FERNÁNDEZ | 1 | $6,350 | 9992403110 | tinosanchezf@yahoo.com.mx |
+| 24 | JESUS ALEJANDRO PUC SOSA | 0 | $6,000 | 9993778311 | alejandro18sosa@gmail.com |
+| 25 | EDGARDO RAUL GÓMEZ ARZAMENDI | 0 | $6,000 | 9991450399 | cpedgardo_gomez@hotmail.com |
+| 26 | YAEL ROMERO DE DIOS | 0 | $6,000 | 9995287779 | licyaelromero@gmail.com |
+| 27 | RAÚL CERVANTES CEBALLOS | 0 | $6,000 | 9993382222 | rcervantes@live.com.mx |
+| 28 | KRISZTIAN GOR | 0 | $6,000 | +13213470270 | ttok09136@gmail.com |
 
 ---
 
@@ -108,13 +106,12 @@ tonysantacruz@hotmail.com
 
 ---
 
-### 2️⃣ Solo Adeudan 2026 - CON ARMAS (24)
+### 2️⃣ Solo Adeudan 2026 - CON ARMAS (22)
 
 📧 **RECORDATORIO** - Pagaron 2025, solo falta renovación 2026
 
 ```
 carlosgranja@gmail.com,
-javier_ruzperaza@hotmail.com,
 cc@secure.mx,
 ssg@santinelli.com.mx,
 jcmaneo@hotmail.com,
@@ -134,7 +131,6 @@ guidorcuevasabraham@gmail.com,
 rmadahuar@cotexsa.com.mx,
 alejandrapintado@yahoo.com.mx,
 chafi70@hotmail.com,
-olga.garcia@mayaseguridad.mx,
 quiquis77@hotmail.com,
 tinosanchezf@yahoo.com.mx
 ```
@@ -155,4 +151,4 @@ ttok09136@gmail.com
 
 ---
 
-*Generado automáticamente el lunes, 16 de febrero de 2026*
+*Generado automáticamente el miércoles, 18 de febrero de 2026*

@@ -1,20 +1,20 @@
 # ✅ Socios al Corriente 2026 - Club 738
 
-**Fecha de corte:** lunes, 16 de febrero de 2026  
-**Total:** 31 socios  
+**Fecha de corte:** miércoles, 18 de febrero de 2026  
+**Total:** 33 socios  
 
 ### 💵 Resumen Recaudación 2026
 
 | Concepto | Monto |
 |----------|-------|
 | Inscripciones | $2,000 |
-| Cuotas 2026 | $45,000 |
-| FEMETI | $2,450 |
-| **TOTAL** | **$155,200** |
+| Cuotas 2026 | $58,000 |
+| FEMETI | $3,150 |
+| **TOTAL** | **$168,900** |
 
 ---
 
-## 💰 Socios que Pagaron (23)
+## 💰 Socios que Pagaron (25)
 
 | # | Nombre | Fecha Pago | Inscripción | Cuota 2026 | FEMETI | Total |
 |---|--------|------------|-------------|------------|--------|-------|
@@ -29,18 +29,20 @@
 | 9 | FABIAN MARQUEZ ORTEGA | 30 ene 2026 | $0 | $0 | $0 | $6,850 |
 | 10 | GADDI OTHONIEL CAAMAL PUC | 05 feb 2026 | $0 | $6,500 | $350 | $6,850 |
 | 11 | IVAN TSUIS CABO TORRES | 14 ene 2026 | $0 | $0 | $0 | $6,350 |
-| 12 | JOSE GIL HEREDIA HAGAR | 01 feb 2026 | $0 | $6,500 | $0 | $6,500 |
-| 13 | JOSE VICENTE TRUJILLO LUCIC | 11 feb 2026 | $0 | $6,500 | $350 | $6,850 |
-| 14 | JUAN CARLOS BRICEÑO GONZALEZ | 05 feb 2026 | $0 | $6,500 | $350 | $6,850 |
-| 15 | LUIS FERNANDO GUILLERMO GAMBOA | 07 ene 2026 | $2,000 | $6,000 | $700 | $8,700 |
-| 16 | MANUEL JESÚS TZAB CHUC | 25 ene 2026 | $0 | $0 | $0 | $6,850 |
-| 17 | PAULINO EDILBERTO MONFORTE TRAVA | 21 ene 2026 | $0 | $0 | $0 | $6,850 |
-| 18 | RICARDO ALBERTO DESQUENS BONILLA | 15 ene 2026 | $0 | $0 | $0 | $6,350 |
-| 19 | RICARDO ANTONIO SOBERANIS GAMBOA | 17 ene 2026 | $0 | $0 | $0 | $6,350 |
-| 20 | RIGOMAR HINOJOSA SHIELDS | 28 ene 2026 | $0 | $0 | $0 | $6,850 |
-| 21 | RODRIGO GARCÍA ESCALANTE | 19 ene 2026 | $0 | $0 | $0 | $6,850 |
-| 22 | SANTIAGO ALEJANDRO QUINTAL PAREDES | 31 dic 2025 | $0 | $0 | $0 | $6,350 |
-| 23 | SANTIAGO RUEDA ESCOBEDO | 20 ene 2026 | $0 | $0 | $0 | $6,850 |
+| 12 | JAVIER RUZ PERAZA | 18 feb 2026 | $0 | $6,500 | $350 | $6,850 |
+| 13 | JOSE GIL HEREDIA HAGAR | 01 feb 2026 | $0 | $6,500 | $0 | $6,500 |
+| 14 | JOSE VICENTE TRUJILLO LUCIC | 11 feb 2026 | $0 | $6,500 | $350 | $6,850 |
+| 15 | JUAN CARLOS BRICEÑO GONZALEZ | 05 feb 2026 | $0 | $6,500 | $350 | $6,850 |
+| 16 | JUAN CARLOS RAMÍREZ GÓMEZ | 18 feb 2026 | $0 | $6,500 | $350 | $6,850 |
+| 17 | LUIS FERNANDO GUILLERMO GAMBOA | 07 ene 2026 | $2,000 | $6,000 | $700 | $8,700 |
+| 18 | MANUEL JESÚS TZAB CHUC | 25 ene 2026 | $0 | $0 | $0 | $6,850 |
+| 19 | PAULINO EDILBERTO MONFORTE TRAVA | 21 ene 2026 | $0 | $0 | $0 | $6,850 |
+| 20 | RICARDO ALBERTO DESQUENS BONILLA | 15 ene 2026 | $0 | $0 | $0 | $6,350 |
+| 21 | RICARDO ANTONIO SOBERANIS GAMBOA | 17 ene 2026 | $0 | $0 | $0 | $6,350 |
+| 22 | RIGOMAR HINOJOSA SHIELDS | 28 ene 2026 | $0 | $0 | $0 | $6,850 |
+| 23 | RODRIGO GARCÍA ESCALANTE | 19 ene 2026 | $0 | $0 | $0 | $6,850 |
+| 24 | SANTIAGO ALEJANDRO QUINTAL PAREDES | 31 dic 2025 | $0 | $0 | $0 | $6,350 |
+| 25 | SANTIAGO RUEDA ESCOBEDO | 20 ene 2026 | $0 | $0 | $0 | $6,850 |
 
 ---
 
@@ -59,4 +61,4 @@
 
 ---
 
-*Generado automáticamente el lunes, 16 de febrero de 2026*
+*Generado automáticamente el miércoles, 18 de febrero de 2026*
