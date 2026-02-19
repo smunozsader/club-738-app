@@ -12,6 +12,7 @@ import { db } from '../firebaseConfig';
 import { useToastContext } from '../contexts/ToastContext';
 import { jsPDF } from 'jspdf';
 import { getLimitesCartuchos, ajustarCartuchos, getCartuchosPorDefecto } from '../utils/limitesCartuchos';
+import SelectorModalidadFEMETI from './SelectorModalidadFEMETI';
 import './GeneradorPETA.css';
 
 // Datos constantes del Club
@@ -110,6 +111,9 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   
   // Estados seleccionados (máx 10, solo para competencia/caza)
   const [estadosSeleccionados, setEstadosSeleccionados] = useState(['Yucatán']);
+  
+  // Modalidad y competencias FEMETI (solo para competencia nacional - requerido DN27)
+  const [modalidadFEMETI, setModalidadFEMETI] = useState(null);
   
   // Buscar socio
   const [busqueda, setBusqueda] = useState('');
@@ -449,8 +453,14 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       return;
     }
 
-    if ((tipoPETA === 'competencia' || tipoPETA === 'caza') && estadosSeleccionados.length === 0) {
-      showToast('Selecciona al menos un estado', 'warning', 3000);
+    // Para competencia, validar que tenga competencias FEMETI O estados
+    if (tipoPETA === 'competencia') {
+      if (!modalidadFEMETI?.competencias?.length && estadosSeleccionados.length === 0) {
+        showToast('Selecciona competencias FEMETI o al menos un estado', 'warning', 3000);
+        return;
+      }
+    } else if (tipoPETA === 'caza' && estadosSeleccionados.length === 0) {
+      showToast('Selecciona al menos un estado para caza', 'warning', 3000);
       return;
     }
 
@@ -649,12 +659,48 @@ export default function GeneradorPETA({ userEmail, onBack }) {
         doc.text('POR SER DE PETA DE COMPETENCIA NACIONAL SE SOLICITAN LOS SIGUIENTES ESTADOS (MÁXIMO 10)', margin, y);
         y += 6;
         doc.setFont('helvetica', 'normal');
-        const estadosLinea = estadosSeleccionados.join(', ');
-        const lineasEstados = doc.splitTextToSize(estadosLinea, pageWidth - margin * 2);
-        lineasEstados.forEach(linea => {
-          doc.text(linea, margin, y);
-          y += 4;
-        });
+        
+        // Si hay competencias FEMETI seleccionadas, mostrar detalles completos (DN27)
+        if (modalidadFEMETI?.competencias?.length > 0) {
+          // Modalidad y tipo de arma
+          doc.setFont('helvetica', 'bold');
+          doc.text(`MODALIDAD: ${modalidadFEMETI.nombre || 'No especificada'}`, margin, y);
+          y += 5;
+          doc.setFont('helvetica', 'normal');
+          
+          // Estados donde participa
+          const estadosLinea = estadosSeleccionados.join(', ');
+          doc.text(`ESTADOS: ${estadosLinea}`, margin, y);
+          y += 6;
+          
+          // Clubes y periodo de competencias (requerimiento DN27)
+          doc.setFont('helvetica', 'bold');
+          doc.text('CLUBES Y PERIODO DONDE PARTICIPARÁ:', margin, y);
+          y += 5;
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(8);
+          
+          modalidadFEMETI.competencias.slice(0, 10).forEach((comp, idx) => {
+            const fechaFormateada = comp.fecha 
+              ? new Date(comp.fecha).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })
+              : 'Sin fecha';
+            const lineaComp = `${idx + 1}. ${fechaFormateada} - ${comp.club || 'Club'} (${comp.estado || comp.lugar || ''})`;
+            const lineasComp = doc.splitTextToSize(lineaComp, pageWidth - margin * 2);
+            lineasComp.forEach(linea => {
+              doc.text(linea, margin, y);
+              y += 3.5;
+            });
+          });
+          doc.setFontSize(9);
+        } else {
+          // Fallback: solo estados (sin competencias específicas)
+          const estadosLinea = estadosSeleccionados.join(', ');
+          const lineasEstados = doc.splitTextToSize(estadosLinea, pageWidth - margin * 2);
+          lineasEstados.forEach(linea => {
+            doc.text(linea, margin, y);
+            y += 4;
+          });
+        }
       } else {
         // Caza
         doc.setFont('helvetica', 'bold');
@@ -1107,10 +1153,31 @@ export default function GeneradorPETA({ userEmail, onBack }) {
           </div>
         )}
 
-        {/* Paso 6: Estados (solo para competencia/caza) */}
-        {socioSeleccionado && (tipoPETA === 'competencia' || tipoPETA === 'caza') && (
+        {/* Paso 6: Competencias FEMETI (solo para competencia nacional) */}
+        {socioSeleccionado && tipoPETA === 'competencia' && (
           <div className="peta-section">
-            <h3>6. Estados Autorizados (máximo 10)</h3>
+            <h3>6. Competencias FEMETI 2026 (requerido DN27)</h3>
+            <p className="seleccion-info" style={{ marginBottom: '15px', color: '#f59e0b' }}>
+              ⚠️ SEDENA requiere indicar clubes y periodo de las competencias (máximo 10)
+            </p>
+            
+            <SelectorModalidadFEMETI
+              onChange={(data) => {
+                setModalidadFEMETI(data);
+                // También actualizar estadosSeleccionados para compatibilidad
+                if (data?.estados) {
+                  setEstadosSeleccionados(data.estados);
+                }
+              }}
+              maxCompetencias={10}
+            />
+          </div>
+        )}
+
+        {/* Paso 6b: Estados para Caza (lista simple) */}
+        {socioSeleccionado && tipoPETA === 'caza' && (
+          <div className="peta-section">
+            <h3>6. Estados Autorizados para Caza (máximo 10)</h3>
             <p className="seleccion-info">
               Seleccionados: {estadosSeleccionados.length}/10
             </p>
@@ -1130,7 +1197,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                 fontWeight: '600'
               }}
             >
-              ✨ Sugerir estados FEMETI {tipoPETA === 'caza' ? 'para Caza' : 'para Competencia'}
+              ✨ Sugerir estados para Caza (Sureste + UMAs)
             </button>
 
             <div className="estados-grid">
