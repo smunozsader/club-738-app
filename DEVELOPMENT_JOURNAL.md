@@ -10,6 +10,66 @@
 
 ## 📅 Febrero 2026
 
+### 19 de Febrero - v1.37.4 - Selector de Competencias FEMETI con Fechas y Clubes
+
+#### 🎯 Objetivo
+Implementar selector de competencias FEMETI que cumple con requisitos SEDENA DN27 - oficio 392: "indicar clubes y periodo donde participará en el evento de competencia nacional (siendo como máximo 10)".
+
+#### ⚠️ Problema Identificado
+SEDENA rechazaba PETAs de competencia porque:
+- Solo se indicaban estados, no clubes específicos
+- Faltaban fechas de las competencias
+- No cumplía formato Manual DN27
+
+#### ✅ Solución Implementada
+
+**1. Extracción de datos FEMETI 2026:**
+- Script `scripts/extraer_competencias_femeti.py`
+- Genera `data/referencias/femeti_tiradas_2026/competencias_femeti_2026.json`
+- **2,887 eventos** extraídos del Excel oficial FEMETI
+
+**2. Nuevo componente `SelectorModalidadFEMETI.jsx`:**
+- Flujo: Modalidad → Estado → Competencias específicas
+- Muestra fecha, club sede y ubicación por cada evento
+- Límite máximo 10 competencias (SEDENA)
+- Tabla resumen con todas las selecciones
+
+**3. Datos guardados en Firestore:**
+```javascript
+modalidadFEMETI: {
+  nombre: "RECORRIDOS DE CAZA",
+  tipoArma: "Escopeta",
+  calibres: ["12", "20", ".410"],
+  competencias: [
+    { fecha: "2026-03-15", club: "Club X", estado: "Yucatán", lugar: "..." }
+  ],
+  estadosCompetencia: ["Yucatán", ...]
+}
+```
+
+#### 📊 Resumen FEMETI 2026
+| Modalidad | Estados | Eventos |
+|-----------|---------|---------|
+| Blancos en Movimiento | 13 | 412 |
+| Recorridos de Caza | 26 | 465 |
+| Tiro Olímpico | 18 | 449 |
+| Siluetas Metálicas | 32 | 937 |
+| Tiro Práctico | 19 | 615 |
+| Tiro Neumático | 5 | 9 |
+| **TOTAL** | - | **2,887** |
+
+#### 📄 Archivos Modificados/Creados
+- `src/components/SelectorModalidadFEMETI.jsx` - Componente completo reescrito
+- `src/components/SelectorModalidadFEMETI.css` - Estilos nuevos para competencias
+- `src/components/SolicitarPETA.jsx` - Integración y validación
+- `scripts/extraer_competencias_femeti.py` - Extractor de datos Excel
+- `data/referencias/femeti_tiradas_2026/competencias_femeti_2026.json` - Datos JSON
+
+#### 🚀 Deploy
+- Firebase Hosting: ✅ Desplegado
+
+---
+
 ### 16 de Febrero - Análisis Cobranza 2026 + Sincronización Excel-Firestore
 
 #### 🎯 Objetivo

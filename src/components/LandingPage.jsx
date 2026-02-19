@@ -113,11 +113,18 @@ const LandingPage = () => {
           <span className="card-cta">Ver calendario →</span>
         </a>
 
-        <a href="/calculadora" className="feature-card calculadora-card">
-          <div className="card-icon">🔢</div>
-          <h3>Rifles de Aire - ¿Requiere Registro?</h3>
-          <p>Calcula la potencia de tu rifle de aire y verifica si requiere registro ante SEDENA</p>
-          <span className="card-cta">Calcular →</span>
+        <a 
+          href="https://www.femeti.org.mx/calendario-anual" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="feature-card femeti-card"
+        >
+          <div className="card-icon">
+            <img src="/logo_femeti.avif" alt="FEMETI" className="femeti-logo-icon" />
+          </div>
+          <h3>Calendario FEMETI</h3>
+          <p>Competencias nacionales y eventos oficiales de la Federación Mexicana de Tiro</p>
+          <span className="card-cta">Ver calendario FEMETI →</span>
         </a>
       </section>
 

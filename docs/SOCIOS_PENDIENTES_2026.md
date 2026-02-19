@@ -55,7 +55,7 @@ Estos socios SÍ pagaron en 2025, solo falta su renovación 2026.
 | 6 | ALEJANDRO GOMORY MARTINEZ | 6 | $6,000 | 9999490494 | agm@galletasdonde.com |
 | 7 | HANS JURGEN THIES BARBACHANO | 6 | $6,000 | 9999415052 | hanstb@gmail.com |
 | 8 | JORGE ALFREDO DAWN MEDINA | 6 | $6,000 | 9999005153 | jorgedawn@prodigy.net.mx |
-| 9 | ALEJANDRO JAVIER GARCÍA GAMBOA | 5 | $6,350 | 9999001272 | cudaosj@hotmail.com |
+| 9 | ALEJANDRO JAVIER GARCÍA GAMBOA | 5 | $6,350 | 9999001272 | alveyc@hotmail.com |
 | 10 | ROGER IRÁN MÉNDEZ CARRILLO | 5 | $6,000 | 9991356502 | rafle_30@hotmail.com |
 | 11 | ALEJANDRO FRANCISCO RIVAS PINTADO | 4 | $6,350 | 9997720959 | al3xrivas@gmail.com |
 | 12 | BRAYER KERMITH VERDE CHIN | 4 | $6,000 | 9992247551 | brayerbyv@gmail.com |
@@ -118,7 +118,7 @@ jcmaneo@hotmail.com,
 agm@galletasdonde.com,
 hanstb@gmail.com,
 jorgedawn@prodigy.net.mx,
-cudaosj@hotmail.com,
+alveyc@hotmail.com,
 rafle_30@hotmail.com,
 al3xrivas@gmail.com,
 brayerbyv@gmail.com,

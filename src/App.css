@@ -473,6 +473,22 @@ main {
   color: #f59e0b;
 }
 
+/* Agenda Cita Card (WhatsApp) */
+.dash-card.citas {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  border-color: #25d366;
+  text-decoration: none;
+}
+
+.dash-card.citas:hover {
+  border-color: #128c7e;
+  box-shadow: 0 8px 16px rgba(37, 211, 102, 0.3);
+}
+
+.dash-card.citas .dash-card-cta {
+  color: #128c7e;
+}
+
 /* Comunicados Oficiales Card */
 .dash-card.comunicados {
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);

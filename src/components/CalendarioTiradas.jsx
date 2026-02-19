@@ -218,7 +218,6 @@ const CalendarioTiradas = () => {
         </div>
         <nav className="calendario-nav">
           <a href="/" className="nav-link">← Portal</a>
-          <a href="/calculadora" className="nav-link">Calculadora PCP</a>
         </nav>
       </div>
 

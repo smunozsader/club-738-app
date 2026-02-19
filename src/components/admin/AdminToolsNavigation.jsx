@@ -149,20 +149,6 @@ export default function AdminToolsNavigation({
       ]
     },
     {
-      id: 'agenda',
-      title: '📅 Agenda & Citas',
-      color: 'pink',
-      tools: [
-        { 
-          id: 'mi-agenda', 
-          label: 'Mi Agenda', 
-          icon: '📅',
-          description: 'Gestiona citas de socios',
-          onClick: () => onSelectTool('mi-agenda')
-        }
-      ]
-    },
-    {
       id: 'documentos',
       title: '📑 Generador de Documentos',
       color: 'teal',

@@ -18,7 +18,6 @@ import AvisoPrivacidad from './components/privacidad/AvisoPrivacidad';
 import DashboardRenovaciones from './components/DashboardRenovaciones';
 import DashboardCumpleanos from './components/DashboardCumpleanos';
 import GeneradorPETA from './components/GeneradorPETA';
-import CalculadoraPCP from './components/CalculadoraPCP';
 import CalendarioTiradas from './components/CalendarioTiradas';
 import SolicitarPETA from './components/SolicitarPETA';
 import MisPETAs from './components/MisPETAs';
@@ -36,8 +35,6 @@ import MiPerfil from './components/MiPerfil';
 import GestionArsenal from './components/GestionArsenal';
 import AdminBajasArsenal from './components/AdminBajasArsenal';
 import AdminAltasArsenal from './components/AdminAltasArsenal';
-import AgendarCita from './components/AgendarCita';
-import MiAgenda from './components/MiAgenda';
 import ManualUsuario from './components/ManualUsuario';
 import ThemeToggle from './components/ThemeToggle';
 import ComunicadosOficiales from './components/ComunicadosOficiales';
@@ -47,11 +44,6 @@ import './App.css';
 const ADMIN_EMAIL = 'admin@club738.com';
 
 // Detectar rutas públicas (sin necesidad de login)
-const isCalculadoraRoute = () => {
-  return window.location.pathname === '/calculadora' || 
-         window.location.hash === '#/calculadora';
-};
-
 const isCalendarioRoute = () => {
   return window.location.pathname === '/calendario' || 
          window.location.hash === '#/calendario' ||
@@ -186,11 +178,6 @@ function App() {
     return <div className="loading">Cargando...</div>;
   }
 
-  // Ruta pública: Calculadora PCP (sin necesidad de login)
-  if (isCalculadoraRoute()) {
-    return <CalculadoraPCP />;
-  }
-
   // Ruta pública: Calendario de Tiradas (sin necesidad de login)
   if (isCalendarioRoute()) {
     return <CalendarioTiradas />;
@@ -249,7 +236,6 @@ function App() {
               onDashboardCumpleanos={() => setActiveSection('cumpleanos')}
               onAdminBajas={() => setActiveSection('admin-bajas-arsenal')}
               onAdminAltas={() => setActiveSection('admin-altas-arsenal')}
-              onMiAgenda={() => setActiveSection('mi-agenda')}
               onReportadorExpedientes={() => setActiveSection('reportador-expedientes')}
               onGeneradorDocumentos={() => setActiveSection('generador-documentos')}
               onReporteContable={() => setActiveSection('reporte-contable')}
@@ -355,12 +341,6 @@ function App() {
           {activeSection === 'admin-altas-arsenal' && user.email === ADMIN_EMAIL && (
             <div className="section-admin-altas-arsenal">
               <AdminAltasArsenal />
-            </div>
-          )}
-
-          {activeSection === 'mi-agenda' && user.email === ADMIN_EMAIL && (
-            <div className="section-mi-agenda">
-              <MiAgenda onBack={() => setActiveSection('admin-dashboard')} />
             </div>
           )}
 
@@ -643,13 +623,6 @@ function App() {
                 <span className="dash-card-cta">Configurar →</span>
               </div>
               
-              <div className="dash-card citas" onClick={() => setActiveSection('agendar-cita')}>
-                <div className="dash-card-icon">📅</div>
-                <h3>Agendar Cita</h3>
-                <p>Agenda cita para entrega de documentos o consultas</p>
-                <span className="dash-card-cta">Agendar →</span>
-              </div>
-              
               <div className="dash-card pagos" onClick={() => setShowPagosModal(true)}>
                 <div className="dash-card-icon">💳</div>
                 <h3>Estado de Pagos</h3>
@@ -661,6 +634,18 @@ function App() {
                 )}
                 <span className="dash-card-cta">Ver detalles →</span>
               </div>
+
+              <a 
+                href="https://wa.me/+525665824667" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="dash-card citas"
+              >
+                <div className="dash-card-icon">📅</div>
+                <h3>Agenda Cita</h3>
+                <p>Agenda tu cita para la renovación de tu membresía</p>
+                <span className="dash-card-cta">Agendar por WhatsApp →</span>
+              </a>
 
               <div className="dash-card comunicados" onClick={() => setActiveSection('comunicados')}>
                 <div className="dash-card-icon">📢</div>
@@ -679,13 +664,6 @@ function App() {
                   <h3>Calendario de Tiradas</h3>
                   <p>Competencias 2026 del Club y región Sureste</p>
                   <span className="dash-card-cta">Ver calendario →</span>
-                </div>
-                
-                <div className="dash-card calculadora" onClick={() => window.location.href = '/calculadora'}>
-                  <div className="dash-card-icon">🔢</div>
-                  <h3>Calculadora PCP</h3>
-                  <p>Verifica si tu rifle de aire requiere registro</p>
-                  <span className="dash-card-cta">Calcular →</span>
                 </div>
                 
                 <div className="dash-card e5cinco" onClick={() => setShowE5cincoModal(true)}>
@@ -762,12 +740,6 @@ function App() {
                     <span className="dash-card-cta">Ver solicitudes →</span>
                   </div>
                   
-                  <div className="dash-card admin agenda" onClick={() => setActiveSection('mi-agenda')}>
-                    <div className="dash-card-icon">📅</div>
-                    <h3>Mi Agenda</h3>
-                    <p>Gestionar citas de socios</p>
-                    <span className="dash-card-cta">Ver agenda →</span>
-                  </div>
                 </div>
               </div>
             )}
@@ -836,12 +808,6 @@ function App() {
           </div>
         )}
 
-        {activeSection === 'agendar-cita' && (
-          <div className="section-agendar-cita">
-            <AgendarCita onBack={() => setActiveSection('dashboard')} />
-          </div>
-        )}
-        
         {activeSection === 'comunicados' && (
           <div className="section-comunicados">
             <button className="btn-back" onClick={() => setActiveSection('dashboard')}>

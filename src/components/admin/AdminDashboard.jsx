@@ -35,7 +35,6 @@ export default function AdminDashboard({
   onDashboardCumpleanos,
   onAdminBajas,
   onAdminAltas,
-  onMiAgenda,
   onReportadorExpedientes,
   onGeneradorDocumentos,
   onReporteContable,
@@ -91,9 +90,6 @@ export default function AdminDashboard({
         break;
       case 'bajas-arsenal':
         if (onAdminBajas) onAdminBajas();
-        break;
-      case 'mi-agenda':
-        if (onMiAgenda) onMiAgenda();
         break;
       case 'generador-documentos':
         if (onGeneradorDocumentos) onGeneradorDocumentos();

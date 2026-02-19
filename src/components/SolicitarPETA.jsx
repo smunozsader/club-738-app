@@ -12,6 +12,7 @@ import { db } from '../firebaseConfig';
 import { useToastContext } from '../contexts/ToastContext';
 import { calcularMontoE5cinco, obtenerInfoPagoCompleta } from '../utils/pagosE5cinco';
 import { getCartuchosPorDefecto } from '../utils/limitesCartuchos';
+import SelectorModalidadFEMETI from './SelectorModalidadFEMETI';
 import './SolicitarPETA.css';
 
 const ESTADOS_MEXICO = [
@@ -75,6 +76,9 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
   // NOTA: Yucatán NO es obligatorio para PETAs nacionales
   const [estadosSeleccionados, setEstadosSeleccionados] = useState([]);
   
+  // Modalidad FEMETI (solo para competencia)
+  const [modalidadFEMETI, setModalidadFEMETI] = useState(null);
+  
   // Dirección (pre-llenada desde Firestore)
   const [domicilio, setDomicilio] = useState({
     calle: '',
@@ -88,6 +92,12 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
     setEsAdminSolicitando(targetEmail && targetEmail !== userEmail);
     cargarDatosSocio();
   }, [userEmail, targetEmail, emailSocio]);
+
+  // Resetear selecciones cuando cambia el tipo de PETA
+  useEffect(() => {
+    setModalidadFEMETI(null);
+    setEstadosSeleccionados([]);
+  }, [tipoPETA]);
 
   const cargarDatosSocio = async () => {
     try {
@@ -201,8 +211,20 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
       if (!continuar) return false;
     }
     
-    // Validar estados (solo para competencia/caza)
-    if ((tipoPETA === 'competencia' || tipoPETA === 'caza') && estadosSeleccionados.length === 0) {
+    // Validar modalidad FEMETI y competencias (solo para competencia)
+    if (tipoPETA === 'competencia') {
+      if (!modalidadFEMETI || !modalidadFEMETI.nombre) {
+        showToast('Debes seleccionar una modalidad FEMETI', 'warning', 3000);
+        return false;
+      }
+      if (!modalidadFEMETI.competencias || modalidadFEMETI.competencias.length === 0) {
+        showToast('Debes seleccionar al menos 1 competencia (fecha y club)', 'warning', 3000);
+        return false;
+      }
+    }
+    
+    // Validar estados (solo para caza)
+    if (tipoPETA === 'caza' && estadosSeleccionados.length === 0) {
       showToast('Debes seleccionar al menos 1 estado', 'warning', 3000);
       return false;
     }
@@ -281,7 +303,28 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
         
         // Armas y estados
         armasIncluidas: armasIncluidas,
-        estadosAutorizados: (tipoPETA === 'competencia' || tipoPETA === 'caza') ? estadosSeleccionados : [],
+        estadosAutorizados: tipoPETA === 'competencia' 
+          ? (modalidadFEMETI?.estados || [])
+          : tipoPETA === 'caza' 
+            ? estadosSeleccionados 
+            : [],
+        
+        // Modalidad FEMETI y competencias (solo para competencia nacional)
+        // Según Manual DN27 - debe incluir clubes y periodos específicos
+        modalidadFEMETI: tipoPETA === 'competencia' && modalidadFEMETI ? {
+          nombre: modalidadFEMETI.nombre,
+          tipoArma: modalidadFEMETI.tipo_arma,
+          descripcion: modalidadFEMETI.descripcion,
+          calibres: modalidadFEMETI.calibres,
+          // Competencias seleccionadas con fecha, club y estado (requerido SEDENA)
+          competencias: (modalidadFEMETI.competencias || []).map(c => ({
+            fecha: c.fecha,
+            club: c.club,
+            lugar: c.lugar,
+            estado: c.estado
+          })),
+          estadosCompetencia: modalidadFEMETI.estados || []
+        } : null,
         
         // Información de pago e5cinco esperado
         pagoE5cinco: {
@@ -565,29 +608,34 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
           </div>
         )}
 
-        {/* Estados (solo para competencia/caza) */}
-        {(tipoPETA === 'competencia' || tipoPETA === 'caza') && (
+        {/* Selector de Competencias FEMETI (solo para competencia) */}
+        {tipoPETA === 'competencia' && (
+          <div className="form-section">
+            <SelectorModalidadFEMETI
+              onChange={setModalidadFEMETI}
+              maxCompetencias={10}
+            />
+          </div>
+        )}
+        
+        {tipoPETA === 'caza' && (
           <div className="form-section">
             <h3>Selecciona estados (máximo 10)</h3>
             <p className="help-text">Seleccionaste: {estadosSeleccionados.length}/10</p>
             
-            {/* Botón de estados sugeridos */}
             <div className="estados-sugeridos">
               <button 
                 type="button"
                 className="btn-sugerir"
                 onClick={() => {
-                  const sugeridos = tipoPETA === 'caza' ? ESTADOS_SUGERIDOS_CAZA : ESTADOS_SUGERIDOS_TIRO;
+                  const sugeridos = ESTADOS_SUGERIDOS_CAZA;
                   setEstadosSeleccionados(sugeridos);
                 }}
               >
-                ✨ Usar estados sugeridos para {tipoPETA === 'caza' ? 'Caza (Sureste + UMAs)' : 'Tiro Práctico (FEMETI 2026)'}
+                ✨ Usar estados sugeridos para Caza (Sureste + UMAs)
               </button>
               <p className="sugeridos-info">
-                {tipoPETA === 'caza' 
-                  ? '🦌 Incluye: Yucatán, Campeche, Q. Roo, Tabasco, Chiapas, Veracruz, Tamaulipas, Sonora'
-                  : '🎯 Incluye: Yucatán, Baja California, Coahuila, Edo. Méx, Guanajuato, Hidalgo, Jalisco, Michoacán, SLP, Tabasco'
-                }
+                🦌 Incluye: Yucatán, Campeche, Q. Roo, Tabasco, Chiapas, Veracruz, Tamaulipas, Sonora
               </p>
             </div>
             

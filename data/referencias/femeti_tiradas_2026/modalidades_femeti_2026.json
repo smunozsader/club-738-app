@@ -1,0 +1,167 @@
+{
+  "BLANCOS EN MOVIMIENTO": {
+    "tipo_arma": "Escopeta",
+    "descripcion": "Palomas - Colombaire, Jaula Europea/Americana",
+    "calibres": [
+      "12",
+      "20",
+      "410"
+    ],
+    "estados": [
+      "BAJA CALIFORNIA",
+      "COAHUILA",
+      "GUANAJUATO",
+      "HIDALGO",
+      "JALISCO",
+      "MEXICO",
+      "MICHOACAN",
+      "NUEVO LEON",
+      "QUERETARO",
+      "SAN LUIS POTOSI",
+      "VERACRUZ",
+      "YUCATAN"
+    ],
+    "total_eventos": 421
+  },
+  "RECORRIDOS DE CAZA": {
+    "tipo_arma": "Escopeta",
+    "descripcion": "Discos en recorridos",
+    "calibres": [
+      "12",
+      "20",
+      "410"
+    ],
+    "estados": [
+      "AGUASCALIENTES",
+      "BAJA CALIFORNIA",
+      "CHIAPAS",
+      "COAHUILA",
+      "DURANGO",
+      "GUERRERO",
+      "HIDALGO",
+      "JALISCO",
+      "MEXICO",
+      "MICHOACAN",
+      "NUEVO LEON",
+      "PUEBLA",
+      "QUERETARO",
+      "QUINTANA ROO",
+      "SAN LUIS POTOSI",
+      "SINALOA",
+      "TABASCO",
+      "TAMAULIPAS",
+      "VERACRUZ",
+      "YUCATAN",
+      "ZACATECAS"
+    ],
+    "total_eventos": 465
+  },
+  "TIRO OLIMPICO": {
+    "tipo_arma": "Escopeta",
+    "descripcion": "Skeet, Trap, Fosa Olimpica",
+    "calibres": [
+      "12"
+    ],
+    "estados": [
+      "BAJA CALIFORNIA",
+      "CHIAPAS",
+      "CHIHUAHUA",
+      "COAHUILA",
+      "GUANAJUATO",
+      "GUERRERO",
+      "JALISCO",
+      "MEXICO",
+      "NAYARIT",
+      "NUEVO LEON",
+      "QUERETARO",
+      "SINALOA",
+      "TAMAULIPAS",
+      "ZACATECAS"
+    ],
+    "total_eventos": 451
+  },
+  "SILUETAS METALICAS": {
+    "tipo_arma": "Rifle/Pistola",
+    "descripcion": "Siluetas metalicas",
+    "calibres": [
+      ".22",
+      ".223",
+      "Alto Poder"
+    ],
+    "estados": [
+      "AGUASCALIENTES",
+      "BAJA CALIFORNIA",
+      "BAJA CALIFORNIA SUR",
+      "CHIAPAS",
+      "CHIHUAHUA",
+      "COAHUILA",
+      "DURANGO",
+      "GUANAJUATO",
+      "GUERRERO",
+      "JALISCO",
+      "MEXICO",
+      "MICHOACAN",
+      "NAYARIT",
+      "NUEVO LEON",
+      "OAXACA",
+      "PUEBLA",
+      "QUERETARO",
+      "SAN LUIS POTOSI",
+      "SINALOA",
+      "SONORA",
+      "TABASCO",
+      "TAMAULIPAS",
+      "VERACRUZ",
+      "ZACATECAS"
+    ],
+    "total_eventos": 960
+  },
+  "TIRO PRACTICO": {
+    "tipo_arma": "Multi",
+    "descripcion": "Tiro Practico Mexicano",
+    "calibres": [
+      ".12",
+      ".22",
+      ".38 Spl",
+      ".380",
+      ".223"
+    ],
+    "estados": [
+      "BAJA CALIFORNIA",
+      "CHIAPAS",
+      "COAHUILA",
+      "GUANAJUATO",
+      "GUERRERO",
+      "HIDALGO",
+      "JALISCO",
+      "MEXICO",
+      "MICHOACAN",
+      "MORELOS",
+      "NAYARIT",
+      "NUEVO LEON",
+      "SAN LUIS POTOSI",
+      "SINALOA",
+      "TABASCO",
+      "TAMAULIPAS",
+      "VERACRUZ",
+      "YUCATAN"
+    ],
+    "total_eventos": 618
+  },
+  "TIRO NEUMATICO": {
+    "tipo_arma": "Aire",
+    "descripcion": "Silueta Mexicana, Bench Rest",
+    "calibres": [
+      "4.5",
+      "5.5"
+    ],
+    "estados": [
+      "BAJA CALIFORNIA",
+      "JALISCO",
+      "NUEVO LEON",
+      "SAN LUIS POTOSI",
+      "SONORA"
+    ],
+    "total_eventos": 9
+  }
+}
