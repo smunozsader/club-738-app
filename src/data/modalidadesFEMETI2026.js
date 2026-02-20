@@ -77,7 +77,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 121
       },
-      "MEXICO": {
+      "ESTADO DE MÉXICO": {
         "display": "Estado de México",
         "clubes": [
           {
@@ -109,7 +109,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 50
       },
-      "MICHOACAN": {
+      "MICHOACÁN": {
         "display": "Michoacán",
         "clubes": [
           {
@@ -161,7 +161,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 30
       },
-      "SAN LUIS POTOSI": {
+      "SAN LUIS POTOSÍ": {
         "display": "San Luis Potosí",
         "clubes": [
           {
@@ -185,9 +185,13 @@ export const MODALIDADES_FEMETI_2026 = {
           {
             "club": "Club Asoc. Regiomontana de Caza y Tiro, A.C.",
             "domicilio": "Santa Catarina, N.L."
+          },
+          {
+            "club": "Club Dptvo. de Cazadores Gatos Monteses, A.C.",
+            "domicilio": "Monterrey, N.L."
           }
         ],
-        "totalEventos": 6
+        "totalEventos": 8
       },
       "VERACRUZ": {
         "display": "Veracruz",
@@ -203,7 +207,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 9
       },
-      "QUERETARO": {
+      "QUERÉTARO": {
         "display": "Querétaro",
         "clubes": [
           {
@@ -227,17 +231,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 2
       },
-      "NUEVO LEON": {
-        "display": "Nuevo León",
-        "clubes": [
-          {
-            "club": "Club Dptvo. de Cazadores Gatos Monteses, A.C.",
-            "domicilio": "Monterrey, N.L."
-          }
-        ],
-        "totalEventos": 2
-      },
-      "YUCATAN": {
+      "YUCATÁN": {
         "display": "Yucatán",
         "clubes": [
           {
@@ -248,7 +242,7 @@ export const MODALIDADES_FEMETI_2026 = {
         "totalEventos": 1
       }
     },
-    "totalEstados": 13,
+    "totalEstados": 12,
     "totalEventos": 412
   },
   "RECORRIDOS DE CAZA": {
@@ -311,15 +305,27 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 12
       },
-      "MEXICO": {
+      "ESTADO DE MÉXICO": {
         "display": "Estado de México",
         "clubes": [
+          {
+            "club": "Club Cinegético El Sable, A.C.",
+            "domicilio": "Capulhuac. Mex."
+          },
+          {
+            "club": "Club de Caza, Tiro, Arqueria y Pesca, \"Aguilas de Atlacomulco, A.C.",
+            "domicilio": "Atlacomulco, Méx."
+          },
+          {
+            "club": "Club de Tiro Y Cinegético De Toluca A.C.",
+            "domicilio": "Almoloya de Juárez, Mex."
+          },
           {
             "club": "Club Ferrocarrileros del Valle de México, A.C.",
             "domicilio": "Pueblo San Marcos Tecomaxusco, Ecatzingo Edo. Mex."
           }
         ],
-        "totalEventos": 4
+        "totalEventos": 28
       },
       "GUERRERO": {
         "display": "Guerrero",
@@ -347,16 +353,6 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 100
       },
-      "MÉX": {
-        "display": "Méx",
-        "clubes": [
-          {
-            "club": "Club de Caza, Tiro, Arqueria y Pesca, \"Aguilas de Atlacomulco, A.C.",
-            "domicilio": "Atlacomulco, Méx."
-          }
-        ],
-        "totalEventos": 1
-      },
       "PUEBLA": {
         "display": "Puebla",
         "clubes": [
@@ -367,7 +363,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 24
       },
-      "MICHOACAN": {
+      "MICHOACÁN": {
         "display": "Michoacán",
         "clubes": [
           {
@@ -399,7 +395,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 11
       },
-      "NUEVO LEON": {
+      "NUEVO LEÓN": {
         "display": "Nuevo León",
         "clubes": [
           {
@@ -409,29 +405,31 @@ export const MODALIDADES_FEMETI_2026 = {
           {
             "club": "Club Rifle y Caña de Nuevo Leon, A.C.D.",
             "domicilio": "Garcia, N.L."
-          }
-        ],
-        "totalEventos": 10
-      },
-      "ZACATECAS": {
-        "display": "Zacatecas",
-        "clubes": [
-          {
-            "club": "Club Cinegético Regional Jerezano, A.C. \"PUMAS\"",
-            "domicilio": "Jerez, Zacatecas"
-          }
-        ],
-        "totalEventos": 2
-      },
-      "NUEVO LEÓN": {
-        "display": "Nuevo León",
-        "clubes": [
+          },
           {
             "club": "Club Asoc. Regiomontana de Caza y Tiro, A.C.",
             "domicilio": "Santa Catarina, N.L."
           }
         ],
-        "totalEventos": 5
+        "totalEventos": 15
+      },
+      "ZACATECAS": {
+        "display": "Zacatecas",
+        "clubes": [
+          {
+            "club": "Club Cinegetico Zacatecas de Caza, Tiro y Pesca., A.C.",
+            "domicilio": "Zacatecas, Zac."
+          },
+          {
+            "club": "Club Lobos de Zacatecas, A.C.",
+            "domicilio": "Zacatecas,Zac."
+          },
+          {
+            "club": "Club Cinegético Regional Jerezano, A.C. \"PUMAS\"",
+            "domicilio": "Jerez, Zacatecas"
+          }
+        ],
+        "totalEventos": 7
       },
       "TABASCO": {
         "display": "Tabasco",
@@ -443,8 +441,8 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 1
       },
-      "Q ROO": {
-        "display": "Q Roo",
+      "QUINTANA ROO": {
+        "display": "Quintana Roo",
         "clubes": [
           {
             "club": "Club 78 C. T. y P., A.C.",
@@ -453,15 +451,19 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 6
       },
-      "YUCATAN": {
+      "YUCATÁN": {
         "display": "Yucatán",
         "clubes": [
           {
             "club": "Club Los Conejos de Caza y Tiro A.C.",
             "domicilio": "Baca, Yuc."
+          },
+          {
+            "club": "Club de Caza, Tiro y Pesca de Yucatán A.C.",
+            "domicilio": "Mérida, Yucatán"
           }
         ],
-        "totalEventos": 4
+        "totalEventos": 8
       },
       "TAMAULIPAS": {
         "display": "Tamaulipas",
@@ -473,17 +475,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 3
       },
-      "YUCATÁN": {
-        "display": "Yucatán",
-        "clubes": [
-          {
-            "club": "Club de Caza, Tiro y Pesca de Yucatán A.C.",
-            "domicilio": "Mérida, Yucatán"
-          }
-        ],
-        "totalEventos": 4
-      },
-      "QUERETARO": {
+      "QUERÉTARO": {
         "display": "Querétaro",
         "clubes": [
           {
@@ -521,7 +513,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 3
       },
-      "SAN LUIS POTOSI": {
+      "SAN LUIS POTOSÍ": {
         "display": "San Luis Potosí",
         "clubes": [
           {
@@ -552,7 +544,7 @@ export const MODALIDADES_FEMETI_2026 = {
         "totalEventos": 1
       }
     },
-    "totalEstados": 24,
+    "totalEstados": 21,
     "totalEventos": 465
   },
   "TIRO OLIMPICO": {
@@ -607,6 +599,10 @@ export const MODALIDADES_FEMETI_2026 = {
         "display": "Jalisco",
         "clubes": [
           {
+            "club": "Club Alianza de Cazadores Diana A.C.",
+            "domicilio": "Zapopan, Jal."
+          },
+          {
             "club": "Club Cinegético Jalisciense, A.C. y CODE Jalisco",
             "domicilio": "Zapopan, Jal."
           },
@@ -623,11 +619,23 @@ export const MODALIDADES_FEMETI_2026 = {
             "domicilio": "Ocotlán, Jal."
           }
         ],
-        "totalEventos": 27
+        "totalEventos": 135
       },
       "CHIAPAS": {
         "display": "Chiapas",
         "clubes": [
+          {
+            "club": "Club de Tiro Olimpico Chiapaneco A.C.",
+            "domicilio": "Berriozabal, Chiapas"
+          },
+          {
+            "club": "Club De Tiro Chiapas A.C.",
+            "domicilio": "Tuxtla Gtz.Chis"
+          },
+          {
+            "club": "Club de Tiro Chiapas A.C.",
+            "domicilio": "Tuxtla Gtz.Chis"
+          },
           {
             "club": "Club de Tiro, Caza y Pesca, Jaguar, A.C.",
             "domicilio": "Ocozocoautla de Espinosa, Chis."
@@ -635,23 +643,23 @@ export const MODALIDADES_FEMETI_2026 = {
           {
             "club": "Club de C. T. y P. Hálcones, A.C.",
             "domicilio": "Tuxtla Gutierrez, Chis."
-          },
-          {
-            "club": "Club de Tiro Olimpico Chiapaneco A.C.",
-            "domicilio": "Berriozabal, Chiapas"
           }
         ],
-        "totalEventos": 63
+        "totalEventos": 98
       },
-      "MEXICO": {
+      "ESTADO DE MÉXICO": {
         "display": "Estado de México",
         "clubes": [
+          {
+            "club": "Club Ferrocarrileros del Valle de México, A.C.",
+            "domicilio": "Pueblo San Marcos Tecomaxusco, Ecatzingo Edo. Mex."
+          },
           {
             "club": "Club Cinegético El Sable, A.C.",
             "domicilio": "Capulhuac. Mex."
           }
         ],
-        "totalEventos": 1
+        "totalEventos": 6
       },
       "BAJA CALIFORNIA": {
         "display": "Baja California",
@@ -771,7 +779,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 9
       },
-      "QUERETARO": {
+      "QUERÉTARO": {
         "display": "Querétaro",
         "clubes": [
           {
@@ -823,7 +831,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 6
       },
-      "SAN LUIS POTOSI": {
+      "SAN LUIS POTOSÍ": {
         "display": "San Luis Potosí",
         "clubes": [
           {
@@ -895,21 +903,53 @@ export const MODALIDADES_FEMETI_2026 = {
         "display": "Chiapas",
         "clubes": [
           {
+            "club": "Club de Tiro, Caza y Pesca, Jaguar, A.C.",
+            "domicilio": "Ocozocoautla de Espinosa, Chis."
+          },
+          {
+            "club": "CLUB DE TIRO, CAZA Y PESCA HALCONES A .C.",
+            "domicilio": "TUXTLA GUTIERREZ, CHIAPAS, COL EL JOBO"
+          },
+          {
+            "club": "Club de Tiro Olimpico Chiapaneco A.C.",
+            "domicilio": "Berriozabal, Chiapas"
+          },
+          {
+            "club": "CLUB DE TIRO, CAZA Y PESCA HALCONES A.C.",
+            "domicilio": "TUXTLA GUTIERREZ, CHIAPAS, COL. EL JOBO"
+          },
+          {
+            "club": "Club de T. C. y P. Choyeros, A.C.",
+            "domicilio": "TUXTTLA GUTIERREZ, CHIAPAS, COL. EL JOBO"
+          },
+          {
             "club": "Club De Tiro Chiapas A.C.",
             "domicilio": "Tuxtla Gtz.Chis"
           }
         ],
-        "totalEventos": 7
+        "totalEventos": 62
       },
-      "MÉX": {
-        "display": "Méx",
+      "ESTADO DE MÉXICO": {
+        "display": "Estado de México",
         "clubes": [
           {
             "club": "Club de Caza, Tiro, Arqueria y Pesca, \"Aguilas de Atlacomulco, A.C.",
             "domicilio": "Atlacomulco, Méx."
+          },
+          {
+            "club": "Club de Tiro Y Cinegético De Toluca A.C.",
+            "domicilio": "Almoloya de Juárez, Mex."
+          },
+          {
+            "club": "Club Cinegético El Sable, A.C.",
+            "domicilio": "Capulhuac. Mex."
+          },
+          {
+            "club": "Club Ferrocarrileros del Valle de México, A.C.",
+            "domicilio": "Pueblo San Marcos Tecomaxusco, Ecatzingo Edo. Mex."
           }
         ],
-        "totalEventos": 26
+        "totalEventos": 51
       },
       "GUERRERO": {
         "display": "Guerrero",
@@ -937,16 +977,6 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 55
       },
-      "MEXICO": {
-        "display": "Estado de México",
-        "clubes": [
-          {
-            "club": "Club Ferrocarrileros del Valle de México, A.C.",
-            "domicilio": "Pueblo San Marcos Tecomaxusco, Ecatzingo Edo. Mex."
-          }
-        ],
-        "totalEventos": 4
-      },
       "COAHUILA": {
         "display": "Coahuila",
         "clubes": [
@@ -973,15 +1003,27 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 87
       },
-      "NUEVO LEON": {
+      "NUEVO LEÓN": {
         "display": "Nuevo León",
         "clubes": [
           {
             "club": "Club Rifle y Caña de Nuevo Leon, A.C.D.",
             "domicilio": "Garcia, N.L."
+          },
+          {
+            "club": "Club Asoc. Regiomontana de Caza y Tiro, A.C.",
+            "domicilio": "Santa Catarina, N.L."
+          },
+          {
+            "club": "Club de Caza Tiro y Pesca San Nicolas de los Garza, A.C.  ANIVERSARIO DEL CLUB",
+            "domicilio": "Escobedo, Nuevo León"
+          },
+          {
+            "club": "Club de Caza Tiro y Pesca San Nicolas de los Garza, A.C.",
+            "domicilio": "Escobedo, Nuevo León"
           }
         ],
-        "totalEventos": 6
+        "totalEventos": 28
       },
       "PUEBLA": {
         "display": "Puebla",
@@ -997,11 +1039,15 @@ export const MODALIDADES_FEMETI_2026 = {
         "display": "Veracruz",
         "clubes": [
           {
+            "club": "Club de Caza, Pesca y Tiro Jabatos A.C.",
+            "domicilio": "LAS CHOAPAS, VER."
+          },
+          {
             "club": "Club de Caza, Tiro y Pesca \" La Jauría \" A.C.",
             "domicilio": "Martínez de la Torre, Ver."
           }
         ],
-        "totalEventos": 1
+        "totalEventos": 25
       },
       "SONORA": {
         "display": "Sonora",
@@ -1051,25 +1097,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 65
       },
-      "NUEVO LEÓN": {
-        "display": "Nuevo León",
-        "clubes": [
-          {
-            "club": "Club Asoc. Regiomontana de Caza y Tiro, A.C.",
-            "domicilio": "Santa Catarina, N.L."
-          },
-          {
-            "club": "Club de Caza Tiro y Pesca San Nicolas de los Garza, A.C.  ANIVERSARIO DEL CLUB",
-            "domicilio": "Escobedo, Nuevo León"
-          },
-          {
-            "club": "Club de Caza Tiro y Pesca San Nicolas de los Garza, A.C.",
-            "domicilio": "Escobedo, Nuevo León"
-          }
-        ],
-        "totalEventos": 22
-      },
-      "MICHOACAN": {
+      "MICHOACÁN": {
         "display": "Michoacán",
         "clubes": [
           {
@@ -1167,6 +1195,70 @@ export const MODALIDADES_FEMETI_2026 = {
         "display": "Chihuahua",
         "clubes": [
           {
+            "club": "Club de Caza y Pesca Tiradores del Desierto, A.C.",
+            "domicilio": "Cd. Ahumada, Chihuahua"
+          },
+          {
+            "club": "Club Cazadores y Tiradores de Chihuahua A.C.",
+            "domicilio": "Chihuahua, Chihuahua."
+          },
+          {
+            "club": "Club de Caza y Tiro El Indio, A.C.",
+            "domicilio": "Camargo Chihuahua"
+          },
+          {
+            "club": "Club de Tiradores y Cazadores Cruz Blanca A.C.",
+            "domicilio": "Cd Juarez Chihuahua"
+          },
+          {
+            "club": "Club de C.T. Y P.  S.O.P., A.C.",
+            "domicilio": "Cd, Aldama, Chihuahua."
+          },
+          {
+            "club": "Club de C.T. Y P. del Noroeste, A.C.",
+            "domicilio": "Nvo Casas Grandes , Chih"
+          },
+          {
+            "club": "Club 30-06 Cazadores De Chihuahua “José Seijas Caro”, A. C",
+            "domicilio": "Chihuahua, Chihuahua."
+          },
+          {
+            "club": "Club de C.T. y P. Lobina Negra",
+            "domicilio": "Rosales, Chihuahua"
+          },
+          {
+            "club": "Club C. y T. Noroeste, A.C.",
+            "domicilio": "Nvo Casas Grandes Chih"
+          },
+          {
+            "club": "Club 30-06 Cazadores de Chihuahua “José Seijas Caro”, A. C",
+            "domicilio": "Chihuahua, Chihuahua."
+          },
+          {
+            "club": "Club Cinegético Frisco, A.C.",
+            "domicilio": "Santa Barbara, Chih."
+          },
+          {
+            "club": "Club Cinegetico El Ganso A.C.",
+            "domicilio": "Cuauhtemoc Chihuahua"
+          },
+          {
+            "club": "Club Cinegetico Zorro Plateado",
+            "domicilio": "Sta Barbara Chih"
+          },
+          {
+            "club": "Club de Caza y Pesca Colonia Industrial A.C.",
+            "domicilio": "Chihuahua, Chihuahua."
+          },
+          {
+            "club": "Club de Caza, Tiro y Pesca Paquime, A.C.",
+            "domicilio": "Nvo Casas Grandes , Chihuahua"
+          },
+          {
+            "club": "Club Cinegético de C.T. Y P. de Riva Palacio, A.C.",
+            "domicilio": "Ojo de la llegua , Chihuahua"
+          },
+          {
             "club": "Club de Caza, Tiro  y Pesca El Crustáceo.",
             "domicilio": "Rosales, Chihuahua"
           },
@@ -1179,10 +1271,6 @@ export const MODALIDADES_FEMETI_2026 = {
             "domicilio": "Cuauhtemoc Chihuahua"
           },
           {
-            "club": "Club de Tiradores y Cazadores Cruz Blanca A.C.",
-            "domicilio": "Cd, Juarez, Chih."
-          },
-          {
             "club": "Club Deportivo de Tiro, Caza y Pesca de CD. Juárez.",
             "domicilio": "Juarez, Chihuahua"
           },
@@ -1191,9 +1279,9 @@ export const MODALIDADES_FEMETI_2026 = {
             "domicilio": "Cuauhtemoc Chihuahua"
           }
         ],
-        "totalEventos": 9
+        "totalEventos": 32
       },
-      "QUERETARO": {
+      "QUERÉTARO": {
         "display": "Querétaro",
         "clubes": [
           {
@@ -1215,6 +1303,26 @@ export const MODALIDADES_FEMETI_2026 = {
         "display": "Zacatecas",
         "clubes": [
           {
+            "club": "CLUB CINEGETICO JALPENSE A.C.",
+            "domicilio": "JALPA, ZACATECAS."
+          },
+          {
+            "club": "Club Cinegético Regional Jerezano, A.C. \"PUMAS\"",
+            "domicilio": "Jerez, Zacatecas"
+          },
+          {
+            "club": "Club de Tiradores Y Cazadores Zacatecanos A.C.",
+            "domicilio": "Concepción del Oro , Zac"
+          },
+          {
+            "club": "Club Cinegetico  \"Bala Rasa\" A.C.",
+            "domicilio": "Valparaiso,Zac."
+          },
+          {
+            "club": "Club Cinegético Jalpence, A.C.",
+            "domicilio": "Jalpa, Zac."
+          },
+          {
             "club": "Club Lobos de Zacatecas, A.C.",
             "domicilio": "Zacatecas, Zac."
           },
@@ -1223,17 +1331,29 @@ export const MODALIDADES_FEMETI_2026 = {
             "domicilio": "Zacatecas, Zac."
           }
         ],
-        "totalEventos": 6
+        "totalEventos": 21
       },
       "DURANGO": {
         "display": "Durango",
         "clubes": [
           {
+            "club": "Club Cinegetico Victoria, A.C.",
+            "domicilio": "Guadalupe. Victoria, Dgo"
+          },
+          {
+            "club": "CLUB DE CAZA Y TIRO DE DURANGO, A.C.",
+            "domicilio": "CARR. DURANGO-CD. JUAREZ KM. 6 DURANGO, DGO."
+          },
+          {
+            "club": "Club de Caza y Tiro de Durango A.C.",
+            "domicilio": "Durango Durango"
+          },
+          {
             "club": "Asociacion lagunera de Tiro y Caza A.C.",
             "domicilio": "Gomez palacio, Durango"
           }
         ],
-        "totalEventos": 1
+        "totalEventos": 9
       },
       "OAXACA": {
         "display": "Oaxaca",
@@ -1266,7 +1386,7 @@ export const MODALIDADES_FEMETI_2026 = {
         "totalEventos": 4
       }
     },
-    "totalEstados": 26,
+    "totalEstados": 24,
     "totalEventos": 937
   },
   "TIRO PRACTICO": {
@@ -1347,7 +1467,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 24
       },
-      "SAN LUIS POTOSI": {
+      "SAN LUIS POTOSÍ": {
         "display": "San Luis Potosí",
         "clubes": [
           {
@@ -1413,7 +1533,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 5
       },
-      "MEXICO": {
+      "ESTADO DE MÉXICO": {
         "display": "Estado de México",
         "clubes": [
           {
@@ -1435,7 +1555,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 32
       },
-      "MICHOACAN": {
+      "MICHOACÁN": {
         "display": "Michoacán",
         "clubes": [
           {
@@ -1499,7 +1619,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 25
       },
-      "NUEVO LEON": {
+      "NUEVO LEÓN": {
         "display": "Nuevo León",
         "clubes": [
           {
@@ -1509,9 +1629,13 @@ export const MODALIDADES_FEMETI_2026 = {
           {
             "club": "Club Asoc. Regiomontana de Caza y Tiro, A.C.",
             "domicilio": "Santa Catarina, N.L"
+          },
+          {
+            "club": "Club de Caza Tiro y Pesca San Nicolas de los Garza, A.C.",
+            "domicilio": "Escobedo, Nuevo León"
           }
         ],
-        "totalEventos": 12
+        "totalEventos": 15
       },
       "YUCATÁN": {
         "display": "Yucatán",
@@ -1522,16 +1646,6 @@ export const MODALIDADES_FEMETI_2026 = {
           }
         ],
         "totalEventos": 7
-      },
-      "NUEVO LEÓN": {
-        "display": "Nuevo León",
-        "clubes": [
-          {
-            "club": "Club de Caza Tiro y Pesca San Nicolas de los Garza, A.C.",
-            "domicilio": "Escobedo, Nuevo León"
-          }
-        ],
-        "totalEventos": 3
       },
       "GUANAJUATO": {
         "display": "Guanajuato",
@@ -1544,7 +1658,7 @@ export const MODALIDADES_FEMETI_2026 = {
         "totalEventos": 1
       }
     },
-    "totalEstados": 19,
+    "totalEstados": 18,
     "totalEventos": 615
   },
   "TIRO NEUMATICO": {
@@ -1581,7 +1695,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 1
       },
-      "SAN LUIS POTOSI": {
+      "SAN LUIS POTOSÍ": {
         "display": "San Luis Potosí",
         "clubes": [
           {
@@ -1591,7 +1705,7 @@ export const MODALIDADES_FEMETI_2026 = {
         ],
         "totalEventos": 1
       },
-      "NUEVO LEON": {
+      "NUEVO LEÓN": {
         "display": "Nuevo León",
         "clubes": [
           {

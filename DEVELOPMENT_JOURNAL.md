@@ -10,6 +10,55 @@
 
 ## 📅 Febrero 2026
 
+### 20 de Febrero - v1.37.6 - Normalización CSV FEMETI + Selector Dropdown
+
+#### 🎯 Objetivo
+1. Normalizar nombres de estados en MATRIZ_FEMETI_2026.csv para unificar variantes
+2. Rediseñar selector FEMETI con dropdowns para UX más compacta
+
+#### ✅ Cambios Implementados
+
+**1. Normalización de MATRIZ_FEMETI_2026.csv:**
+Script `scripts/normalizar_estados_csv.py` corrige:
+- MEXICO, MÉX, MÉXICO → ESTADO DE MÉXICO
+- YUCATAN → YUCATÁN
+- NUEVO LEON → NUEVO LEÓN
+- JAL. → JALISCO
+- CHIS. → CHIAPAS
+- CHIH. → CHIHUAHUA
+- VER. → VERACRUZ
+- ZAC. → ZACATECAS
+- HGO. → HIDALGO
+- DGO. → DURANGO
+- Q ROO → QUINTANA ROO
+
+**2. Nuevo diseño SelectorEstadosFEMETI (v2 Dropdowns):**
+- Dropdown "Agregar Estado" en lugar de grid de checkboxes
+- Multi-select de modalidades por estado (ej: Edo. Mex → Tiro Práctico + Recorridos + Blancos)
+- Tags visuales de modalidades seleccionadas
+- Preview compacto en acordeón (details/summary)
+- Búsqueda en tiempo real dentro del dropdown
+
+**3. Clubes corregidos:**
+- Yucatán ahora incluye: Club Los Conejos + Club 738
+- Estado de México: Toluca, El Sable, Águilas Atlacomulco, Ferrocarrileros
+
+**4. Regeneración modalidadesFEMETI2026.js:**
+- Script actualizado `scripts/generate_femeti_js.py`
+- Estados con acentos correctos
+- 29 estados únicos normalizados
+
+#### 📊 Resumen Estados Normalizados
+```
+29 estados únicos (antes había duplicados por variantes de nombre)
+6 modalidades: BLANCOS, RECORRIDOS, TIRO OLÍMPICO, SILUETAS, TIRO PRÁCTICO, NEUMÁTICO
+```
+
+#### 🚀 Deploy
+- v1.37.6 desplegada a https://yucatanctp.org
+
+---
+
 ### 19 de Febrero - v1.37.5 - Selector FEMETI Simplificado (Modalidad + Estados)
 
 #### 🎯 Objetivo
