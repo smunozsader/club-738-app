@@ -10,6 +10,20 @@
 
 ## 📅 Febrero 2026
 
+### 20 de Febrero - Organización docs: Archivar Google Calendar
+
+#### 🎯 Objetivo
+Mover documentos de funcionalidad obsoleta (Google Calendar) a carpeta histórica.
+
+#### ✅ Archivos movidos a `docs/archive/google-calendar-historico/`
+- GOOGLE_CALENDAR_SETUP.md
+- GOOGLE_CALENDAR_FLUJO_VISUAL.md
+- GOOGLE_CALENDAR_TEST_GUIDE.md
+- CITAS_RESUMEN.md
+- README.md (nuevo, explica motivo de archivado)
+
+---
+
 ### 20 de Febrero - v1.37.6 - Normalización CSV FEMETI + Selector Dropdown
 
 #### 🎯 Objetivo
