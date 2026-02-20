@@ -34,13 +34,20 @@ service cloud.firestore {
     }
     
     // Verificar si es el Secretario (tiene permisos de lectura de todos los socios)
+    // smunozam@gmail.com = Secretario del Club (Sergio Muñoz de Alba Medrano)
     function isSecretario() {
-      return isAuthenticated() && request.auth.token.email == 'admin@club738.com';
+      return isAuthenticated() && (
+        request.auth.token.email == 'admin@club738.com' ||
+        request.auth.token.email == 'smunozam@gmail.com'
+      );
     }
     
     // Verificar si es el Administrador (permisos completos de edición)
     function isAdmin() {
-      return isAuthenticated() && request.auth.token.email == 'admin@club738.com';
+      return isAuthenticated() && (
+        request.auth.token.email == 'admin@club738.com' ||
+        request.auth.token.email == 'smunozam@gmail.com'
+      );
     }
     
     // Verificar si es Secretario O Administrador (ambos tienen permisos administrativos)

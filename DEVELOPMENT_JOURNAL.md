@@ -10,6 +10,27 @@
 
 ## 📅 Febrero 2026
 
+### 20 de Febrero - Fix: Permisos Firestore para Secretario
+
+#### 🎯 Problema
+Las solicitudes PETA no aparecían en el panel de administración para `smunozam@gmail.com`, aunque existían en Firestore.
+
+#### 🔍 Diagnóstico
+- Los PETAs existen en Firestore (`smunozam@gmail.com` tiene 2 PETAs)
+- UI mostraba panel admin (porque `usuarios/{email}.role = 'administrator'`)
+- PERO las reglas de Firestore solo permitían acceso a `admin@club738.com`
+- Resultado: Query silenciosamente rechazada → lista vacía
+
+#### ✅ Solución
+Actualizar `firestore.rules`:
+- `isSecretario()` → Agregar `smunozam@gmail.com` como secretario
+- `isAdmin()` → Agregar `smunozam@gmail.com` como admin
+
+#### 📁 Archivos modificados
+- `firestore.rules` - Funciones `isSecretario()` e `isAdmin()`
+
+---
+
 ### 20 de Febrero - Organización docs: Archivar Google Calendar
 
 #### 🎯 Objetivo
