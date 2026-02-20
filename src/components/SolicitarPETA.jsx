@@ -12,7 +12,7 @@ import { db } from '../firebaseConfig';
 import { useToastContext } from '../contexts/ToastContext';
 import { calcularMontoE5cinco, obtenerInfoPagoCompleta } from '../utils/pagosE5cinco';
 import { getCartuchosPorDefecto } from '../utils/limitesCartuchos';
-import SelectorModalidadFEMETI from './SelectorModalidadFEMETI';
+import SelectorEstadosFEMETI from './SelectorEstadosFEMETI';
 import './SolicitarPETA.css';
 
 const ESTADOS_MEXICO = [
@@ -211,14 +211,14 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
       if (!continuar) return false;
     }
     
-    // Validar modalidad FEMETI y competencias (solo para competencia)
+    // Validar modalidad FEMETI y estados (solo para competencia)
     if (tipoPETA === 'competencia') {
-      if (!modalidadFEMETI || !modalidadFEMETI.nombre) {
+      if (!modalidadFEMETI || !modalidadFEMETI.modalidad) {
         showToast('Debes seleccionar una modalidad FEMETI', 'warning', 3000);
         return false;
       }
-      if (!modalidadFEMETI.competencias || modalidadFEMETI.competencias.length === 0) {
-        showToast('Debes seleccionar al menos 1 competencia (fecha y club)', 'warning', 3000);
+      if (!modalidadFEMETI.estadosSeleccionados || modalidadFEMETI.estadosSeleccionados.length === 0) {
+        showToast('Debes seleccionar al menos 1 estado donde competirás', 'warning', 3000);
         return false;
       }
     }
@@ -304,26 +304,25 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
         // Armas y estados
         armasIncluidas: armasIncluidas,
         estadosAutorizados: tipoPETA === 'competencia' 
-          ? (modalidadFEMETI?.estados || [])
+          ? (modalidadFEMETI?.estadosSeleccionados || [])
           : tipoPETA === 'caza' 
             ? estadosSeleccionados 
             : [],
         
-        // Modalidad FEMETI y competencias (solo para competencia nacional)
-        // Según Manual DN27 - debe incluir clubes y periodos específicos
+        // Modalidad FEMETI con clubes por estado (nuevo formato simplificado)
+        // El socio selecciona MODALIDAD + ESTADOS y el sistema incluye TODOS los clubes
         modalidadFEMETI: tipoPETA === 'competencia' && modalidadFEMETI ? {
-          nombre: modalidadFEMETI.nombre,
-          tipoArma: modalidadFEMETI.tipo_arma,
-          descripcion: modalidadFEMETI.descripcion,
+          nombre: modalidadFEMETI.modalidad,
+          tipoArma: modalidadFEMETI.tipoArma,
           calibres: modalidadFEMETI.calibres,
-          // Competencias seleccionadas con fecha, club y estado (requerido SEDENA)
-          competencias: (modalidadFEMETI.competencias || []).map(c => ({
-            fecha: c.fecha,
-            club: c.club,
-            lugar: c.lugar,
-            estado: c.estado
-          })),
-          estadosCompetencia: modalidadFEMETI.estados || []
+          estadosSeleccionados: modalidadFEMETI.estadosSeleccionados || [],
+          totalClubes: modalidadFEMETI.totalClubes || 0,
+          temporalidad: modalidadFEMETI.temporalidad || null,
+          // Clubes agrupados por estado (para referencia)
+          clubesPorEstado: (modalidadFEMETI.clubesPreview || []).map(e => ({
+            estado: e.estado,
+            clubes: e.clubes.map(c => ({ club: c.club, domicilio: c.domicilio }))
+          }))
         } : null,
         
         // Información de pago e5cinco esperado
@@ -608,12 +607,13 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
           </div>
         )}
 
-        {/* Selector de Competencias FEMETI (solo para competencia) */}
+        {/* Selector de Modalidad y Estados FEMETI (solo para competencia) */}
         {tipoPETA === 'competencia' && (
           <div className="form-section">
-            <SelectorModalidadFEMETI
+            <SelectorEstadosFEMETI
               onChange={setModalidadFEMETI}
-              maxCompetencias={10}
+              fechaSolicitud={new Date().toISOString().split('T')[0]}
+              maxEstados={10}
             />
           </div>
         )}

@@ -12,7 +12,8 @@ import { db } from '../firebaseConfig';
 import { useToastContext } from '../contexts/ToastContext';
 import { jsPDF } from 'jspdf';
 import { getLimitesCartuchos, ajustarCartuchos, getCartuchosPorDefecto } from '../utils/limitesCartuchos';
-import SelectorModalidadFEMETI from './SelectorModalidadFEMETI';
+import { generarMatrizClubesPDF, calcularTemporalidad, MODALIDADES_FEMETI_2026 } from '../data/modalidadesFEMETI2026';
+import SelectorEstadosFEMETI from './SelectorEstadosFEMETI';
 import './GeneradorPETA.css';
 
 // Datos constantes del Club
@@ -113,6 +114,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   const [estadosSeleccionados, setEstadosSeleccionados] = useState(['Yucatán']);
   
   // Modalidad y competencias FEMETI (solo para competencia nacional - requerido DN27)
+  // Nuevo formato: { modalidad, tipoArma, calibres, estadosSeleccionados, clubesPreview, totalClubes, temporalidad }
   const [modalidadFEMETI, setModalidadFEMETI] = useState(null);
   
   // Buscar socio
@@ -453,10 +455,10 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       return;
     }
 
-    // Para competencia, validar que tenga competencias FEMETI O estados
+    // Para competencia, validar que tenga modalidad y estados seleccionados
     if (tipoPETA === 'competencia') {
-      if (!modalidadFEMETI?.competencias?.length && estadosSeleccionados.length === 0) {
-        showToast('Selecciona competencias FEMETI o al menos un estado', 'warning', 3000);
+      if (!modalidadFEMETI?.modalidad || !modalidadFEMETI?.estadosSeleccionados?.length) {
+        showToast('Selecciona una modalidad FEMETI y al menos un estado', 'warning', 3000);
         return;
       }
     } else if (tipoPETA === 'caza' && estadosSeleccionados.length === 0) {
@@ -655,45 +657,141 @@ export default function GeneradorPETA({ userEmail, onBack }) {
           y += 5;
         });
       } else if (tipoPETA === 'competencia') {
-        doc.setFont('helvetica', 'bold');
-        doc.text('POR SER DE PETA DE COMPETENCIA NACIONAL SE SOLICITAN LOS SIGUIENTES ESTADOS (MÁXIMO 10)', margin, y);
-        y += 6;
-        doc.setFont('helvetica', 'normal');
+        // ========== MATRIZ FORMATO RFA-LC-017 (DEFENSA-02-045) ==========
+        // Aplica a TODAS las modalidades FEMETI (Tiro Práctico, Recorridos de Caza, etc.)
         
-        // Si hay competencias FEMETI seleccionadas, mostrar detalles completos (DN27)
-        if (modalidadFEMETI?.competencias?.length > 0) {
-          // Modalidad y tipo de arma
-          doc.setFont('helvetica', 'bold');
-          doc.text(`MODALIDAD: ${modalidadFEMETI.nombre || 'No especificada'}`, margin, y);
-          y += 5;
-          doc.setFont('helvetica', 'normal');
+        if (modalidadFEMETI?.modalidad && modalidadFEMETI?.estadosSeleccionados?.length > 0) {
+          // Generar matriz de clubes para la modalidad seleccionada
+          const matrizResultado = generarMatrizClubesPDF(
+            modalidadFEMETI.modalidad,
+            modalidadFEMETI.estadosSeleccionados,
+            fechaOficio || new Date().toISOString().split('T')[0]
+          );
           
-          // Estados donde participa
-          const estadosLinea = estadosSeleccionados.join(', ');
-          doc.text(`ESTADOS: ${estadosLinea}`, margin, y);
-          y += 6;
-          
-          // Clubes y periodo de competencias (requerimiento DN27)
-          doc.setFont('helvetica', 'bold');
-          doc.text('CLUBES Y PERIODO DONDE PARTICIPARÁ:', margin, y);
-          y += 5;
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(8);
-          
-          modalidadFEMETI.competencias.slice(0, 10).forEach((comp, idx) => {
-            const fechaFormateada = comp.fecha 
-              ? new Date(comp.fecha).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })
-              : 'Sin fecha';
-            const lineaComp = `${idx + 1}. ${fechaFormateada} - ${comp.club || 'Club'} (${comp.estado || comp.lugar || ''})`;
-            const lineasComp = doc.splitTextToSize(lineaComp, pageWidth - margin * 2);
-            lineasComp.forEach(linea => {
-              doc.text(linea, margin, y);
-              y += 3.5;
+          if (matrizResultado && matrizResultado.filas.length > 0) {
+            doc.setFont('helvetica', 'bold');
+            doc.text('POR SER DE PETA DE COMPETENCIA NACIONAL SE SOLICITAN LOS SIGUIENTES DESTINOS:', margin, y);
+            y += 6;
+            
+            // Información de modalidad
+            doc.setFontSize(9);
+            doc.text(`MODALIDAD: ${matrizResultado.modalidad}`, margin, y);
+            y += 5;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            doc.text(`Tipo de arma: ${matrizResultado.tipoArma}`, margin, y);
+            y += 4;
+            doc.text(`Calibres: ${matrizResultado.calibres}`, margin, y);
+            y += 6;
+            
+            // Frase del período (requerida por usuario)
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(8);
+            doc.text(`Tiradas Registradas en el Calendario FEMETI período: ${matrizResultado.temporalidad.textoCompleto}`, margin, y);
+            y += 6;
+            doc.setFont('helvetica', 'normal');
+            
+            // Función para dibujar encabezado de tabla
+            const dibujarEncabezadoTabla = (yPos) => {
+              doc.setFont('helvetica', 'bold');
+              doc.setFontSize(7);
+              const colWidthsM = [8, 35, 55, 35, 45]; // #, Estado, Club, Temporalidad, Domicilio
+              const headersM = ['#', 'ESTADO', 'CLUB', 'TEMPORALIDAD', 'DOMICILIO'];
+              
+              let xPos = margin;
+              // Línea superior
+              doc.setLineWidth(0.3);
+              doc.line(margin, yPos - 1, pageWidth - margin, yPos - 1);
+              
+              headersM.forEach((header, i) => {
+                doc.text(header, xPos + 1, yPos + 2);
+                xPos += colWidthsM[i];
+              });
+              
+              // Línea separadora
+              doc.line(margin, yPos + 4, pageWidth - margin, yPos + 4);
+              
+              return yPos + 6;
+            };
+            
+            y = dibujarEncabezadoTabla(y);
+            
+            // Filas de la matriz
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(6.5);
+            const colWidthsM = [8, 35, 55, 35, 45];
+            const filaAltura = 4;
+            const margenInferior = 40; // Espacio para firma
+            
+            matrizResultado.filas.forEach((fila, idx) => {
+              // Verificar si necesitamos nueva página
+              if (y > (pageHeight - margenInferior)) {
+                // Línea de cierre antes de nueva página
+                doc.setLineWidth(0.3);
+                doc.line(margin, y - 1, pageWidth - margin, y - 1);
+                
+                // Nueva página
+                doc.addPage();
+                y = margin + 10;
+                
+                // Encabezado de continuación
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(9);
+                doc.text(`CONTINUACIÓN - ${matrizResultado.modalidad}`, margin, y);
+                y += 6;
+                doc.text(`Tiradas FEMETI período: ${matrizResultado.temporalidad.textoCompleto}`, margin, y);
+                y += 6;
+                
+                // Re-dibujar encabezado de tabla
+                y = dibujarEncabezadoTabla(y);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(6.5);
+              }
+              
+              let xPos = margin;
+              
+              // Número de fila
+              doc.text(String(fila.numero), xPos + 2, y + 2);
+              xPos += colWidthsM[0];
+              
+              // Estado
+              doc.text((fila.estado || '').substring(0, 18).toUpperCase(), xPos + 1, y + 2);
+              xPos += colWidthsM[1];
+              
+              // Club (truncar si es muy largo)
+              doc.text((fila.club || '').substring(0, 32), xPos + 1, y + 2);
+              xPos += colWidthsM[2];
+              
+              // Temporalidad
+              doc.text((fila.temporalidad || '').substring(0, 18), xPos + 1, y + 2);
+              xPos += colWidthsM[3];
+              
+              // Domicilio
+              doc.text((fila.domicilio || '').substring(0, 25), xPos + 1, y + 2);
+              
+              y += filaAltura;
             });
-          });
-          doc.setFontSize(9);
+            
+            // Línea inferior tabla
+            doc.setLineWidth(0.3);
+            doc.line(margin, y - 1, pageWidth - margin, y - 1);
+            
+            y += 3;
+            doc.setFontSize(9);
+            
+            // Nota de total de clubes
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(7);
+            doc.text(`Total: ${matrizResultado.totalClubes} clubes en ${modalidadFEMETI.estadosSeleccionados.length} estados`, margin, y);
+            y += 5;
+            doc.setFontSize(9);
+          }
         } else {
-          // Fallback: solo estados (sin competencias específicas)
+          // Fallback: solo estados (sin modalidad específica)
+          doc.setFont('helvetica', 'bold');
+          doc.text('POR SER DE PETA DE COMPETENCIA NACIONAL SE SOLICITAN LOS SIGUIENTES ESTADOS (MÁXIMO 10)', margin, y);
+          y += 6;
+          doc.setFont('helvetica', 'normal');
           const estadosLinea = estadosSeleccionados.join(', ');
           const lineasEstados = doc.splitTextToSize(estadosLinea, pageWidth - margin * 2);
           lineasEstados.forEach(linea => {
@@ -1156,20 +1254,21 @@ export default function GeneradorPETA({ userEmail, onBack }) {
         {/* Paso 6: Competencias FEMETI (solo para competencia nacional) */}
         {socioSeleccionado && tipoPETA === 'competencia' && (
           <div className="peta-section">
-            <h3>6. Competencias FEMETI 2026 (requerido DN27)</h3>
+            <h3>6. Modalidad y Estados FEMETI 2026 (requerido DN27)</h3>
             <p className="seleccion-info" style={{ marginBottom: '15px', color: '#f59e0b' }}>
-              ⚠️ SEDENA requiere indicar clubes y periodo de las competencias (máximo 10)
+              ⚠️ Selecciona modalidad y estados. Se incluirán automáticamente TODOS los clubes de esa modalidad en cada estado.
             </p>
             
-            <SelectorModalidadFEMETI
+            <SelectorEstadosFEMETI
               onChange={(data) => {
                 setModalidadFEMETI(data);
                 // También actualizar estadosSeleccionados para compatibilidad
-                if (data?.estados) {
-                  setEstadosSeleccionados(data.estados);
+                if (data?.estadosSeleccionados) {
+                  setEstadosSeleccionados(data.estadosSeleccionados);
                 }
               }}
-              maxCompetencias={10}
+              fechaSolicitud={fechaOficio || new Date().toISOString().split('T')[0]}
+              maxEstados={10}
             />
           </div>
         )}

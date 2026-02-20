@@ -10,6 +10,69 @@
 
 ## 📅 Febrero 2026
 
+### 19 de Febrero - v1.37.5 - Selector FEMETI Simplificado (Modalidad + Estados)
+
+#### 🎯 Objetivo
+Simplificar el flujo de selección de competencias FEMETI: en lugar de seleccionar competencias individuales, el usuario selecciona MODALIDAD + ESTADOS y el sistema auto-incluye TODOS los clubes de esa modalidad en cada estado.
+
+#### ✅ Cambios Implementados
+
+**1. Nuevo archivo de datos `src/data/modalidadesFEMETI2026.js`:**
+- 6 modalidades con todos los clubes por estado
+- Función `generarMatrizClubesPDF()` para generar tabla RFA-LC-017
+- Función `calcularTemporalidad()` → "X DE MES - 31 DE DICIEMBRE 2026"
+
+**2. Nuevo componente `SelectorEstadosFEMETI.jsx`:**
+- Grid de modalidades (Tiro Práctico, Recorridos de Caza, etc.)
+- Checkboxes para seleccionar estados (máx 10)
+- Preview automático de TODOS los clubes incluidos
+- Frase de período: "Tiradas Registradas en el Calendario FEMETI período: X - 31 DIC 2026"
+
+**3. Actualizado `GeneradorPETA.jsx`:**
+- Genera matriz formato RFA-LC-017 (DEFENSA-02-045)
+- Soporte para múltiples páginas si hay muchos clubes
+- Aplica a TODAS las modalidades (no solo Tiro Práctico)
+
+**4. Actualizado `SolicitarPETA.jsx`:**
+- Usa el nuevo selector simplificado
+- Mismo flujo para socios y admin
+
+**5. Eliminadas Cloud Functions de calendario/agenda:**
+- `crearEventoCalendar` ❌
+- `actualizarEventoCalendar` ❌
+- `onCitaCreated` ❌
+- `onCitaUpdated` ❌
+
+**6. Limpieza de Firestore:**
+- Eliminados 10 PETAs de prueba
+- 0 citas encontradas
+
+#### 📊 Datos FEMETI 2026
+| Modalidad | Estados | Clubes |
+|-----------|---------|--------|
+| Tiro Práctico | 19 | 39 |
+| Recorridos de Caza | 24 | 38 |
+| Tiro Olímpico | 15 | 38 |
+| Blancos en Movimiento | 13 | 33 |
+| Siluetas Metálicas | 26 | 75 |
+| Tiro Neumático | 5 | 5 |
+
+#### 📁 Archivos Modificados
+- `src/data/modalidadesFEMETI2026.js` (nuevo)
+- `src/components/SelectorEstadosFEMETI.jsx` (nuevo)
+- `src/components/SelectorEstadosFEMETI.css` (nuevo)
+- `src/components/GeneradorPETA.jsx`
+- `src/components/SolicitarPETA.jsx`
+- `scripts/generate_femeti_js.py` (nuevo)
+- `scripts/limpiar_petas_citas.js` (nuevo)
+
+#### 🚀 Deploy
+- Build: ✅
+- Firebase Hosting: ✅
+- Cloud Functions eliminadas: ✅
+
+---
+
 ### 19 de Febrero - v1.37.4 - Selector de Competencias FEMETI con Fechas y Clubes
 
 #### 🎯 Objetivo

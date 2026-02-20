@@ -1,0 +1,411 @@
+/**
+ * SelectorEstadosFEMETI.css - Estilos para selector de modalidad/estados FEMETI
+ * Usa CSS variables para dark mode (ver color-theory-wcag.css)
+ */
+
+.selector-estados-femeti {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid var(--border-color);
+}
+
+.selector-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.selector-header h4 {
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  font-size: 1.3rem;
+}
+
+.selector-subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.selector-subtitle strong {
+  color: var(--info);
+}
+
+/* Grid de modalidades */
+.modalidades-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.modalidad-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 12px;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modalidad-card:hover {
+  border-color: var(--info);
+  background: var(--bg-primary);
+}
+
+.modalidad-card.selected {
+  border-color: var(--success);
+  background: var(--success-bg, rgba(34, 197, 94, 0.1));
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.modalidad-icono {
+  font-size: 1.8rem;
+}
+
+.modalidad-nombre {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.modalidad-arma {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.modalidad-estados {
+  font-size: 0.7rem;
+  color: var(--info);
+  font-weight: 500;
+}
+
+/* Panel de estados */
+.estados-panel {
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border-color);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.panel-info h5 {
+  margin: 0 0 4px 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.panel-calibres {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.panel-contador {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--bg-primary);
+  border-radius: 8px;
+}
+
+.contador {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--success);
+}
+
+.contador.limite {
+  color: var(--warning);
+}
+
+.contador-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Acciones de estados */
+.estados-acciones {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.btn-seleccionar-todos,
+.btn-limpiar {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-seleccionar-todos {
+  background: var(--success);
+  color: white;
+  border: none;
+}
+
+.btn-seleccionar-todos:hover:not(:disabled) {
+  background: var(--success-dark, #16a34a);
+}
+
+.btn-seleccionar-todos:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-limpiar {
+  background: transparent;
+  color: var(--error);
+  border: 1px solid var(--error);
+}
+
+.btn-limpiar:hover {
+  background: var(--error);
+  color: white;
+}
+
+/* Grid de estados con checkboxes */
+.estados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.estado-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.estado-item:hover:not(.disabled) {
+  border-color: var(--info);
+  background: var(--bg-secondary);
+}
+
+.estado-item.selected {
+  border-color: var(--success);
+  background: var(--success-bg, rgba(34, 197, 94, 0.1));
+}
+
+.estado-item.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.estado-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--success);
+  cursor: pointer;
+}
+
+.estado-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.estado-nombre {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.estado-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Preview de clubes */
+.clubes-preview {
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--success);
+  border-left: 4px solid var(--success);
+}
+
+.preview-header {
+  margin-bottom: 16px;
+}
+
+.preview-header h5 {
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.preview-temporalidad {
+  margin: 0;
+  padding: 10px;
+  background: var(--info-bg, rgba(59, 130, 246, 0.1));
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.temporalidad-fechas {
+  display: block;
+  margin-top: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--info);
+}
+
+.preview-estados {
+  display: grid;
+  gap: 16px;
+}
+
+.preview-estado {
+  padding: 12px;
+  background: var(--bg-primary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.preview-estado h6 {
+  margin: 0 0 10px 0;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.preview-clubes-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview-clubes-lista li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.club-nombre {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.club-domicilio {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.preview-nota {
+  margin: 16px 0 0 0;
+  padding: 10px;
+  background: var(--warning-bg, rgba(245, 158, 11, 0.1));
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Link FEMETI */
+.femeti-link {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.femeti-link a {
+  color: var(--info);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.femeti-link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .selector-estados-femeti {
+    padding: 16px;
+  }
+  
+  .modalidades-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  
+  .modalidad-card {
+    padding: 12px 8px;
+  }
+  
+  .modalidad-icono {
+    font-size: 1.5rem;
+  }
+  
+  .modalidad-nombre {
+    font-size: 0.7rem;
+  }
+  
+  .estados-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .panel-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .panel-contador {
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modalidades-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .estados-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .estados-acciones {
+    flex-direction: column;
+  }
+  
+  .btn-seleccionar-todos,
+  .btn-limpiar {
+    width: 100%;
+  }
+}
