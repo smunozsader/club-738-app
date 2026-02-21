@@ -10,6 +10,45 @@
 
 ## 📅 Febrero 2026
 
+### 21 de Febrero - v1.37.7 - GeneradorPETA formato DN27 SEDENA-02-045
+
+#### 🎯 Objetivo
+Actualizar el módulo GeneradorPETA para cumplir con el formato oficial DN27 SEDENA-02-045 / RFA-LC-017.
+
+#### ✅ Cambios Implementados
+
+**PDF generado ahora incluye:**
+- Códigos `SEDENA-02-045` / `RFA-LC-017` en encabezado
+- Secciones A-I con formato oficial DN27
+- **Sección B**: No. Expediente, Número ext/int, Correo electrónico
+- **Sección F** (solo caza): Lista de hasta 10 estados
+- **Sección G** (solo tiro): Campo del Club 738 + opción club invitado con oficio
+- **Sección H** (solo competencia): Clubes FEMETI con periodo, estado y domicilio
+- **Sección I**: Lugar, fecha y firma con formato oficial
+
+**Formulario UI actualizado:**
+- Campos DN27: No. Expediente, No. Ext/Int, Municipio, Correo electrónico
+- Para Tiro: Nueva sección con opción de agregar club invitado
+- Solo se muestra la sección correspondiente al tipo seleccionado (F, G o H)
+
+**Lógica de fechas corregida:**
+- Inicio: Mínimo 15 días después de fecha del oficio (DN27)
+- Caza: Jul-Dic → 30 Jun siguiente | Ene-Jun → 30 Jun mismo año
+- Tiro/Competencia: Hasta 31 Dic del año del inicio
+
+**Módulo SolicitarPETA desactivado para socios:**
+- Solo el administrador puede generar PETAs a través de GeneradorPETA
+
+#### 📁 Archivos modificados
+- `src/components/GeneradorPETA.jsx` - Reescritura de `generarPDF()` y formulario UI
+- `src/components/SolicitarPETA.jsx` - Corrección lógica de fechas
+- `src/App.jsx` - Desactivación de SolicitarPETA para socios
+
+#### 🧹 Limpieza Firebase
+- Eliminados 2 PETAs de prueba de `smunozam@gmail.com`
+
+---
+
 ### 20 de Febrero - Fix: Permisos Firestore para Secretario
 
 #### 🎯 Problema

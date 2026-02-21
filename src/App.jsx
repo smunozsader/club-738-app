@@ -775,7 +775,7 @@ function App() {
             </button>
             <MisPETAs 
               userEmail={user.email}
-              onNuevoPETA={() => setActiveSection('solicitar-peta')}
+              /* SolicitarPETA desactivado - usar GeneradorPETA del admin */
               onBack={() => setActiveSection('dashboard')}
             />
           </div>
@@ -787,6 +787,7 @@ function App() {
           </div>
         )}
 
+        {/* SolicitarPETA desactivado para socios - usar GeneradorPETA del admin
         {activeSection === 'solicitar-peta' && (
           <div className="section-solicitar-peta">
             <button className="btn-back" onClick={() => setActiveSection('mis-petas')}>
@@ -798,6 +799,7 @@ function App() {
             />
           </div>
         )}
+        */}
 
         {activeSection === 'privacidad' && (
           <div className="section-privacidad">

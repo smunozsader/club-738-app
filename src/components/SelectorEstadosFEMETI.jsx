@@ -1,421 +1,453 @@
 /**
- * SelectorEstadosFEMETI v2 - Selector con Dropdowns para PETA
+ * SelectorEstadosFEMETI - Selector FEMETI con UI mejorada
  * 
- * Flujo mejorado con dropdowns:
- * 1. Usuario selecciona ESTADO desde dropdown
- * 2. Para ese estado, selecciona MODALIDADES (multi-select)
- * 3. Sistema auto-incluye TODOS los clubes de cada combinación estado+modalidad
+ * Flujo: DROPDOWN Estado → CHECKBOXES Modalidades → AUTO-POBLADO Clubes
  * 
- * Ejemplo: Estado de México con Tiro Práctico + Recorridos de Caza + Blancos
+ * Permite seleccionar múltiples modalidades por estado
+ * y auto-pobla los clubes/fechas correspondientes
  */
-import { useState, useEffect, useMemo } from 'react';
-import { 
-  MODALIDADES_FEMETI_2026, 
-  LISTA_MODALIDADES,
-  calcularTemporalidad 
-} from '../data/modalidadesFEMETI2026';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import './SelectorEstadosFEMETI.css';
 
-// Obtener todos los estados únicos de todas las modalidades
-const obtenerTodosLosEstados = () => {
-  const estadosMap = new Map();
+// Importar datos de competencias FEMETI 2026
+import COMPETENCIAS_FEMETI from '../../data/referencias/femeti_tiradas_2026/competencias_femeti_2026.json';
+
+// Normalizar nombre de estado para mostrar con acentos
+const normalizarEstadoDisplay = (estado) => {
+  const mapeo = {
+    'AGUASCALIENTES': 'Aguascalientes',
+    'BAJA CALIFORNIA': 'Baja California',
+    'BAJA CALIFORNIA SUR': 'Baja California Sur',
+    'CAMPECHE': 'Campeche',
+    'CHIAPAS': 'Chiapas',
+    'CHIHUAHUA': 'Chihuahua',
+    'CIUDAD DE MEXICO': 'Ciudad de México',
+    'COAHUILA': 'Coahuila',
+    'COLIMA': 'Colima',
+    'DURANGO': 'Durango',
+    'DGO.': 'Durango',
+    'ESTADO DE MEXICO': 'Estado de México',
+    'GUANAJUATO': 'Guanajuato',
+    'GUERRERO': 'Guerrero',
+    'HIDALGO': 'Hidalgo',
+    'HGO.': 'Hidalgo',
+    'JALISCO': 'Jalisco',
+    'MICHOACAN': 'Michoacán',
+    'MORELOS': 'Morelos',
+    'NAYARIT': 'Nayarit',
+    'NUEVO LEON': 'Nuevo León',
+    'OAXACA': 'Oaxaca',
+    'PUEBLA': 'Puebla',
+    'QUERETARO': 'Querétaro',
+    'QUINTANA ROO': 'Quintana Roo',
+    'Q ROO': 'Quintana Roo',
+    'SAN LUIS POTOSI': 'San Luis Potosí',
+    'SINALOA': 'Sinaloa',
+    'SONORA': 'Sonora',
+    'TABASCO': 'Tabasco',
+    'TAMAULIPAS': 'Tamaulipas',
+    'TLAXCALA': 'Tlaxcala',
+    'VERACRUZ': 'Veracruz',
+    'VER.': 'Veracruz',
+    'YUCATAN': 'Yucatán',
+    'ZACATECAS': 'Zacatecas',
+    'ZAC.': 'Zacatecas'
+  };
+  const upper = estado.toUpperCase();
+  return mapeo[upper] || estado.charAt(0).toUpperCase() + estado.slice(1).toLowerCase();
+};
+
+// Formatear fecha para mostrar
+const formatearFecha = (fechaISO) => {
+  if (!fechaISO) return '';
+  try {
+    const fecha = new Date(fechaISO + 'T12:00:00');
+    return fecha.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+  } catch {
+    return fechaISO;
+  }
+};
+
+// Iconos por modalidad
+const ICONOS_MODALIDAD = {
+  'BLANCOS EN MOVIMIENTO': '🕊️',
+  'RECORRIDOS DE CAZA': '🎯',
+  'TIRO OLIMPICO': '🏅',
+  'SILUETAS METALICAS': '🔫',
+  'TIRO PRACTICO': '⚡',
+  'TIRO NEUMATICO': '💨'
+};
+
+// Colores por modalidad para badges
+const COLORES_MODALIDAD = {
+  'BLANCOS EN MOVIMIENTO': '#8b5cf6',
+  'RECORRIDOS DE CAZA': '#22c55e',
+  'TIRO OLIMPICO': '#f59e0b',
+  'SILUETAS METALICAS': '#ef4444',
+  'TIRO PRACTICO': '#3b82f6',
+  'TIRO NEUMATICO': '#06b6d4'
+};
+
+// Construir índice invertido: Estado → Modalidades → Competencias
+const construirIndiceEstados = () => {
+  const indice = {};
   
-  for (const [modalidadKey, modalidadData] of Object.entries(MODALIDADES_FEMETI_2026)) {
-    for (const [estadoKey, estadoData] of Object.entries(modalidadData.estados)) {
-      if (!estadosMap.has(estadoKey)) {
-        estadosMap.set(estadoKey, {
-          key: estadoKey,
-          display: estadoData.display,
-          modalidadesDisponibles: []
-        });
+  for (const [modalidad, datos] of Object.entries(COMPETENCIAS_FEMETI)) {
+    for (const [estadoRaw, competencias] of Object.entries(datos.estados)) {
+      const estadoNorm = estadoRaw.toUpperCase().trim();
+      const estadoDisplay = normalizarEstadoDisplay(estadoRaw);
+      
+      if (!indice[estadoNorm]) {
+        indice[estadoNorm] = {
+          display: estadoDisplay,
+          modalidades: {}
+        };
       }
-      estadosMap.get(estadoKey).modalidadesDisponibles.push({
-        key: modalidadKey,
-        ...LISTA_MODALIDADES.find(m => m.key === modalidadKey),
-        clubes: estadoData.clubes,
-        eventos: estadoData.totalEventos
+      
+      if (!indice[estadoNorm].modalidades[modalidad]) {
+        indice[estadoNorm].modalidades[modalidad] = {
+          tipo_arma: datos.tipo_arma,
+          descripcion: datos.descripcion,
+          calibres: datos.calibres,
+          competencias: []
+        };
+      }
+      
+      competencias.forEach((comp, idx) => {
+        indice[estadoNorm].modalidades[modalidad].competencias.push({
+          ...comp,
+          estado: estadoNorm,
+          estadoDisplay: estadoDisplay,
+          modalidad: modalidad,
+          id: `${estadoNorm}-${modalidad}-${idx}`
+        });
       });
     }
   }
   
-  return Array.from(estadosMap.values())
-    .sort((a, b) => a.display.localeCompare(b.display));
+  return indice;
 };
 
-const TODOS_LOS_ESTADOS = obtenerTodosLosEstados();
+// Índice pre-calculado
+const INDICE_ESTADOS = construirIndiceEstados();
+
+// Lista de estados para dropdown, ordenados alfabéticamente
+const ESTADOS_DROPDOWN = Object.entries(INDICE_ESTADOS)
+  .map(([key, data]) => ({
+    value: key,
+    label: data.display,
+    modalidades: Object.keys(data.modalidades).length,
+    competencias: Object.values(data.modalidades).reduce((sum, m) => sum + m.competencias.length, 0)
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label, 'es'));
 
 export default function SelectorEstadosFEMETI({ 
   onChange,
-  fechaSolicitud,
-  maxEstados = 10 
+  maxCompetencias = 10 
 }) {
-  // Estado: { estadoKey: string, modalidades: string[] }[]
-  const [selecciones, setSelecciones] = useState([]);
-  const [estadoDropdownAbierto, setEstadoDropdownAbierto] = useState(false);
-  const [modalidadDropdownAbierto, setModalidadDropdownAbierto] = useState(null); // estadoKey
-  
-  // Estados ya seleccionados (para excluir del dropdown)
-  const estadosYaSeleccionados = useMemo(() => 
-    selecciones.map(s => s.estadoKey), 
-    [selecciones]
-  );
-  
-  // Estados disponibles para agregar
-  const estadosDisponibles = useMemo(() => 
-    TODOS_LOS_ESTADOS.filter(e => !estadosYaSeleccionados.includes(e.key)),
-    [estadosYaSeleccionados]
-  );
-  
-  // Calcular temporalidad
-  const temporalidad = useMemo(() => {
-    if (!fechaSolicitud) return null;
-    return calcularTemporalidad(fechaSolicitud);
-  }, [fechaSolicitud]);
-  
-  // Generar preview de clubes agrupados
-  const clubesPreview = useMemo(() => {
-    const preview = [];
+  // Estado seleccionado en dropdown
+  const [estadoSeleccionado, setEstadoSeleccionado] = useState('');
+  // Modalidades seleccionadas (checkboxes)
+  const [modalidadesSeleccionadas, setModalidadesSeleccionadas] = useState([]);
+  // Competencias auto-pobladas y seleccionadas
+  const [competenciasSeleccionadas, setCompetenciasSeleccionadas] = useState([]);
+
+  // Ref para onChange (evitar loop infinito)
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+
+  // Modalidades disponibles para el estado seleccionado
+  const modalidadesDisponibles = useMemo(() => {
+    if (!estadoSeleccionado || !INDICE_ESTADOS[estadoSeleccionado]) return [];
+    return Object.entries(INDICE_ESTADOS[estadoSeleccionado].modalidades).map(([nombre, datos]) => ({
+      nombre,
+      tipo_arma: datos.tipo_arma,
+      calibres: datos.calibres,
+      totalCompetencias: datos.competencias.length
+    }));
+  }, [estadoSeleccionado]);
+
+  // Competencias filtradas por estado + modalidades seleccionadas
+  const competenciasFiltradas = useMemo(() => {
+    if (!estadoSeleccionado || modalidadesSeleccionadas.length === 0) return [];
     
-    for (const seleccion of selecciones) {
-      const estadoInfo = TODOS_LOS_ESTADOS.find(e => e.key === seleccion.estadoKey);
-      if (!estadoInfo) continue;
-      
-      const modalidadesInfo = [];
-      for (const modalidadKey of seleccion.modalidades) {
-        const modData = estadoInfo.modalidadesDisponibles.find(m => m.key === modalidadKey);
-        if (modData) {
-          modalidadesInfo.push({
-            key: modalidadKey,
-            nombre: modData.nombre,
-            icono: modData.icono,
-            arma: modData.arma,
-            clubes: modData.clubes
-          });
-        }
+    const estadoData = INDICE_ESTADOS[estadoSeleccionado];
+    if (!estadoData) return [];
+
+    let todas = [];
+    modalidadesSeleccionadas.forEach(mod => {
+      if (estadoData.modalidades[mod]) {
+        todas = [...todas, ...estadoData.modalidades[mod].competencias];
       }
-      
-      if (modalidadesInfo.length > 0) {
-        preview.push({
-          estadoKey: seleccion.estadoKey,
-          estadoDisplay: estadoInfo.display,
-          modalidades: modalidadesInfo
-        });
-      }
-    }
-    
-    return preview;
-  }, [selecciones]);
-  
-  // Total de clubes únicos
-  const totalClubes = useMemo(() => {
-    const clubesSet = new Set();
-    for (const estado of clubesPreview) {
-      for (const mod of estado.modalidades) {
-        for (const club of mod.clubes) {
-          clubesSet.add(`${estado.estadoKey}|${club.club}`);
-        }
-      }
-    }
-    return clubesSet.size;
-  }, [clubesPreview]);
-  
+    });
+
+    // Ordenar por fecha
+    return todas.sort((a, b) => (a.fecha || '').localeCompare(b.fecha || ''));
+  }, [estadoSeleccionado, modalidadesSeleccionadas]);
+
+  // Cuando cambia el estado, limpiar modalidades
+  useEffect(() => {
+    setModalidadesSeleccionadas([]);
+  }, [estadoSeleccionado]);
+
   // Notificar cambios al padre
   useEffect(() => {
-    if (onChange) {
-      // Aplanar para compatibilidad con GeneradorPETA
-      const estadosSeleccionados = selecciones.map(s => s.estadoKey);
-      const modalidadesUnicas = [...new Set(selecciones.flatMap(s => s.modalidades))];
+    if (onChangeRef.current) {
+      const modalidadesUsadas = [...new Set(competenciasSeleccionadas.map(c => c.modalidad))];
+      const estadosUsados = [...new Set(competenciasSeleccionadas.map(c => c.estado))];
       
-      onChange({
-        selecciones, // Nuevo formato detallado
-        estadosSeleccionados, // Compat
-        modalidades: modalidadesUnicas, // Compat
-        clubesPreview,
-        totalClubes,
-        temporalidad
+      onChangeRef.current({
+        competencias: competenciasSeleccionadas,
+        estadosSeleccionados: estadosUsados.map(e => INDICE_ESTADOS[e]?.display || e),
+        modalidades: modalidadesUsadas,
+        modalidad: modalidadesUsadas[0] || null,
+        resumen: competenciasSeleccionadas.map(c => ({
+          fecha: c.fecha,
+          club: c.club,
+          lugar: c.lugar,
+          estado: c.estadoDisplay,
+          modalidad: c.modalidad
+        }))
       });
     }
-  }, [selecciones, temporalidad]);
-  
-  // Agregar estado
-  const agregarEstado = (estadoKey) => {
-    if (selecciones.length >= maxEstados) return;
-    if (estadosYaSeleccionados.includes(estadoKey)) return;
-    
-    setSelecciones(prev => [...prev, { estadoKey, modalidades: [] }]);
-    setEstadoDropdownAbierto(false);
-  };
-  
-  // Remover estado
-  const removerEstado = (estadoKey) => {
-    setSelecciones(prev => prev.filter(s => s.estadoKey !== estadoKey));
-  };
-  
-  // Toggle modalidad para un estado
-  const toggleModalidad = (estadoKey, modalidadKey) => {
-    setSelecciones(prev => prev.map(s => {
-      if (s.estadoKey !== estadoKey) return s;
-      
-      const tieneModalidad = s.modalidades.includes(modalidadKey);
-      return {
-        ...s,
-        modalidades: tieneModalidad
-          ? s.modalidades.filter(m => m !== modalidadKey)
-          : [...s.modalidades, modalidadKey]
-      };
-    }));
-  };
-  
-  // Obtener info de estado
-  const getEstadoInfo = (estadoKey) => {
-    return TODOS_LOS_ESTADOS.find(e => e.key === estadoKey);
-  };
-  
-  // Cerrar dropdowns al hacer clic fuera
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (!e.target.closest('.dropdown-container')) {
-        setEstadoDropdownAbierto(false);
-        setModalidadDropdownAbierto(null);
+  }, [competenciasSeleccionadas]);
+
+  // Toggle modalidad
+  const toggleModalidad = (modalidad) => {
+    setModalidadesSeleccionadas(prev => {
+      if (prev.includes(modalidad)) {
+        return prev.filter(m => m !== modalidad);
+      } else {
+        return [...prev, modalidad];
       }
-    };
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+    });
+  };
+
+  // Seleccionar/deseleccionar competencia individual
+  const toggleCompetencia = (competencia) => {
+    setCompetenciasSeleccionadas(prev => {
+      const existe = prev.find(c => c.id === competencia.id);
+      if (existe) {
+        return prev.filter(c => c.id !== competencia.id);
+      } else if (prev.length < maxCompetencias) {
+        return [...prev, competencia];
+      }
+      return prev;
+    });
+  };
+
+  // Seleccionar todas las competencias filtradas
+  const seleccionarTodas = () => {
+    const disponibles = competenciasFiltradas.filter(
+      c => !competenciasSeleccionadas.find(s => s.id === c.id)
+    );
+    const espacioDisponible = maxCompetencias - competenciasSeleccionadas.length;
+    const nuevas = disponibles.slice(0, espacioDisponible);
+    setCompetenciasSeleccionadas(prev => [...prev, ...nuevas]);
+  };
+
+  // Deseleccionar todas del estado/modalidad actual
+  const deseleccionarFiltradas = () => {
+    const idsFiltradas = new Set(competenciasFiltradas.map(c => c.id));
+    setCompetenciasSeleccionadas(prev => prev.filter(c => !idsFiltradas.has(c.id)));
+  };
+
+  // Verificar si competencia está seleccionada
+  const estaSeleccionada = (competencia) => {
+    return competenciasSeleccionadas.some(c => c.id === competencia.id);
+  };
+
+  // Contar seleccionadas en filtro actual
+  const seleccionadasEnFiltro = competenciasFiltradas.filter(c => estaSeleccionada(c)).length;
 
   return (
-    <div className="selector-estados-femeti selector-v2">
+    <div className="selector-estados-femeti-v2">
+      {/* Header */}
       <div className="selector-header">
-        <h4>🎯 Competencia Nacional FEMETI 2026</h4>
-        <p className="selector-subtitle">
-          Agrega estados y selecciona las modalidades en las que competirás.
-        </p>
-      </div>
-
-      {/* Dropdown para agregar estado */}
-      <div className="dropdown-container estado-dropdown">
-        <button
-          type="button"
-          className="dropdown-trigger"
-          onClick={(e) => {
-            e.stopPropagation();
-            setEstadoDropdownAbierto(!estadoDropdownAbierto);
-            setModalidadDropdownAbierto(null);
-          }}
-          disabled={selecciones.length >= maxEstados}
-        >
-          <span className="dropdown-icon">➕</span>
-          <span>Agregar Estado</span>
-          <span className="dropdown-counter">
-            {selecciones.length}/{maxEstados}
+        <h4>📍 Competencias FEMETI 2026</h4>
+        <div className="contador-global">
+          <span className={`contador ${competenciasSeleccionadas.length >= maxCompetencias ? 'limite' : ''}`}>
+            {competenciasSeleccionadas.length} / {maxCompetencias}
           </span>
-          <span className={`dropdown-arrow ${estadoDropdownAbierto ? 'open' : ''}`}>▼</span>
-        </button>
-        
-        {estadoDropdownAbierto && (
-          <div className="dropdown-menu estado-menu">
-            <div className="dropdown-search">
-              <input 
-                type="text" 
-                placeholder="Buscar estado..." 
-                onClick={(e) => e.stopPropagation()}
-                onChange={(e) => {
-                  // Filtrar estados en tiempo real
-                  const search = e.target.value.toLowerCase();
-                  const items = document.querySelectorAll('.estado-menu .dropdown-item');
-                  items.forEach(item => {
-                    const texto = item.textContent.toLowerCase();
-                    item.style.display = texto.includes(search) ? 'flex' : 'none';
-                  });
-                }}
-              />
-            </div>
-            <div className="dropdown-items">
-              {estadosDisponibles.map(estado => (
-                <div
-                  key={estado.key}
-                  className="dropdown-item"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    agregarEstado(estado.key);
-                  }}
-                >
-                  <span className="item-nombre">{estado.display}</span>
-                  <span className="item-meta">
-                    {estado.modalidadesDisponibles.length} modalidades
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+          <span className="contador-label">seleccionadas</span>
+        </div>
       </div>
 
-      {/* Lista de estados seleccionados con sus modalidades */}
-      {selecciones.length > 0 && (
-        <div className="selecciones-lista">
-          {selecciones.map(seleccion => {
-            const estadoInfo = getEstadoInfo(seleccion.estadoKey);
-            if (!estadoInfo) return null;
-            
-            return (
-              <div key={seleccion.estadoKey} className="seleccion-item">
-                <div className="seleccion-header">
-                  <div className="seleccion-estado">
-                    <span className="estado-icono">📍</span>
-                    <span className="estado-nombre">{estadoInfo.display}</span>
-                  </div>
-                  <button
-                    type="button"
-                    className="btn-remover"
-                    onClick={() => removerEstado(seleccion.estadoKey)}
-                    title="Quitar estado"
-                  >
-                    ✕
-                  </button>
-                </div>
-                
-                {/* Dropdown de modalidades para este estado */}
-                <div className="dropdown-container modalidad-dropdown">
-                  <button
-                    type="button"
-                    className="dropdown-trigger modalidad-trigger"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setModalidadDropdownAbierto(
-                        modalidadDropdownAbierto === seleccion.estadoKey 
-                          ? null 
-                          : seleccion.estadoKey
-                      );
-                      setEstadoDropdownAbierto(false);
-                    }}
-                  >
-                    <span>
-                      {seleccion.modalidades.length === 0 
-                        ? 'Seleccionar modalidades...' 
-                        : `${seleccion.modalidades.length} modalidad(es)`}
-                    </span>
-                    <span className={`dropdown-arrow ${modalidadDropdownAbierto === seleccion.estadoKey ? 'open' : ''}`}>▼</span>
-                  </button>
-                  
-                  {modalidadDropdownAbierto === seleccion.estadoKey && (
-                    <div className="dropdown-menu modalidad-menu">
-                      {estadoInfo.modalidadesDisponibles.map(mod => {
-                        const seleccionada = seleccion.modalidades.includes(mod.key);
-                        return (
-                          <div
-                            key={mod.key}
-                            className={`dropdown-item modalidad-item ${seleccionada ? 'selected' : ''}`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleModalidad(seleccion.estadoKey, mod.key);
-                            }}
-                          >
-                            <span className="check-box">
-                              {seleccionada ? '☑' : '☐'}
-                            </span>
-                            <span className="mod-icono">{mod.icono}</span>
-                            <div className="mod-info">
-                              <span className="mod-nombre">{mod.nombre}</span>
-                              <span className="mod-meta">{mod.arma} • {mod.clubes.length} clubes</span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-                
-                {/* Tags de modalidades seleccionadas */}
-                {seleccion.modalidades.length > 0 && (
-                  <div className="modalidades-tags">
-                    {seleccion.modalidades.map(modKey => {
-                      const modInfo = estadoInfo.modalidadesDisponibles.find(m => m.key === modKey);
-                      if (!modInfo) return null;
-                      return (
-                        <span 
-                          key={modKey} 
-                          className="modalidad-tag"
-                          onClick={() => toggleModalidad(seleccion.estadoKey, modKey)}
-                          title="Clic para quitar"
-                        >
-                          {modInfo.icono} {modInfo.nombre}
-                          <span className="tag-remove">×</span>
-                        </span>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Preview compacto de clubes */}
-      {clubesPreview.length > 0 && clubesPreview.some(e => e.modalidades.length > 0) && (
-        <div className="clubes-preview preview-compacto">
-          <details open>
-            <summary className="preview-header">
-              <span>📋 Clubes a incluir ({totalClubes} total)</span>
-              {temporalidad && (
-                <span className="temporalidad-badge">
-                  {temporalidad.textoCorto}
-                </span>
-              )}
-            </summary>
-            
-            <div className="preview-content">
-              {clubesPreview.map(estado => (
-                <div key={estado.estadoKey} className="preview-estado-compacto">
-                  <div className="estado-header-compacto">
-                    <strong>📍 {estado.estadoDisplay}</strong>
-                  </div>
-                  {estado.modalidades.map(mod => (
-                    <div key={mod.key} className="modalidad-clubes">
-                      <div className="modalidad-label">
-                        {mod.icono} {mod.nombre}:
-                      </div>
-                      <ul className="clubes-lista-compacta">
-                        {mod.clubes.map((club, idx) => (
-                          <li key={idx}>
-                            {club.club} <span className="club-loc">({club.domicilio})</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </details>
-          
-          {temporalidad && (
-            <p className="preview-temporalidad-full">
-              📅 Tiradas Registradas en el Calendario FEMETI período: <strong>{temporalidad.textoCompleto}</strong>
-            </p>
-          )}
-        </div>
-      )}
-
-      {/* Ayuda */}
-      {selecciones.length === 0 && (
-        <div className="selector-ayuda">
-          <p>💡 <strong>Tip:</strong> Puedes seleccionar múltiples modalidades por estado.</p>
-          <p>Ejemplo: Estado de México → Tiro Práctico + Recorridos de Caza + Blancos en Movimiento</p>
-        </div>
-      )}
-
-      {/* Link FEMETI */}
-      <div className="femeti-link">
-        <a 
-          href="https://www.femeti.org.mx/calendario-anual" 
-          target="_blank" 
-          rel="noopener noreferrer"
+      {/* Paso 1: Dropdown de Estados */}
+      <div className="selector-paso">
+        <label className="paso-label">
+          <span className="paso-numero">1</span>
+          Selecciona un Estado
+        </label>
+        <select 
+          className="estado-dropdown"
+          value={estadoSeleccionado}
+          onChange={(e) => setEstadoSeleccionado(e.target.value)}
         >
-          📅 Ver calendario completo FEMETI 2026 →
-        </a>
+          <option value="">-- Seleccionar Estado --</option>
+          {ESTADOS_DROPDOWN.map(estado => (
+            <option key={estado.value} value={estado.value}>
+              {estado.label} ({estado.modalidades} modalidades, {estado.competencias} fechas)
+            </option>
+          ))}
+        </select>
       </div>
+
+      {/* Paso 2: Checkboxes de Modalidades */}
+      {estadoSeleccionado && modalidadesDisponibles.length > 0 && (
+        <div className="selector-paso">
+          <label className="paso-label">
+            <span className="paso-numero">2</span>
+            Selecciona Modalidades
+          </label>
+          <div className="modalidades-grid">
+            {modalidadesDisponibles.map(mod => {
+              const isChecked = modalidadesSeleccionadas.includes(mod.nombre);
+              return (
+                <label 
+                  key={mod.nombre} 
+                  className={`modalidad-checkbox ${isChecked ? 'checked' : ''}`}
+                  style={{ '--mod-color': COLORES_MODALIDAD[mod.nombre] || '#6b7280' }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => toggleModalidad(mod.nombre)}
+                  />
+                  <span className="modalidad-icono">{ICONOS_MODALIDAD[mod.nombre] || '🎯'}</span>
+                  <span className="modalidad-info">
+                    <span className="modalidad-nombre">{mod.nombre}</span>
+                    <span className="modalidad-meta">{mod.tipo_arma} • {mod.totalCompetencias} fechas</span>
+                    <span className="modalidad-calibres">Calibres: {mod.calibres.join(', ')}</span>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Paso 3: Clubes/Competencias Auto-poblados */}
+      {competenciasFiltradas.length > 0 && (
+        <div className="selector-paso">
+          <label className="paso-label">
+            <span className="paso-numero">3</span>
+            Clubes y Fechas Disponibles
+            <span className="conteo-filtro">
+              ({seleccionadasEnFiltro}/{competenciasFiltradas.length} en esta selección)
+            </span>
+          </label>
+          
+          {/* Acciones rápidas */}
+          <div className="acciones-rapidas">
+            <button 
+              type="button"
+              className="btn-accion btn-seleccionar-todas"
+              onClick={seleccionarTodas}
+              disabled={competenciasSeleccionadas.length >= maxCompetencias}
+            >
+              ✓ Seleccionar todas
+            </button>
+            <button 
+              type="button"
+              className="btn-accion btn-deseleccionar"
+              onClick={deseleccionarFiltradas}
+              disabled={seleccionadasEnFiltro === 0}
+            >
+              ✕ Quitar de esta selección
+            </button>
+          </div>
+
+          {/* Lista de competencias */}
+          <div className="competencias-auto">
+            {competenciasFiltradas.map(comp => {
+              const seleccionada = estaSeleccionada(comp);
+              const disabled = !seleccionada && competenciasSeleccionadas.length >= maxCompetencias;
+
+              return (
+                <div 
+                  key={comp.id}
+                  className={`competencia-card ${seleccionada ? 'seleccionada' : ''} ${disabled ? 'disabled' : ''}`}
+                  onClick={() => !disabled && toggleCompetencia(comp)}
+                >
+                  <div className="competencia-check">
+                    {seleccionada ? '✓' : '○'}
+                  </div>
+                  <div className="competencia-contenido">
+                    <div className="competencia-fecha">{formatearFecha(comp.fecha)}</div>
+                    <div className="competencia-club">{comp.club}</div>
+                    <div className="competencia-lugar">{comp.lugar}</div>
+                  </div>
+                  <div 
+                    className="competencia-modalidad-badge"
+                    style={{ backgroundColor: COLORES_MODALIDAD[comp.modalidad] || '#6b7280' }}
+                  >
+                    {ICONOS_MODALIDAD[comp.modalidad]} {comp.modalidad.split(' ')[0]}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Resumen de selección global */}
+      {competenciasSeleccionadas.length > 0 && (
+        <div className="resumen-global">
+          <div className="resumen-header">
+            <h5>📋 Resumen de Selección</h5>
+            <button 
+              type="button"
+              className="btn-limpiar-todo"
+              onClick={() => setCompetenciasSeleccionadas([])}
+            >
+              🗑️ Limpiar todo
+            </button>
+          </div>
+          
+          {/* Agrupar por estado */}
+          {Object.entries(
+            competenciasSeleccionadas.reduce((acc, c) => {
+              if (!acc[c.estadoDisplay]) acc[c.estadoDisplay] = [];
+              acc[c.estadoDisplay].push(c);
+              return acc;
+            }, {})
+          ).map(([estado, comps]) => (
+            <div key={estado} className="resumen-estado">
+              <div className="resumen-estado-header">
+                <span className="resumen-estado-nombre">📍 {estado}</span>
+                <span className="resumen-estado-count">{comps.length} competencia{comps.length !== 1 ? 's' : ''}</span>
+              </div>
+              <div className="resumen-competencias">
+                {comps.map(comp => (
+                  <div key={comp.id} className="resumen-comp-item">
+                    <span 
+                      className="resumen-modalidad-dot"
+                      style={{ backgroundColor: COLORES_MODALIDAD[comp.modalidad] }}
+                    />
+                    <span className="resumen-comp-fecha">{formatearFecha(comp.fecha)}</span>
+                    <span className="resumen-comp-club">{comp.club}</span>
+                    <button 
+                      type="button"
+                      className="btn-quitar-comp"
+                      onClick={(e) => { e.stopPropagation(); toggleCompetencia(comp); }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Mensaje si no hay selección */}
+      {competenciasSeleccionadas.length === 0 && (
+        <div className="mensaje-vacio">
+          <p>👆 Selecciona un estado y modalidades para ver los clubes disponibles</p>
+        </div>
+      )}
     </div>
   );
 }

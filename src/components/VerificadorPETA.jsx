@@ -183,8 +183,10 @@ export default function VerificadorPETA({ userEmail, onBack }) {
   const cargarSocios = async () => {
     try {
       setLoading(true);
+      console.log('🔍 [VerificadorPETA] Iniciando carga de socios...');
       const sociosRef = collection(db, 'socios');
       const sociosSnap = await getDocs(sociosRef);
+      console.log(`📊 [VerificadorPETA] Total socios cargados: ${sociosSnap.size}`);
       
       const sociosList = await Promise.all(
         sociosSnap.docs.map(async (socioDoc) => {
@@ -198,6 +200,11 @@ export default function VerificadorPETA({ userEmail, onBack }) {
             ...doc.data()
           }));
           
+          if (petas.length > 0) {
+            console.log(`✅ [VerificadorPETA] ${socioDoc.id}: ${petas.length} PETA(s) encontrado(s)`);
+            petas.forEach(p => console.log(`   - ID: ${p.id}, Estado: ${p.estado}, Tipo: ${p.tipo}`));
+          }
+          
           return {
             email: socioDoc.id,
             nombre: socioData.nombre || socioDoc.id,
@@ -209,6 +216,7 @@ export default function VerificadorPETA({ userEmail, onBack }) {
       
       // Filtrar solo socios con PETAs
       const sociosConPETAs = sociosList.filter(s => s.petas.length > 0);
+      console.log(`📋 [VerificadorPETA] Socios con PETAs: ${sociosConPETAs.length}`);
       setSocios(sociosConPETAs);
       
     } catch (error) {

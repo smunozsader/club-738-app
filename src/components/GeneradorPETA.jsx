@@ -93,13 +93,18 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   const [petaAnterior, setPetaAnterior] = useState('');
   const [esRenovacion, setEsRenovacion] = useState(false);
   
-  // Dirección del solicitante (6 campos)
+  // Dirección del solicitante (formato DN27 SEDENA-02-045)
   const [calle, setCalle] = useState('');
+  const [numeroExterior, setNumeroExterior] = useState('');
+  const [numeroInterior, setNumeroInterior] = useState('');
   const [colonia, setColonia] = useState('');
-  const [ciudad, setCiudad] = useState('');
   const [cp, setCp] = useState('');
   const [municipio, setMunicipio] = useState('');
   const [estadoDomicilio, setEstadoDomicilio] = useState('');
+  const [correoElectronico, setCorreoElectronico] = useState('');
+  
+  // Datos administrativos DN27
+  const [noExpediente, setNoExpediente] = useState('');
   
   // Fechas
   const [fechaInicio, setFechaInicio] = useState('');
@@ -113,6 +118,11 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   // Estados seleccionados (máx 10, solo para competencia/caza)
   const [estadosSeleccionados, setEstadosSeleccionados] = useState(['Yucatán']);
   
+  // Club invitado (solo para TIRO - sección G DN27)
+  const [tieneClubInvitado, setTieneClubInvitado] = useState(false);
+  const [clubInvitado, setClubInvitado] = useState('');
+  const [domicilioClubInvitado, setDomicilioClubInvitado] = useState('');
+  
   // Modalidad y competencias FEMETI (solo para competencia nacional - requerido DN27)
   // Nuevo formato: { modalidad, tipoArma, calibres, estadosSeleccionados, clubesPreview, totalClubes, temporalidad }
   const [modalidadFEMETI, setModalidadFEMETI] = useState(null);
@@ -122,55 +132,82 @@ export default function GeneradorPETA({ userEmail, onBack }) {
 
   // Solo el secretario puede usar este módulo
   const esSecretario = userEmail === 'admin@club738.com';
+  
+  console.log('🔐 [GeneradorPETA] userEmail:', userEmail);
+  console.log('🔐 [GeneradorPETA] esSecretario:', esSecretario);
 
   // En revisión desde solicitud (no manual): bloquear edición de armas/cartuchos
   const revisionBloqueada = esSecretario && solicitudSeleccionada && !modoManual;
 
   useEffect(() => {
+    console.log('🚀 [GeneradorPETA] useEffect disparado, esSecretario:', esSecretario);
     if (esSecretario) {
+      console.log('✅ [GeneradorPETA] Cargando socios y solicitudes...');
       cargarSocios();
       cargarSolicitudesPETA();
+    } else {
+      console.log('⚠️ [GeneradorPETA] NO es secretario, no se cargan solicitudes');
     }
   }, [esSecretario]);
 
   useEffect(() => {
     if (socioSeleccionado) {
       cargarArmasSocio(socioSeleccionado.email);
-      // Pre-llenar dirección si existe (desde campo 'domicilio' en Firestore)
-      // Estructura actualizada con 6 campos: calle, colonia, ciudad, municipio, estado, cp
+      // Pre-llenar dirección si existe (formato DN27 SEDENA-02-045)
       if (socioSeleccionado.domicilio) {
         setCalle(socioSeleccionado.domicilio.calle || '');
+        setNumeroExterior(socioSeleccionado.domicilio.numeroExterior || socioSeleccionado.domicilio.numero || '');
+        setNumeroInterior(socioSeleccionado.domicilio.numeroInterior || '');
         setColonia(socioSeleccionado.domicilio.colonia || '');
-        setCiudad(socioSeleccionado.domicilio.ciudad || '');
         setCp(socioSeleccionado.domicilio.cp || '');
-        setMunicipio(socioSeleccionado.domicilio.municipio || '');
+        setMunicipio(socioSeleccionado.domicilio.municipio || socioSeleccionado.domicilio.ciudad || '');
         setEstadoDomicilio(socioSeleccionado.domicilio.estado || '');
       } else {
         // Limpiar campos si no hay domicilio
         setCalle('');
+        setNumeroExterior('');
+        setNumeroInterior('');
         setColonia('');
-        setCiudad('');
         setCp('');
         setMunicipio('');
         setEstadoDomicilio('');
       }
+      // Correo electrónico desde el email del socio
+      setCorreoElectronico(socioSeleccionado.email || '');
     }
   }, [socioSeleccionado]);
 
-  // Calcular fecha fin automáticamente según tipo
+  // Calcular fecha mínima de inicio: 15 días después de fecha del oficio (DN27)
+  const getFechaMinInicio = () => {
+    const oficio = fechaOficio ? new Date(fechaOficio + 'T12:00:00') : new Date();
+    oficio.setDate(oficio.getDate() + 15); // Mínimo 15 días después del oficio
+    return oficio.toISOString().split('T')[0];
+  };
+
+  // Calcular fecha fin automáticamente según tipo (DN27)
   useEffect(() => {
     if (fechaInicio) {
-      const inicio = new Date(fechaInicio);
+      const inicio = new Date(fechaInicio + 'T12:00:00');
       if (tipoPETA === 'caza') {
-        // Caza: hasta 30 de junio del año siguiente
-        const añoFin = inicio.getMonth() >= 6 ? inicio.getFullYear() + 1 : inicio.getFullYear();
+        // DN27: Temporada de caza es 1 julio - 30 junio
+        // Si inicio es julio-diciembre (mes 6-11) → fin = 30 junio año siguiente
+        // Si inicio es enero-junio (mes 0-5) → fin = 30 junio mismo año
+        const mes = inicio.getMonth(); // 0-11
+        const añoFin = mes >= 6 ? inicio.getFullYear() + 1 : inicio.getFullYear();
         setFechaFin(`${añoFin}-06-30`);
       } else {
-        // Tiro y Competencia: hasta 31 de diciembre del mismo año
+        // DN27: Tiro y Competencia hasta 31 de diciembre del mismo año
         setFechaFin(`${inicio.getFullYear()}-12-31`);
       }
     }
   }, [fechaInicio, tipoPETA]);
+
+  // Auto-setear fecha inicio cuando cambia fecha oficio (si no hay fecha inicio)
+  useEffect(() => {
+    if (fechaOficio && !fechaInicio) {
+      setFechaInicio(getFechaMinInicio());
+    }
+  }, [fechaOficio]);
 
   const cargarSocios = async () => {
     try {
@@ -279,16 +316,20 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       setTipoPETA(solicitud.tipo || 'tiro');
       setEsRenovacion(solicitud.esRenovacion || false);
       setPetaAnterior(solicitud.petaAnteriorNumero || '');
+      setNoExpediente(solicitud.noExpediente || '');
       
-      // Domicilio
+      // Domicilio (formato DN27)
       if (solicitud.domicilio) {
         setCalle(solicitud.domicilio.calle || '');
+        setNumeroExterior(solicitud.domicilio.numeroExterior || solicitud.domicilio.numero || '');
+        setNumeroInterior(solicitud.domicilio.numeroInterior || '');
         setColonia(solicitud.domicilio.colonia || '');
-        setCiudad(solicitud.domicilio.ciudad || '');
         setCp(solicitud.domicilio.cp || '');
-        setMunicipio(solicitud.domicilio.municipio || '');
+        setMunicipio(solicitud.domicilio.municipio || solicitud.domicilio.ciudad || '');
         setEstadoDomicilio(solicitud.domicilio.estado || '');
       }
+      // Correo electrónico
+      setCorreoElectronico(solicitud.correoElectronico || solicitud.email || socio.email || '');
       
       // Fechas
       if (solicitud.vigenciaInicio) {
@@ -455,6 +496,16 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       return;
     }
 
+    // DN27: Validar que fecha inicio sea mínimo 15 días después de fecha oficio
+    const oficio = new Date(fechaOficio + 'T12:00:00');
+    const inicio = new Date(fechaInicio + 'T12:00:00');
+    const diferenciaDias = Math.floor((inicio - oficio) / (1000 * 60 * 60 * 24));
+    
+    if (diferenciaDias < 15) {
+      showToast(`DN27: La vigencia debe iniciar mínimo 15 días después del oficio (${diferenciaDias} días actual)`, 'error', 5000);
+      return;
+    }
+
     // Para competencia, validar que tenga modalidad y estados seleccionados
     if (tipoPETA === 'competencia') {
       if (!modalidadFEMETI?.modalidad || !modalidadFEMETI?.estadosSeleccionados?.length) {
@@ -477,189 +528,259 @@ export default function GeneradorPETA({ userEmail, onBack }) {
 
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
-      const margin = 20;
-      let y = 20;
-
-      // ========== DECORATIVE BORDER ==========
-      // Outer border (thick)
-      doc.setLineWidth(0.8);
-      doc.rect(8, 8, pageWidth - 16, pageHeight - 16);
-      // Inner border (thin)
-      doc.setLineWidth(0.3);
-      doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
+      const margin = 15;
+      let y = 12;
 
       // Helper para centrar texto
-      const centrarTexto = (texto, yPos, fontSize = 10) => {
+      const centrarTexto = (texto, yPos) => {
         const textWidth = doc.getTextWidth(texto);
         doc.text(texto, (pageWidth - textWidth) / 2, yPos);
       };
 
-      // ========== ENCABEZADO ==========
+      // ========== CÓDIGOS DE FORMATO DN27 ==========
+      doc.setFontSize(8);
       doc.setFont('helvetica', 'bold');
-      centrarTexto('SECRETARIA DE LA DEFENSA NACIONAL', y, 11);
-      y += 5;
-      doc.setFontSize(9);
-      centrarTexto('DIRECCIÓN GENERAL DEL REGISTRO FEDERAL DE ARMAS DE FUEGO Y CONTROL DE EXPLOSIVOS.', y);
-      y += 5;
-      doc.setFontSize(10);
-      centrarTexto('SOLICITUD DE PERMISO EXTRAORDINARIO PARA LA PRÁCTICA DE CAZA, TIRO Y/O COMPETENCIA.', y);
-      y += 10;
-
-      // ========== DATOS DEL CLUB ==========
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      centrarTexto('DATOS DEL CLUB.', y);
+      doc.text('SEDENA-02-045', pageWidth - margin - 25, y);
+      y += 4;
+      doc.text('RFA-LC-017', pageWidth - margin - 20, y);
       y += 6;
-      
-      doc.setFont('helvetica', 'normal');
+
+      // ========== ENCABEZADO OFICIAL ==========
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      centrarTexto('Secretaría de la Defensa Nacional', y);
+      y += 5;
+      doc.setFontSize(8);
+      centrarTexto('Dirección General del Registro Federal de Armas de Fuego y Control de Explosivos.', y);
+      y += 5;
       doc.setFontSize(9);
-      doc.text(`NOMBRE DEL CLUB: ${DATOS_CLUB.nombre}`, margin, y);
-      doc.text(`No.REG.ANTE S.D.N.: ${DATOS_CLUB.registroSEDENA}`, pageWidth - margin - 50, y);
+      centrarTexto('Solicitud de permiso extraordinario para la práctica de caza, tiro y/o competencia.', y);
       y += 8;
 
-      // ========== DATOS DEL SOLICITANTE ==========
+      // ========== A. DATOS DEL CLUB ==========
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      centrarTexto('DATOS DEL SOLICITANTE.', y);
-      y += 6;
+      doc.setFontSize(9);
+      doc.text('A. Datos del Club.', margin, y);
+      y += 5;
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.text(`Nombre del Club: ${DATOS_CLUB.nombre}`, margin, y);
+      doc.text(`No. Reg. Ante S.D.N.: ${DATOS_CLUB.registroSEDENA}`, pageWidth - margin - 45, y);
+      y += 7;
+
+      // ========== B. DATOS DE LA PERSONA SOLICITANTE ==========
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.text('B. Datos de la persona solicitante:', margin, y);
+      y += 5;
 
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
+      doc.setFontSize(8);
       
-      // NPS y PETA anterior
-      doc.text(`N.P.S.: `, margin, y);
-      // PETA anterior (solo si es renovación)
-      if (esRenovacion) {
-        const petaAnteriorTexto = petaAnterior ? `S-1/M-4/${petaAnterior}` : 'S-1/M-4/____';
-        doc.text(`No.P. E.T.A. ANTERIOR: ${petaAnteriorTexto}`, margin + 60, y);
+      // Fila 1: No. Expediente y No. Permiso anterior
+      doc.text(`No. Expediente: ${noExpediente || '_____________'}`, margin, y);
+      if (esRenovacion && petaAnterior) {
+        doc.text(`No. Permiso anterior (Renovaciones): ${petaAnterior}`, pageWidth / 2, y);
       }
       y += 5;
 
-      doc.setFontSize(9);
-      doc.text(`NOMBRE: ${socioSeleccionado.nombre.toUpperCase()}`, margin, y);
+      // Fila 2: Nombre
+      doc.text(`Nombre: ${socioSeleccionado.nombre.toUpperCase()}`, margin, y);
       y += 5;
 
-      doc.text(`CALLE: ${calle.toUpperCase()}`, margin, y);
-      doc.text(`COLONIA: ${colonia.toUpperCase()}`, margin + 90, y);
-      y += 5;
+      // Fila 3: Dirección - Calle y Número
+      doc.text('Dirección:', margin, y);
+      y += 4;
+      const numeroCompleto = numeroInterior ? `${numeroExterior} Int. ${numeroInterior}` : numeroExterior;
+      doc.text(`Calle: ${calle.toUpperCase()}`, margin + 5, y);
+      doc.text(`Número: ${numeroCompleto}`, pageWidth / 2, y);
+      y += 4;
 
-      doc.text(`C.P.: ${cp}`, margin, y);
-      // Mostrar ciudad y estado juntos: "MÉRIDA, YUCATÁN"
-      const ciudadEstado = estadoDomicilio ? `${ciudad}, ${estadoDomicilio}`.toUpperCase() : ciudad.toUpperCase();
-      doc.text(`CIUDAD Y ESTADO: ${ciudadEstado}`, margin + 40, y);
-      y += 8;
+      // Fila 4: Colonia y CP
+      doc.text(`Colonia: ${colonia.toUpperCase()}`, margin + 5, y);
+      doc.text(`C.P.: ${cp}`, pageWidth / 2, y);
+      y += 4;
 
-      // ========== TIPO DE ACTIVIDAD ==========
+      // Fila 5: Municipio y Estado
+      doc.text(`Municipio o Delegación: ${municipio.toUpperCase()}`, margin + 5, y);
+      doc.text(`Estado: ${estadoDomicilio.toUpperCase()}`, pageWidth / 2, y);
+      y += 4;
+
+      // Fila 6: Correo electrónico
+      doc.text(`Correo electrónico: ${correoElectronico.toLowerCase()}`, margin + 5, y);
+      y += 7;
+
+      // ========== C. TIPO DE ACTIVIDAD ==========
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      centrarTexto('TIPO DE ACTIVIDAD.', y);
-      y += 6;
+      doc.setFontSize(9);
+      doc.text('C. Tipo de actividad.', margin, y);
+      y += 5;
 
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
+      doc.setFontSize(8);
       const cazaX = tipoPETA === 'caza' ? 'X' : ' ';
       const tiroX = tipoPETA === 'tiro' ? 'X' : ' ';
       const compX = tipoPETA === 'competencia' ? 'X' : ' ';
       
-      // Distribuir las tres opciones uniformemente
-      const activityWidth = pageWidth - (margin * 2);
-      const cazaPos = margin;
-      const tiroPos = margin + activityWidth / 3;
-      const compPos = margin + (activityWidth * 2 / 3);
-      
-      doc.text(`CAZA(  ${cazaX}  )`, cazaPos, y);
-      doc.text(`TIRO(  ${tiroX}  )`, tiroPos, y);
-      doc.text(`COMPETENCIA NACIONAL(  ${compX}  )`, compPos, y);
-      y += 8;
+      doc.text(`Caza ( ${cazaX} )`, margin + 20, y);
+      doc.text(`Tiro ( ${tiroX} )`, margin + 60, y);
+      doc.text(`Competencia ( ${compX} )`, margin + 100, y);
+      y += 7;
 
-      // ========== PERIODO ==========
+      // ========== D. PERIODO ==========
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      centrarTexto('PERIODO (MÍNIMO A PARTIR DE 15 DÍAS DE LA FECHA DE LA SOLICITUD):', y);
-      y += 6;
-
-      doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
+      doc.text('D. Periodo (mínimo a partir de 15 días de la fecha de su solicitud):', margin, y);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.text('(12 meses como máximo)', pageWidth - margin - 35, y);
+      y += 5;
+
+      doc.setFontSize(8);
       const fechaInicioFmt = formatearFechaPETA(fechaInicio);
       const fechaFinFmt = formatearFechaPETA(fechaFin);
-      doc.text(`${fechaInicioFmt}  AL  ${fechaFinFmt}`, margin, y);
-      y += 10;
-
-      // ========== ARMAS ==========
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.text('DATOS DE LAS ARMAS QUE EMPLEARÁ', margin, y);
-      y += 8;  // Aumentado de 6 a 8 para espacio después del título
-
-      // Encabezados de tabla
-      const colWidths = [10, 45, 25, 35, 30, 20];
-      const headers = ['ORD', 'CLASE', 'CALIBRE', 'MARCA', 'MATRÍCULA', 'CARTUCHOS'];
-      const tableStartY = y;
       
-      doc.setFontSize(8);
+      // Formato: Día Mes Año al Día Mes Año
+      doc.text(`${fechaInicioFmt}`, margin + 20, y);
+      doc.text('al', margin + 55, y);
+      doc.text(`${fechaFinFmt}`, margin + 65, y);
+      y += 3;
+      doc.setFontSize(6);
+      doc.text('Día    Mes    Año', margin + 20, y);
+      doc.text('Día    Mes    Año', margin + 65, y);
+      y += 6;
+
+      // ========== E. DATOS DE LAS ARMAS QUE EMPLEARÁ ==========
       doc.setFont('helvetica', 'bold');
-      doc.setLineWidth(0.4);
+      doc.setFontSize(9);
+      doc.text('E. Datos de las armas que empleará:', margin, y);
+      y += 5;
+
+      // Encabezados de tabla (orden DN27: Tipo, Marca, Calibre, Matrícula, Cartuchos)
+      const colWidths = [8, 40, 35, 25, 35, 25];
+      const headers = ['', 'Tipo', 'Marca', 'Calibre', 'Matrícula', 'Cartuchos'];
+      
+      doc.setFontSize(7);
+      doc.setFont('helvetica', 'bold');
       
       let xPos = margin;
       headers.forEach((header, i) => {
-        doc.text(header, xPos + 1, y + 4);
+        doc.text(header, xPos + 1, y);
         xPos += colWidths[i];
       });
-      y += 6;
+      y += 4;
 
-      // Filas de armas
-      console.log('📄 Generando PDF - Estado actual:');
-      console.log('  armasSeleccionadas:', armasSeleccionadas);
-      console.log('  armasSocio:', armasSocio);
-      console.log('  cartuchosPorArma:', cartuchosPorArma);
-      
+      // Línea separadora
+      doc.setLineWidth(0.2);
+      doc.line(margin, y - 1, pageWidth - margin, y - 1);
+
+      // Filas de armas (5 filas en el formulario oficial, pero soportamos 10)
       doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      
       for (let i = 0; i < 10; i++) {
         xPos = margin;
         const armaId = armasSeleccionadas[i];
         const arma = armaId ? armasSocio.find(a => a.id === armaId) : null;
         
-        if (armaId && !arma) {
-          console.warn(`⚠️ Arma con ID ${armaId} no encontrada en armasSocio`);
-        }
-        
-        doc.text(`${i + 1}`, xPos + 1, y + 2);
+        // Número de fila
+        doc.text(`${i + 1}.`, xPos + 1, y + 2);
         xPos += colWidths[0];
         
         if (arma) {
-          doc.text((arma.clase || '').substring(0, 25).toUpperCase(), xPos + 1, y + 2);
+          // Tipo (Clase)
+          doc.text((arma.clase || '').substring(0, 22).toUpperCase(), xPos + 1, y + 2);
           xPos += colWidths[1];
-          doc.text((arma.calibre || '').toUpperCase(), xPos + 1, y + 2);
-          xPos += colWidths[2];
+          // Marca
           doc.text((arma.marca || '').substring(0, 18).toUpperCase(), xPos + 1, y + 2);
+          xPos += colWidths[2];
+          // Calibre
+          doc.text((arma.calibre || '').toUpperCase(), xPos + 1, y + 2);
           xPos += colWidths[3];
+          // Matrícula
           doc.text((arma.matricula || '').toUpperCase(), xPos + 1, y + 2);
           xPos += colWidths[4];
-          {
-            const limites = getLimitesCartuchos(arma.calibre, arma.clase);
-            const val = cartuchosPorArma[armaId] ?? limites.default;
-            const ajustado = ajustarCartuchos(val, arma.calibre, arma.clase);
-            doc.text(String(ajustado), xPos + 1, y + 2);
-          }
+          // Cartuchos
+          const limites = getLimitesCartuchos(arma.calibre, arma.clase);
+          const val = cartuchosPorArma[armaId] ?? limites.default;
+          const ajustado = ajustarCartuchos(val, arma.calibre, arma.clase);
+          doc.text(String(ajustado), xPos + 1, y + 2);
         }
-        y += 5;
+        y += 4;
       }
       
       y += 3;
 
-      // ========== DESTINO / ESTADOS ==========
-      doc.setFontSize(9);
-      if (tipoPETA === 'tiro') {
-        // Práctica de tiro - Campo del club
-        const lineas = doc.splitTextToSize(DATOS_CLUB.campoTiro.texto, pageWidth - (margin * 2));
-        lineas.forEach(linea => {
-          doc.text(linea, margin, y);
-          y += 5;
-        });
-      } else if (tipoPETA === 'competencia') {
-        // ========== MATRIZ FORMATO RFA-LC-017 (DEFENSA-02-045) ==========
-        // Aplica a TODAS las modalidades FEMETI (Tiro Práctico, Recorridos de Caza, etc.)
+      // ========== F. CACERÍA (solo si tipoPETA === 'caza') ==========
+      if (tipoPETA === 'caza') {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.text('F. Si la actividad es cacería especifique los estados donde la practicará (máximo 10)', margin, y);
+        y += 5;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8);
         
+        estadosSeleccionados.slice(0, 10).forEach((estado, idx) => {
+          doc.text(`${idx + 1}. ${estado}`, margin + 5, y);
+          y += 4;
+        });
+        y += 3;
+      }
+
+      // ========== G. TIRO (solo si tipoPETA === 'tiro') ==========
+      if (tipoPETA === 'tiro') {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.text('G. Si la actividad es de tiro deberá de ser el campo de tiro del club al que pertenece', margin, y);
+        y += 4;
+        doc.text('o en caso contrario deberá de anexar la invitación del club que lo invite a su campo de tiro.', margin, y);
+        y += 6;
+        
+        // Campo de tiro del Club 738
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.text('Campo de Tiro del Club:', margin + 5, y);
+        y += 4;
+        doc.setFont('helvetica', 'normal');
+        doc.text(DATOS_CLUB.nombre, margin + 10, y);
+        y += 4;
+        const lineasCampo = doc.splitTextToSize(DATOS_CLUB.campoTiro.texto, pageWidth - (margin * 2) - 15);
+        lineasCampo.forEach(linea => {
+          doc.text(linea, margin + 10, y);
+          y += 4;
+        });
+        y += 3;
+        
+        // Club invitado (si aplica)
+        if (tieneClubInvitado && clubInvitado) {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(8);
+          doc.text('Club Invitado (con oficio de invitación anexo):', margin + 5, y);
+          y += 4;
+          doc.setFont('helvetica', 'normal');
+          doc.text(`Nombre: ${clubInvitado.toUpperCase()}`, margin + 10, y);
+          y += 4;
+          if (domicilioClubInvitado) {
+            const lineasInvitado = doc.splitTextToSize(`Domicilio: ${domicilioClubInvitado}`, pageWidth - (margin * 2) - 15);
+            lineasInvitado.forEach(linea => {
+              doc.text(linea, margin + 10, y);
+              y += 4;
+            });
+          }
+          y += 2;
+        }
+      }
+
+      // ========== H. COMPETENCIA NACIONAL (solo si tipoPETA === 'competencia') ==========
+      if (tipoPETA === 'competencia') {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.text('H. Si la actividad es de competencia nacional, especifique clubes, periodo y Estados', margin, y);
+        y += 4;
+        doc.text('donde participará (máximo 10).', margin, y);
+        y += 5;
+
         if (modalidadFEMETI?.modalidad && modalidadFEMETI?.estadosSeleccionados?.length > 0) {
           // Generar matriz de clubes para la modalidad seleccionada
           const matrizResultado = generarMatrizClubesPDF(
@@ -669,179 +790,115 @@ export default function GeneradorPETA({ userEmail, onBack }) {
           );
           
           if (matrizResultado && matrizResultado.filas.length > 0) {
-            doc.setFont('helvetica', 'bold');
-            doc.text('POR SER DE PETA DE COMPETENCIA NACIONAL SE SOLICITAN LOS SIGUIENTES DESTINOS:', margin, y);
-            y += 6;
-            
             // Información de modalidad
-            doc.setFontSize(9);
-            doc.text(`MODALIDAD: ${matrizResultado.modalidad}`, margin, y);
-            y += 5;
-            doc.setFont('helvetica', 'normal');
             doc.setFontSize(8);
-            doc.text(`Tipo de arma: ${matrizResultado.tipoArma}`, margin, y);
-            y += 4;
-            doc.text(`Calibres: ${matrizResultado.calibres}`, margin, y);
-            y += 6;
-            
-            // Frase del período (requerida por usuario)
             doc.setFont('helvetica', 'bold');
-            doc.setFontSize(8);
-            doc.text(`Tiradas Registradas en el Calendario FEMETI período: ${matrizResultado.temporalidad.textoCompleto}`, margin, y);
-            y += 6;
+            doc.text(`Modalidad: ${matrizResultado.modalidad}`, margin + 5, y);
+            y += 4;
             doc.setFont('helvetica', 'normal');
+            doc.text(`Tipo de arma: ${matrizResultado.tipoArma} | Calibres: ${matrizResultado.calibres}`, margin + 5, y);
+            y += 4;
+            doc.text(`Tiradas FEMETI período: ${matrizResultado.temporalidad.textoCompleto}`, margin + 5, y);
+            y += 5;
             
-            // Función para dibujar encabezado de tabla
-            const dibujarEncabezadoTabla = (yPos) => {
-              doc.setFont('helvetica', 'bold');
-              doc.setFontSize(7);
-              const colWidthsM = [8, 35, 55, 35, 45]; // #, Estado, Club, Temporalidad, Domicilio
-              const headersM = ['#', 'ESTADO', 'CLUB', 'TEMPORALIDAD', 'DOMICILIO'];
-              
-              let xPos = margin;
-              // Línea superior
-              doc.setLineWidth(0.3);
-              doc.line(margin, yPos - 1, pageWidth - margin, yPos - 1);
-              
-              headersM.forEach((header, i) => {
-                doc.text(header, xPos + 1, yPos + 2);
-                xPos += colWidthsM[i];
-              });
-              
-              // Línea separadora
-              doc.line(margin, yPos + 4, pageWidth - margin, yPos + 4);
-              
-              return yPos + 6;
-            };
+            // Tabla de clubes
+            const colWidthsH = [8, 30, 50, 30, 50];
+            const headersH = ['#', 'Estado', 'Club', 'Temporalidad', 'Domicilio'];
             
-            y = dibujarEncabezadoTabla(y);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(6);
+            let xPosH = margin + 5;
+            headersH.forEach((header, i) => {
+              doc.text(header, xPosH, y);
+              xPosH += colWidthsH[i];
+            });
+            y += 3;
+            doc.setLineWidth(0.2);
+            doc.line(margin + 5, y - 1, pageWidth - margin, y - 1);
             
-            // Filas de la matriz
             doc.setFont('helvetica', 'normal');
-            doc.setFontSize(6.5);
-            const colWidthsM = [8, 35, 55, 35, 45];
-            const filaAltura = 4;
-            const margenInferior = 40; // Espacio para firma
+            doc.setFontSize(5.5);
             
-            matrizResultado.filas.forEach((fila, idx) => {
-              // Verificar si necesitamos nueva página
+            const margenInferior = 35;
+            matrizResultado.filas.forEach((fila) => {
+              // Nueva página si es necesario
               if (y > (pageHeight - margenInferior)) {
-                // Línea de cierre antes de nueva página
-                doc.setLineWidth(0.3);
-                doc.line(margin, y - 1, pageWidth - margin, y - 1);
-                
-                // Nueva página
                 doc.addPage();
-                y = margin + 10;
-                
-                // Encabezado de continuación
+                y = 15;
                 doc.setFont('helvetica', 'bold');
-                doc.setFontSize(9);
-                doc.text(`CONTINUACIÓN - ${matrizResultado.modalidad}`, margin, y);
+                doc.setFontSize(8);
+                doc.text(`Continuación - ${matrizResultado.modalidad}`, margin, y);
                 y += 6;
-                doc.text(`Tiradas FEMETI período: ${matrizResultado.temporalidad.textoCompleto}`, margin, y);
-                y += 6;
-                
-                // Re-dibujar encabezado de tabla
-                y = dibujarEncabezadoTabla(y);
                 doc.setFont('helvetica', 'normal');
-                doc.setFontSize(6.5);
+                doc.setFontSize(5.5);
               }
               
-              let xPos = margin;
-              
-              // Número de fila
-              doc.text(String(fila.numero), xPos + 2, y + 2);
-              xPos += colWidthsM[0];
-              
-              // Estado
-              doc.text((fila.estado || '').substring(0, 18).toUpperCase(), xPos + 1, y + 2);
-              xPos += colWidthsM[1];
-              
-              // Club (truncar si es muy largo)
-              doc.text((fila.club || '').substring(0, 32), xPos + 1, y + 2);
-              xPos += colWidthsM[2];
-              
-              // Temporalidad
-              doc.text((fila.temporalidad || '').substring(0, 18), xPos + 1, y + 2);
-              xPos += colWidthsM[3];
-              
-              // Domicilio
-              doc.text((fila.domicilio || '').substring(0, 25), xPos + 1, y + 2);
-              
-              y += filaAltura;
+              xPosH = margin + 5;
+              doc.text(String(fila.numero), xPosH + 2, y);
+              xPosH += colWidthsH[0];
+              doc.text((fila.estado || '').substring(0, 15).toUpperCase(), xPosH, y);
+              xPosH += colWidthsH[1];
+              doc.text((fila.club || '').substring(0, 28), xPosH, y);
+              xPosH += colWidthsH[2];
+              doc.text((fila.temporalidad || '').substring(0, 15), xPosH, y);
+              xPosH += colWidthsH[3];
+              doc.text((fila.domicilio || '').substring(0, 28), xPosH, y);
+              y += 3;
             });
             
-            // Línea inferior tabla
-            doc.setLineWidth(0.3);
-            doc.line(margin, y - 1, pageWidth - margin, y - 1);
-            
-            y += 3;
-            doc.setFontSize(9);
-            
-            // Nota de total de clubes
-            doc.setFont('helvetica', 'normal');
+            y += 2;
             doc.setFontSize(7);
-            doc.text(`Total: ${matrizResultado.totalClubes} clubes en ${modalidadFEMETI.estadosSeleccionados.length} estados`, margin, y);
+            doc.text(`Total: ${matrizResultado.totalClubes} clubes en ${modalidadFEMETI.estadosSeleccionados.length} estados`, margin + 5, y);
             y += 5;
-            doc.setFontSize(9);
           }
         } else {
-          // Fallback: solo estados (sin modalidad específica)
-          doc.setFont('helvetica', 'bold');
-          doc.text('POR SER DE PETA DE COMPETENCIA NACIONAL SE SOLICITAN LOS SIGUIENTES ESTADOS (MÁXIMO 10)', margin, y);
-          y += 6;
+          // Fallback: solo estados sin matriz
           doc.setFont('helvetica', 'normal');
-          const estadosLinea = estadosSeleccionados.join(', ');
-          const lineasEstados = doc.splitTextToSize(estadosLinea, pageWidth - margin * 2);
-          lineasEstados.forEach(linea => {
-            doc.text(linea, margin, y);
+          doc.setFontSize(8);
+          estadosSeleccionados.slice(0, 10).forEach((estado, idx) => {
+            doc.text(`${idx + 1}. ${estado}`, margin + 5, y);
             y += 4;
           });
         }
-      } else {
-        // Caza
-        doc.setFont('helvetica', 'bold');
-        doc.text('SI LA ACTIVIDAD ES DE CACERÍA ESPECIFIQUE LOS ESTADOS DONDE LA PRACTICARÁ (MÁXIMO 10)', margin, y);
-        y += 6;
-        doc.setFont('helvetica', 'normal');
-        const estadosLinea = estadosSeleccionados.join(', ');
-        const lineasEstados = doc.splitTextToSize(estadosLinea, pageWidth - margin * 2);
-        lineasEstados.forEach(linea => {
-          doc.text(linea, margin, y);
-          y += 4;
-        });
       }
 
-      // ========== FIRMA ==========
-      y = Math.max(y + 15, 220); // Asegurar espacio para firma
+      // ========== I. LUGAR Y FECHA DE LA SOLICITUD ==========
+      y = Math.max(y + 10, pageHeight - 50);
       
-      // Usar fechaOficio si está definida, sino usar fecha actual
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.text('I. Lugar y fecha de la solicitud.', margin, y);
+      y += 6;
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
       const fechaDelOficio = fechaOficio ? new Date(fechaOficio + 'T12:00:00') : new Date();
-      const firmaLinea1 = `LUGAR Y FECHA DE LA SOLICITUD      Mérida, Yucatán a ${formatearFechaLarga(fechaDelOficio)}`;
-      doc.text(firmaLinea1, pageWidth / 2, y, { align: 'center' });
+      doc.text(`Mérida, Yucatán a ${formatearFechaLarga(fechaDelOficio)}`, margin + 20, y);
       y += 15;
 
-      doc.text('ATENTAMENTE.', pageWidth / 2, y, { align: 'center' });
-      y += 5;
-      doc.text('SUFRAGIO EFECTIVO, NO REELECCIÓN', pageWidth / 2, y, { align: 'center' });
-      y += 20;
+      // Firma
+      doc.text('Respetuosamente.', pageWidth / 2, y, { align: 'center' });
+      y += 4;
+      doc.text('Sufragio Efectivo. No Reelección', pageWidth / 2, y, { align: 'center' });
+      y += 12;
 
-      doc.setFont('helvetica', 'bold');
-      doc.text(DATOS_CLUB.presidente, pageWidth / 2, y, { align: 'center' });
-      y += 5;
-      doc.setFont('helvetica', 'normal');
-      doc.text('PRESIDENTE DEL CLUB.', pageWidth / 2, y, { align: 'center' });
+      // Línea de firma
+      doc.setLineWidth(0.3);
+      doc.line(pageWidth / 2 - 40, y, pageWidth / 2 + 40, y);
+      y += 4;
+      doc.setFontSize(7);
+      doc.text('(Nombre y firma)', pageWidth / 2, y, { align: 'center' });
 
       // Guardar PDF
       const tipoLabel = tipoPETA === 'tiro' ? 'TIRO' : tipoPETA === 'competencia' ? 'COMPETENCIA' : 'CAZA';
       const nombreArchivo = `PETA_${tipoLabel}_${socioSeleccionado.nombre.replace(/\s+/g, '_').substring(0, 20)}_${new Date().getFullYear()}.pdf`;
       
       doc.save(nombreArchivo);
+      showToast(`PDF generado: ${nombreArchivo}`, 'success', 3000);
 
     } catch (error) {
       console.error('Error generando PDF:', error);
-      alert('Error al generar PDF: ' + error.message);
+      showToast('Error al generar PDF: ' + error.message, 'error', 5000);
     } finally {
       setGenerando(false);
     }
@@ -1031,12 +1088,25 @@ export default function GeneradorPETA({ userEmail, onBack }) {
           </div>
         )}
 
-        {/* Paso 3: Datos del Solicitante */}
+        {/* Paso 3: Datos del Solicitante (DN27 SEDENA-02-045) */}
         {socioSeleccionado && (
           <div className="peta-section">
             <h3>3. Datos del Solicitante</h3>
             
+            {/* Fila: No. Expediente y Renovación */}
             <div className="form-row">
+              <label htmlFor="gen-no-expediente">
+                No. Expediente:
+                <input
+                  id="gen-no-expediente"
+                  type="text"
+                  name="noExpediente"
+                  value={noExpediente}
+                  onChange={(e) => setNoExpediente(e.target.value)}
+                  placeholder="Número de expediente"
+                  aria-label="Número de expediente SEDENA"
+                />
+              </label>
               <label className="renovacion-check">
                 <input
                   type="checkbox"
@@ -1047,21 +1117,25 @@ export default function GeneradorPETA({ userEmail, onBack }) {
               </label>
             </div>
 
-            <div className="form-row">
-              <label htmlFor="gen-peta-anterior">
-                No. PETA Anterior (S-1/M-4/):
-                <input
-                  id="gen-peta-anterior"
-                  type="text"
-                  name="petaAnterior"
-                  value={petaAnterior}
-                  onChange={(e) => setPetaAnterior(e.target.value)}
-                  placeholder="4 dígitos del PETA anterior"
-                  aria-label="Número del PETA anterior"
-                />
-              </label>
-            </div>
+            {/* Fila: PETA Anterior (solo si es renovación) */}
+            {esRenovacion && (
+              <div className="form-row">
+                <label htmlFor="gen-peta-anterior">
+                  No. Permiso anterior:
+                  <input
+                    id="gen-peta-anterior"
+                    type="text"
+                    name="petaAnterior"
+                    value={petaAnterior}
+                    onChange={(e) => setPetaAnterior(e.target.value)}
+                    placeholder="Número del PETA anterior"
+                    aria-label="Número del PETA anterior"
+                  />
+                </label>
+              </div>
+            )}
 
+            {/* Fila: Calle y Número */}
             <div className="form-row direccion">
               <label htmlFor="gen-calle" className="calle">
                 Calle:
@@ -1071,10 +1145,38 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                   name="calle"
                   value={calle}
                   onChange={(e) => setCalle(e.target.value)}
-                  placeholder="Calle y número"
+                  placeholder="Nombre de la calle"
                   aria-label="Calle del domicilio"
                 />
               </label>
+              <label htmlFor="gen-num-ext" className="numero">
+                No. Ext:
+                <input
+                  id="gen-num-ext"
+                  type="text"
+                  name="numeroExterior"
+                  value={numeroExterior}
+                  onChange={(e) => setNumeroExterior(e.target.value)}
+                  placeholder="123"
+                  aria-label="Número exterior"
+                />
+              </label>
+              <label htmlFor="gen-num-int" className="numero">
+                No. Int:
+                <input
+                  id="gen-num-int"
+                  type="text"
+                  name="numeroInterior"
+                  value={numeroInterior}
+                  onChange={(e) => setNumeroInterior(e.target.value)}
+                  placeholder="A"
+                  aria-label="Número interior (opcional)"
+                />
+              </label>
+            </div>
+
+            {/* Fila: Colonia y CP */}
+            <div className="form-row direccion">
               <label htmlFor="gen-colonia" className="colonia">
                 Colonia:
                 <input
@@ -1087,9 +1189,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                   aria-label="Colonia del domicilio"
                 />
               </label>
-            </div>
-
-            <div className="form-row direccion2">
               <label htmlFor="gen-cp" className="cp">
                 C.P.:
                 <input
@@ -1103,8 +1202,12 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                   aria-label="Código postal del domicilio"
                 />
               </label>
+            </div>
+
+            {/* Fila: Municipio y Estado */}
+            <div className="form-row direccion2">
               <label htmlFor="gen-municipio" className="municipio">
-                Municipio:
+                Municipio o Delegación:
                 <input
                   id="gen-municipio"
                   type="text"
@@ -1123,8 +1226,24 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                   name="estadoDomicilio"
                   value={estadoDomicilio}
                   onChange={(e) => setEstadoDomicilio(e.target.value)}
-                  placeholder="YUC."
+                  placeholder="Yucatán"
                   aria-label="Estado del domicilio"
+                />
+              </label>
+            </div>
+
+            {/* Fila: Correo electrónico */}
+            <div className="form-row">
+              <label htmlFor="gen-correo">
+                Correo electrónico:
+                <input
+                  id="gen-correo"
+                  type="email"
+                  name="correoElectronico"
+                  value={correoElectronico}
+                  onChange={(e) => setCorreoElectronico(e.target.value)}
+                  placeholder="ejemplo@email.com"
+                  aria-label="Correo electrónico del solicitante"
                 />
               </label>
             </div>
@@ -1163,10 +1282,11 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                   name="fechaInicio"
                   value={fechaInicio}
                   onChange={(e) => setFechaInicio(e.target.value)}
-                  min={new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                  min={getFechaMinInicio()}
                   aria-label="Fecha de inicio de vigencia del PETA"
                   aria-required="true"
                 />
+                <span className="fecha-hint">Mín. 15 días después del oficio: {getFechaMinInicio()}</span>
               </label>
               <label htmlFor="gen-fecha-fin">
                 Fecha de fin:
@@ -1270,6 +1390,88 @@ export default function GeneradorPETA({ userEmail, onBack }) {
               fechaSolicitud={fechaOficio || new Date().toISOString().split('T')[0]}
               maxEstados={10}
             />
+          </div>
+        )}
+
+        {/* Paso 6: Campo de Tiro (solo para tiro) */}
+        {socioSeleccionado && tipoPETA === 'tiro' && (
+          <div className="peta-section">
+            <h3>6. Campo de Tiro (Sección G - DN27)</h3>
+            
+            <div className="campo-tiro-info" style={{ 
+              background: 'var(--bg-secondary)', 
+              padding: '15px', 
+              borderRadius: '8px',
+              marginBottom: '15px'
+            }}>
+              <p style={{ fontWeight: 'bold', marginBottom: '8px' }}>
+                🏟️ Campo de Tiro del Club (siempre incluido):
+              </p>
+              <p style={{ marginLeft: '10px', fontSize: '14px' }}>
+                {DATOS_CLUB.nombre}
+              </p>
+              <p style={{ marginLeft: '10px', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                {DATOS_CLUB.campoTiro.texto}
+              </p>
+            </div>
+
+            <div className="club-invitado-section">
+              <label className="club-invitado-check" style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '10px',
+                marginBottom: '15px',
+                cursor: 'pointer'
+              }}>
+                <input
+                  type="checkbox"
+                  checked={tieneClubInvitado}
+                  onChange={(e) => setTieneClubInvitado(e.target.checked)}
+                />
+                <span style={{ fontWeight: '600' }}>
+                  📩 Agregar club invitado (requiere oficio de invitación anexo)
+                </span>
+              </label>
+
+              {tieneClubInvitado && (
+                <div className="club-invitado-form" style={{ 
+                  background: 'var(--bg-tertiary)', 
+                  padding: '15px', 
+                  borderRadius: '8px',
+                  marginTop: '10px'
+                }}>
+                  <div className="form-row" style={{ marginBottom: '12px' }}>
+                    <label htmlFor="gen-club-invitado" style={{ display: 'block', marginBottom: '5px' }}>
+                      Nombre del Club Invitado:
+                    </label>
+                    <input
+                      id="gen-club-invitado"
+                      type="text"
+                      value={clubInvitado}
+                      onChange={(e) => setClubInvitado(e.target.value)}
+                      placeholder="Ej: Club de Tiro de Cancún"
+                      style={{ width: '100%', padding: '8px', borderRadius: '6px' }}
+                    />
+                  </div>
+                  <div className="form-row">
+                    <label htmlFor="gen-domicilio-club-invitado" style={{ display: 'block', marginBottom: '5px' }}>
+                      Domicilio del Campo de Tiro:
+                    </label>
+                    <textarea
+                      id="gen-domicilio-club-invitado"
+                      value={domicilioClubInvitado}
+                      onChange={(e) => setDomicilioClubInvitado(e.target.value)}
+                      placeholder="Dirección completa del campo de tiro del club invitado"
+                      rows={2}
+                      style={{ width: '100%', padding: '8px', borderRadius: '6px', resize: 'vertical' }}
+                    />
+                  </div>
+                  <p style={{ fontSize: '12px', color: '#f59e0b', marginTop: '10px' }}>
+                    ⚠️ Recuerda anexar el oficio de invitación del club al expediente.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

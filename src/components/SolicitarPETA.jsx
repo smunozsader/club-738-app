@@ -159,16 +159,20 @@ export default function SolicitarPETA({ userEmail, targetEmail, onBack }) {
     const hoy = new Date();
     let inicio, fin;
     
+    // DN27: Inicio mínimo 15 días después de la solicitud
+    inicio = new Date(hoy);
+    inicio.setDate(inicio.getDate() + 15);
+    
     if (tipoPETA === 'caza') {
-      // Caza: 1 Julio → 30 Junio del siguiente año
-      const año = hoy.getMonth() >= 6 ? hoy.getFullYear() : hoy.getFullYear() - 1;
-      inicio = new Date(año, 6, 1); // 1 Jul
-      fin = new Date(año + 1, 5, 30); // 30 Jun siguiente
+      // DN27: Temporada de caza es 1 julio - 30 junio
+      // Si inicio es julio-dic (mes 6-11) → fin = 30 jun año siguiente
+      // Si inicio es ene-jun (mes 0-5) → fin = 30 jun mismo año
+      const mesInicio = inicio.getMonth();
+      const añoFin = mesInicio >= 6 ? inicio.getFullYear() + 1 : inicio.getFullYear();
+      fin = new Date(añoFin, 5, 30); // 30 Jun
     } else {
-      // Tiro/Competencia: Fecha solicitud → 31 Dic mismo año
-      inicio = new Date(hoy);
-      inicio.setDate(inicio.getDate() + 15); // 15 días después (mínimo trámite)
-      fin = new Date(hoy.getFullYear(), 11, 31); // 31 Dic
+      // Tiro/Competencia: hasta 31 Dic del mismo año
+      fin = new Date(inicio.getFullYear(), 11, 31); // 31 Dic
     }
     
     return { inicio, fin };
