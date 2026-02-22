@@ -14,18 +14,26 @@ const MESES_ES = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO',
  * Calcula la temporalidad del PETA:
  * Desde fecha solicitud + 15 días hasta 31 DIC del año
  */
+// Meses abreviados para formato corto
+const MESES_CORTO = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN',
+                    'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+
 export const calcularTemporalidad = (fechaSolicitud) => {
   const fecha = new Date(fechaSolicitud);
   fecha.setDate(fecha.getDate() + 15);
   
   const dia = fecha.getDate();
   const mes = MESES_ES[fecha.getMonth()];
+  const mesCorto = MESES_CORTO[fecha.getMonth()];
   const año = fecha.getFullYear();
+  const añoCorto = String(año).slice(-2);
+  const diaStr = dia.toString().padStart(2, '0');
   
   return {
     inicio: `${dia} DE ${mes} ${año}`,
     fin: `31 DE DICIEMBRE ${año}`,
-    textoCompleto: `${dia} DE ${mes} - 31 DE DICIEMBRE ${año}`
+    textoCompleto: `${dia} DE ${mes} - 31 DE DICIEMBRE ${año}`,
+    corto: `${diaStr}-${mesCorto}-${añoCorto} A 31-DIC-${añoCorto}`
   };
 };
 
@@ -240,10 +248,20 @@ export const MODALIDADES_FEMETI_2026 = {
           }
         ],
         "totalEventos": 1
+      },
+      "QUINTANA ROO": {
+        "display": "Quintana Roo",
+        "clubes": [
+          {
+            "club": "Palo Seco Club de Caza, Tiro y Pesca A.C.",
+            "domicilio": "Cancún, Q. Roo."
+          }
+        ],
+        "totalEventos": 6
       }
     },
-    "totalEstados": 12,
-    "totalEventos": 412
+    "totalEstados": 13,
+    "totalEventos": 418
   },
   "RECORRIDOS DE CAZA": {
     "tipoArma": "Escopeta",
@@ -447,9 +465,13 @@ export const MODALIDADES_FEMETI_2026 = {
           {
             "club": "Club 78 C. T. y P., A.C.",
             "domicilio": "Valladolid, Q. Roo."
+          },
+          {
+            "club": "Palo Seco Club de Caza, Tiro y Pesca A.C.",
+            "domicilio": "Cancún, Q. Roo."
           }
         ],
-        "totalEventos": 6
+        "totalEventos": 12
       },
       "YUCATÁN": {
         "display": "Yucatán",
@@ -808,10 +830,20 @@ export const MODALIDADES_FEMETI_2026 = {
           }
         ],
         "totalEventos": 1
+      },
+      "QUINTANA ROO": {
+        "display": "Quintana Roo",
+        "clubes": [
+          {
+            "club": "Palo Seco Club de Caza, Tiro y Pesca A.C.",
+            "domicilio": "Cancún, Q. Roo."
+          }
+        ],
+        "totalEventos": 6
       }
     },
-    "totalEstados": 15,
-    "totalEventos": 449
+    "totalEstados": 16,
+    "totalEventos": 455
   },
   "SILUETAS METALICAS": {
     "tipoArma": "Rifle/Pistola",
@@ -1384,10 +1416,20 @@ export const MODALIDADES_FEMETI_2026 = {
           }
         ],
         "totalEventos": 4
+      },
+      "QUINTANA ROO": {
+        "display": "Quintana Roo",
+        "clubes": [
+          {
+            "club": "Palo Seco Club de Caza, Tiro y Pesca A.C.",
+            "domicilio": "Cancún, Q. Roo."
+          }
+        ],
+        "totalEventos": 6
       }
     },
-    "totalEstados": 24,
-    "totalEventos": 937
+    "totalEstados": 25,
+    "totalEventos": 943
   },
   "TIRO PRACTICO": {
     "tipoArma": "Pistola/Rifle/Escopeta",
@@ -1656,10 +1698,20 @@ export const MODALIDADES_FEMETI_2026 = {
           }
         ],
         "totalEventos": 1
+      },
+      "QUINTANA ROO": {
+        "display": "Quintana Roo",
+        "clubes": [
+          {
+            "club": "Palo Seco Club de Caza, Tiro y Pesca A.C.",
+            "domicilio": "Cancún, Q. Roo."
+          }
+        ],
+        "totalEventos": 6
       }
     },
-    "totalEstados": 18,
-    "totalEventos": 615
+    "totalEstados": 19,
+    "totalEventos": 621
   },
   "TIRO NEUMATICO": {
     "tipoArma": "Rifle/Pistola de Aire",
@@ -1756,8 +1808,13 @@ export const generarMatrizClubesPDF = (modalidad, estadosSeleccionados, fechaSol
   let contador = 1;
   
   for (const estado of estadosSeleccionados) {
-    const estadoData = data.estados[estado];
-    if (!estadoData) continue;
+    // Normalizar estado a MAYÚSCULAS para coincidir con claves del objeto MODALIDADES_FEMETI_2026
+    const estadoNormalizado = estado.toUpperCase();
+    const estadoData = data.estados[estadoNormalizado];
+    if (!estadoData) {
+      console.warn(`[generarMatrizClubesPDF] Estado no encontrado: "${estado}" → "${estadoNormalizado}"`);
+      continue;
+    }
     
     for (const clubInfo of estadoData.clubes) {
       filas.push({

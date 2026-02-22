@@ -19,8 +19,9 @@ import DashboardRenovaciones from './components/DashboardRenovaciones';
 import DashboardCumpleanos from './components/DashboardCumpleanos';
 import GeneradorPETA from './components/GeneradorPETA';
 import CalendarioTiradas from './components/CalendarioTiradas';
-import SolicitarPETA from './components/SolicitarPETA';
-import MisPETAs from './components/MisPETAs';
+// SolicitarPETA y MisPETAs desactivados - usar GeneradorPETA del admin
+// import SolicitarPETA from './components/SolicitarPETA';
+// import MisPETAs from './components/MisPETAs';
 import VerificadorPETA from './components/VerificadorPETA';
 import ExpedienteImpresor from './components/ExpedienteImpresor';
 import RegistroPagos from './components/RegistroPagos';
@@ -609,12 +610,7 @@ function App() {
                 <span className="dash-card-cta">Actualizar arsenal →</span>
               </div>
               
-              <div className="dash-card petas" onClick={() => setActiveSection('mis-petas')}>
-                <div className="dash-card-icon">🎯</div>
-                <h3>Mis PETAs</h3>
-                <p>Solicita y gestiona tus permisos de transporte</p>
-                <span className="dash-card-cta">Ver solicitudes →</span>
-              </div>
+              {/* MisPETAs desactivado - usar GeneradorPETA del admin */}
               
               <div className="dash-card perfil" onClick={() => setActiveSection('mi-perfil')}>
                 <div className="dash-card-icon">⚙️</div>
@@ -768,6 +764,7 @@ function App() {
           </div>
         )}
 
+        {/* MisPETAs desactivado - usar GeneradorPETA del admin
         {activeSection === 'mis-petas' && (
           <div className="section-mis-petas">
             <button className="btn-back" onClick={() => setActiveSection('dashboard')}>
@@ -775,11 +772,11 @@ function App() {
             </button>
             <MisPETAs 
               userEmail={user.email}
-              /* SolicitarPETA desactivado - usar GeneradorPETA del admin */
               onBack={() => setActiveSection('dashboard')}
             />
           </div>
         )}
+        */}
 
         {activeSection === 'mi-perfil' && (
           <div className="section-mi-perfil">

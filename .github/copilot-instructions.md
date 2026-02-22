@@ -1,6 +1,6 @@
 # Club 738 Web - AI Coding Agent Instructions
 
-**Status**: v1.36.1 | Updated: Jan 29, 2026  
+**Status**: v1.37.7 | Updated: Feb 22, 2026  
 **Framework**: React 18.x + Vite 5.x + Firebase (Firestore, Auth, Storage, Functions, Hosting)
 
 ---
@@ -53,7 +53,7 @@ firebase functions:log                # View Cloud Function logs
 ### Tech Stack
 - **Frontend**: React 18.2.x + Vite 5.x with code splitting (react-vendor, firebase-vendor, xlsx-vendor, pdf-vendor chunks)
 - **Backend**: Firebase (Auth, Firestore, Cloud Storage, Cloud Functions v2, Hosting)
-- **Key Libs**: jsPDF (PDF generation), tesseract.js (OCR for RFAs), xlsx (Excel), pdfjs-dist (PDF processing), googleapis (Google Calendar)
+- **Key Libs**: jsPDF (PDF generation), tesseract.js (OCR for RFAs), xlsx (Excel), pdfjs-dist (PDF processing)
 - **CSS**: Co-located modules + CSS variables (dark mode)
 - **Analytics**: Firebase Analytics (production only)
 
@@ -69,8 +69,8 @@ export { auth, db, storage, analytics, trackEvent, trackPageView }
 3. **PETAs** (`socios/{email}/petas/{petaId}`) - Authorization requests (1-10 weapons max, SEDENA forms)
 
 ### Integration Points
-- **Google Calendar**: Cloud Functions (v2) sync citas → smunozam@gmail.com calendar with auto-invites
-- **Cloud Functions**: Node 22, max 10 instances, 3 main functions: `onPetaCreated`, `crearEventoCalendar`, `actualizarEventoCalendar`
+- **WhatsApp**: Citas se agendan via WhatsApp (+525665824667) - no hay sistema interno de citas
+- **Cloud Functions**: Node 22, max 10 instances. Funciones: `onPetaCreated`, `onCitaCreated`, `onNotificacionCreated`, `enviarRecordatorios`, `scheduledFirestoreBackup`
 - **Cloud Storage**: Files >5MB rejected, paths normalized with lowercase emails, RFA PDFs OCR-validated for calibre
 
 ### Design System - CSS Variables (Non-Negotiable)
@@ -347,12 +347,13 @@ Official authorization package **physically submitted** to 32 Zona Militar (Vall
 | e5cinco Receipt | Socio | `documentos/{email}/recibo-e5cinco.pdf` | PDF |
 | **PETA Form** | **Auto-generated** | **From Firestore** | **PDF** |
 
-### Key Tools
-- **SolicitarPETA.jsx**: Initiate PETA, select 1-10 weapons
+### Key Tools (Admin Only)
+- **GeneradorPETA.jsx**: Auto-populate official PDF form from Firestore ← KEY TOOL (SOLO ADMIN)
 - **DocumentList.jsx**: Upload 14 supporting docs
 - **VerificadorPETA.jsx**: Secretary verification checklist
-- **GeneradorPETA.jsx**: Auto-populate official PDF form from Firestore ← KEY TOOL
 - **ExpedienteImpresor.jsx**: Bundle all 16 docs for hand-in
+
+> ⚠️ **NOTA**: `SolicitarPETA.jsx` está DESACTIVADO para socios. Solo el admin genera PETAs via GeneradorPETA.
 
 ---
 
@@ -442,29 +443,28 @@ socios/{email}/armas/{armaId}: {
 
 ## ☁️ Cloud Functions (v2 Architecture)
 
-### Three Active Functions
+### Active Functions
 1. **`onPetaCreated`** - Trigger: `socios/{email}/petas/{petaId}` created
    - Sends email notification to secretary (smunozam@gmail.com)
    - Includes weapon list, authorization states, PETA type
    
-2. **`crearEventoCalendar`** - Trigger: `socios/{email}/citas/{citaId}` created
-   - Creates Google Calendar event in smunozam@gmail.com
-   - Auto-invites socio via email
-   - Reminders: 24h, 1h, 15min
-   - Color: Blue (#9)
+2. **`onCitaCreated`** - Trigger: `socios/{email}/citas/{citaId}` created
+   - Sends confirmation email to socio
 
-3. **`actualizarEventoCalendar`** - Trigger: `socios/{email}/citas/{citaId}` updated
-   - Confirmada: Green title "✅ CONFIRMADA" + color #10
-   - Completada: Gray "✔️ COMPLETADA" + color #8
-   - Cancelada: Deletes event from calendar
-   - Sends status change email to socio
+3. **`onNotificacionCreated`** - Trigger: `notificaciones/{notifId}` created
+   - Processes system notifications
+
+4. **`enviarRecordatorios`** - Scheduled function for reminders
+
+5. **`scheduledFirestoreBackup`** / **`manualFirestoreBackup`** - Database backups
+
+> ⚠️ **NOTA**: Las funciones `crearEventoCalendar` y `actualizarEventoCalendar` fueron ELIMINADAS (Feb 2026). El sistema de citas ahora usa WhatsApp.
 
 ### Key Configuration
 - **Region**: us-central1
 - **Max Instances**: 10
 - **Runtime**: Node 22
 - **Service Account**: firebase-adminsdk-fbsvc@club-738-appgit-50256612-450b8.iam.gserviceaccount.com
-- **Calendar Email**: smunozam@gmail.com (must be shared with service account)
 - **Secrets**: `EMAIL_PASS` (set via `firebase functions:secrets:set EMAIL_PASS`)
 
 ### Deployment
@@ -577,51 +577,8 @@ git add . && git rebase --continue && git push
 | [storage.rules](storage.rules) | Cloud Storage access control |
 | [firebase.json](firebase.json) | Hosting rewrites, CSP headers, cache headers |
 | [vite.config.js](vite.config.js) | Build optimization, code splitting, compression |
-| [functions/index.js](functions/index.js) | Cloud Functions v2 (onPetaCreated, calendar integration) |
+| [functions/index.js](functions/index.js) | Cloud Functions v2 (onPetaCreated, onNotificacionCreated, backups) |
 | [DEVELOPMENT_JOURNAL.md](DEVELOPMENT_JOURNAL.md) | Feature history, versioning, architectural notes |
-
----
-
-## 🔫 Arsenal Data Integrity - "LA FUENTE DE VERDAD"
-
-### Master Source: Excel File
-`socios/FUENTE_DE_VERDAD_CLUB_738_*.xlsx`:
-- **76 socios** with complete profiles
-- **292 weapons** (80 rifles, 69 shotguns, 99 pistols, 2 revolvers, 1 kit, 1 special)
-- **9 socios without weapons** (recent members, active placeholders)
-- NEVER delete or simplify entries - they're official SEDENA documents
-
-### What Stays Synced Daily in Firestore
-```javascript
-socios/{email}/armas/{armaId}: {
-  clase: "ESCOPETA SEMIAUTOMATICA",  // Verbatim from SEDENA
-  type_group: "ESCOPETA",            // Normalized for UI queries
-  calibre: ".22" | "9mm" | etc,      // Art. 50 SEDENA compliant
-  marca, modelo, matricula, folio,
-  modalidad: 'caza' | 'tiro' | 'ambas',
-  documentoRegistro: URL             // RFA PDF
-}
-```
-
-### Critical Lesson: Weapon Caliber Validation
-❌ **NEVER assume** a caliber without PDF verification
-✅ **ALWAYS OCR** weapon registration PDFs before entry
-
-**Art. 50 LFAFE Compliance**:
-- ✅ Permitted: .22 LR, .380 ACP, 9mm (some models), 38 SPL
-- ❌ Prohibited: .40 S&W, 10mm, .45 ACP, 357 MAG
-
-**Process**: 
-1. Extract caliber from PDF via OCR
-2. Validate against Art. 50 SEDENA
-3. If uncertain → ask user for confirmation
-4. One wrong calibre = PETA rejection from 32 Zona Militar
-
-### Key Tools
-- **MisArmas.jsx**: Socio views their weapons
-- **AdminAltasArsenal.jsx**: Register new weapons
-- **AdminBajasArsenal.jsx**: Deregister weapons
-- **ReportadorExpedientes.jsx**: SEDENA reports
 
 ---
 
@@ -683,6 +640,8 @@ socios/{email}/armas/{armaId}: {
 8. **Weapon Emojis**: Prohibited in UI text (accessibility/sensitivity)
 9. **Cloud Functions**: v2 API uses `onDocumentCreated`/`onDocumentUpdated`, not v1 patterns
 10. **Toast Context**: Must wrap components in `<ToastProvider>` in App.jsx (already done)
+11. **Estado Normalization**: En `generarMatrizClubesPDF()`, usar `.toUpperCase()` para buscar estados (claves son MAYÚSCULAS)
+12. **SolicitarPETA Desactivado**: Socios NO pueden solicitar PETAs directamente - solo admin via GeneradorPETA
 
 ---
 
@@ -764,4 +723,4 @@ git add . && git rebase --continue && git push
 
 ---
 
-**Last Updated**: Jan 29, 2026 | Version: 1.36.1 | Framework: React 18.x + Vite 5.x + Firebase
+**Last Updated**: Feb 22, 2026 | Version: 1.37.7 | Framework: React 18.x + Vite 5.x + Firebase

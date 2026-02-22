@@ -83,11 +83,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   const [loading, setLoading] = useState(true);
   const [generando, setGenerando] = useState(false);
   
-  // Solicitudes PETA existentes
-  const [solicitudesPETA, setSolicitudesPETA] = useState([]);
-  const [solicitudSeleccionada, setSolicitudSeleccionada] = useState(null);
-  const [modoManual, setModoManual] = useState(false);
-  
   // Datos del formulario PETA
   const [tipoPETA, setTipoPETA] = useState('tiro'); // tiro, competencia, caza
   const [petaAnterior, setPetaAnterior] = useState('');
@@ -136,17 +131,13 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   console.log('🔐 [GeneradorPETA] userEmail:', userEmail);
   console.log('🔐 [GeneradorPETA] esSecretario:', esSecretario);
 
-  // En revisión desde solicitud (no manual): bloquear edición de armas/cartuchos
-  const revisionBloqueada = esSecretario && solicitudSeleccionada && !modoManual;
-
   useEffect(() => {
     console.log('🚀 [GeneradorPETA] useEffect disparado, esSecretario:', esSecretario);
     if (esSecretario) {
-      console.log('✅ [GeneradorPETA] Cargando socios y solicitudes...');
+      console.log('✅ [GeneradorPETA] Cargando socios...');
       cargarSocios();
-      cargarSolicitudesPETA();
     } else {
-      console.log('⚠️ [GeneradorPETA] NO es secretario, no se cargan solicitudes');
+      console.log('⚠️ [GeneradorPETA] NO es secretario');
     }
   }, [esSecretario]);
 
@@ -241,176 +232,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
     }
   };
 
-  const cargarSolicitudesPETA = async () => {
-    try {
-      console.log('🔍 Iniciando carga de solicitudes PETA...');
-      const sociosRef = collection(db, 'socios');
-      const sociosSnap = await getDocs(sociosRef);
-      
-      console.log(`📊 Total socios encontrados: ${sociosSnap.size}`);
-      
-      const todasSolicitudes = [];
-      
-      for (const socioDoc of sociosSnap.docs) {
-        const socioData = socioDoc.data();
-        const petasRef = collection(db, 'socios', socioDoc.id, 'petas');
-        const petasSnap = await getDocs(petasRef);
-        
-        if (!petasSnap.empty) {
-          console.log(`✅ ${socioDoc.id} tiene ${petasSnap.size} PETA(s)`);
-        }
-        
-        petasSnap.forEach(petaDoc => {
-          const petaData = petaDoc.data();
-          console.log(`  └─ PETA ${petaDoc.id}:`, {
-            tipo: petaData.tipo,
-            estado: petaData.estado,
-            armas: petaData.armasIncluidas?.length
-          });
-          todasSolicitudes.push({
-            id: petaDoc.id,
-            socioEmail: socioDoc.id,
-            socioNombre: socioData.nombre || socioDoc.id,
-            ...petaData
-          });
-        });
-      }
-      
-      console.log(`📋 Total solicitudes PETA encontradas: ${todasSolicitudes.length}`);
-      
-      // Ordenar por fecha de solicitud (más recientes primero)
-      todasSolicitudes.sort((a, b) => {
-        const fechaA = a.fechaSolicitud?.toMillis() || 0;
-        const fechaB = b.fechaSolicitud?.toMillis() || 0;
-        return fechaB - fechaA;
-      });
-      
-      setSolicitudesPETA(todasSolicitudes);
-      console.log('✅ Solicitudes cargadas en estado:', todasSolicitudes);
-    } catch (error) {
-      console.error('❌ Error cargando solicitudes PETA:', error);
-    }
-  };
-
-  const cargarSolicitud = async (solicitud) => {
-    try {
-      console.log('📝 Cargando solicitud:', solicitud);
-      setSolicitudSeleccionada(solicitud);
-      
-      // Buscar y seleccionar el socio
-      const socio = socios.find(s => s.email === solicitud.socioEmail);
-      if (!socio) {
-        console.error('❌ Socio no encontrado:', solicitud.socioEmail);
-        showToast('Error: Socio no encontrado en la base de datos', 'error', 4000);
-        return;
-      }
-      
-      console.log('✅ Socio encontrado:', socio.nombre);
-      setSocioSeleccionado(socio);
-      
-      // Cargar armas del socio y esperar a que termine
-      console.log('🔄 Cargando armas del socio...');
-      const armasList = await cargarArmasSocio(socio.email);
-      
-      // Pre-llenar formulario con datos de la solicitud
-      setTipoPETA(solicitud.tipo || 'tiro');
-      setEsRenovacion(solicitud.esRenovacion || false);
-      setPetaAnterior(solicitud.petaAnteriorNumero || '');
-      setNoExpediente(solicitud.noExpediente || '');
-      
-      // Domicilio (formato DN27)
-      if (solicitud.domicilio) {
-        setCalle(solicitud.domicilio.calle || '');
-        setNumeroExterior(solicitud.domicilio.numeroExterior || solicitud.domicilio.numero || '');
-        setNumeroInterior(solicitud.domicilio.numeroInterior || '');
-        setColonia(solicitud.domicilio.colonia || '');
-        setCp(solicitud.domicilio.cp || '');
-        setMunicipio(solicitud.domicilio.municipio || solicitud.domicilio.ciudad || '');
-        setEstadoDomicilio(solicitud.domicilio.estado || '');
-      }
-      // Correo electrónico
-      setCorreoElectronico(solicitud.correoElectronico || solicitud.email || socio.email || '');
-      
-      // Fechas
-      if (solicitud.vigenciaInicio) {
-        const inicio = solicitud.vigenciaInicio.toDate();
-        setFechaInicio(inicio.toISOString().split('T')[0]);
-      }
-      if (solicitud.vigenciaFin) {
-        const fin = solicitud.vigenciaFin.toDate();
-        setFechaFin(fin.toISOString().split('T')[0]);
-      }
-      
-      // Armas incluidas
-      if (solicitud.armasIncluidas && Array.isArray(solicitud.armasIncluidas)) {
-        console.log('📋 Armas en solicitud:', solicitud.armasIncluidas);
-        
-        // Helper: normalizar matrícula para comparación (remover guiones, guiones bajos, espacios)
-        const normalizarMatricula = (mat) => {
-          return mat?.toString().toUpperCase().replace(/[-_\s]/g, '') || '';
-        };
-        
-        // IMPORTANTE: Las armas en solicitud pueden tener IDs diferentes a Firestore
-        // Hacer match por matrícula en lugar de por ID
-        const armasASeleccionar = [];
-        const cartuchos = {};
-        
-        solicitud.armasIncluidas.forEach(armaEnSolicitud => {
-          const matriculaNormalizada = normalizarMatricula(armaEnSolicitud.matricula);
-          
-          console.log(`🔍 Buscando match para: "${armaEnSolicitud.matricula}" (normalizada: "${matriculaNormalizada}")`);
-          
-          // Buscar en lista de armas cargada por matrícula normalizada
-          const armaEnFirestore = armasList.find(a => {
-            const matFirestoreNorm = normalizarMatricula(a.matricula);
-            console.log(`  Comparando con: "${a.matricula}" (normalizada: "${matFirestoreNorm}") → ${matFirestoreNorm === matriculaNormalizada ? '✓ MATCH' : '✗'}`);
-            return matFirestoreNorm === matriculaNormalizada;
-          });
-          
-          if (armaEnFirestore) {
-            // Encontrada en Firestore - usar el ID de Firestore
-            console.log(`✅ Match por matrícula: ${armaEnSolicitud.matricula} → ${armaEnFirestore.matricula} (ID: ${armaEnFirestore.id})`);
-            armasASeleccionar.push(armaEnFirestore.id);
-            {
-              const limites = getLimitesCartuchos(armaEnFirestore.calibre, armaEnFirestore.clase);
-              const val = armaEnSolicitud.cartuchos ?? limites.default;
-              cartuchos[armaEnFirestore.id] = ajustarCartuchos(val, armaEnFirestore.calibre, armaEnFirestore.clase);
-            }
-          } else {
-            // No encontrada en Firestore - agregar con datos de la solicitud
-            console.log(`⚠️ Arma no encontrada en Firestore: ${armaEnSolicitud.matricula}, agregando desde solicitud`);
-            const armaConDatosSolicitud = { id: armaEnSolicitud.id, ...armaEnSolicitud };
-            setArmasSocio(prev => [...prev, armaConDatosSolicitud]);
-            armasASeleccionar.push(armaEnSolicitud.id);
-            {
-              const limites = getLimitesCartuchos(armaEnSolicitud.calibre, armaEnSolicitud.clase);
-              const val = armaEnSolicitud.cartuchos ?? limites.default;
-              cartuchos[armaEnSolicitud.id] = ajustarCartuchos(val, armaEnSolicitud.calibre, armaEnSolicitud.clase);
-            }
-          }
-        });
-        
-        console.log('🔑 IDs finales a seleccionar:', armasASeleccionar);
-        setArmasSeleccionadas(armasASeleccionar);
-        setCartuchosPorArma(cartuchos);
-        
-        console.log('✅ Armas seleccionadas establecidas:', armasASeleccionar);
-        console.log('🔫 Cartuchos por arma:', cartuchos);
-      }
-      
-      // Estados autorizados
-      if (solicitud.estadosAutorizados && Array.isArray(solicitud.estadosAutorizados)) {
-        setEstadosSeleccionados(solicitud.estadosAutorizados);
-      }
-      
-      setModoManual(false);
-      
-    } catch (error) {
-      console.error('❌ Error cargando solicitud:', error);
-      showToast('Error al cargar la solicitud. Por favor intenta de nuevo.', 'error', 4000);
-    }
-  };
-
   const cargarArmasSocio = async (email) => {
     try {
       console.log('🔫 Cargando armas de:', email);
@@ -438,7 +259,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
   };
 
   const toggleArma = (armaId) => {
-    if (revisionBloqueada) return; // No permitir cambios en modo revisión desde solicitud
     setArmasSeleccionadas(prev => {
       if (prev.includes(armaId)) {
         return prev.filter(id => id !== armaId);
@@ -541,21 +361,21 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       doc.setFontSize(8);
       doc.setFont('helvetica', 'bold');
       doc.text('SEDENA-02-045', pageWidth - margin - 25, y);
-      y += 4;
+      y += 3;
       doc.text('RFA-LC-017', pageWidth - margin - 20, y);
-      y += 6;
+      y += 5;
 
       // ========== ENCABEZADO OFICIAL ==========
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
       centrarTexto('Secretaría de la Defensa Nacional', y);
-      y += 5;
+      y += 4;
       doc.setFontSize(8);
       centrarTexto('Dirección General del Registro Federal de Armas de Fuego y Control de Explosivos.', y);
-      y += 5;
+      y += 4;
       doc.setFontSize(9);
       centrarTexto('Solicitud de permiso extraordinario para la práctica de caza, tiro y/o competencia.', y);
-      y += 8;
+      y += 6;
 
       // ========== A. DATOS DEL CLUB ==========
       doc.setFont('helvetica', 'bold');
@@ -581,7 +401,7 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       // Fila 1: No. Expediente y No. Permiso anterior
       doc.text(`No. Expediente: ${noExpediente || '_____________'}`, margin, y);
       if (esRenovacion && petaAnterior) {
-        doc.text(`No. Permiso anterior (Renovaciones): ${petaAnterior}`, pageWidth / 2, y);
+        doc.text(`No. Permiso anterior (Renovaciones): S-1/M-4/${petaAnterior}`, pageWidth / 2, y);
       }
       y += 5;
 
@@ -589,26 +409,20 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       doc.text(`Nombre: ${socioSeleccionado.nombre.toUpperCase()}`, margin, y);
       y += 5;
 
-      // Fila 3: Dirección - Calle y Número
-      doc.text('Dirección:', margin, y);
-      y += 4;
+      // Fila 3: Calle y Número (sin línea "Dirección:")
       const numeroCompleto = numeroInterior ? `${numeroExterior} Int. ${numeroInterior}` : numeroExterior;
-      doc.text(`Calle: ${calle.toUpperCase()}`, margin + 5, y);
-      doc.text(`Número: ${numeroCompleto}`, pageWidth / 2, y);
+      doc.text(`Calle: ${calle.toUpperCase()} No. ${numeroCompleto}`, margin, y);
       y += 4;
 
       // Fila 4: Colonia y CP
-      doc.text(`Colonia: ${colonia.toUpperCase()}`, margin + 5, y);
+      doc.text(`Colonia: ${colonia.toUpperCase()}`, margin, y);
       doc.text(`C.P.: ${cp}`, pageWidth / 2, y);
       y += 4;
 
-      // Fila 5: Municipio y Estado
-      doc.text(`Municipio o Delegación: ${municipio.toUpperCase()}`, margin + 5, y);
-      doc.text(`Estado: ${estadoDomicilio.toUpperCase()}`, pageWidth / 2, y);
-      y += 4;
-
-      // Fila 6: Correo electrónico
-      doc.text(`Correo electrónico: ${correoElectronico.toLowerCase()}`, margin + 5, y);
+      // Fila 5: Municipio, Estado y Correo electrónico
+      doc.text(`Municipio: ${municipio.toUpperCase()}`, margin, y);
+      doc.text(`Estado: ${estadoDomicilio.toUpperCase()}`, margin + 70, y);
+      doc.text(`Email: ${correoElectronico.toLowerCase()}`, margin + 115, y);
       y += 7;
 
       // ========== C. TIPO DE ACTIVIDAD ==========
@@ -671,18 +485,15 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       });
       y += 4;
 
-      // Línea separadora
-      doc.setLineWidth(0.2);
-      doc.line(margin, y - 1, pageWidth - margin, y - 1);
-
-      // Filas de armas (5 filas en el formulario oficial, pero soportamos 10)
+      // Filas de armas (solo las armas seleccionadas, no filas vacías)
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7);
       
-      for (let i = 0; i < 10; i++) {
+      const armasReales = armasSeleccionadas.filter(id => id);
+      for (let i = 0; i < armasReales.length; i++) {
         xPos = margin;
-        const armaId = armasSeleccionadas[i];
-        const arma = armaId ? armasSocio.find(a => a.id === armaId) : null;
+        const armaId = armasReales[i];
+        const arma = armasSocio.find(a => a.id === armaId);
         
         // Número de fila
         doc.text(`${i + 1}.`, xPos + 1, y + 2);
@@ -775,82 +586,107 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       // ========== H. COMPETENCIA NACIONAL (solo si tipoPETA === 'competencia') ==========
       if (tipoPETA === 'competencia') {
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.text('H. Si la actividad es de competencia nacional, especifique clubes, periodo y Estados', margin, y);
-        y += 4;
-        doc.text('donde participará (máximo 10).', margin, y);
+        doc.setFontSize(8);
+        doc.text('H. Si la actividad es de competencia nacional, especifique clubes, periodo y Estados donde participará (máx. 10).', margin, y);
         y += 5;
 
-        if (modalidadFEMETI?.modalidad && modalidadFEMETI?.estadosSeleccionados?.length > 0) {
-          // Generar matriz de clubes para la modalidad seleccionada
-          const matrizResultado = generarMatrizClubesPDF(
-            modalidadFEMETI.modalidad,
-            modalidadFEMETI.estadosSeleccionados,
-            fechaOficio || new Date().toISOString().split('T')[0]
-          );
-          
-          if (matrizResultado && matrizResultado.filas.length > 0) {
-            // Información de modalidad
-            doc.setFontSize(8);
-            doc.setFont('helvetica', 'bold');
-            doc.text(`Modalidad: ${matrizResultado.modalidad}`, margin + 5, y);
-            y += 4;
-            doc.setFont('helvetica', 'normal');
-            doc.text(`Tipo de arma: ${matrizResultado.tipoArma} | Calibres: ${matrizResultado.calibres}`, margin + 5, y);
-            y += 4;
-            doc.text(`Tiradas FEMETI período: ${matrizResultado.temporalidad.textoCompleto}`, margin + 5, y);
-            y += 5;
+        // Usar clubesPorEstado directamente del selector (soporta múltiples modalidades por estado)
+        if (modalidadFEMETI?.clubesPorEstado?.length > 0) {
+            // Calcular temporalidad con las mismas fechas que Sección D
+            const tempFechaInicio = new Date(fechaInicio + 'T12:00:00');
+            const tempFechaFin = new Date(fechaFin + 'T12:00:00');
+            const MESES_CORTO = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+            const diaIni = tempFechaInicio.getDate().toString().padStart(2, '0');
+            const mesIni = MESES_CORTO[tempFechaInicio.getMonth()];
+            const añoIni = String(tempFechaInicio.getFullYear()).slice(-2);
+            const diaFin = tempFechaFin.getDate().toString().padStart(2, '0');
+            const mesFin = MESES_CORTO[tempFechaFin.getMonth()];
+            const añoFin = String(tempFechaFin.getFullYear()).slice(-2);
+            const temporalidadCorta = `${diaIni}-${mesIni}-${añoIni} A ${diaFin}-${mesFin}-${añoFin}`;
             
-            // Tabla de clubes
-            const colWidthsH = [8, 30, 50, 30, 50];
-            const headersH = ['#', 'Estado', 'Club', 'Temporalidad', 'Domicilio'];
-            
+            // Encabezado de columnas (ampliado para nombres largos de clubes)
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(6);
-            let xPosH = margin + 5;
-            headersH.forEach((header, i) => {
-              doc.text(header, xPosH, y);
-              xPosH += colWidthsH[i];
-            });
+            doc.text('#', margin + 3, y);
+            doc.text('Estado', margin + 10, y);
+            doc.text('Club', margin + 48, y);
+            doc.text('Temporalidad', margin + 155, y);
             y += 3;
-            doc.setLineWidth(0.2);
-            doc.line(margin + 5, y - 1, pageWidth - margin, y - 1);
+            
+            // Agrupar todos los clubes por estado y deduplicar
+            const clubesPorEstadoAgrupados = {};
+            modalidadFEMETI.clubesPorEstado.forEach(item => {
+              const estadoKey = (item.estado || '').toUpperCase();
+              if (!clubesPorEstadoAgrupados[estadoKey]) {
+                clubesPorEstadoAgrupados[estadoKey] = {
+                  display: item.estado,
+                  clubesUnicos: new Set()
+                };
+              }
+              // Agregar todos los clubes de esta selección (deduplicando)
+              (item.clubes || []).forEach(club => {
+                const clubNombre = (club || '').trim();
+                if (clubNombre) {
+                  clubesPorEstadoAgrupados[estadoKey].clubesUnicos.add(clubNombre);
+                }
+              });
+            });
             
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(5.5);
             
             const margenInferior = 35;
-            matrizResultado.filas.forEach((fila) => {
+            let numeroEstado = 1;
+            
+            for (const estadoKey of Object.keys(clubesPorEstadoAgrupados)) {
+              const estadoData = clubesPorEstadoAgrupados[estadoKey];
+              const clubes = [...estadoData.clubesUnicos].sort();
+              
+              if (clubes.length === 0) continue;
+              
               // Nueva página si es necesario
               if (y > (pageHeight - margenInferior)) {
                 doc.addPage();
                 y = 15;
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(8);
-                doc.text(`Continuación - ${matrizResultado.modalidad}`, margin, y);
+                doc.text('Continuación - Competencia Nacional', margin, y);
                 y += 6;
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(5.5);
               }
               
-              xPosH = margin + 5;
-              doc.text(String(fila.numero), xPosH + 2, y);
-              xPosH += colWidthsH[0];
-              doc.text((fila.estado || '').substring(0, 15).toUpperCase(), xPosH, y);
-              xPosH += colWidthsH[1];
-              doc.text((fila.club || '').substring(0, 28), xPosH, y);
-              xPosH += colWidthsH[2];
-              doc.text((fila.temporalidad || '').substring(0, 15), xPosH, y);
-              xPosH += colWidthsH[3];
-              doc.text((fila.domicilio || '').substring(0, 28), xPosH, y);
+              // Imprimir estado con número
+              doc.text(String(numeroEstado), margin + 5, y);
+              doc.text(estadoKey, margin + 10, y);
+              
+              // Primer club en la misma línea que el estado
+              doc.text(clubes[0].substring(0, 60), margin + 48, y);
+              doc.text(temporalidadCorta, margin + 155, y);
               y += 3;
-            });
-            
-            y += 2;
-            doc.setFontSize(7);
-            doc.text(`Total: ${matrizResultado.totalClubes} clubes en ${modalidadFEMETI.estadosSeleccionados.length} estados`, margin + 5, y);
-            y += 5;
-          }
+              
+              // Clubes restantes indentados (sin número)
+              for (let i = 1; i < clubes.length; i++) {
+                // Nueva página si es necesario
+                if (y > (pageHeight - margenInferior)) {
+                  doc.addPage();
+                  y = 15;
+                  doc.setFont('helvetica', 'bold');
+                  doc.setFontSize(8);
+                  doc.text('Continuación - Competencia Nacional', margin, y);
+                  y += 6;
+                  doc.setFont('helvetica', 'normal');
+                  doc.setFontSize(5.5);
+                }
+                
+                // Indentado: sin número, sin estado
+                doc.text(clubes[i].substring(0, 60), margin + 48, y);
+                doc.text(temporalidadCorta, margin + 155, y);
+                y += 3;
+              }
+              
+              numeroEstado++;
+            }
         } else {
           // Fallback: solo estados sin matriz
           doc.setFont('helvetica', 'normal');
@@ -867,27 +703,23 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(9);
-      doc.text('I. Lugar y fecha de la solicitud.', margin, y);
-      y += 6;
-      
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8);
       const fechaDelOficio = fechaOficio ? new Date(fechaOficio + 'T12:00:00') : new Date();
-      doc.text(`Mérida, Yucatán a ${formatearFechaLarga(fechaDelOficio)}`, margin + 20, y);
-      y += 15;
+      doc.text(`I. Lugar y fecha de la solicitud: Mérida, Yucatán a ${formatearFechaLarga(fechaDelOficio)}`, margin, y);
+      y += 8;
 
       // Firma
       doc.text('Respetuosamente.', pageWidth / 2, y, { align: 'center' });
       y += 4;
       doc.text('Sufragio Efectivo. No Reelección', pageWidth / 2, y, { align: 'center' });
-      y += 12;
-
-      // Línea de firma
-      doc.setLineWidth(0.3);
-      doc.line(pageWidth / 2 - 40, y, pageWidth / 2 + 40, y);
+      y += 20; // Espacio para la firma física
+      
+      // Nombre y cargo del Presidente
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.text('GRAL. BGDA. E.M. RICARDO JESÚS FERNÁNDEZ Y GASQUE', pageWidth / 2, y, { align: 'center' });
       y += 4;
       doc.setFontSize(7);
-      doc.text('(Nombre y firma)', pageWidth / 2, y, { align: 'center' });
+      doc.text('PRESIDENTE DEL CLUB', pageWidth / 2, y, { align: 'center' });
 
       // Guardar PDF
       const tipoLabel = tipoPETA === 'tiro' ? 'TIRO' : tipoPETA === 'competencia' ? 'COMPETENCIA' : 'CAZA';
@@ -928,69 +760,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
 
   return (
     <div className="generador-peta">
-      {/* Modo de Trabajo */}
-      <div className="modo-trabajo">
-        <button 
-          className={!modoManual ? 'activo' : ''}
-          onClick={() => setModoManual(false)}
-        >
-          📋 Desde Solicitud
-        </button>
-        <button 
-          className={modoManual ? 'activo' : ''}
-          onClick={() => setModoManual(true)}
-        >
-          ✍️ Manual
-        </button>
-      </div>
-
-      {/* Paso 0: Solicitudes PETA Existentes (si no es modo manual) */}
-      {!modoManual && (
-        <div className="peta-section solicitudes-section">
-          <h3>📋 Solicitudes PETA Pendientes</h3>
-          <p className="seccion-ayuda">
-            Selecciona una solicitud para pre-llenar el formulario automáticamente con los datos del socio.
-          </p>
-
-          {solicitudesPETA.length === 0 ? (
-            <div className="no-solicitudes">
-              <p>No hay solicitudes PETA pendientes</p>
-              <button onClick={() => setModoManual(true)}>Crear PETA Manual</button>
-            </div>
-          ) : (
-            <div className="solicitudes-lista">
-              {solicitudesPETA.map(solicitud => (
-                <div
-                  key={solicitud.id}
-                  className={`solicitud-item ${solicitudSeleccionada?.id === solicitud.id ? 'selected' : ''}`}
-                  onClick={() => cargarSolicitud(solicitud)}
-                >
-                  <div className="solicitud-header">
-                    <strong>{solicitud.socioNombre}</strong>
-                    <span className={`estado-badge ${solicitud.estado}`}>
-                      {solicitud.estado?.replace(/_/g, ' ')}
-                    </span>
-                  </div>
-                  <div className="solicitud-detalles">
-                    <span>Tipo: <strong>{solicitud.tipo?.toUpperCase()}</strong></span>
-                    <span>{solicitud.armasIncluidas?.length || 0} armas</span>
-                    <span>
-                      {solicitud.fechaSolicitud?.toDate().toLocaleDateString('es-MX')}
-                    </span>
-                  </div>
-                  {solicitud.estadosAutorizados && solicitud.estadosAutorizados.length > 0 && (
-                    <div className="solicitud-estados">
-                      Estados: {solicitud.estadosAutorizados.slice(0, 3).join(', ')}
-                      {solicitud.estadosAutorizados.length > 3 && ` +${solicitud.estadosAutorizados.length - 3}`}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
       <div className="peta-form">
         {/* Paso 1: Seleccionar Socio */}
         <div className="peta-section">
@@ -1322,10 +1091,8 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                 {armasSocio.map(arma => (
                   <div
                     key={arma.id}
-                    className={`arma-item ${armasSeleccionadas.includes(arma.id) ? 'selected' : ''} ${revisionBloqueada ? 'locked' : ''}`}
-                    onClick={() => {
-                      if (!revisionBloqueada) toggleArma(arma.id);
-                    }}
+                    className={`arma-item ${armasSeleccionadas.includes(arma.id) ? 'selected' : ''}`}
+                    onClick={() => toggleArma(arma.id)}
                   >
                     <div className="arma-check">
                       {armasSeleccionadas.includes(arma.id) ? '✓' : '○'}
@@ -1357,7 +1124,6 @@ export default function GeneradorPETA({ userEmail, onBack }) {
                                 min={limites.min}
                                 max={limites.max}
                                 step={limites.step}
-                                disabled={revisionBloqueada}
                               />
                             );
                           })()}

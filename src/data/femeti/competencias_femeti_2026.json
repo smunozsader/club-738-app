@@ -49,10 +49,13 @@
       ],
       "YUCATAN": [
         "Club Los Conejos de Caza y Tiro, A.C."
+      ],
+      "QUINTANA ROO": [
+        "Palo Seco Club de Caza, Tiro y Pesca A.C."
       ]
     },
-    "total_estados": 11,
-    "total_clubes": 27
+    "total_estados": 12,
+    "total_clubes": 28
   },
   "RECORRIDOS DE CAZA": {
     "estados": {
@@ -110,7 +113,8 @@
         "Club de Tiro Querétaro, A.C."
       ],
       "QUINTANA ROO": [
-        "Club 78 de Tiro, Caza y Pesca, A.C."
+        "Club 78 de Tiro, Caza y Pesca, A.C.",
+        "Palo Seco Club de Caza, Tiro y Pesca A.C."
       ],
       "SAN LUIS POTOSI": [
         "Club Cinegético y de Tiro Halcones, A.C."
@@ -139,7 +143,7 @@
       ]
     },
     "total_estados": 21,
-    "total_clubes": 39
+    "total_clubes": 40
   },
   "TIRO OLIMPICO": {
     "estados": {
@@ -206,10 +210,13 @@
       ],
       "ZACATECAS": [
         "Club Cinegético Zacatecas de Caza, Tiro y Pesca, A.C."
+      ],
+      "QUINTANA ROO": [
+        "Palo Seco Club de Caza, Tiro y Pesca A.C."
       ]
     },
-    "total_estados": 14,
-    "total_clubes": 36
+    "total_estados": 15,
+    "total_clubes": 37
   },
   "SILUETAS METALICAS": {
     "estados": {
@@ -354,10 +361,13 @@
         "Club Cinegético Zacatecas de Caza, Tiro y Pesca, A.C.",
         "Club Lobos de Zacatecas, A.C.",
         "Club de Tiradores y Cazadores Zacatecanos, A.C."
+      ],
+      "QUINTANA ROO": [
+        "Palo Seco Club de Caza, Tiro y Pesca A.C."
       ]
     },
-    "total_estados": 24,
-    "total_clubes": 94
+    "total_estados": 25,
+    "total_clubes": 95
   },
   "TIRO PRACTICO": {
     "estados": {
@@ -431,10 +441,13 @@
       ],
       "YUCATAN": [
         "Club de Caza, Tiro y Pesca de Yucatán, A.C."
+      ],
+      "QUINTANA ROO": [
+        "Palo Seco Club de Caza, Tiro y Pesca A.C."
       ]
     },
-    "total_estados": 18,
-    "total_clubes": 35
+    "total_estados": 19,
+    "total_clubes": 36
   },
   "TIRO NEUMATICO": {
     "estados": {

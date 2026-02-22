@@ -16,7 +16,6 @@ import { db } from '../../firebaseConfig';
 import { DashboardSkeleton } from '../common/LoadingSkeleton';
 import { useToastContext } from '../../contexts/ToastContext';
 import AdminToolsNavigation from './AdminToolsNavigation';
-import NotificacionesCitas from './NotificacionesCitas';
 import * as XLSX from 'xlsx';
 import './AdminDashboard.css';
 
@@ -264,9 +263,6 @@ export default function AdminDashboard({
 
   return (
     <div className="admin-dashboard">
-      {/* Notificaciones de Citas Pendientes */}
-      <NotificacionesCitas />
-
       {/* Componente de navegación de herramientas (Grid de tarjetas) */}
       <AdminToolsNavigation 
         onSelectTool={handleSelectTool}

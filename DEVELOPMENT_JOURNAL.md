@@ -10,6 +10,82 @@
 
 ## 📅 Febrero 2026
 
+### 22 de Febrero - v1.37.9 - Arqueo domicilios: Fuente de Verdad vs Firestore
+
+#### 🎯 Objetivo
+Detectar y corregir domicilios faltantes o vacíos en Firestore comparados contra la fuente de verdad (Excel maestro).
+
+#### 🔍 Diagnóstico
+Al generar PETA para José Gil Heredia Hagar, los campos de domicilio (calle, colonia, CP, ciudad, estado) salían vacíos.
+
+**Causa raíz**: El campo `domicilio` en Firestore era un string vacío `""` en lugar de un objeto con subcampos.
+
+#### ✅ Cambios Implementados
+
+**Script de arqueo creado:**
+- `scripts/arqueo_domicilios.py` - Compara 77 socios entre Excel y Firestore
+- Detecta: campo inexistente, string vacío, objeto incompleto
+- Modo `audit`: solo reporta discrepancias
+- Modo `fix`: actualiza Firestore con datos de fuente de verdad
+
+**Socios corregidos (3):**
+1. JOSE GIL HEREDIA HAGAR (jgheredia@hotmail.com) - Cred. 224
+2. REMIGIO BEETHOVEN AGUILAR CANTO (sysaventas@hotmail.com) - Cred. 46  
+3. JOSE GILBERTO HERNANDEZ CARRILLO (josegilbertohernandezcarrillo@gmail.com) - Cred. 153
+
+**Resultado final:**
+```
+✅ Domicilios correctos:     77/77 (100%)
+❌ Sin campo domicilio:      0
+❌ Domicilio vacío/string:   0
+⚠️  Domicilio incompleto:    0
+```
+
+#### 📁 Archivos modificados
+- `scripts/arqueo_domicilios.py` (nuevo) - Script de auditoría y corrección
+- Firestore: 3 documentos actualizados con estructura `domicilio: {calle, colonia, ciudad, municipio, estado, cp}`
+
+---
+
+### 22 de Febrero - v1.37.8 - PETA PDF: Deduplicación clubes y formato firma
+
+#### 🎯 Objetivo
+Corregir duplicación de clubes cuando un estado tiene múltiples modalidades FEMETI y optimizar el formato de la sección de firma.
+
+#### ✅ Cambios Implementados
+
+**Sección H - Deduplicación global de clubes:**
+- Clubes ahora se agrupan por estado usando `Set` para eliminar duplicados
+- Antes: Si Estado de México tenía TIRO PRÁCTICO y RECORRIDOS DE CAZA, los clubes aparecían duplicados
+- Ahora: Cada club aparece una sola vez por estado sin importar cuántas modalidades comparta
+- Se usa directamente `modalidadFEMETI.clubesPorEstado` del selector, no la función auxiliar
+
+**Columna Club más ancha:**
+- Posición movida de `margin+140` a `margin+155`
+- Límite de caracteres aumentado de 55 a 60
+
+**Sección I - Formato de firma optimizado:**
+- Eliminada línea horizontal encima del nombre del presidente
+- Reducido espacio entre "I. Lugar y fecha" y "Respetuosamente." (de 15pt a 8pt)
+- Agregado espacio de 20pt para firma física entre "Sufragio Efectivo. No Reelección" y nombre del presidente
+
+**Resultado final:**
+```
+I. Lugar y fecha de la solicitud: Mérida, Yucatán a 22 de FEBRERO de 2026
+Respetuosamente.
+Sufragio Efectivo. No Reelección
+
+[espacio para firma]
+
+GRAL. BGDA. E.M. RICARDO JESÚS FERNÁNDEZ Y GASQUE
+PRESIDENTE DEL CLUB
+```
+
+#### 📁 Archivos modificados
+- `src/components/GeneradorPETA.jsx` - Sección H reescrita + formato firma
+
+---
+
 ### 21 de Febrero - v1.37.7 - GeneradorPETA formato DN27 SEDENA-02-045
 
 #### 🎯 Objetivo

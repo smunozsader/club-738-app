@@ -1,3 +1,60 @@
+## 2026-02-21 - v1.37.7 Limpieza Datos FEMETI 2026 + Eliminación onCitaUpdated
+
+### Extracción y Normalización de Datos FEMETI
+
+**Objetivo**: Extraer jerarquía limpia de ESTADO → MODALIDAD → CLUBES del archivo Excel FEMETI 2026 y eliminar función de Cloud Functions no funcional.
+
+**Trabajo Realizado**:
+
+#### 1. Script de Extracción FEMETI
+- **Archivo**: `scripts/extraer_competencias_femeti.py`
+- **Fuente**: `PA 26 BLOQUEADO femeti.xlsx` (6 hojas de modalidades)
+- **Salida**: `data/referencias/femeti_tiradas_2026/competencias_femeti_2026.json`
+
+**Normalización de Nombres de Clubes**:
+- Función `normalizar_club()` con 16 pasos de procesamiento
+- Diccionario `unificacion` con ~80 mapeos de variantes a nombres canónicos
+- Expansión de abreviaciones (Dptvo→Deportivo, Cineg→Cinegético, Cazad→Cazadores, etc.)
+- `title_case_club()` con soporte Unicode para comillas curvas (`\u201c`, `\u201d`, etc.)
+- Corrección de capitalización: "josé" → "José", "águilas" → "Águilas", "D.f" → "D.F."
+
+**Estadísticas Finales**:
+| Métrica | Valor |
+|---------|-------|
+| Estados | 28 |
+| Clubes únicos | 118 |
+| Combinaciones estado-modalidad-club | 235 |
+
+#### 2. Reportes Generados
+- **Script**: `scripts/generar_reporte_femeti.py`
+- **MD**: `data/referencias/femeti_tiradas_2026/FEMETI_2026_CLUBES.md` (571 líneas)
+- **CSV**: `data/referencias/femeti_tiradas_2026/FEMETI_2026_CLUBES.csv` (235 registros)
+
+#### 3. Eliminación onCitaUpdated
+- **Cloud Function eliminada**: `onCitaUpdated` (no funcional)
+- **Archivo**: `functions/index.js` (líneas 547-635 removidas)
+- **Firebase**: `firebase functions:delete onCitaUpdated --force`
+- **Motivo**: Función duplicada, citas se manejan via `onCitaCreated`
+
+#### 4. Archivado de Componentes Deprecados
+Movidos a `archive/`:
+- `SolicitarPETA.jsx` / `SolicitarPETA.css`
+- `SelectorModalidadFEMETI.jsx` / `SelectorModalidadFEMETI.css`
+- `SelectorEstadosFEMETI_v1_backup.jsx`
+- `SelectorEstadosFEMETI_v2.jsx`
+
+**Archivos Modificados**:
+- `functions/index.js` - Eliminación de onCitaUpdated
+- `scripts/extraer_competencias_femeti.py` - Normalización mejorada
+- `scripts/generar_reporte_femeti.py` - NUEVO
+- `data/referencias/femeti_tiradas_2026/competencias_femeti_2026.json`
+- `data/referencias/femeti_tiradas_2026/FEMETI_2026_CLUBES.md` - NUEVO
+- `data/referencias/femeti_tiradas_2026/FEMETI_2026_CLUBES.csv` - NUEVO
+
+**Deploy**: ✅ Producción actualizada (https://club-738-app.web.app)
+
+---
+
 ## 2026-01-19 - REGISTRO DE NUEVA ARMA: RICARDO ANTONIO SOBERANIS GAMBOA
 
 ### Registro de CZ P-10 C en Sistema
