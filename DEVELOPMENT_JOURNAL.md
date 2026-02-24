@@ -10,6 +10,48 @@
 
 ## 📅 Febrero 2026
 
+### 23 de Febrero - v1.37.10 - Sincronización arsenal Ricardo Castillo
+
+#### 🎯 Objetivo
+Completar registro de armas aprobadas y procesar baja pendiente para Ricardo Ernesto Castillo Mancera (dr.ricardocastillo@me.com).
+
+#### 🔍 Diagnóstico
+- 2 solicitudes de alta de armas estaban **aprobadas** pero NO se habían creado en la subcolección `armas`
+- 1 solicitud de baja del Rifle CZ 457 pendiente por venta a socio de otro club
+
+#### ✅ Cambios Implementados
+
+**Altas completadas en Firebase:**
+| Clase | Marca | Modelo | Calibre | Matrícula | Folio |
+|-------|-------|--------|---------|-----------|-------|
+| ESCOPETA | ARMSAN | PHENOMA | 12 Ga | 59-H25YT-002250 | A3903743 |
+| PISTOLA | SIG SAUER | P365 | .380" ACP | 66F268845 | A3903742 |
+
+**Baja procesada:**
+| Clase | Marca | Modelo | Calibre | Matrícula | Folio | Motivo |
+|-------|-------|--------|---------|-----------|-------|--------|
+| RIFLE | CZ | CZ 457 | .22" | H228675 | A3880038 | Venta a Sergio Iván Rosado Sosa (otro club) |
+
+**Excel Fuente de Verdad actualizado:**
+- Eliminada fila del Rifle CZ 457
+- Agregadas 2 filas para armas nuevas
+- Backup creado antes de modificación
+
+**Arsenal final de Ricardo (3 armas):**
+1. PISTOLA CESKA ZBROJOVKA CZ SHADOW 2 (.380") - EP34718
+2. ESCOPETA ARMSAN PHENOMA (12 Ga) - 59-H25YT-002250
+3. PISTOLA SIG SAUER P365 (.380" ACP) - 66F268845
+
+#### 📁 Archivos modificados
+- `data/referencias/socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx` - Actualizado arsenal
+- `scripts/verificar-ricardo-armas.js` (nuevo) - Verificar armas en Firebase
+- `scripts/completar-armas-ricardo.js` (nuevo) - Registrar armas aprobadas
+- `scripts/procesar-baja-cz457.js` (nuevo) - Procesar baja
+- `scripts/actualizar-excel-ricardo.py` (nuevo) - Actualizar Excel
+- Firestore: `socios/dr.ricardocastillo@me.com/armas/*` actualizado
+
+---
+
 ### 22 de Febrero - v1.37.9 - Arqueo domicilios: Fuente de Verdad vs Firestore
 
 #### 🎯 Objetivo
