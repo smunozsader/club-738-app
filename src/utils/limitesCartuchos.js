@@ -195,3 +195,109 @@ export function getDescripcionLimites(calibre, clase) {
   const limites = getLimitesCartuchos(calibre, clase);
   return `${limites.min}-${limites.max} cartuchos (${limites.nota})`;
 }
+
+/**
+ * Normaliza variantes de calibre a un formato estándar para el PETA
+ * Agrupa diferentes capturas del mismo calibre bajo una nomenclatura única
+ * @param {string} calibre - Calibre del arma (puede tener variaciones)
+ * @param {string} clase - Clase del arma (PISTOLA, RIFLE, ESCOPETA)
+ * @returns {string} Calibre normalizado
+ * 
+ * Ejemplos:
+ * - ".22 LR", ".22"", ".22", "22 LR" → ".22 LR"
+ * - ".380"", "0.380", "380 ACP", ".380 ACP" → ".380 ACP"
+ * - ".223"", "0.223", "223 REM", ".223 REM", "5.56" → ".223 REM"
+ * - "12 GA", "12 GAUGE", "12ga" → "12 GA"
+ * - "9mm", "9 MM", "9X19" → "9MM"
+ */
+export function normalizarCalibre(calibre, clase) {
+  const c = (calibre || '').toString().toUpperCase().replace(/"/g, '').replace(/'/g, '').trim();
+  const cl = (clase || '').toString().toUpperCase().trim();
+  
+  // ESCOPETAS - Normalizar por gauge
+  if (cl.includes('ESCOPETA') || c.includes('GA') || c.includes('GAUGE')) {
+    if (c.includes('12')) return '12 GA';
+    if (c.includes('16')) return '16 GA';
+    if (c.includes('20')) return '20 GA';
+    if (c.includes('28')) return '28 GA';
+    if (c.includes('.410') || c.includes('410')) return '.410';
+    return '12 GA'; // Default escopeta
+  }
+  
+  // CALIBRE .22 y variantes
+  // OJO: .223 REM es diferente de .22 LR - verificar primero
+  if (c.includes('223') || c.includes('5.56') || c.includes('5,56')) {
+    return '.223 REM';
+  }
+  if (c.includes('22-250') || c.includes('22/250')) {
+    return '.22-250';
+  }
+  if (c.includes('222') && !c.includes('2223')) {
+    return '.222 REM';
+  }
+  // Ahora sí, .22 LR (el común)
+  if (c.includes('22') && !c.includes('223') && !c.includes('222') && !c.includes('250')) {
+    if (c.includes('MAGNUM') || c.includes('MAG') || c.includes('WMR')) return '.22 MAG';
+    if (c.includes('HORNET')) return '.22 HORNET';
+    if (c.includes('TCM')) return '.22 TCM';
+    return '.22 LR';
+  }
+  
+  // CALIBRE .380 ACP y variantes
+  if (c.includes('380') || c === '0.380' || c.includes('9 CORTO') || c.includes('9CORTO') || c.includes('9MM CORTO')) {
+    return '.380 ACP';
+  }
+  
+  // CALIBRE 9MM y variantes
+  if (c.includes('9MM') || c.includes('9 MM') || c.includes('9X19') || c.includes('9 X 19') || c === '9' || c.includes('PARABELLUM')) {
+    return '9MM';
+  }
+  
+  // CALIBRE .38 SPECIAL
+  if ((c.includes('38') || c.includes('.38')) && !c.includes('380') && (c.includes('SPL') || c.includes('SPECIAL') || c.includes('ESP'))) {
+    return '.38 SPL';
+  }
+  if (c === '.38' || c === '38' || c === '0.38') {
+    return '.38 SPL';
+  }
+  
+  // CALIBRE .40 S&W
+  if (c.includes('40') && (c.includes('S&W') || c.includes('SW') || c === '.40' || c === '40' || c === '0.40')) {
+    return '.40 S&W';
+  }
+  
+  // CALIBRE .45 ACP
+  if (c.includes('45') && !c.includes('454') && !c.includes('45-70')) {
+    return '.45 ACP';
+  }
+  
+  // CALIBRE .357 MAGNUM
+  if (c.includes('357')) {
+    return '.357 MAG';
+  }
+  
+  // CALIBRE .30-06
+  if (c.includes('30-06') || c.includes('30/06') || c.includes('3006')) {
+    return '.30-06';
+  }
+  
+  // CALIBRE .308 / 7.62 NATO
+  if (c.includes('308') || c.includes('7.62') || c.includes('7,62')) {
+    if (c.includes('X39') || c.includes('39')) return '7.62X39';
+    return '.308 WIN';
+  }
+  
+  // CALIBRE .300
+  if (c.includes('300') && !c.includes('3006')) {
+    if (c.includes('WIN') || c.includes('MAG')) return '.300 WIN MAG';
+    return '.300';
+  }
+  
+  // CALIBRE .270
+  if (c.includes('270')) {
+    return '.270';
+  }
+  
+  // Si no se reconoce, devolver el original limpio
+  return calibre?.toUpperCase()?.trim() || 'OTRO';
+}

@@ -10,6 +10,46 @@
 
 ## 📅 Febrero 2026
 
+### 24 de Febrero - v1.37.11 - Mejoras GeneradorPETA (formato DN27)
+
+#### 🎯 Objetivo
+Optimizar el formato de solicitud PETA según Manual DN27 SEDENA-02-045 y agregar colchón de tiempo para proceso interno.
+
+#### ✅ Cambios Implementados
+
+**1. Período de inicio ampliado a 21 días:**
+- DN27 requiere mínimo 15 días entre fecha oficio y fecha inicio
+- Agregamos 6 días extra para proceso interno del club:
+  - Firma del Presidente (4-6 días)
+  - Entrega formal ante 32 ZM Valladolid
+- Total: 21 días de colchón (1 semana club + 2 semanas SEDENA)
+
+**2. Vigencia tiro/competencia: 31 de diciembre**
+- Confirmado que SEDENA usa año calendario (no 12 meses desde inicio)
+- La vigencia termina el 31 de diciembre del año en curso
+- Caza mantiene temporada cinegética (30 de junio)
+
+**3. Normalización de calibres para cartuchos:**
+- Nueva función `normalizarCalibre()` en `limitesCartuchos.js`
+- Agrupa variantes del mismo calibre bajo nomenclatura estándar:
+
+| Variantes en Firebase | Normalizado a |
+|----------------------|---------------|
+| `.22 LR`, `.22"`, `.22`, `22 LR` | `.22 LR` |
+| `.380"`, `0.380`, `380 ACP` | `.380 ACP` |
+| `.223"`, `223 REM`, `5.56` | `.223 REM` |
+| `12 GA`, `12 GAUGE`, `12ga` | `12 GA` |
+| `9mm`, `9 MM`, `9X19` | `9MM` |
+
+#### 📁 Archivos modificados
+- `src/components/GeneradorPETA.jsx` - Período 21 días, vigencia 31 dic, calibres normalizados
+- `src/utils/limitesCartuchos.js` - Nueva función `normalizarCalibre()`
+
+#### 🚀 Deploy
+Sí - Firebase Hosting
+
+---
+
 ### 23 de Febrero - v1.37.10 - Sincronización arsenal Ricardo Castillo
 
 #### 🎯 Objetivo

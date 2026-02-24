@@ -11,7 +11,7 @@ import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { useToastContext } from '../contexts/ToastContext';
 import { jsPDF } from 'jspdf';
-import { getLimitesCartuchos, ajustarCartuchos, getCartuchosPorDefecto } from '../utils/limitesCartuchos';
+import { getLimitesCartuchos, ajustarCartuchos, getCartuchosPorDefecto, normalizarCalibre } from '../utils/limitesCartuchos';
 import { generarMatrizClubesPDF, calcularTemporalidad, MODALIDADES_FEMETI_2026 } from '../data/modalidadesFEMETI2026';
 import SelectorEstadosFEMETI from './SelectorEstadosFEMETI';
 import './GeneradorPETA.css';
@@ -168,26 +168,29 @@ export default function GeneradorPETA({ userEmail, onBack }) {
     }
   }, [socioSeleccionado]);
 
-  // Calcular fecha mínima de inicio: 15 días después de fecha del oficio (DN27)
+  // Calcular fecha mínima de inicio: 21 días después de fecha del oficio
+  // DN27 requiere mínimo 15 días, pero agregamos 6 días de colchón para:
+  // - Proceso interno de firma del Presidente del Club (4-6 días)
+  // - Entrega formal ante 32 ZM Valladolid
   const getFechaMinInicio = () => {
     const oficio = fechaOficio ? new Date(fechaOficio + 'T12:00:00') : new Date();
-    oficio.setDate(oficio.getDate() + 15); // Mínimo 15 días después del oficio
+    oficio.setDate(oficio.getDate() + 21); // 21 días = 15 mínimo SEDENA + 6 colchón interno
     return oficio.toISOString().split('T')[0];
   };
 
-  // Calcular fecha fin automáticamente según tipo (DN27)
+  // Calcular fecha fin automáticamente según tipo
   useEffect(() => {
     if (fechaInicio) {
       const inicio = new Date(fechaInicio + 'T12:00:00');
       if (tipoPETA === 'caza') {
-        // DN27: Temporada de caza es 1 julio - 30 junio
+        // Temporada de caza es 1 julio - 30 junio
         // Si inicio es julio-diciembre (mes 6-11) → fin = 30 junio año siguiente
         // Si inicio es enero-junio (mes 0-5) → fin = 30 junio mismo año
         const mes = inicio.getMonth(); // 0-11
         const añoFin = mes >= 6 ? inicio.getFullYear() + 1 : inicio.getFullYear();
         setFechaFin(`${añoFin}-06-30`);
       } else {
-        // DN27: Tiro y Competencia hasta 31 de diciembre del mismo año
+        // Tiro y Competencia: vigencia hasta 31 de diciembre (año calendario SEDENA)
         setFechaFin(`${inicio.getFullYear()}-12-31`);
       }
     }
@@ -316,13 +319,14 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       return;
     }
 
-    // DN27: Validar que fecha inicio sea mínimo 15 días después de fecha oficio
+    // DN27: Validar que fecha inicio sea mínimo 21 días después de fecha oficio
+    // (15 días SEDENA + 6 días colchón proceso interno)
     const oficio = new Date(fechaOficio + 'T12:00:00');
     const inicio = new Date(fechaInicio + 'T12:00:00');
     const diferenciaDias = Math.floor((inicio - oficio) / (1000 * 60 * 60 * 24));
     
-    if (diferenciaDias < 15) {
-      showToast(`DN27: La vigencia debe iniciar mínimo 15 días después del oficio (${diferenciaDias} días actual)`, 'error', 5000);
+    if (diferenciaDias < 21) {
+      showToast(`La vigencia debe iniciar mínimo 21 días después del oficio (${diferenciaDias} días actual)`, 'error', 5000);
       return;
     }
 
@@ -471,9 +475,10 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       doc.text('E. Datos de las armas que empleará:', margin, y);
       y += 5;
 
-      // Encabezados de tabla (orden DN27: Tipo, Marca, Calibre, Matrícula, Cartuchos)
-      const colWidths = [8, 40, 35, 25, 35, 25];
-      const headers = ['', 'Tipo', 'Marca', 'Calibre', 'Matrícula', 'Cartuchos'];
+      // Encabezados de tabla (orden DN27: Tipo, Marca, Calibre, Matrícula) - SIN cartuchos por arma
+      // Los cartuchos se muestran al final agrupados por calibre según Art. 50 LFAFE
+      const colWidths = [8, 45, 40, 30, 45];
+      const headers = ['', 'Tipo', 'Marca', 'Calibre', 'Matrícula'];
       
       doc.setFontSize(7);
       doc.setFont('helvetica', 'bold');
@@ -490,6 +495,10 @@ export default function GeneradorPETA({ userEmail, onBack }) {
       doc.setFontSize(7);
       
       const armasReales = armasSeleccionadas.filter(id => id);
+      
+      // Acumular calibres para el resumen final
+      const cartuchosPorCalibre = {};
+      
       for (let i = 0; i < armasReales.length; i++) {
         xPos = margin;
         const armaId = armasReales[i];
@@ -501,25 +510,51 @@ export default function GeneradorPETA({ userEmail, onBack }) {
         
         if (arma) {
           // Tipo (Clase)
-          doc.text((arma.clase || '').substring(0, 22).toUpperCase(), xPos + 1, y + 2);
+          doc.text((arma.clase || '').substring(0, 24).toUpperCase(), xPos + 1, y + 2);
           xPos += colWidths[1];
           // Marca
-          doc.text((arma.marca || '').substring(0, 18).toUpperCase(), xPos + 1, y + 2);
+          doc.text((arma.marca || '').substring(0, 20).toUpperCase(), xPos + 1, y + 2);
           xPos += colWidths[2];
           // Calibre
           doc.text((arma.calibre || '').toUpperCase(), xPos + 1, y + 2);
           xPos += colWidths[3];
           // Matrícula
           doc.text((arma.matricula || '').toUpperCase(), xPos + 1, y + 2);
-          xPos += colWidths[4];
-          // Cartuchos
+          
+          // Acumular para resumen por calibre (Art. 50 LFAFE)
+          // Usar calibre normalizado para agrupar variantes del mismo calibre
           const limites = getLimitesCartuchos(arma.calibre, arma.clase);
-          const val = cartuchosPorArma[armaId] ?? limites.default;
-          const ajustado = ajustarCartuchos(val, arma.calibre, arma.clase);
-          doc.text(String(ajustado), xPos + 1, y + 2);
+          const calibreNormalizado = normalizarCalibre(arma.calibre, arma.clase);
+          if (!cartuchosPorCalibre[calibreNormalizado]) {
+            cartuchosPorCalibre[calibreNormalizado] = {
+              calibre: calibreNormalizado,
+              clase: arma.clase,
+              limite: limites.max,
+              articulo: limites.articulo,
+              nota: limites.nota
+            };
+          }
         }
         y += 4;
       }
+      
+      y += 4;
+      
+      // ========== CANTIDAD DE CARTUCHOS POR CALIBRE (Art. 50 LFAFE) ==========
+      // El PETA autoriza la transportación de armas CON la cantidad de cartuchos según la ley
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.text('Cantidad de cartuchos para autorización de transporte (Art. 50 LFAFE):', margin, y);
+      y += 5;
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      
+      Object.values(cartuchosPorCalibre).forEach(item => {
+        const texto = `Calibre ${item.calibre}: ${item.limite.toLocaleString('es-MX')} cartuchos`;
+        doc.text(texto, margin + 5, y);
+        y += 4;
+      });
       
       y += 3;
 
