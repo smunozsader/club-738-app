@@ -10,6 +10,64 @@
 
 ## 📅 Febrero 2026
 
+### 24 de Febrero - v1.37.12 - Alta armas Enrique Gaona + Reporte Movimientos 2026
+
+#### 🎯 Objetivo
+Aprobar solicitudes de alta de armas para Enrique Gaona Castañeda y generar reporte de movimientos del arsenal 2026.
+
+#### ✅ Cambios Implementados
+
+**1. Alta de 3 armas para Enrique Gaona (quiquis77@hotmail.com):**
+
+| Clase | Marca | Modelo | Calibre | Matrícula | Folio |
+|-------|-------|--------|---------|-----------|-------|
+| RIFLE | CESKA ZBROJOVKA | CZ 512 | .22 LR | J100907 | A3900899 |
+| PISTOLA | BERETTA | 80 X | .380 | Y014871X | A3900898 |
+| PISTOLA | SIG SAUER | P322 | .22 LR | 73A192310 | A3916770 |
+
+- Solicitudes aprobadas en Firestore
+- Armas añadidas a subcolección `armas`
+- Excel Fuente de Verdad actualizado (filas 299-301)
+- Arsenal total de Gaona: 4 armas (antes: 1)
+
+**2. Reporte de Movimientos del Arsenal 2026:**
+
+Creado documento `docs/MOVIMIENTOS_ARSENAL_2026.md` con:
+
+| Concepto | Cantidad |
+|----------|----------|
+| Altas (entradas) | 11 |
+| Bajas (salidas del club) | 1 |
+| Movimientos internos | 3 |
+| Balance neto | +10 |
+
+**Altas por socio:**
+- Iván Cabo Torres: 2
+- Ricardo Soberanis: 1
+- Juan Carlos Briceño: 2
+- Adolfo Xacur: 1
+- Ricardo Castillo: 2
+- Enrique Gaona: 3
+
+**Única baja real:** CZ 457 vendido a Sergio Iván Rosado Sosa (externo)
+
+**Movimientos internos (no afectan total):**
+- Gardoni → Aréchiga: 2 pistolas
+- Ruz Peraza → Soberanis: 1 rifle (pendiente)
+
+#### 📁 Archivos creados/modificados
+- `scripts/aprobar-altas-gaona.js` - Script aprobación de solicitudes
+- `scripts/agregar-armas-gaona-excel.py` - Script actualización Excel
+- `scripts/listar-armas-2026.js` - Reporte de altas 2026
+- `scripts/listar-bajas-2026.js` - Reporte de bajas 2026
+- `docs/MOVIMIENTOS_ARSENAL_2026.md` - Reporte consolidado
+- `data/referencias/socios/FUENTE_DE_VERDAD_CLUB_738_ENERO_2026.xlsx` - Actualizado
+
+#### 🚀 Deploy
+No requerido (solo datos y documentación)
+
+---
+
 ### 24 de Febrero - v1.37.11 - Mejoras GeneradorPETA (formato DN27)
 
 #### 🎯 Objetivo
