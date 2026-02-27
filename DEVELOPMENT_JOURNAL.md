@@ -26,7 +26,7 @@ Completar la migración a Gemini Code Assist y activar el entorno de desarrollo 
 - El portal ahora está listo para continuar con el desarrollo de nuevas funcionalidades.
 
 #### 🚀 Deploy
-No requerido (solo configuración de entorno local).
+No requerido (solo configuración de git add .entorno local).
 
 ---
 
