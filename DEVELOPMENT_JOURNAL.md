@@ -6,6 +6,30 @@
 
 **URL de Producción**: https://yucatanctp.org
 
+
+
+### 26 de Febrero - v1.37.13 - Migración a Gemini Code Assist
+
+#### 🎯 Objetivo
+Completar la migración a Gemini Code Assist y activar el entorno de desarrollo en Firebase Studio para continuar con el desarrollo del portal.
+
+#### ✅ Cambios Implementados
+
+**1. Activación del Entorno de Desarrollo:**
+- Se completó la transición al nuevo entorno de desarrollo asistido por IA, Gemini Code Assist.
+- Se instalaron todas las dependencias del proyecto ejecutando `npm install`.
+- Se inició exitosamente el servidor de desarrollo local con `npm run dev`.
+
+**2. Resumen de la Sesión:**
+- La sesión de hoy se centró en la configuración y activación del entorno de desarrollo.
+- Se confirmó que el proyecto es compatible con las nuevas herramientas.
+- El portal ahora está listo para continuar con el desarrollo de nuevas funcionalidades.
+
+#### 🚀 Deploy
+No requerido (solo configuración de entorno local).
+
+---
+
 ---
 
 ## 📅 Febrero 2026
