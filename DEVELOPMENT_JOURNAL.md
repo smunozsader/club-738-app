@@ -6,7 +6,43 @@
 
 **URL de Producción**: https://yucatanctp.org
 
+---
+### 1 de Marzo - v1.37.16 - Sincronización Arsenal Celestino Sánchez
 
+#### 🎯 Objetivo
+Regularizar el arsenal del socio Celestino Sánchez Fernández (`tinosanchezf@yahoo.com.mx`), subiendo los 4 registros PDF de armas que figuraban como pendientes en la base de datos.
+
+#### ✅ Cambios Implementados
+
+**1. Identificación y Mapeo de Armas:**
+- Se localizaron 4 armas en Firestore bajo el perfil del socio con el campo `documentoRegistro` como `pendiente`.
+- Se mapearon los archivos PDF proporcionados en la carpeta `2026. celestino. armas nuevas/` con sus correspondientes registros en la base de datos.
+
+**2. Creación de Scripts Administrativos:**
+- **`scripts/listar-armas-celestino.cjs`**: Creado para consultar y verificar el estado actual de las armas del socio directamente desde Firestore.
+- **`scripts/subir-registros-celestino.cjs`**: Creado para automatizar la subida de los 4 archivos PDF a Firebase Storage y la posterior actualización de los documentos en Firestore.
+
+**3. Ejecución y Verificación:**
+- El script de subida se ejecutó exitosamente, colocando cada PDF en la ruta `documentos/{email}/armas/{armaId}/registro.pdf`.
+- Se actualizó el campo `documentoRegistro` a `true` en Firestore para las 4 armas.
+- Se realizó una verificación final con el script de listado, confirmando que todos los registros ahora aparecen como completos.
+
+#### 🔫 Armas Actualizadas
+| Marca | Modelo | Matrícula | Estado Anterior | Estado Actual |
+|-------------------|--------------|-------------|-----------------|---------------|
+| CESKA ZBROJOVKA | CZ P-07 | D207727 | Pendiente | ✅ Completo |
+| CESKA ZBROJOVKA | CZ P-10 C | CP18665 | Pendiente | ✅ Completo |
+| SIG SAUER | P250 | 57C048858 | Pendiente | ✅ Completo |
+| WINCHESTER | 9422 | F11281 | Pendiente | ✅ Completo |
+
+#### 📁 Archivos Creados
+- `scripts/listar-armas-celestino.cjs`
+- `scripts/subir-registros-celestino.cjs`
+
+#### 🚀 Deploy
+No requerido (tarea de gestión de datos mediante scripts de administración).
+
+---
 
 ### 26 de Febrero - v1.37.13 - Migración a Gemini Code Assist
 
