@@ -7,6 +7,39 @@
 **URL de Producción**: https://yucatanctp.org
 
 ---
+### 2 de Marzo - v1.37.17 - Alta Arsenal Santiago Quintal
+
+#### 🎯 Objetivo
+Regularizar el arsenal del socio Santiago A. Quintal Paredes (`squintal158@gmail.com`), quien reportó tener 5 armas mientras que el sistema solo reflejaba 3. Se procedió a dar de alta las 2 armas faltantes.
+
+#### ✅ Cambios Implementados
+
+**1. Investigación y Diagnóstico:**
+- Se ejecutó el script `scripts/reports/read_santiago_firestore.mjs` para consultar directamente la base de datos de producción.
+- El script confirmó que solo existían 3 armas registradas en la subcolección `armas` del socio, validando el estado del sistema.
+
+**2. Creación de Script de Alta:**
+- Se creó un script dedicado, `scripts/alta-armas-quintal.cjs`, para registrar las 2 armas nuevas proporcionadas por el socio.
+- El script automatiza la subida del documento de registro a Firebase Storage y la creación de los documentos correspondientes en Firestore, asociando la URL del registro a cada arma.
+
+**3. Ejecución y Verificación:**
+- Se ejecutó el script `alta-armas-quintal.cjs`, el cual completó el proceso sin errores.
+- Se realizó una verificación final utilizando `read_santiago_firestore.mjs`, confirmando que el total de armas del socio ahora es 5.
+
+#### 🔫 Armas Registradas
+| Clase | Marca | Modelo | Calibre | Matrícula | Folio |
+|---------|-------------------|-----------|-----------|-------------|----------|
+| PISTOLA | SIG SAUER | P322 | .22 L.R. | 73A191703 | A3935566 |
+| RIFLE | CESKA ZBROJOVKA | CZ 600 LUX| .223" REM | J011498 | A3935568 |
+
+#### 📁 Archivos Creados
+- `scripts/alta-armas-quintal.cjs`
+
+#### 🚀 Deploy
+No requerido (tarea de gestión de datos mediante scripts de administración).
+
+---
+
 ### 1 de Marzo - v1.37.16 - Sincronización Arsenal Celestino Sánchez
 
 #### 🎯 Objetivo
